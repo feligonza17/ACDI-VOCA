@@ -1,0 +1,9 @@
+name: "feli-website"
+output_dir: "."
+navbar:
+  title: "Proyecto ACDI/VOCA"
+  left: 
+    - text: "Home"
+      href: index.html
+    - text: "Sobre la página"
+      href: abour.html
