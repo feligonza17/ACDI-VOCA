@@ -1,6 +1,8 @@
 ---
-title: "About Me"
+title: "Aqui vamos a poner los códigos y resultados del proyecto (hasta que nos dé)"
 ---
+
+
 
 
 - __Name:__ Nick

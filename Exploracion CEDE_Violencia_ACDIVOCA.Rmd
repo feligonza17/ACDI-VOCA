@@ -18,6 +18,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+intl.charset.fallback.utf8_for_file=T
 ```
 
 

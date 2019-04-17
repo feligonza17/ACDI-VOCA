@@ -4,11 +4,28 @@ navbar:
   title: "Proyecto ACDI/VOCA"
   left: 
     - text: "Home"
+      icon: fa-home
       href: index.html
-    - text: "Graficos exploratorios"
-      href: Exploracion CEDE_Violencia_ACDIVOCA.html
     - text: "Sobre la pagina"
+      icon: fa-info
       href: about.html
+    - text: "Primeras Exploraciones"
+      menu:
+        - text: "Graficos BBDD Violencia"
+          icon: fa-user-secret
+          href: Exploracion_CEDE_Violencia_ACDIVOCA.html
+        - text: "Analisis Descriptivos"
+          href: acdivoca_analisis.html
+    - text: "Exploraciones avanzadas"
+      menu:
+        - text: "Violencia"
+        - text: "Gobierno"
+    - text: "More"
+      icon: fa-gear
+      menu:
+        - text: "Heading 1"
+        - text: "Page A"
+          href: page-a.html
 output:
   html_document:
     theme: lumen

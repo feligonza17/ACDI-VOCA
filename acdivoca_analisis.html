@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Felipe GonzÃ¡lez-Arango" />
+
+
+<title>Acidova_analisis</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-info"></span>
+     
+    Sobre la pagina
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Primeras Exploraciones
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Exploracion_CEDE_Violencia_ACDIVOCA.html">
+        <span class="fa fa-user-secret"></span>
+         
+        Graficos BBDD Violencia
+      </a>
+    </li>
+    <li>
+      <a href="acdivoca_analisis.html">Analisis Descriptivos</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exploraciones avanzadas
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Violencia</li>
+    <li class="dropdown-header">Gobierno</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    More
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Heading 1</li>
+    <li>
+      <a href="page-a.html">Page A</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Acidova_analisis</h1>
+<h4 class="author">Felipe GonzÃ¡lez-Arango</h4>
+<h4 class="date">29 marzo 2019</h4>
+
+</div>
+
+
+<div id="instalar-y-cargar-paquetes" class="section level1">
+<h1><span class="header-section-number">1</span> Instalar y cargar paquetes</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readstata13)
+<span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(data.table)
+<span class="kw">library</span>(readxl)
+<span class="kw">library</span>(doBy)
+<span class="kw">library</span>(vtable)
+<span class="kw">library</span>(plyr)
+<span class="kw">library</span>(gridExtra)
+<span class="kw">library</span>(grid)
+<span class="kw">library</span>(Hmisc)
+<span class="kw">library</span>(matrixStats)
+<span class="kw">library</span>(ggpubr)</code></pre></div>
+</div>
+<div id="importar-bases-de-datos" class="section level1">
+<h1><span class="header-section-number">2</span> Importar Bases de Datos</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos_acdivoca &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&#39;ACDI-VOCA - Base de Datos y Tabulados_F.xlsx&#39;</span>)
+<span class="co">#Ojo siempre abrir desde el dropbox de Felipe GonzÃ¡lez porque se hizo el cambio de variables chaacter a numerica desde Excel.</span>
+datos_acdivoca_num &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(<span class="kw">read_excel</span>(<span class="st">&#39;ACDI-VOCA - Base de Datos y Tabulados_F.xlsx&#39;</span>,
+                                               <span class="dt">sheet=</span><span class="dv">2</span>))
+
+datos_cede_conflicto &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(<span class="kw">read.dta13</span>(<span class="st">&quot;PANEL_CONFLICTO_Y_VIOLENCIA.dta&quot;</span>,
+                                                 <span class="dt">encoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;UTF-8&quot;</span>,
+                                                 <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>,
+                                                 <span class="dt">nonint.factors=</span><span class="ot">TRUE</span>))
+<span class="co">#Limpiar el cÃ³digo ID de la base acdivoca. Hay ciertos municipios que empiezan con un &#39;0&#39; y hay que quitarlo</span>
+
+datos_acdivoca_num<span class="op">$</span>MPIO_IK &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">startsWith</span>(<span class="kw">as.character</span>(datos_acdivoca_num<span class="op">$</span>MPIO_IK),<span class="st">&quot;0&quot;</span>),
+                                 <span class="kw">sub</span>(<span class="st">&quot;0{1}&quot;</span>,<span class="st">&quot;&quot;</span>,datos_acdivoca_num<span class="op">$</span>MPIO_IK, <span class="dt">ignore.case=</span><span class="ot">TRUE</span>),
+                                 datos_acdivoca_num<span class="op">$</span>MPIO_IK)</code></pre></div>
+<div id="limpiar-y-organizar-bases-de-datos" class="section level2">
+<h2><span class="header-section-number">2.1</span> Limpiar y organizar bases de datos</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1. Limpiar y organizar bases de datos --------------------------------------------------</span>
+
+<span class="co">#Limpiar el cÃ³digo ID de la base acdivoca. Hay ciertos municipios que empiezan con un &#39;0&#39; y hay que quitarlo</span>
+
+datos_acdivoca_num<span class="op">$</span>MPIO_IK &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">startsWith</span>(<span class="kw">as.character</span>(datos_acdivoca_num<span class="op">$</span>MPIO_IK),<span class="st">&quot;0&quot;</span>),
+                                 <span class="kw">sub</span>(<span class="st">&quot;0{1}&quot;</span>,<span class="st">&quot;&quot;</span>,datos_acdivoca_num<span class="op">$</span>MPIO_IK, <span class="dt">ignore.case=</span><span class="ot">TRUE</span>),
+                                 datos_acdivoca_num<span class="op">$</span>MPIO_IK)
+
+<span class="kw">setnames</span>(datos_acdivoca, <span class="st">&#39;MPIO_IK&#39;</span>, <span class="st">&#39;codmpio&#39;</span>) <span class="co">#Para que el merge sea mÃ¡s fÃ¡cil</span>
+<span class="kw">setnames</span>(datos_acdivoca_num, <span class="st">&#39;MPIO_IK&#39;</span>, <span class="st">&#39;codmpio&#39;</span>)
+datos_acdivoca<span class="op">$</span>codmpio &lt;-<span class="st"> </span><span class="kw">as.character</span>(datos_acdivoca<span class="op">$</span>codmpio)
+datos_acdivoca_num<span class="op">$</span>codmpio &lt;-<span class="st"> </span><span class="kw">as.character</span>(datos_acdivoca_num<span class="op">$</span>codmpio)
+datos_cede_conflicto<span class="op">$</span>codmpio &lt;-<span class="st"> </span><span class="kw">as.character</span>(datos_cede_conflicto<span class="op">$</span>codmpio)
+
+<span class="co"># 1. Meter municipio en codigo</span>
+Nombre_cod_municipio &lt;-<span class="st"> </span>datos_acdivoca_num[,<span class="kw">c</span>(<span class="st">&#39;Municipio&#39;</span>,<span class="st">&#39;codmpio&#39;</span>)]
+Nombre_cod_municipio<span class="op">$</span>codmpio &lt;-<span class="st"> </span><span class="kw">as.character</span>(Nombre_cod_municipio<span class="op">$</span>codmpio)
+<span class="co"># 2. Eliminar las filas repetidas</span>
+Nombre_cod_municipio &lt;-<span class="st"> </span>Nombre_cod_municipio[<span class="op">!</span><span class="kw">duplicated</span>(Nombre_cod_municipio),]
+conflicto_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_conflicto, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y =</span> T)
+<span class="co"># 4. Convertir ano en numero</span>
+conflicto_<span class="dv">44</span><span class="op">$</span>ano &lt;-<span class="st"> </span><span class="kw">as.Date</span>(conflicto_<span class="dv">44</span><span class="op">$</span>ano, <span class="st">&#39;%Y&#39;</span>, <span class="dt">na.rm=</span>T)</code></pre></div>
+</div>
+</div>
+<div id="transformacian-variables-importantes" class="section level1">
+<h1><span class="header-section-number">3</span> TransformaciÃ³n Variables Importantes</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pregunta p024 -- Preguntas de ReconciliaciÃ³n. Todos son Directos, se suman para sacar un indice mÃ¡s global.</span>
+datos_acdivoca_num<span class="op">$</span>p024_tot &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(p024_<span class="dv">1</span>, p024_<span class="dv">2</span>, p024_<span class="dv">3</span>, p024_<span class="dv">4</span>, p024_<span class="dv">5</span>, p024_<span class="dv">6</span>, p024_<span class="dv">7</span>, p024_<span class="dv">8</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rowSums</span>()
+              <span class="co"># Otra forma de hacerlo con data.table.</span>
+              <span class="co">#datos_acdivoca_num[ , p024_tot := rowSums(datos_acdivoca_num[,c(24:31)])]</span>
+
+<span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p024_tot) &lt;-<span class="st"> &quot;ReconciliaciÃ³n Directo&quot;</span>
+<span class="co">#Pregunta p053 -- Pregunta sobre el perdÃ³n. Solo es una entonces good</span>
+<span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p053) &lt;-<span class="st"> &quot;PerdÃ³n&quot;</span>
+
+<span class="co">#Pregunta p058 y p059. Ambas de Violencia. La segunda tiene escala invertida. La Primera no. Se hacen los arreglos necesarios para poder sumarlas.</span>
+
+datos_acdivoca_num<span class="op">$</span>p059 &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">recode</span>(datos_acdivoca_num<span class="op">$</span>p059,<span class="st">&quot;1&quot;</span>=<span class="st">&quot;5&quot;</span>,<span class="st">&quot;2&quot;</span>=<span class="st">&quot;4&quot;</span>,<span class="st">&quot;4&quot;</span>=<span class="st">&quot;2&quot;</span>,<span class="st">&quot;5&quot;</span>=<span class="st">&quot;1&quot;</span>, <span class="st">&quot;3&quot;</span>=<span class="st">&quot;3&quot;</span>))
+datos_acdivoca_num<span class="op">$</span>p058_tot &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(p058, p059) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rowSums</span>()
+<span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p058_tot) &lt;-<span class="st"> &quot;Violencia&quot;</span>
+
+<span class="co">#Pregunta p071a y p071b. Este es chÃ©vere. La diferencia entre ambos arroja un coeficiente entre -4 y 4. Un 4 representa Rencor total y un -4 representa sentimientos de culpa(?). Un 0 es neutralidad/tranquilidad/perdon</span>
+
+datos_acdivoca_num<span class="op">$</span>p071_tot &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(p071_<span class="dv">1</span>, p071_<span class="dv">2</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">as.matrix</span>(.) <span class="op">%&gt;%</span>
+<span class="st">  </span>matrixStats<span class="op">::</span><span class="kw">rowDiffs</span>()
+<span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p071_tot) &lt;-<span class="st"> &quot;Rencor-Culpa&quot;</span>
+
+
+<span class="co">#Pregunta p075_1 es de memora histÃ³rica.</span>
+
+<span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p075_<span class="dv">1</span>) &lt;-<span class="st"> &quot;Memoria HistÃ³rica&quot;</span></code></pre></div>
+</div>
+<div id="datos-agregados-acdivoca-por-municipio" class="section level1">
+<h1><span class="header-section-number">4</span> Datos Agregados ACDIVOCA: por municipio</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtp024 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(p024_tot <span class="op">~</span><span class="st"> </span>Municipio, datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+dtp053 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(p053 <span class="op">~</span><span class="st"> </span>Municipio, datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+dtp058 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(p058_tot <span class="op">~</span><span class="st"> </span>Municipio, datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+dtp071 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(p071_tot <span class="op">~</span><span class="st"> </span>Municipio, datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+dtp075 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(p075_<span class="dv">1</span> <span class="op">~</span><span class="st"> </span>Municipio, datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )</code></pre></div>
+<div id="datos-agregados-cede_violencia-por-municipio-colapsando-los-aaos" class="section level2">
+<h2><span class="header-section-number">4.1</span> Datos Agregados CEDE_Violencia: por municipio colapsando los aÃ±os</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Homicidios</span>
+homi_GA &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&#39;homi_{1}&#39;</span>, <span class="kw">names</span>(conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">grep</span>(<span class="st">&#39;_pn&#39;</span>,.,<span class="dt">value =</span> T, <span class="dt">invert =</span> T)
+conflicto_44_tidy &lt;-<span class="st"> </span><span class="kw">gather</span>(conflicto_<span class="dv">44</span>, <span class="st">&#39;Grupo_Armado&#39;</span>, <span class="st">&#39;Numero_Homicidios&#39;</span>, homi_GA)
+dthomi &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(Numero_Homicidios <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_tidy, <span class="dt">FUN=</span><span class="kw">c</span>(sum,median,mean,sd), <span class="dt">na.rm=</span>T )
+
+<span class="co">#Ataques</span>
+ataque_GA &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;tpobc_{1}&quot;</span>, <span class="kw">names</span>(conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T)
+conflicto_44_ataque &lt;-<span class="st"> </span><span class="kw">gather</span>(conflicto_<span class="dv">44</span>, <span class="dt">key=</span> <span class="st">&quot;Grupo_Armado&quot;</span>, <span class="dt">value=</span> <span class="st">&quot;Ataques_Pobl_Civil&quot;</span>, ataque_GA)
+dtataque &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(Ataques_Pobl_Civil <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_ataque, <span class="dt">FUN=</span><span class="kw">c</span>(sum,median,mean,sd), <span class="dt">na.rm=</span>T )
+
+<span class="co">#Secuestros</span>
+secuestro_GA &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;secu_{1}&quot;</span>, <span class="kw">names</span>(conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T)
+conflicto_44_secuestro &lt;-<span class="st"> </span><span class="kw">gather</span>(conflicto_<span class="dv">44</span>, <span class="dt">key=</span> <span class="st">&quot;Grupo_Armado&quot;</span>, <span class="dt">value=</span> <span class="st">&quot;Secuestros&quot;</span>, secuestro_GA)
+dtsecu &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(Secuestros <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_secuestro, <span class="dt">FUN=</span><span class="kw">c</span>(sum,median,mean,sd), <span class="dt">na.rm=</span>T )
+
+<span class="co">#Secuestros PolÃ­tcos</span>
+secuestrop_GA &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;secpo_{1}&quot;</span>, <span class="kw">names</span>(conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T)
+conflicto_44_secuestrop &lt;-<span class="st"> </span><span class="kw">gather</span>(conflicto_<span class="dv">44</span>, <span class="dt">key=</span> <span class="st">&quot;Grupo_Armado&quot;</span>, <span class="dt">value=</span> <span class="st">&quot;Secuestros_Politicos&quot;</span>, secuestrop_GA)
+dtsecup &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(Secuestros_Politicos <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_secuestrop, <span class="dt">FUN=</span><span class="kw">c</span>(sum,median, mean,sd), <span class="dt">na.rm=</span>T )
+
+<span class="co">#Desmovilizados</span>
+desmovilizados &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;desmov_{1}&quot;</span>, <span class="kw">names</span>(conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T) <span class="co">#Seleccionar variables que empiecen con                                                                      desmov_</span>
+desmovilizados &lt;-<span class="st"> </span>desmovilizados[<span class="op">-</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">7</span>)]<span class="co">#Limpiar los nombres para poder hacer el gather</span>
+conflicto_44_desmovilizados &lt;-<span class="st"> </span><span class="kw">gather</span>(conflicto_<span class="dv">44</span>, <span class="dt">key=</span><span class="st">&quot;Grupo_Armado&quot;</span>,
+                                      <span class="dt">value=</span><span class="st">&quot;Desmovilizados&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;desmov_OTRO&quot;</span>,<span class="st">&quot;desmov_FARC&quot;</span>,<span class="st">&quot;desmov_ELN&quot;</span>,
+                                                                <span class="st">&quot;desmov_AUC&quot;</span>))
+dtdemovilizados &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(Ataques_Pobl_Civil <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_ataque, <span class="dt">FUN=</span><span class="kw">c</span>(sum,median,mean,sd), <span class="dt">na.rm=</span>T )</code></pre></div>
+</div>
+</div>
+<div id="analisis-estadasticos-correlaciones-y-regresiones" class="section level1">
+<h1><span class="header-section-number">5</span> AnÃ¡lisis EstadÃ­sticos (Correlaciones y regresiones)</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Para sacar las correlaciones y las regresiones</span>
+<span class="co">#Hay dos criterios que se pueden seguir: coger la suma de las variables predictoras o la media. La predecida siempre va a ser la media porque o sino se infla.</span>
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(dthomi<span class="op">$</span>Numero_Homicidios.mean, dtataque<span class="op">$</span>Ataques_Pobl_Civil.mean, dtdemovilizados<span class="op">$</span>Ataques_Pobl_Civil.mean, dtsecu<span class="op">$</span>Secuestros.mean,dtsecup<span class="op">$</span>Secuestros_Politicos.mean, dtp024<span class="op">$</span>p024_tot.mean, dtp053<span class="op">$</span>p053.mean, dtp058<span class="op">$</span>p058_tot.mean, dtp071<span class="op">$</span>p071_tot.mean, dtp075<span class="op">$</span>p075_<span class="fl">1.</span>mean)
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Homicidios&quot;</span>,<span class="st">&quot;Ataques_Pobl_Civil&quot;</span>,<span class="st">&quot;Desmovilizados&quot;</span>,<span class="st">&quot;Secuestros&quot;</span>,<span class="st">&quot;Secuestros_Politcios&quot;</span>, <span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p024_tot),<span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p053), <span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p058_tot), <span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p071_tot),<span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p075_<span class="dv">1</span>))
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+<span class="kw">shapiro.test</span>(dtsecup<span class="op">$</span>Secuestros_Politicos.sum) <span class="co">#Todos los de CEDE son no siguen distribuciÃ³n normal. Las escalas, por el contrario sÃ­ las siguen. Toca tomar una decisiÃ³n allÃ­.</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  dtsecup$Secuestros_Politicos.sum
+## W = 0.60454, p-value = 1.15e-09</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>)</code></pre></div>
+<pre><code>##                         Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                    1.00               0.86           0.86
+## Ataques_Pobl_Civil            0.86               1.00           1.00
+## Desmovilizados                0.86               1.00           1.00
+## Secuestros                    0.87               0.89           0.89
+## Secuestros_Politcios          0.47               0.66           0.66
+## ReconciliaciÃ³n Directo      -0.09              -0.13          -0.13
+## PerdÃ³n                       0.11              -0.01          -0.01
+## Violencia                     0.18               0.28           0.28
+## Rencor-Culpa                  0.02              -0.13          -0.13
+## Memoria HistÃ³rica           -0.04              -0.03          -0.03
+##                         Secuestros Secuestros_Politcios
+## Homicidios                    0.87                 0.47
+## Ataques_Pobl_Civil            0.89                 0.66
+## Desmovilizados                0.89                 0.66
+## Secuestros                    1.00                 0.59
+## Secuestros_Politcios          0.59                 1.00
+## ReconciliaciÃ³n Directo      -0.10                -0.36
+## PerdÃ³n                       0.09                -0.01
+## Violencia                     0.04                 0.20
+## Rencor-Culpa                 -0.11                 0.02
+## Memoria HistÃ³rica           -0.11                -0.21
+##                         ReconciliaciÃ³n Directo PerdÃ³n Violencia
+## Homicidios                                -0.09    0.11      0.18
+## Ataques_Pobl_Civil                        -0.13   -0.01      0.28
+## Desmovilizados                            -0.13   -0.01      0.28
+## Secuestros                                -0.10    0.09      0.04
+## Secuestros_Politcios                      -0.36   -0.01      0.20
+## ReconciliaciÃ³n Directo                    1.00    0.09     -0.12
+## PerdÃ³n                                    0.09    1.00     -0.46
+## Violencia                                 -0.12   -0.46      1.00
+## Rencor-Culpa                              -0.24   -0.05      0.26
+## Memoria HistÃ³rica                         0.18    0.14     -0.34
+##                         Rencor-Culpa Memoria HistÃ³rica
+## Homicidios                      0.02              -0.04
+## Ataques_Pobl_Civil             -0.13              -0.03
+## Desmovilizados                 -0.13              -0.03
+## Secuestros                     -0.11              -0.11
+## Secuestros_Politcios            0.02              -0.21
+## ReconciliaciÃ³n Directo        -0.24               0.18
+## PerdÃ³n                        -0.05               0.14
+## Violencia                       0.26              -0.34
+## Rencor-Culpa                    1.00              -0.18
+## Memoria HistÃ³rica             -0.18               1.00
+## 
+## n= 44 
+## 
+## 
+## P
+##                         Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                         0.0000             0.0000        
+## Ataques_Pobl_Civil      0.0000                        0.0000        
+## Desmovilizados          0.0000     0.0000                           
+## Secuestros              0.0000     0.0000             0.0000        
+## Secuestros_Politcios    0.0013     0.0000             0.0000        
+## ReconciliaciÃ³n Directo 0.5808     0.4135             0.4135        
+## PerdÃ³n                 0.4600     0.9721             0.9721        
+## Violencia               0.2427     0.0687             0.0687        
+## Rencor-Culpa            0.8902     0.3837             0.3837        
+## Memoria HistÃ³rica      0.7852     0.8601             0.8601        
+##                         Secuestros Secuestros_Politcios
+## Homicidios              0.0000     0.0013              
+## Ataques_Pobl_Civil      0.0000     0.0000              
+## Desmovilizados          0.0000     0.0000              
+## Secuestros                         0.0000              
+## Secuestros_Politcios    0.0000                         
+## ReconciliaciÃ³n Directo 0.5033     0.0156              
+## PerdÃ³n                 0.5444     0.9319              
+## Violencia               0.7961     0.1893              
+## Rencor-Culpa            0.4931     0.9149              
+## Memoria HistÃ³rica      0.4827     0.1813              
+##                         ReconciliaciÃ³n Directo PerdÃ³n Violencia
+## Homicidios              0.5808                  0.4600  0.2427   
+## Ataques_Pobl_Civil      0.4135                  0.9721  0.0687   
+## Desmovilizados          0.4135                  0.9721  0.0687   
+## Secuestros              0.5033                  0.5444  0.7961   
+## Secuestros_Politcios    0.0156                  0.9319  0.1893   
+## ReconciliaciÃ³n Directo                         0.5506  0.4251   
+## PerdÃ³n                 0.5506                          0.0018   
+## Violencia               0.4251                  0.0018           
+## Rencor-Culpa            0.1135                  0.7347  0.0888   
+## Memoria HistÃ³rica      0.2499                  0.3727  0.0238   
+##                         Rencor-Culpa Memoria HistÃ³rica
+## Homicidios              0.8902       0.7852            
+## Ataques_Pobl_Civil      0.3837       0.8601            
+## Desmovilizados          0.3837       0.8601            
+## Secuestros              0.4931       0.4827            
+## Secuestros_Politcios    0.9149       0.1813            
+## ReconciliaciÃ³n Directo 0.1135       0.2499            
+## PerdÃ³n                 0.7347       0.3727            
+## Violencia               0.0888       0.0238            
+## Rencor-Culpa                         0.2465            
+## Memoria HistÃ³rica      0.2465</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;pearson&quot;</span>)</code></pre></div>
+<pre><code>##                         Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                    1.00               0.62           0.62
+## Ataques_Pobl_Civil            0.62               1.00           1.00
+## Desmovilizados                0.62               1.00           1.00
+## Secuestros                    0.79               0.46           0.46
+## Secuestros_Politcios          0.32               0.69           0.69
+## ReconciliaciÃ³n Directo      -0.08              -0.09          -0.09
+## PerdÃ³n                      -0.10              -0.09          -0.09
+## Violencia                     0.18               0.32           0.32
+## Rencor-Culpa                 -0.11              -0.29          -0.29
+## Memoria HistÃ³rica            0.00               0.05           0.05
+##                         Secuestros Secuestros_Politcios
+## Homicidios                    0.79                 0.32
+## Ataques_Pobl_Civil            0.46                 0.69
+## Desmovilizados                0.46                 0.69
+## Secuestros                    1.00                 0.15
+## Secuestros_Politcios          0.15                 1.00
+## ReconciliaciÃ³n Directo      -0.01                -0.18
+## PerdÃ³n                      -0.17                -0.03
+## Violencia                     0.10                 0.18
+## Rencor-Culpa                 -0.13                -0.34
+## Memoria HistÃ³rica           -0.09                 0.07
+##                         ReconciliaciÃ³n Directo PerdÃ³n Violencia
+## Homicidios                                -0.08   -0.10      0.18
+## Ataques_Pobl_Civil                        -0.09   -0.09      0.32
+## Desmovilizados                            -0.09   -0.09      0.32
+## Secuestros                                -0.01   -0.17      0.10
+## Secuestros_Politcios                      -0.18   -0.03      0.18
+## ReconciliaciÃ³n Directo                    1.00    0.08     -0.19
+## PerdÃ³n                                    0.08    1.00     -0.46
+## Violencia                                 -0.19   -0.46      1.00
+## Rencor-Culpa                              -0.13   -0.06      0.28
+## Memoria HistÃ³rica                         0.27    0.17     -0.35
+##                         Rencor-Culpa Memoria HistÃ³rica
+## Homicidios                     -0.11               0.00
+## Ataques_Pobl_Civil             -0.29               0.05
+## Desmovilizados                 -0.29               0.05
+## Secuestros                     -0.13              -0.09
+## Secuestros_Politcios           -0.34               0.07
+## ReconciliaciÃ³n Directo        -0.13               0.27
+## PerdÃ³n                        -0.06               0.17
+## Violencia                       0.28              -0.35
+## Rencor-Culpa                    1.00              -0.21
+## Memoria HistÃ³rica             -0.21               1.00
+## 
+## n= 44 
+## 
+## 
+## P
+##                         Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                         0.0000             0.0000        
+## Ataques_Pobl_Civil      0.0000                        0.0000        
+## Desmovilizados          0.0000     0.0000                           
+## Secuestros              0.0000     0.0015             0.0015        
+## Secuestros_Politcios    0.0357     0.0000             0.0000        
+## ReconciliaciÃ³n Directo 0.5908     0.5461             0.5461        
+## PerdÃ³n                 0.5305     0.5616             0.5616        
+## Violencia               0.2310     0.0318             0.0318        
+## Rencor-Culpa            0.4586     0.0570             0.0570        
+## Memoria HistÃ³rica      0.9985     0.7649             0.7649        
+##                         Secuestros Secuestros_Politcios
+## Homicidios              0.0000     0.0357              
+## Ataques_Pobl_Civil      0.0015     0.0000              
+## Desmovilizados          0.0015     0.0000              
+## Secuestros                         0.3284              
+## Secuestros_Politcios    0.3284                         
+## ReconciliaciÃ³n Directo 0.9450     0.2316              
+## PerdÃ³n                 0.2612     0.8389              
+## Violencia               0.5222     0.2526              
+## Rencor-Culpa            0.4026     0.0242              
+## Memoria HistÃ³rica      0.5414     0.6673              
+##                         ReconciliaciÃ³n Directo PerdÃ³n Violencia
+## Homicidios              0.5908                  0.5305  0.2310   
+## Ataques_Pobl_Civil      0.5461                  0.5616  0.0318   
+## Desmovilizados          0.5461                  0.5616  0.0318   
+## Secuestros              0.9450                  0.2612  0.5222   
+## Secuestros_Politcios    0.2316                  0.8389  0.2526   
+## ReconciliaciÃ³n Directo                         0.6094  0.2256   
+## PerdÃ³n                 0.6094                          0.0019   
+## Violencia               0.2256                  0.0019           
+## Rencor-Culpa            0.3832                  0.7012  0.0621   
+## Memoria HistÃ³rica      0.0761                  0.2813  0.0214   
+##                         Rencor-Culpa Memoria HistÃ³rica
+## Homicidios              0.4586       0.9985            
+## Ataques_Pobl_Civil      0.0570       0.7649            
+## Desmovilizados          0.0570       0.7649            
+## Secuestros              0.4026       0.5414            
+## Secuestros_Politcios    0.0242       0.6673            
+## ReconciliaciÃ³n Directo 0.3832       0.0761            
+## PerdÃ³n                 0.7012       0.2813            
+## Violencia               0.0621       0.0214            
+## Rencor-Culpa                         0.1771            
+## Memoria HistÃ³rica      0.1771</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">correlaciones_sum_mean &lt;-<span class="st"> </span><span class="kw">cbind</span>(dthomi<span class="op">$</span>Numero_Homicidios.sum, dtataque<span class="op">$</span>Ataques_Pobl_Civil.sum, dtdemovilizados<span class="op">$</span>Ataques_Pobl_Civil.sum, dtsecu<span class="op">$</span>Secuestros.sum,dtsecup<span class="op">$</span>Secuestros_Politicos.sum, dtp024<span class="op">$</span>p024_tot.mean, dtp053<span class="op">$</span>p053.mean, dtp058<span class="op">$</span>p058_tot.mean, dtp071<span class="op">$</span>p071_tot.mean, dtp075<span class="op">$</span>p075_<span class="fl">1.</span>mean)
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Homicidios&quot;</span>,<span class="st">&quot;Ataques_Pobl_Civil&quot;</span>,<span class="st">&quot;Desmovilizados&quot;</span>,<span class="st">&quot;Secuestros&quot;</span>,<span class="st">&quot;Secuestros_Politcios&quot;</span>, <span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p024_tot),<span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p053), <span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p058_tot), <span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p071_tot),<span class="kw">label</span>(datos_acdivoca_num<span class="op">$</span>p075_<span class="dv">1</span>))
+<span class="kw">colnames</span>(correlaciones_sum_mean) &lt;-<span class="st"> </span>nombres
+
+<span class="kw">shapiro.test</span>(dtsecup<span class="op">$</span>Secuestros_Politicos.sum) <span class="co">#Todos los de CEDE son no siguen distribuciÃ³n normal. Las escalas, por el contrario sÃ­ las siguen. Toca tomar una decisiÃ³n allÃ­.</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  dtsecup$Secuestros_Politicos.sum
+## W = 0.60454, p-value = 1.15e-09</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rcorr</span>(correlaciones_sum_mean, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>)</code></pre></div>
+<pre><code>##                         Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                    1.00               0.86           0.86
+## Ataques_Pobl_Civil            0.86               1.00           1.00
+## Desmovilizados                0.86               1.00           1.00
+## Secuestros                    0.87               0.89           0.89
+## Secuestros_Politcios          0.47               0.66           0.66
+## ReconciliaciÃ³n Directo      -0.09              -0.13          -0.13
+## PerdÃ³n                       0.11              -0.01          -0.01
+## Violencia                     0.18               0.28           0.28
+## Rencor-Culpa                  0.02              -0.13          -0.13
+## Memoria HistÃ³rica           -0.04              -0.03          -0.03
+##                         Secuestros Secuestros_Politcios
+## Homicidios                    0.87                 0.47
+## Ataques_Pobl_Civil            0.89                 0.66
+## Desmovilizados                0.89                 0.66
+## Secuestros                    1.00                 0.59
+## Secuestros_Politcios          0.59                 1.00
+## ReconciliaciÃ³n Directo      -0.10                -0.36
+## PerdÃ³n                       0.09                -0.01
+## Violencia                     0.04                 0.20
+## Rencor-Culpa                 -0.11                 0.02
+## Memoria HistÃ³rica           -0.11                -0.21
+##                         ReconciliaciÃ³n Directo PerdÃ³n Violencia
+## Homicidios                                -0.09    0.11      0.18
+## Ataques_Pobl_Civil                        -0.13   -0.01      0.28
+## Desmovilizados                            -0.13   -0.01      0.28
+## Secuestros                                -0.10    0.09      0.04
+## Secuestros_Politcios                      -0.36   -0.01      0.20
+## ReconciliaciÃ³n Directo                    1.00    0.09     -0.12
+## PerdÃ³n                                    0.09    1.00     -0.46
+## Violencia                                 -0.12   -0.46      1.00
+## Rencor-Culpa                              -0.24   -0.05      0.26
+## Memoria HistÃ³rica                         0.18    0.14     -0.34
+##                         Rencor-Culpa Memoria HistÃ³rica
+## Homicidios                      0.02              -0.04
+## Ataques_Pobl_Civil             -0.13              -0.03
+## Desmovilizados                 -0.13              -0.03
+## Secuestros                     -0.11              -0.11
+## Secuestros_Politcios            0.02              -0.21
+## ReconciliaciÃ³n Directo        -0.24               0.18
+## PerdÃ³n                        -0.05               0.14
+## Violencia                       0.26              -0.34
+## Rencor-Culpa                    1.00              -0.18
+## Memoria HistÃ³rica             -0.18               1.00
+## 
+## n= 44 
+## 
+## 
+## P
+##                         Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                         0.0000             0.0000        
+## Ataques_Pobl_Civil      0.0000                        0.0000        
+## Desmovilizados          0.0000     0.0000                           
+## Secuestros              0.0000     0.0000             0.0000        
+## Secuestros_Politcios    0.0013     0.0000             0.0000        
+## ReconciliaciÃ³n Directo 0.5808     0.4135             0.4135        
+## PerdÃ³n                 0.4600     0.9721             0.9721        
+## Violencia               0.2427     0.0687             0.0687        
+## Rencor-Culpa            0.8902     0.3837             0.3837        
+## Memoria HistÃ³rica      0.7852     0.8601             0.8601        
+##                         Secuestros Secuestros_Politcios
+## Homicidios              0.0000     0.0013              
+## Ataques_Pobl_Civil      0.0000     0.0000              
+## Desmovilizados          0.0000     0.0000              
+## Secuestros                         0.0000              
+## Secuestros_Politcios    0.0000                         
+## ReconciliaciÃ³n Directo 0.5033     0.0156              
+## PerdÃ³n                 0.5444     0.9319              
+## Violencia               0.7961     0.1893              
+## Rencor-Culpa            0.4931     0.9149              
+## Memoria HistÃ³rica      0.4827     0.1813              
+##                         ReconciliaciÃ³n Directo PerdÃ³n Violencia
+## Homicidios              0.5808                  0.4600  0.2427   
+## Ataques_Pobl_Civil      0.4135                  0.9721  0.0687   
+## Desmovilizados          0.4135                  0.9721  0.0687   
+## Secuestros              0.5033                  0.5444  0.7961   
+## Secuestros_Politcios    0.0156                  0.9319  0.1893   
+## ReconciliaciÃ³n Directo                         0.5506  0.4251   
+## PerdÃ³n                 0.5506                          0.0018   
+## Violencia               0.4251                  0.0018           
+## Rencor-Culpa            0.1135                  0.7347  0.0888   
+## Memoria HistÃ³rica      0.2499                  0.3727  0.0238   
+##                         Rencor-Culpa Memoria HistÃ³rica
+## Homicidios              0.8902       0.7852            
+## Ataques_Pobl_Civil      0.3837       0.8601            
+## Desmovilizados          0.3837       0.8601            
+## Secuestros              0.4931       0.4827            
+## Secuestros_Politcios    0.9149       0.1813            
+## ReconciliaciÃ³n Directo 0.1135       0.2499            
+## PerdÃ³n                 0.7347       0.3727            
+## Violencia               0.0888       0.0238            
+## Rencor-Culpa                         0.2465            
+## Memoria HistÃ³rica      0.2465</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rcorr</span>(correlaciones_sum_mean, <span class="dt">type=</span><span class="st">&quot;pearson&quot;</span>)</code></pre></div>
+<pre><code>##                         Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                    1.00               0.62           0.62
+## Ataques_Pobl_Civil            0.62               1.00           1.00
+## Desmovilizados                0.62               1.00           1.00
+## Secuestros                    0.79               0.46           0.46
+## Secuestros_Politcios          0.32               0.69           0.69
+## ReconciliaciÃ³n Directo      -0.08              -0.09          -0.09
+## PerdÃ³n                      -0.10              -0.09          -0.09
+## Violencia                     0.18               0.32           0.32
+## Rencor-Culpa                 -0.11              -0.29          -0.29
+## Memoria HistÃ³rica            0.00               0.05           0.05
+##                         Secuestros Secuestros_Politcios
+## Homicidios                    0.79                 0.32
+## Ataques_Pobl_Civil            0.46                 0.69
+## Desmovilizados                0.46                 0.69
+## Secuestros                    1.00                 0.15
+## Secuestros_Politcios          0.15                 1.00
+## ReconciliaciÃ³n Directo      -0.01                -0.18
+## PerdÃ³n                      -0.17                -0.03
+## Violencia                     0.10                 0.18
+## Rencor-Culpa                 -0.13                -0.34
+## Memoria HistÃ³rica           -0.09                 0.07
+##                         ReconciliaciÃ³n Directo PerdÃ³n Violencia
+## Homicidios                                -0.08   -0.10      0.18
+## Ataques_Pobl_Civil                        -0.09   -0.09      0.32
+## Desmovilizados                            -0.09   -0.09      0.32
+## Secuestros                                -0.01   -0.17      0.10
+## Secuestros_Politcios                      -0.18   -0.03      0.18
+## ReconciliaciÃ³n Directo                    1.00    0.08     -0.19
+## PerdÃ³n                                    0.08    1.00     -0.46
+## Violencia                                 -0.19   -0.46      1.00
+## Rencor-Culpa                              -0.13   -0.06      0.28
+## Memoria HistÃ³rica                         0.27    0.17     -0.35
+##                         Rencor-Culpa Memoria HistÃ³rica
+## Homicidios                     -0.11               0.00
+## Ataques_Pobl_Civil             -0.29               0.05
+## Desmovilizados                 -0.29               0.05
+## Secuestros                     -0.13              -0.09
+## Secuestros_Politcios           -0.34               0.07
+## ReconciliaciÃ³n Directo        -0.13               0.27
+## PerdÃ³n                        -0.06               0.17
+## Violencia                       0.28              -0.35
+## Rencor-Culpa                    1.00              -0.21
+## Memoria HistÃ³rica             -0.21               1.00
+## 
+## n= 44 
+## 
+## 
+## P
+##                         Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                         0.0000             0.0000        
+## Ataques_Pobl_Civil      0.0000                        0.0000        
+## Desmovilizados          0.0000     0.0000                           
+## Secuestros              0.0000     0.0015             0.0015        
+## Secuestros_Politcios    0.0357     0.0000             0.0000        
+## ReconciliaciÃ³n Directo 0.5908     0.5461             0.5461        
+## PerdÃ³n                 0.5305     0.5616             0.5616        
+## Violencia               0.2310     0.0318             0.0318        
+## Rencor-Culpa            0.4586     0.0570             0.0570        
+## Memoria HistÃ³rica      0.9985     0.7649             0.7649        
+##                         Secuestros Secuestros_Politcios
+## Homicidios              0.0000     0.0357              
+## Ataques_Pobl_Civil      0.0015     0.0000              
+## Desmovilizados          0.0015     0.0000              
+## Secuestros                         0.3284              
+## Secuestros_Politcios    0.3284                         
+## ReconciliaciÃ³n Directo 0.9450     0.2316              
+## PerdÃ³n                 0.2612     0.8389              
+## Violencia               0.5222     0.2526              
+## Rencor-Culpa            0.4026     0.0242              
+## Memoria HistÃ³rica      0.5414     0.6673              
+##                         ReconciliaciÃ³n Directo PerdÃ³n Violencia
+## Homicidios              0.5908                  0.5305  0.2310   
+## Ataques_Pobl_Civil      0.5461                  0.5616  0.0318   
+## Desmovilizados          0.5461                  0.5616  0.0318   
+## Secuestros              0.9450                  0.2612  0.5222   
+## Secuestros_Politcios    0.2316                  0.8389  0.2526   
+## ReconciliaciÃ³n Directo                         0.6094  0.2256   
+## PerdÃ³n                 0.6094                          0.0019   
+## Violencia               0.2256                  0.0019           
+## Rencor-Culpa            0.3832                  0.7012  0.0621   
+## Memoria HistÃ³rica      0.0761                  0.2813  0.0214   
+##                         Rencor-Culpa Memoria HistÃ³rica
+## Homicidios              0.4586       0.9985            
+## Ataques_Pobl_Civil      0.0570       0.7649            
+## Desmovilizados          0.0570       0.7649            
+## Secuestros              0.4026       0.5414            
+## Secuestros_Politcios    0.0242       0.6673            
+## ReconciliaciÃ³n Directo 0.3832       0.0761            
+## PerdÃ³n                 0.7012       0.2813            
+## Violencia               0.0621       0.0214            
+## Rencor-Culpa                         0.1771            
+## Memoria HistÃ³rica      0.1771</code></pre>
+</div>
+<div id="regresiones-lineales-exploratorias" class="section level1">
+<h1><span class="header-section-number">6</span> Regresiones Lineales Exploratorias</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regRecon_direct &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="st">`</span><span class="dt">ReconciliaciÃ³n Directo</span><span class="st">`</span> <span class="op">~</span><span class="st"> </span>Homicidios<span class="op">+</span>Ataques_Pobl_Civil<span class="op">+</span><span class="st">`</span><span class="dt">Desmovilizados</span><span class="st">`</span><span class="op">+</span>Secuestros<span class="op">+</span>Secuestros_Politcios, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regRecon_direct)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = `ReconciliaciÃ³n Directo` ~ Homicidios + Ataques_Pobl_Civil + 
+##     Desmovilizados + Secuestros + Secuestros_Politcios, data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.8761 -1.1058 -0.1575  0.9997  5.1149 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           27.89702    0.47109  59.218   &lt;2e-16 ***
+## Homicidios            -0.01110    0.02009  -0.552    0.584    
+## Ataques_Pobl_Civil     0.05524    0.11952   0.462    0.647    
+## Desmovilizados              NA         NA      NA       NA    
+## Secuestros             0.17950    0.50553   0.355    0.724    
+## Secuestros_Politcios -11.16934   10.74537  -1.039    0.305    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.512 on 39 degrees of freedom
+## Multiple R-squared:  0.04359,    Adjusted R-squared:  -0.05451 
+## F-statistic: 0.4443 on 4 and 39 DF,  p-value: 0.7758</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regPerdon &lt;-<span class="st"> </span><span class="kw">lm</span>(PerdÃ³n <span class="op">~</span><span class="st"> </span>Homicidios<span class="op">+</span>Ataques_Pobl_Civil<span class="op">+</span><span class="st">`</span><span class="dt">Desmovilizados</span><span class="st">`</span><span class="op">+</span>Secuestros<span class="op">+</span>Secuestros_Politcios, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regPerdon)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = PerdÃ³n ~ Homicidios + Ataques_Pobl_Civil + Desmovilizados + 
+##     Secuestros + Secuestros_Politcios, data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.54759 -0.13745  0.00727  0.16640  0.47409 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           3.823978   0.050939  75.070   &lt;2e-16 ***
+## Homicidios            0.001065   0.002173   0.490    0.627    
+## Ataques_Pobl_Civil   -0.003066   0.012924  -0.237    0.814    
+## Desmovilizados              NA         NA      NA       NA    
+## Secuestros           -0.054033   0.054663  -0.988    0.329    
+## Secuestros_Politcios  0.032572   1.161901   0.028    0.978    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2716 on 39 degrees of freedom
+## Multiple R-squared:  0.03603,    Adjusted R-squared:  -0.06284 
+## F-statistic: 0.3644 on 4 and 39 DF,  p-value: 0.8324</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia <span class="op">~</span><span class="st"> </span>Homicidios<span class="op">+</span>Ataques_Pobl_Civil<span class="op">+</span><span class="st">`</span><span class="dt">Desmovilizados</span><span class="st">`</span><span class="op">+</span>Secuestros<span class="op">+</span>Secuestros_Politcios, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regViolencia)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Violencia ~ Homicidios + Ataques_Pobl_Civil + Desmovilizados + 
+##     Secuestros + Secuestros_Politcios, data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.7676 -0.3140 -0.1167  0.2482  1.0360 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           4.639335   0.089073  52.084   &lt;2e-16 ***
+## Homicidios            0.000621   0.003799   0.163    0.871    
+## Ataques_Pobl_Civil    0.037942   0.022599   1.679    0.101    
+## Desmovilizados              NA         NA      NA       NA    
+## Secuestros           -0.046372   0.095586  -0.485    0.630    
+## Secuestros_Politcios -1.130684   2.031735  -0.557    0.581    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4749 on 39 degrees of freedom
+## Multiple R-squared:  0.1161, Adjusted R-squared:  0.02548 
+## F-statistic: 1.281 on 4 and 39 DF,  p-value: 0.294</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regRencorculpa &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="st">`</span><span class="dt">Rencor-Culpa</span><span class="st">`</span> <span class="op">~</span><span class="st"> </span>Homicidios<span class="op">+</span>Ataques_Pobl_Civil<span class="op">+</span><span class="st">`</span><span class="dt">Desmovilizados</span><span class="st">`</span><span class="op">+</span>Secuestros<span class="op">+</span>Secuestros_Politcios, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regRencorculpa)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = `Rencor-Culpa` ~ Homicidios + Ataques_Pobl_Civil + 
+##     Desmovilizados + Secuestros + Secuestros_Politcios, data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.47165 -0.10876 -0.03848  0.17737  0.33741 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          -0.239435   0.035712  -6.705 5.47e-08 ***
+## Homicidios            0.001145   0.001523   0.752    0.457    
+## Ataques_Pobl_Civil   -0.004834   0.009061  -0.534    0.597    
+## Desmovilizados              NA         NA      NA       NA    
+## Secuestros           -0.028927   0.038323  -0.755    0.455    
+## Secuestros_Politcios -1.078315   0.814586  -1.324    0.193    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1904 on 39 degrees of freedom
+## Multiple R-squared:  0.1357, Adjusted R-squared:  0.0471 
+## F-statistic: 1.531 on 4 and 39 DF,  p-value: 0.2121</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="st">`</span><span class="dt">Memoria HistÃ³rica</span><span class="st">`</span> <span class="op">~</span><span class="st"> </span>Homicidios<span class="op">+</span>Ataques_Pobl_Civil<span class="op">+</span><span class="st">`</span><span class="dt">Desmovilizados</span><span class="st">`</span><span class="op">+</span>Secuestros<span class="op">+</span>Secuestros_Politcios, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = `Memoria HistÃ³rica` ~ Homicidios + Ataques_Pobl_Civil + 
+##     Desmovilizados + Secuestros + Secuestros_Politcios, data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.79700 -0.22456  0.01515  0.22131  0.64660 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                       Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           3.327378   0.065595  50.726   &lt;2e-16 ***
+## Homicidios            0.001435   0.002798   0.513    0.611    
+## Ataques_Pobl_Civil    0.002983   0.016642   0.179    0.859    
+## Desmovilizados              NA         NA      NA       NA    
+## Secuestros           -0.064312   0.070391  -0.914    0.367    
+## Secuestros_Politcios  0.142359   1.496208   0.095    0.925    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3497 on 39 degrees of freedom
+## Multiple R-squared:  0.02609,    Adjusted R-squared:  -0.07379 
+## F-statistic: 0.2612 on 4 and 39 DF,  p-value: 0.901</code></pre>
+</div>
+<div id="analisis-no-agregados" class="section level1">
+<h1><span class="header-section-number">7</span> AnÃ¡lisis NO AGREGADOS</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a ver como cambia la correlacion de Rencor-Culpa con Homicidios en el tiempo</span>
+
+conflicto_44_tidy<span class="op">$</span>ano_num &lt;-<span class="st"> </span><span class="kw">substring</span>(conflicto_44_tidy<span class="op">$</span>ano,<span class="dv">1</span>,<span class="dv">4</span>)
+conflicto_44_tidy<span class="op">$</span>ano_num &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(conflicto_44_tidy<span class="op">$</span>ano_num)
+
+<span class="co">#Loop para hacer la correlacion por aÃ±o.</span>
+
+homicidios &lt;-<span class="st"> </span><span class="kw">c</span>()
+x &lt;-<span class="st"> </span><span class="kw">c</span>()
+y &lt;-<span class="st"> </span><span class="kw">c</span>()
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) {
+homicidios &lt;-<span class="st"> </span>conflicto_44_tidy <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(ano_num<span class="op">==</span><span class="dv">2002</span><span class="op">+</span>i) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(Numero_Homicidios, Municipio) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summaryBy</span>(Numero_Homicidios <span class="op">~</span><span class="st"> </span>Municipio, ., <span class="dt">FUN=</span><span class="kw">c</span>(sum, mean), <span class="dt">na.rm=</span>T ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(Numero_Homicidios.sum) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">as.data.frame</span>()
+
+conflicto_44_tidy<span class="op">$</span>valores_corr[i] &lt;-<span class="st"> </span><span class="kw">cor</span>(homicidios ,dfcorrelaciones<span class="op">$</span><span class="st">`</span><span class="dt">Rencor-Culpa</span><span class="st">`</span>,<span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)
+x[i] &lt;-<span class="st"> </span><span class="dv">2002</span><span class="op">+</span>i
+y[i] &lt;-<span class="st"> </span><span class="kw">cor</span>(homicidios, dfcorrelaciones<span class="op">$</span><span class="st">`</span><span class="dt">Rencor-Culpa</span><span class="st">`</span>,<span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(x,y, <span class="dt">type=</span><span class="st">&quot;b&quot;</span>, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">main=</span> <span class="st">&quot;CorrelaciÃ³n Rencor-Culpa con Homicidios en el tiempo&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;AÃ±os&quot;</span>, <span class="dt">ylab=</span> <span class="st">&quot;CorrelaciÃ³n&quot;</span>)</code></pre></div>
+<p><img src="acdivoca_analisis_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
