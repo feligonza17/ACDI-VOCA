@@ -1,0 +1,301 @@
+---
+title: 'Exploración CEDE_Violencia.proyecto acdivoca'
+author: 'Felipe González-Arango'
+date: '29 marzo 2019'
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    code_folding: show
+    toc_depth: 2
+    number_sections: true
+    theme: journal
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+
+# Instalar y cargar paquetes
+```{r message=FALSE, warning=FALSE}
+library(readstata13)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(data.table)
+library(readxl)
+library(doBy)
+library(vtable)
+library(plyr)
+library(gridExtra)
+library(grid)
+```
+
+# Importar Bases de Datos
+
+```{r message=FALSE, warning=FALSE}
+datos_acdivoca <- as.data.table(read_excel('ACDI-VOCA - Base de Datos y Tabulados_F.xlsx'))
+
+datos_cede_conflicto <- as.data.table(read.dta13("PANEL_CONFLICTO_Y_VIOLENCIA.dta",
+                                    encoding="latin1", fromEncoding="UTF-8",
+                                    convert.factors = TRUE, generate.factors = TRUE,
+                                    nonint.factors=TRUE))
+```
+
+# Limpiar y organizar bases de datos
+```{r}
+#Hacer análisis con la base de datos del 2013
+datos_cede_conflicto_2013 <- datos_cede_conflicto[ano=='2013']
+
+#Limpiar el código ID de la base acdivoca. Hay ciertos municipios que empiezan con un '0' y hay que quitarlo.
+datos_acdivoca$MPIO_IK <- ifelse(startsWith(datos_acdivoca$MPIO_IK,"0"),
+                                 sub("0{1}","",datos_acdivoca$MPIO_IK, ignore.case=TRUE),
+                                 datos_acdivoca$MPIO_IK)
+
+setnames(datos_acdivoca, 'MPIO_IK', 'codmpio') #Para que el merge sea más fácil
+datos_acdivoca$codmpio <- as.character(datos_acdivoca$codmpio)
+datos_cede_conflicto_2013$codmpio <- as.character(datos_cede_conflicto_2013$codmpio)
+datos_cede_conflicto$codmpio <- as.character(datos_cede_conflicto$codmpio)
+
+# 1. Meter municipio en codigo
+Nombre_cod_municipio <- datos_acdivoca[,c('Municipio','codmpio')]
+Nombre_cod_municipio$codmpio <- as.character(Nombre_cod_municipio$codmpio)
+# 2. Eliminar las filas repetidas
+Nombre_cod_municipio <- Nombre_cod_municipio[!duplicated(Nombre_cod_municipio),]
+# 3. Merge conflicto con 44 municipuos (Así queda con los mismos municipios del acdivoca)
+conflicto_44 <- merge(datos_cede_conflicto, Nombre_cod_municipio, by='codmpio', all.y=T)
+# 4. Convertir ano en numero
+conflicto_44$ano <- as.Date(conflicto_44$ano, '%Y')
+```
+
+# Merge
+```{r}
+#Acdivoca con Conflicto_CEDE_2013 --- por municipio
+merge_acdi_cede <- merge(datos_acdivoca,datos_cede_conflicto_2013, by= 'codmpio')
+
+#Revisar si el merge quedó bien hecho
+length(intersect(merge_acdi_cede$codmpio,datos_cede_conflicto$codmpio)) # ---> 44 municipios
+```
+
+# Análisis Homicidios
+
+## Exploración Datos, 2013-Medellín (Gráfico)
+
+```{r}
+# Nuevo data table solo de medellín
+Medellin = merge_acdi_cede[Municipio == "Medellín"]
+
+# Gráfico Homicidios FARC en 2013
+ggplot(merge_acdi_cede,
+       aes(x = Municipio, y = homi_FARC)) +
+  geom_col() +
+  labs(y='Número Homicidios', title='Homicidios FARC 2013', caption="Fuente: Ministerio de Defensa") +
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+ggsave('Numero_homicidios_FARC_2013.png', height = 8, width = 6)
+```
+
+
+## Tendencia de homicidios FARC por año por municipio
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+# Plot
+  ggplot(conflicto_44,
+       aes(x=ano, y = homi_FARC)) +
+  geom_line() +
+  facet_wrap(~Municipio) +
+    labs(y='Número Homicidios', title='Homicidios FARC 2003-2013', x= 'Año',caption="Fuente: Ministerio de Defensa") +
+    scale_x_date(date_breaks = '1 year', date_labels = '%Y',
+                 limits = c(as.Date('2003', format = '%Y'), as.Date('2013', format = '%Y'))) +
+    theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+```
+
+## Tendencia homicidios por actor (armado) por municipio
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+# Gather homicidios por grupo armado en una columna
+homi_GA <- grep('homi_{1}', names(conflicto_44), value = T) %>% grep('_pn',.,value = T, invert = T)
+# Tidy data table - homicidios de transito
+conflicto_44_tidy <- gather(conflicto_44, 'Grupo_Armado', 'Numero_Homicidios', homi_GA)
+
+# Plot sin zoom
+# Generate colors
+library(randomcoloR)
+n <- 13
+palette <- distinctColorPalette(n)
+#
+ggplot(conflicto_44_tidy,
+       aes(x=ano, y = Numero_Homicidios, color= Grupo_Armado)) +
+  geom_line() +
+  scale_color_manual(values = palette) +
+  facet_wrap(~Municipio) +
+  labs(y='Número Homicidios', title='Homicidios 2003-2013', x= 'Año', caption="Fuente: Ministerio de Defensa") +
+  scale_x_date(date_breaks = '1 year', date_labels = '%Y',
+               limits = c(as.Date('2003', format = '%Y'), as.Date('2013', format = '%Y'))) +
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+# Plot con Zoom
+ggplot(conflicto_44_tidy,
+       aes(x=ano, y = Numero_Homicidios, color= Grupo_Armado)) +
+  geom_line() +
+  scale_color_manual(values = palette) +
+  facet_wrap(~Municipio) +
+  labs(y='Número Homicidios', title='Homicidios 2003-2013', x= 'Año', caption="Fuente: Ministerio de Defensa") +
+  scale_x_date(date_breaks = '1 year', date_labels = '%Y',
+               limits = c(as.Date('2003', format = '%Y'), as.Date('2013', format = '%Y'))) +
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90)) +
+  coord_cartesian(ylim = c(0, 70))
+```
+
+
+## Descriptivos
+```{r}
+dt1 <- summaryBy(Numero_Homicidios ~ Municipio, conflicto_44_tidy, FUN=c(sum,mean,sd), na.rm=T )
+head(dt1, n=20)
+```
+
+
+# Análisis Ataques
+```{r}
+ataque_GA <- grep("tpobc_{1}", names(conflicto_44), value = T)
+conflicto_44_ataque <- gather(conflicto_44, key= "Grupo_Armado", value= "Ataques_Pobl_Civil", ataque_GA)
+```
+
+## Descriptivos
+```{r}
+dt2 <- summaryBy(Ataques_Pobl_Civil ~ Municipio, conflicto_44_ataque, FUN=c(sum,mean,sd), na.rm=T )
+head(dt2, n=20)
+```
+
+
+## Tendencia ataques por actor (armado) por municipio
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+ggplot(conflicto_44_ataque,
+       aes(x=ano, y = Ataques_Pobl_Civil, color= Grupo_Armado)) +
+  geom_line() +
+  scale_color_manual(values = palette) +
+  facet_wrap(~Municipio) +
+  labs(y='Número Ataques', title='Ataques 1993-2010', x= 'Año', caption="Fuente: Policía Nacional") +
+  coord_cartesian(ylim=c(0,20))+
+  theme_minimal()+
+  scale_x_date(date_breaks = '2 year', date_labels = '%Y',
+               limits = c(as.Date('1993', format = '%Y'), as.Date('2010', format = '%Y'))) +
+  theme(plot.title = element_text(hjust = 0.3), axis.text.x = element_text(angle=90))
+```
+
+
+# Análisis Secuestros
+```{r}
+secuestro_GA <- grep("secu_{1}", names(conflicto_44), value = T)
+conflicto_44_secuestro <- gather(conflicto_44, key= "Grupo_Armado", value= "Secuestros", secuestro_GA)
+```
+
+## Descriptivos
+```{r}
+dt3 <- summaryBy(Secuestros ~ Municipio, conflicto_44_secuestro, FUN=c(sum,mean,sd), na.rm=T )
+head(dt3, n=20)
+```
+
+## Tendencia a secuestros por actor armado por municipio
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+ggplot(conflicto_44_secuestro,
+       aes(x=ano, y = Secuestros, color= Grupo_Armado)) +
+  geom_line() +
+  scale_color_manual(values = palette) +
+  facet_wrap(~Municipio) +
+  labs(y='Número Secuestros', title='Secuestros 2003-2013', x= 'Año', caption="Fuente: Ministerio de Defensa") +
+  theme_minimal()+
+  scale_x_date(date_breaks = '1 year', date_labels = '%Y',
+               limits = c(as.Date('2003', format = '%Y'), as.Date('2013', format = '%Y'))) +
+  theme(plot.title = element_text(hjust = 0.3), axis.text.x = element_text(angle=90))+
+  coord_cartesian(ylim=c(0,20))
+
+ggplot(conflicto_44_secuestro,
+       aes(x=ano, y = Secuestros, color= Grupo_Armado)) +
+  geom_line() +
+  scale_color_manual(values = palette) +
+  facet_wrap(~Municipio) +
+  labs(y='Número Secuestros', title='Secuestros 2003-2013', x= 'Año', caption="Fuente: Ministerio de Defensa") +
+  theme_minimal()+
+  scale_x_date(date_breaks = '1 year', date_labels = '%Y',
+               limits = c(as.Date('2003', format = '%Y'), as.Date('2013', format = '%Y'))) +
+  theme(plot.title = element_text(hjust = 0.3), axis.text.x = element_text(angle=90))
+```
+
+
+# Análisis Secuestros Políticos
+```{r}
+secuestrop_GA <- grep("secpo_{1}", names(conflicto_44), value = T)
+conflicto_44_secuestrop <- gather(conflicto_44, key= "Grupo_Armado", value= "Secuestros_Politicos", secuestrop_GA)
+```
+
+
+## Descriptivos
+```{r}
+dt4 <- summaryBy(Secuestros_Politicos ~ Municipio, conflicto_44_secuestrop, FUN=c(sum,mean,sd), na.rm=T )
+head(dt4, n=20)
+```
+
+## Tendencia a secuestros por actor armado por municipio
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+ggplot(conflicto_44_secuestrop,
+       aes(x=ano, y = Secuestros_Politicos, color= Grupo_Armado)) +
+  geom_line() +
+  facet_wrap(~Municipio) +
+  labs(y='Número Secuestros', title='Secuestros Políticos 1993-2010', x= 'Año', caption="Fuente: Policía Nacional") +
+  theme_minimal()+
+  scale_x_date(date_breaks = '2 year', date_labels = '%Y',
+               limits = c(as.Date('1993', format = '%Y'), as.Date('2010', format = '%Y'))) +
+  theme(plot.title = element_text(hjust = 0.3), axis.text.x = element_text(angle=90))
+```
+
+
+# Análisis Desmovilizados
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+desmovilizados <- grep("desmov_{1}", names(conflicto_44), value = T) #Seleccionar variables que empiecen con                                                                      desmov_
+desmovilizados <- desmovilizados[-c(2,4,7)]#Limpiar los nombres para poder hacer el gather
+conflicto_44_desmovilizados <- gather(conflicto_44, key="Grupo_Armado",
+                                      value="Desmovilizados", c("desmov_OTRO","desmov_FARC","desmov_ELN",
+                                                                "desmov_AUC"))
+
+```
+
+
+## Descriptivos
+```{r}
+dt5 <- summaryBy(Desmovilizados ~ Municipio, conflicto_44_desmovilizados, FUN=c(sum,mean,sd), na.rm=T )
+head(dt5, n=20)
+```
+
+## Tendencia a secuestros por actor armado por municipio
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+ggplot(conflicto_44_desmovilizados,
+       aes(x=ano, y = Desmovilizados, color= Grupo_Armado)) +
+  geom_line() +
+  facet_wrap(~Municipio) +
+  labs(y='Desmovilizados', title='Desmovilizados 1993-2010', x= 'Año', caption="Fuente: Policía Nacional") +
+  theme_minimal()+
+  scale_x_date(date_breaks = '2 year', date_labels = '%Y',
+               limits = c(as.Date('1993', format = '%Y'), as.Date('2010', format = '%Y'))) +
+  theme(plot.title = element_text(hjust = 0.3), axis.text.x = element_text(angle=90)) +
+  coord_cartesian(ylim=c(0,150))
+
+ggplot(conflicto_44_desmovilizados,
+       aes(x=ano, y = Desmovilizados, color= Grupo_Armado)) +
+  geom_line() +
+  facet_wrap(~Municipio) +
+  labs(y='Desmovilizados', title='Desmovilizados 1993-2010', x= 'Año', caption="Fuente: Policía Nacional") +
+  theme_minimal()+
+  scale_x_date(date_breaks = '2 year', date_labels = '%Y',
+               limits = c(as.Date('1993', format = '%Y'), as.Date('2010', format = '%Y'))) +
+  theme(plot.title = element_text(hjust = 0.3), axis.text.x = element_text(angle=90)) +
+  coord_cartesian(ylim=c(0,30))
+```
+
+
+
+

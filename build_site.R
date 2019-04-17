@@ -6,3 +6,4 @@ setwd("C:/Users/felig/ACDI-VOCA")
 
 #render your sweet site. 
 rmarkdown::render_site()
+
