@@ -9,6 +9,9 @@ navbar:
     - text: "Sobre la pagina"
       icon: fa-info
       href: about.html
+    - text: "Codigo para iniciar"
+      icon: 
+      href: Merge bases.html
     - text: "Primeras Exploraciones"
       menu:
         - text: "Graficos BBDD Violencia"

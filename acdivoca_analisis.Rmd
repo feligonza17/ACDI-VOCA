@@ -1,16 +1,16 @@
 ---
 title: "Acidova_analisis"
-author: 'Felipe González-Arango'
+author: 'Felipe Gonzalez-Arango'
 date: '29 marzo 2019'
 output: 
   html_document:
-    toc: true
+    toc: TRUE
     toc_float:
-      collapsed: true
+      collapsed: TRUE
       smooth_scroll: false
     code_folding: show
     toc_depth: 2
-    number_sections: true
+    number_sections: TRUE
     theme: journal
     highlight: tango
 ---
@@ -44,7 +44,7 @@ library(ggpubr)
 ```{r message=FALSE, warning=FALSE}
 
 datos_acdivoca <- read_excel('ACDI-VOCA - Base de Datos y Tabulados_F.xlsx')
-#Ojo siempre abrir desde el dropbox de Felipe González porque se hizo el cambio de variables chaacter a numerica desde Excel.
+#Ojo siempre abrir desde el dropbox de Felipe Gonzalez porque se hizo el cambio de variables chaacter a numerica desde Excel.
 datos_acdivoca_num <- as.data.table(read_excel('ACDI-VOCA - Base de Datos y Tabulados_F.xlsx',
                                                sheet=2))
 
@@ -52,7 +52,7 @@ datos_cede_conflicto <- as.data.table(read.dta13("PANEL_CONFLICTO_Y_VIOLENCIA.dt
                                                  encoding="latin1", fromEncoding="UTF-8",
                                                  convert.factors = TRUE, generate.factors = TRUE,
                                                  nonint.factors=TRUE))
-#Limpiar el código ID de la base acdivoca. Hay ciertos municipios que empiezan con un '0' y hay que quitarlo
+#Limpiar el codigo ID de la base acdivoca. Hay ciertos municipios que empiezan con un '0' y hay que quitarlo
 
 datos_acdivoca_num$MPIO_IK <- ifelse(startsWith(as.character(datos_acdivoca_num$MPIO_IK),"0"),
                                  sub("0{1}","",datos_acdivoca_num$MPIO_IK, ignore.case=TRUE),
@@ -63,13 +63,13 @@ datos_acdivoca_num$MPIO_IK <- ifelse(startsWith(as.character(datos_acdivoca_num$
 ```{r}
 # 1. Limpiar y organizar bases de datos --------------------------------------------------
 
-#Limpiar el código ID de la base acdivoca. Hay ciertos municipios que empiezan con un '0' y hay que quitarlo
+#Limpiar el codigo ID de la base acdivoca. Hay ciertos municipios que empiezan con un '0' y hay que quitarlo
 
 datos_acdivoca_num$MPIO_IK <- ifelse(startsWith(as.character(datos_acdivoca_num$MPIO_IK),"0"),
                                  sub("0{1}","",datos_acdivoca_num$MPIO_IK, ignore.case=TRUE),
                                  datos_acdivoca_num$MPIO_IK)
 
-setnames(datos_acdivoca, 'MPIO_IK', 'codmpio') #Para que el merge sea más fácil
+setnames(datos_acdivoca, 'MPIO_IK', 'codmpio') #Para que el merge sea mas facil
 setnames(datos_acdivoca_num, 'MPIO_IK', 'codmpio')
 datos_acdivoca$codmpio <- as.character(datos_acdivoca$codmpio)
 datos_acdivoca_num$codmpio <- as.character(datos_acdivoca_num$codmpio)
@@ -87,18 +87,18 @@ conflicto_44$ano <- as.Date(conflicto_44$ano, '%Y', na.rm=T)
 
 ```
 
-# Transformación Variables Importantes
+# Transformacion Variables Importantes
 ```{r}
-# Pregunta p024 -- Preguntas de Reconciliación. Todos son Directos, se suman para sacar un indice más global.
+# Pregunta p024 -- Preguntas de Reconciliacion. Todos son Directos, se suman para sacar un indice mas global.
 datos_acdivoca_num$p024_tot <- datos_acdivoca_num %>%
   select(p024_1, p024_2, p024_3, p024_4, p024_5, p024_6, p024_7, p024_8) %>%
   rowSums()
               # Otra forma de hacerlo con data.table.
               #datos_acdivoca_num[ , p024_tot := rowSums(datos_acdivoca_num[,c(24:31)])]
 
-label(datos_acdivoca_num$p024_tot) <- "Reconciliación Directo"
-#Pregunta p053 -- Pregunta sobre el perdón. Solo es una entonces good
-label(datos_acdivoca_num$p053) <- "Perdón"
+label(datos_acdivoca_num$p024_tot) <- "Reconciliacion Directo"
+#Pregunta p053 -- Pregunta sobre el perdon. Solo es una entonces good
+label(datos_acdivoca_num$p053) <- "Perdon"
 
 #Pregunta p058 y p059. Ambas de Violencia. La segunda tiene escala invertida. La Primera no. Se hacen los arreglos necesarios para poder sumarlas.
 
@@ -108,7 +108,7 @@ datos_acdivoca_num$p058_tot <- datos_acdivoca_num %>%
   rowSums()
 label(datos_acdivoca_num$p058_tot) <- "Violencia"
 
-#Pregunta p071a y p071b. Este es chévere. La diferencia entre ambos arroja un coeficiente entre -4 y 4. Un 4 representa Rencor total y un -4 representa sentimientos de culpa(?). Un 0 es neutralidad/tranquilidad/perdon
+#Pregunta p071a y p071b. Este es chevere. La diferencia entre ambos arroja un coeficiente entre -4 y 4. Un 4 representa Rencor total y un -4 representa sentimientos de culpa(?). Un 0 es neutralidad/tranquilidad/perdon
 
 datos_acdivoca_num$p071_tot <- datos_acdivoca_num %>%
   select(p071_1, p071_2) %>%
@@ -117,9 +117,9 @@ datos_acdivoca_num$p071_tot <- datos_acdivoca_num %>%
 label(datos_acdivoca_num$p071_tot) <- "Rencor-Culpa"
 
 
-#Pregunta p075_1 es de memora histórica.
+#Pregunta p075_1 es de memora historica.
 
-label(datos_acdivoca_num$p075_1) <- "Memoria Histórica"
+label(datos_acdivoca_num$p075_1) <- "Memoria Historica"
 ```
 
 #Datos Agregados ACDIVOCA: por municipio
@@ -150,7 +150,7 @@ secuestro_GA <- grep("secu_{1}", names(conflicto_44), value = T)
 conflicto_44_secuestro <- gather(conflicto_44, key= "Grupo_Armado", value= "Secuestros", secuestro_GA)
 dtsecu <- summaryBy(Secuestros ~ Municipio, conflicto_44_secuestro, FUN=c(sum,median,mean,sd), na.rm=T )
 
-#Secuestros Polítcos
+#Secuestros Politcos
 secuestrop_GA <- grep("secpo_{1}", names(conflicto_44), value = T)
 conflicto_44_secuestrop <- gather(conflicto_44, key= "Grupo_Armado", value= "Secuestros_Politicos", secuestrop_GA)
 dtsecup <- summaryBy(Secuestros_Politicos ~ Municipio, conflicto_44_secuestrop, FUN=c(sum,median, mean,sd), na.rm=T )
@@ -165,7 +165,7 @@ dtdemovilizados <- summaryBy(Ataques_Pobl_Civil ~ Municipio, conflicto_44_ataque
 
 ```
 
-#Análisis Estadísticos  (Correlaciones y regresiones)
+#Analisis Estadisticos  (Correlaciones y regresiones)
 ```{r}
 #Para sacar las correlaciones y las regresiones
 #Hay dos criterios que se pueden seguir: coger la suma de las variables predictoras o la media. La predecida siempre va a ser la media porque o sino se infla.
@@ -173,7 +173,7 @@ dtdemovilizados <- summaryBy(Ataques_Pobl_Civil ~ Municipio, conflicto_44_ataque
 correlaciones <- cbind(dthomi$Numero_Homicidios.mean, dtataque$Ataques_Pobl_Civil.mean, dtdemovilizados$Ataques_Pobl_Civil.mean, dtsecu$Secuestros.mean,dtsecup$Secuestros_Politicos.mean, dtp024$p024_tot.mean, dtp053$p053.mean, dtp058$p058_tot.mean, dtp071$p071_tot.mean, dtp075$p075_1.mean)
 nombres <- c("Homicidios","Ataques_Pobl_Civil","Desmovilizados","Secuestros","Secuestros_Politcios", label(datos_acdivoca_num$p024_tot),label(datos_acdivoca_num$p053), label(datos_acdivoca_num$p058_tot), label(datos_acdivoca_num$p071_tot),label(datos_acdivoca_num$p075_1))
 colnames(correlaciones) <- nombres
-shapiro.test(dtsecup$Secuestros_Politicos.sum) #Todos los de CEDE son no siguen distribución normal. Las escalas, por el contrario sí las siguen. Toca tomar una decisión allí.
+shapiro.test(dtsecup$Secuestros_Politicos.sum) #Todos los de CEDE son no siguen distribucion normal. Las escalas, por el contrario si las siguen. Toca tomar una decision alli.
 rcorr(correlaciones, type="spearman")
 ```
 
@@ -187,7 +187,7 @@ correlaciones_sum_mean <- cbind(dthomi$Numero_Homicidios.sum, dtataque$Ataques_P
 nombres <- c("Homicidios","Ataques_Pobl_Civil","Desmovilizados","Secuestros","Secuestros_Politcios", label(datos_acdivoca_num$p024_tot),label(datos_acdivoca_num$p053), label(datos_acdivoca_num$p058_tot), label(datos_acdivoca_num$p071_tot),label(datos_acdivoca_num$p075_1))
 colnames(correlaciones_sum_mean) <- nombres
 
-shapiro.test(dtsecup$Secuestros_Politicos.sum) #Todos los de CEDE son no siguen distribución normal. Las escalas, por el contrario sí las siguen. Toca tomar una decisión allí.
+shapiro.test(dtsecup$Secuestros_Politicos.sum) #Todos los de CEDE son no siguen distribucion normal. Las escalas, por el contrario si las siguen. Toca tomar una decision alli.
 
 rcorr(correlaciones_sum_mean, type="spearman")
 rcorr(correlaciones_sum_mean, type="pearson")
@@ -197,10 +197,10 @@ rcorr(correlaciones_sum_mean, type="pearson")
 # Regresiones Lineales Exploratorias
 ```{r}
 dfcorrelaciones <- as.data.frame(correlaciones)
-regRecon_direct <- lm(`Reconciliación Directo` ~ Homicidios+Ataques_Pobl_Civil+`Desmovilizados`+Secuestros+Secuestros_Politcios, data=dfcorrelaciones)
+regRecon_direct <- lm(`Reconciliacion Directo` ~ Homicidios+Ataques_Pobl_Civil+`Desmovilizados`+Secuestros+Secuestros_Politcios, data=dfcorrelaciones)
 summary(regRecon_direct)
 
-regPerdon <- lm(Perdón ~ Homicidios+Ataques_Pobl_Civil+`Desmovilizados`+Secuestros+Secuestros_Politcios, data=dfcorrelaciones)
+regPerdon <- lm(Perdon ~ Homicidios+Ataques_Pobl_Civil+`Desmovilizados`+Secuestros+Secuestros_Politcios, data=dfcorrelaciones)
 summary(regPerdon)
 
 regViolencia <- lm(Violencia ~ Homicidios+Ataques_Pobl_Civil+`Desmovilizados`+Secuestros+Secuestros_Politcios, data=dfcorrelaciones)
@@ -209,11 +209,11 @@ summary(regViolencia)
 regRencorculpa <- lm(`Rencor-Culpa` ~ Homicidios+Ataques_Pobl_Civil+`Desmovilizados`+Secuestros+Secuestros_Politcios, data=dfcorrelaciones)
 summary(regRencorculpa)
 
-regMemoria <- lm(`Memoria Histórica` ~ Homicidios+Ataques_Pobl_Civil+`Desmovilizados`+Secuestros+Secuestros_Politcios, data=dfcorrelaciones)
+regMemoria <- lm(`Memoria Historica` ~ Homicidios+Ataques_Pobl_Civil+`Desmovilizados`+Secuestros+Secuestros_Politcios, data=dfcorrelaciones)
 summary(regMemoria)
 ```
 
-#Análisis NO AGREGADOS
+#Analisis NO AGREGADOS
 ```{r}
 #Vamos a ver como cambia la correlacion de Rencor-Culpa con Homicidios en el tiempo
 
@@ -240,6 +240,6 @@ y[i] <- cor(homicidios, dfcorrelaciones$`Rencor-Culpa`,method = "spearman")
 ```
 
 ```{r}
-plot(x,y, type="b", col="blue", main= "Correlación Rencor-Culpa con Homicidios en el tiempo", xlab="Años", ylab= "Correlación")
+plot(x,y, type="b", col="blue", main= "Correlacion Rencor-Culpa con Homicidios en el tiempo", xlab="Años", ylab= "Correlacion")
 ```
 

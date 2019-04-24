@@ -1,4 +1,8 @@
 ---
 title: "Proyecto ACDI/VOCA"
 ---
-Aquí va la descripción
+Proyecto de Juan Camilo Cardenas con ACDIVOCA.
+
+La idea de esta pagina es tener el codigo y sus respectivos resultados en un lugar comun y de facil acceso. Habran ventanas en donde estar el codigo con sus resultados.
+
+
