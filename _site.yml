@@ -11,7 +11,7 @@ navbar:
       href: about.html
     - text: "Codigo para iniciar"
       icon: 
-      href: Merge bases.html
+      href: Merge_bases.html
     - text: "Primeras Exploraciones"
       menu:
         - text: "Graficos BBDD Violencia"

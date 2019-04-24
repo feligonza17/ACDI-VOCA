@@ -9,100 +9,36 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Felipe Gonzalez Arango" />
 
 
-<title>Merge Bases</title>
+<title></title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
-
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css" data-origin="pandoc">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-pre, code { background-color: #f8f8f8; }
-code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code > span.dt { color: #204a87; } /* DataType */
-code > span.dv { color: #0000cf; } /* DecVal */
-code > span.bn { color: #0000cf; } /* BaseN */
-code > span.fl { color: #0000cf; } /* Float */
-code > span.ch { color: #4e9a06; } /* Char */
-code > span.st { color: #4e9a06; } /* String */
-code > span.co { color: #8f5902; font-style: italic; } /* Comment */
-code > span.ot { color: #8f5902; } /* Other */
-code > span.al { color: #ef2929; } /* Alert */
-code > span.fu { color: #000000; } /* Function */
-code > span.er { color: #a40000; font-weight: bold; } /* Error */
-code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #000000; } /* Constant */
-code > span.sc { color: #000000; } /* SpecialChar */
-code > span.vs { color: #4e9a06; } /* VerbatimString */
-code > span.ss { color: #4e9a06; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #000000; } /* Variable */
-code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code > span.ex { } /* Extension */
-code > span.at { color: #c4a000; } /* Attribute */
-code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
-</style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
-  }
-})();
-</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
 
 
 <style type="text/css">
@@ -167,33 +103,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 61px;
+  padding-top: 54px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h2 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h3 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h4 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h5 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h6 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .dropdown-submenu {
   position: relative;
@@ -321,6 +257,408 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-info"></span>
+     
+    Sobre la pagina
+  </a>
+</li>
+<li>
+  <a href="Merge_bases.html">Codigo para iniciar</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Primeras Exploraciones
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Exploracion_CEDE_Violencia_ACDIVOCA.html">
+        <span class="fa fa-user-secret"></span>
+         
+        Graficos BBDD Violencia
+      </a>
+    </li>
+    <li>
+      <a href="acdivoca_analisis.html">Analisis Descriptivos</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exploraciones avanzadas
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Violencia</li>
+    <li class="dropdown-header">Gobierno</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    More
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Heading 1</li>
+    <li>
+      <a href="page-a.html">Page A</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+
+</div>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<p><meta charset="utf-8" /> <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> <meta name="generator" content="pandoc" /></p>
+<p><meta name="author" content="Felipe Gonzalez Arango" /></p>
+<title>
+Merge Bases
+</title>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" /> <link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<p><link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" /> <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" /></p>
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+<!-- tabsets -->
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "î‰™";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "î‰™";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+<!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
@@ -329,9 +667,6 @@ $(document).ready(function () {
   window.initializeCodeFolding("show" === "show");
 });
 </script>
-
-
-
 <script>
 $(document).ready(function ()  {
 
@@ -358,7 +693,6 @@ $(document).ready(function ()  {
     var toc = $("#TOC").tocify(options).data("toc-tocify");
 });
 </script>
-
 <style type="text/css">
 
 #TOC {
@@ -416,139 +750,136 @@ div.tocify {
 
 
 </style>
-
-
-
 </head>
-
 <body>
-
-
 <div class="container-fluid main-container">
-
-
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
-</div>
-</div>
 
+</div>
+</div>
 <div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
-
-
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-    Home
-  </a>
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+<div class="container">
+<pre><code>&lt;div class=&quot;navbar-header&quot;&gt;
+  &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#navbar&quot;&gt;
+    &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+    &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+    &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;a class=&quot;navbar-brand&quot; href=&quot;index.html&quot;&gt;Proyecto ACDI/VOCA&lt;/a&gt;
+&lt;/div&gt;
+&lt;div id=&quot;navbar&quot; class=&quot;navbar-collapse collapse&quot;&gt;
+  &lt;ul class=&quot;nav navbar-nav&quot;&gt;
+    &lt;li&gt;</code></pre>
+<p><a href="index.html"> <span class="fa fa-home"></span></p>
+<pre><code>Home</code></pre>
+</a>
 </li>
 <li>
-  <a href="about.html">
-    <span class="fa fa-info"></span>
-     
-    Sobre la pagina
-  </a>
+<p><a href="about.html"> <span class="fa fa-info"></span></p>
+<pre><code>Sobre la pagina</code></pre>
+</a>
 </li>
 <li>
-  <a href="Merge bases.html">Codigo para iniciar</a>
+<a href="Merge bases.html">Codigo para iniciar</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Primeras Exploraciones
+<p><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Primeras Exploraciones</p>
+<pre><code>&lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;</code></pre>
+</a>
+<ul class="dropdown-menu" role="menu">
+<pre><code>&lt;li&gt;
+  &lt;a href=&quot;Exploracion_CEDE_Violencia_ACDIVOCA.html&quot;&gt;
+    &lt;span class=&quot;fa fa-user-secret&quot;&gt;&lt;/span&gt;
      
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="Exploracion_CEDE_Violencia_ACDIVOCA.html">
-        <span class="fa fa-user-secret"></span>
-         
-        Graficos BBDD Violencia
-      </a>
-    </li>
-    <li>
-      <a href="acdivoca_analisis.html">Analisis Descriptivos</a>
-    </li>
-  </ul>
+    Graficos BBDD Violencia
+  &lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;
+  &lt;a href=&quot;acdivoca_analisis.html&quot;&gt;Analisis Descriptivos&lt;/a&gt;
+&lt;/li&gt;</code></pre>
+</ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Exploraciones avanzadas
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Violencia</li>
-    <li class="dropdown-header">Gobierno</li>
-  </ul>
+<p><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Exploraciones avanzadas</p>
+<pre><code>&lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;</code></pre>
+</a>
+<ul class="dropdown-menu" role="menu">
+<pre><code>&lt;li class=&quot;dropdown-header&quot;&gt;Violencia&lt;/li&gt;
+&lt;li class=&quot;dropdown-header&quot;&gt;Gobierno&lt;/li&gt;</code></pre>
+</ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-gear"></span>
-     
-    More
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Heading 1</li>
-    <li>
-      <a href="page-a.html">Page A</a>
-    </li>
-  </ul>
+<p><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <span class="fa fa-gear"></span></p>
+<pre><code>More
+ 
+&lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;</code></pre>
+</a>
+<ul class="dropdown-menu" role="menu">
+<pre><code>&lt;li class=&quot;dropdown-header&quot;&gt;Heading 1&lt;/li&gt;
+&lt;li&gt;
+  &lt;a href=&quot;page-a.html&quot;&gt;Page A&lt;/a&gt;
+&lt;/li&gt;</code></pre>
+</ul>
 </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div><!--/.container -->
-</div><!--/.navbar -->
-
-<div class="fluid-row" id="header">
-
+<pre><code>  &lt;/ul&gt;
+  &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
+    
+  &lt;/ul&gt;
+&lt;/div&gt;&lt;!--/.nav-collapse --&gt;</code></pre>
+</div>
+<!--/.container -->
+</div>
+<!--/.navbar -->
+<div id="header" class="fluid-row">
 <div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span>Code</span> <span class="caret"></span>
+</button>
 <ul class="dropdown-menu" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li>
+<a id="rmd-show-all-code" href="#">Show All Code</a>
+</li>
+<li>
+<a id="rmd-hide-all-code" href="#">Hide All Code</a>
+</li>
 </ul>
 </div>
-
-
-
-<h1 class="title toc-ignore">Merge Bases</h1>
-<h4 class="author">Felipe Gonzalez Arango</h4>
-<h4 class="date">23 de abril de 2019</h4>
-
+<h1 class="title toc-ignore">
+Merge Bases
+</h1>
+<h4 class="author">
+Felipe Gonzalez Arango
+</h4>
+<h4 class="date">
+23 de abril de 2019
+</h4>
 </div>
-
-
-<p>Objetivo de este documento</p>
-<p>Esta pagina tiene dos objetivos. El primero de ellos es importar las bases de datos y hacer los merge necesarios para sus analisis.</p>
-<p>El segundo es crear los items importantes del cuestionario de reconcialiacion del ACDIVOCA.</p>
+<p>
+Objetivo de este documento
+</p>
+<p>
+Esta pagina tiene dos objetivos. El primero de ellos es importar las bases de datos y hacer los merge necesarios para sus analisis.
+</p>
+<p>
+El segundo es crear los items importantes del cuestionario de reconcialiacion del ACDIVOCA.
+</p>
 <div id="preparar-environment-para-el-analisis" class="section level1">
-<h1><span class="header-section-number">1</span> Preparar environment para el analisis</h1>
-<p>Script para organizar las bases de datos con las que vamos a trabajar en el proyecto (aqui se hace merge de las bases CEDE con el acdivoca y se definen las variables importantes)</p>
+<h1>
+<span class="header-section-number">1</span> Preparar environment para el analisis
+</h1>
+<p>
+Script para organizar las bases de datos con las que vamos a trabajar en el proyecto (aqui se hace merge de las bases CEDE con el acdivoca y se definen las variables importantes)
+</p>
 <div id="cargar-paquetes" class="section level2">
-<h2><span class="header-section-number">1.1</span> Cargar paquetes</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readstata13)
+<h2>
+<span class="header-section-number">1.1</span> Cargar paquetes
+</h2>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readstata13)
 <span class="kw">library</span>(tidyr)
 <span class="kw">library</span>(dplyr)
 <span class="kw">library</span>(ggplot2)
@@ -560,11 +891,15 @@ div.tocify {
 <span class="kw">library</span>(gridExtra)
 <span class="kw">library</span>(grid)
 <span class="kw">library</span>(purrr)
-<span class="kw">library</span>(psych)</code></pre></div>
+<span class="kw">library</span>(psych)</code></pre>
+</div>
 </div>
 <div id="importar-bases-de-datos" class="section level2">
-<h2><span class="header-section-number">1.2</span> Importar bases de datos</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Set Working Directory</span>
+<h2>
+<span class="header-section-number">1.2</span> Importar bases de datos
+</h2>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Set Working Directory</span>
 <span class="kw">setwd</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo&quot;</span>)
 <span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 
@@ -573,7 +908,7 @@ div.tocify {
 <span class="co">#Importar datos ACDIVOCA</span>
 datos_acdivoca &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&#39;ACDI-VOCA - Base de Datos y Tabulados_F.xlsx&#39;</span>)
 
-<span class="co">#Ojo siempre abrir desde el dropbox de Felipe GonzÃ¡lez porque se hizo el cambio de variables chaacter a numerica desde Excel.</span>
+<span class="co">#Ojo siempre abrir desde el dropbox de Felipe GonzÃƒÂ¡lez porque se hizo el cambio de variables chaacter a numerica desde Excel.</span>
 datos_acdivoca_num &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(
   <span class="kw">read_excel</span>(<span class="st">&#39;ACDI-VOCA - Base de Datos y Tabulados_F.xlsx&#39;</span>,<span class="dt">sheet=</span><span class="dv">2</span>))
 <span class="co">#Importar datos CEDE</span>
@@ -600,27 +935,47 @@ datos_cede_gobierno &lt;-<span class="st">  </span><span class="kw">read.dta13</
 datos_cede_tierras &lt;-<span class="st">  </span><span class="kw">read.dta13</span>(<span class="st">&quot;PANEL_AGRICULTURA_Y_TIERRA.dta&quot;</span>,
                                   <span class="dt">encoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;UTF-8&quot;</span>,
                                   <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>,
-                                  <span class="dt">nonint.factors=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p>Aqui revisamos, por encima, el numero de municipios que tiene cada base de datos</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Contar municipios dentro de las bases</span>
-<span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_generales<span class="op">$</span>codmpio)) <span class="co"># --&gt; 1122 municipios</span></code></pre></div>
+                                  <span class="dt">nonint.factors=</span><span class="ot">TRUE</span>)</code></pre>
+</div>
+<p>
+Aqui revisamos, por encima, el numero de municipios que tiene cada base de datos
+</p>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Contar municipios dentro de las bases</span>
+<span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_generales<span class="op">$</span>codmpio)) <span class="co"># --&gt; 1122 municipios</span></code></pre>
+</div>
 <pre><code>## [1] 1122</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_conflicto<span class="op">$</span>codmpio)) <span class="co"># --&gt; 1123 municipios</span></code></pre></div>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_conflicto<span class="op">$</span>codmpio)) <span class="co"># --&gt; 1123 municipios</span></code></pre>
+</div>
 <pre><code>## [1] 1123</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_educacion<span class="op">$</span>codmpio)) <span class="co"># --&gt; 1122 municipios</span></code></pre></div>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_educacion<span class="op">$</span>codmpio)) <span class="co"># --&gt; 1122 municipios</span></code></pre>
+</div>
 <pre><code>## [1] 1122</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_gobierno<span class="op">$</span>codmpio)) <span class="co"># ---&gt; 1123 municipios</span></code></pre></div>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_gobierno<span class="op">$</span>codmpio)) <span class="co"># ---&gt; 1123 municipios</span></code></pre>
+</div>
 <pre><code>## [1] 1123</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_salud<span class="op">$</span>codmpio)) <span class="co"># ---&gt; 1258 municipios</span></code></pre></div>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_salud<span class="op">$</span>codmpio)) <span class="co"># ---&gt; 1258 municipios</span></code></pre>
+</div>
 <pre><code>## [1] 1258</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_tierras<span class="op">$</span>codmpio)) <span class="co"># ---&gt; 1126 municipios</span></code></pre></div>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_tierras<span class="op">$</span>codmpio)) <span class="co"># ---&gt; 1126 municipios</span></code></pre>
+</div>
 <pre><code>## [1] 1126</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_acdivoca<span class="op">$</span>MPIO_IK))       <span class="co"># --&gt; 44 municipios</span></code></pre></div>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_acdivoca<span class="op">$</span>MPIO_IK))       <span class="co"># --&gt; 44 municipios</span></code></pre>
+</div>
 <pre><code>## [1] 44</code></pre>
 </div>
 <div id="limpiar-y-organizar-bases-de-datos" class="section level2">
-<h2><span class="header-section-number">1.3</span> Limpiar y organizar bases de datos</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Limpiar el cÃ³digo ID de la base acdivoca. Hay ciertos municipios que empiezan con un &#39;0&#39; y hay que quitarlo.  </span>
+<h2>
+<span class="header-section-number">1.3</span> Limpiar y organizar bases de datos
+</h2>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Limpiar el cÃƒÂ³digo ID de la base acdivoca. Hay ciertos municipios que empiezan con un &#39;0&#39; y hay que quitarlo.  </span>
 datos_acdivoca<span class="op">$</span>MPIO_IK &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">startsWith</span>(datos_acdivoca<span class="op">$</span>MPIO_IK,<span class="st">&quot;0&quot;</span>),    
                                  <span class="kw">sub</span>(<span class="st">&quot;0{1}&quot;</span>,<span class="st">&quot;&quot;</span>,datos_acdivoca<span class="op">$</span>MPIO_IK, 
                                      <span class="dt">ignore.case=</span><span class="ot">TRUE</span>), 
@@ -628,20 +983,26 @@ datos_acdivoca<span class="op">$</span>MPIO_IK &lt;-<span class="st"> </span><sp
 datos_acdivoca_num<span class="op">$</span>MPIO_IK &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">startsWith</span>(<span class="kw">as.character</span>(datos_acdivoca_num<span class="op">$</span>MPIO_IK),<span class="st">&quot;0&quot;</span>),
                                      <span class="kw">sub</span>(<span class="st">&quot;0{1}&quot;</span>,<span class="st">&quot;&quot;</span>,datos_acdivoca_num<span class="op">$</span>MPIO_IK, <span class="dt">ignore.case=</span><span class="ot">TRUE</span>),
                                      datos_acdivoca_num<span class="op">$</span>MPIO_IK)
-<span class="kw">setnames</span>(datos_acdivoca, <span class="st">&#39;MPIO_IK&#39;</span>, <span class="st">&#39;codmpio&#39;</span>) <span class="co">#Para que el merge sea mÃ¡s fÃ¡cil   </span>
+<span class="kw">setnames</span>(datos_acdivoca, <span class="st">&#39;MPIO_IK&#39;</span>, <span class="st">&#39;codmpio&#39;</span>) <span class="co">#Para que el merge sea mÃƒÂ¡s fÃƒÂ¡cil   </span>
 <span class="kw">setnames</span>(datos_acdivoca_num, <span class="st">&#39;MPIO_IK&#39;</span>, <span class="st">&#39;codmpio&#39;</span>)
 <span class="co"># Meter municipio en codigo </span>
 Nombre_cod_municipio &lt;-<span class="st"> </span>datos_acdivoca[,<span class="kw">c</span>(<span class="st">&#39;Municipio&#39;</span>,<span class="st">&#39;codmpio&#39;</span>)]   
 Nombre_cod_municipio &lt;-<span class="st"> </span>datos_acdivoca_num[,<span class="kw">c</span>(<span class="st">&#39;Municipio&#39;</span>,<span class="st">&#39;codmpio&#39;</span>)]
 Nombre_cod_municipio<span class="op">$</span>codmpio &lt;-<span class="st"> </span><span class="kw">as.character</span>(Nombre_cod_municipio<span class="op">$</span>codmpio)
 <span class="co">#Eliminar las filas repetidas   </span>
-Nombre_cod_municipio &lt;-<span class="st"> </span>Nombre_cod_municipio[<span class="op">!</span><span class="kw">duplicated</span>(Nombre_cod_municipio),]</code></pre></div>
+Nombre_cod_municipio &lt;-<span class="st"> </span>Nombre_cod_municipio[<span class="op">!</span><span class="kw">duplicated</span>(Nombre_cod_municipio),]</code></pre>
+</div>
 </div>
 </div>
 <div id="merge" class="section level1">
-<h1><span class="header-section-number">2</span> Merge</h1>
-<p>Aqui hacemos el merge de las bases de datos. Mas especificamente, vamos a reducir las bases de datos del CEDE para que solo tengan los 44 municipios que tienen los datos del ACDIVOCA. El resto de municipios los podemos obviar.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Merge CONFLICTO con 44 municipuos (Asi queda con los mismos municipios del acdivoca)   </span>
+<h1>
+<span class="header-section-number">2</span> Merge
+</h1>
+<p>
+Aqui hacemos el merge de las bases de datos. Mas especificamente, vamos a reducir las bases de datos del CEDE para que solo tengan los 44 municipios que tienen los datos del ACDIVOCA. El resto de municipios los podemos obviar.
+</p>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Merge CONFLICTO con 44 municipuos (Asi queda con los mismos municipios del acdivoca)   </span>
 cede_conflicto_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_conflicto, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
 <span class="co">#Merge EDUCACIOON con 44 municipuos (Asi queda con los mismos municipios del acdivoca)</span>
 cede_educacion_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_educacion, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
@@ -656,12 +1017,18 @@ cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span clas
 
 <span class="co"># Convertir ano en numero</span>
 cede_conflicto_<span class="dv">44</span><span class="op">$</span>ano &lt;-<span class="st"> </span><span class="kw">as.Date</span>(cede_conflicto_<span class="dv">44</span><span class="op">$</span>ano, <span class="st">&#39;%Y&#39;</span>, <span class="dt">na.rm=</span>T)
-cede_general_<span class="dv">44</span><span class="op">$</span>ano &lt;-<span class="st"> </span><span class="kw">as.Date</span>(cede_general_<span class="dv">44</span><span class="op">$</span>ano, <span class="st">&#39;%Y&#39;</span>, <span class="dt">na.rm=</span>T)</code></pre></div>
+cede_general_<span class="dv">44</span><span class="op">$</span>ano &lt;-<span class="st"> </span><span class="kw">as.Date</span>(cede_general_<span class="dv">44</span><span class="op">$</span>ano, <span class="st">&#39;%Y&#39;</span>, <span class="dt">na.rm=</span>T)</code></pre>
+</div>
 </div>
 <div id="items-acdivoca" class="section level1">
-<h1><span class="header-section-number">3</span> Items ACDI/VOCA</h1>
-<p>Primero recodificamos los valores para que la respuesta “Totalmente en desacuerdo” tome el valor -2, la respuesta “En desacuerdo” tome el valor -1 y asi sucesivamente hasta que la respuesta “Totalmente de acuerdo” tome el valor 2.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Recodificar valores de los Ã­tems para que sean mÃ¡s interpretables (cÃ³digo para los no invertidos y los invertidos) (el 1 es -2; el 2 es 1; el 3 es 0; el 4 es 1 y el 5 es 2)</span>
+<h1>
+<span class="header-section-number">3</span> Items ACDI/VOCA
+</h1>
+<p>
+Primero recodificamos los valores para que la respuesta â€œTotalmente en desacuerdoâ€ tome el valor -2, la respuesta â€œEn desacuerdoâ€ tome el valor -1 y asi sucesivamente hasta que la respuesta â€œTotalmente de acuerdoâ€ tome el valor 2.
+</p>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Recodificar valores de los ÃƒÂ­tems para que sean mÃƒÂ¡s interpretables (cÃƒÂ³digo para los no invertidos y los invertidos) (el 1 es -2; el 2 es 1; el 3 es 0; el 4 es 1 y el 5 es 2)</span>
 datos_acdivoca_num<span class="op">$</span>memoria &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p075_<span class="dv">1</span> 
 datos_acdivoca_num &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">c</span>(<span class="st">&quot;p024_1&quot;</span>, <span class="st">&quot;p024_2&quot;</span>, <span class="st">&quot;p024_3&quot;</span>, <span class="st">&quot;p024_4&quot;</span>, <span class="st">&quot;p024_5&quot;</span>, 
@@ -669,71 +1036,114 @@ datos_acdivoca_num &lt;-<span class="st"> </span>datos_acdivoca_num <span class=
               <span class="st">&quot;p058&quot;</span>, <span class="st">&quot;memoria&quot;</span>), 
             recode, <span class="st">&quot;1&quot;</span>=<span class="op">-</span><span class="dv">2</span>, <span class="st">&quot;2&quot;</span>=<span class="op">-</span><span class="dv">1</span>,<span class="st">&quot;4&quot;</span>=<span class="dv">1</span>,<span class="st">&quot;5&quot;</span>=<span class="dv">2</span>,<span class="st">&quot;3&quot;</span>=<span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">c</span>(<span class="st">&quot;p059&quot;</span>), recode, <span class="st">&quot;1&quot;</span>=<span class="dv">2</span>,<span class="st">&quot;2&quot;</span>=<span class="dv">1</span>,
-                                <span class="st">&quot;4&quot;</span>=<span class="op">-</span><span class="dv">1</span>,<span class="st">&quot;5&quot;</span>=<span class="op">-</span><span class="dv">2</span>, <span class="st">&quot;3&quot;</span>=<span class="dv">0</span>)</code></pre></div>
+                                <span class="st">&quot;4&quot;</span>=<span class="op">-</span><span class="dv">1</span>,<span class="st">&quot;5&quot;</span>=<span class="op">-</span><span class="dv">2</span>, <span class="st">&quot;3&quot;</span>=<span class="dv">0</span>)</code></pre>
+</div>
 <div id="reconciliacion" class="section level2">
-<h2><span class="header-section-number">3.1</span> Reconciliacion</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pregunta p024 -- Preguntas de Reconciliacion. Todos son Directos, se suman para sacar un indice mÃ¡s global.</span>
+<h2>
+<span class="header-section-number">3.1</span> Reconciliacion
+</h2>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pregunta p024 -- Preguntas de Reconciliacion. Todos son Directos, se suman para sacar un indice mÃƒÂ¡s global.</span>
 datos_acdivoca_num<span class="op">$</span>reconciliacion &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(p024_<span class="dv">1</span>, p024_<span class="dv">2</span>, p024_<span class="dv">3</span>, p024_<span class="dv">4</span>, p024_<span class="dv">5</span>, p024_<span class="dv">6</span>, p024_<span class="dv">7</span>, p024_<span class="dv">8</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">rowSums</span>()</code></pre></div>
+<span class="st">  </span><span class="kw">rowSums</span>()</code></pre>
+</div>
 </div>
 <div id="disculpas" class="section level2">
-<h2><span class="header-section-number">3.2</span> Disculpas</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p053 -- Pregunta sobre las disculpas. Solo es una entonces good</span>
-datos_acdivoca_num<span class="op">$</span>disculpas &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p053</code></pre></div>
+<h2>
+<span class="header-section-number">3.2</span> Disculpas
+</h2>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p053 -- Pregunta sobre las disculpas. Solo es una entonces good</span>
+datos_acdivoca_num<span class="op">$</span>disculpas &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p053</code></pre>
+</div>
 </div>
 <div id="violencia" class="section level2">
-<h2><span class="header-section-number">3.3</span> Violencia</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p058 y p059. Ambas de Violencia. La segunda tiene escala invertida. La Primera no. Se hacen los arreglos necesarios para poder sumarlas.</span>
+<h2>
+<span class="header-section-number">3.3</span> Violencia
+</h2>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p058 y p059. Ambas de Violencia. La segunda tiene escala invertida. La Primera no. Se hacen los arreglos necesarios para poder sumarlas.</span>
 
 datos_acdivoca_num<span class="op">$</span>violencia &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(p058, p059) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">rowSums</span>()</code></pre></div>
+<span class="st">  </span><span class="kw">rowSums</span>()</code></pre>
+</div>
 </div>
 <div id="rencor" class="section level2">
-<h2><span class="header-section-number">3.4</span> Rencor</h2>
-<p>Este indice es interesante. Se hace una formula para sacar un indice entre 0 y 15. Un valor bajito representa una persona con mucho rencor mientras que un valor alto representa a una persona con culpa. La formula es la siguiente:</p>
-<p><span class="math inline">\(Rencor = \frac{Otro_{i}}{Uno_{i}} \times \frac{(Otro_{i}+Uno_{i})}{2}\)</span></p>
-<p>AsÃ­: <span class="math inline">\(0 &lt; Rencor &lt; 15\)</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p071a y p071b. Este es chevere. Indice de rencor. Se hace una formula para hablar de la &quot;gravedad&quot; del rencor. Un valor alto indica alta culpa, un valor bajo indica rencor. </span>
+<h2>
+<span class="header-section-number">3.4</span> Rencor
+</h2>
+<p>
+Este indice es interesante. Se hace una formula para sacar un indice entre 0 y 15. Un valor bajito representa una persona con mucho rencor mientras que un valor alto representa a una persona con culpa. La formula es la siguiente:
+</p>
+<p>
+<span class="math inline"><span class="math inline">\(Rencor = \frac{Otro_{i}}{Uno_{i}} \times \frac{(Otro_{i}+Uno_{i})}{2}\)</span></span>
+</p>
+<p>
+AsÃƒÂ­: <span class="math inline"><span class="math inline">\(0 &amp;lt; Rencor &amp;lt; 15\)</span></span>
+</p>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p071a y p071b. Este es chevere. Indice de rencor. Se hace una formula para hablar de la &quot;gravedad&quot; del rencor. Un valor alto indica alta culpa, un valor bajo indica rencor. </span>
 
 datos_acdivoca_num<span class="op">$</span>rencor &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(p071_<span class="dv">1</span>, p071_<span class="dv">2</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">rencor=</span>(p071_<span class="dv">2</span><span class="op">/</span>p071_<span class="dv">1</span>)<span class="op">*</span>((p071_<span class="dv">1</span><span class="op">+</span>p071_<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(rencor) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">as.matrix</span>(<span class="kw">sapply</span>(., as.numeric)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">as.numeric</span>()</code></pre></div>
+<span class="st">  </span><span class="kw">as.numeric</span>()</code></pre>
+</div>
 </div>
 <div id="memoria-historica" class="section level2">
-<h2><span class="header-section-number">3.5</span> Memoria Historica</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p075_1 es de memora historica.</span>
+<h2>
+<span class="header-section-number">3.5</span> Memoria Historica
+</h2>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p075_1 es de memora historica.</span>
 
-datos_acdivoca_num<span class="op">$</span>memoria &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p075_<span class="dv">1</span> </code></pre></div>
+datos_acdivoca_num<span class="op">$</span>memoria &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p075_<span class="dv">1</span> </code></pre>
+</div>
 </div>
 <div id="item-de-memoria-historica-con-expectativas-bicchieri" class="section level2">
-<h2><span class="header-section-number">3.6</span> Item de memoria historica con expectativas (Bicchieri)</h2>
-<p>Este item tiene la misma formula que la del indice de rencor solo que se hace con las preguntas de memoria historica. La formula es la misma.</p>
-<p><span class="math inline">\(Memoria_{Bicchieri} = \frac{Otro_{i}}{Uno_{i}} \times \frac{(Otro_{i}+Uno_{i})}{2}\)</span></p>
-<p>Asi: <span class="math inline">\(0 &lt; Memoria_{Bicchieri} &lt; 15\)</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#indice de memoria histÃ³rica y expectativas cf. Bicchieri.</span>
+<h2>
+<span class="header-section-number">3.6</span> Item de memoria historica con expectativas (Bicchieri)
+</h2>
+<p>
+Este item tiene la misma formula que la del indice de rencor solo que se hace con las preguntas de memoria historica. La formula es la misma.
+</p>
+<p>
+<span class="math inline"><span class="math inline">\(Memoria_{Bicchieri} = \frac{Otro_{i}}{Uno_{i}} \times \frac{(Otro_{i}+Uno_{i})}{2}\)</span></span>
+</p>
+<p>
+Asi: <span class="math inline"><span class="math inline">\(0 &amp;lt; Memoria_{Bicchieri} &amp;lt; 15\)</span></span>
+</p>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#indice de memoria histÃƒÂ³rica y expectativas cf. Bicchieri.</span>
 
 datos_acdivoca_num<span class="op">$</span>memoria_expectativa &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(p075_<span class="dv">1</span>, p075_<span class="dv">2</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">memoria_expectativa=</span>(p075_<span class="dv">2</span><span class="op">/</span>p075_<span class="dv">1</span>)<span class="op">*</span>((p075_<span class="dv">1</span><span class="op">+</span>p075_<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(memoria_expectativa) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">as.matrix</span>(<span class="kw">sapply</span>(., as.numeric)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">as.numeric</span>()</code></pre></div>
+<span class="st">  </span><span class="kw">as.numeric</span>()</code></pre>
+</div>
 </div>
 </div>
 <div id="estadisticos-de-los-items-creados" class="section level1">
-<h1><span class="header-section-number">4</span> Estadisticos de los items creados</h1>
-<p>Aqui exponemos las estadisticas descriptivas de los items que se acaban de crear</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Otra forma de ver los estadisticos </span>
+<h1>
+<span class="header-section-number">4</span> Estadisticos de los items creados
+</h1>
+<p>
+Aqui exponemos las estadisticas descriptivas de los items que se acaban de crear
+</p>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Otra forma de ver los estadisticos </span>
 datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(memoria, reconciliacion, disculpas, 
          violencia, rencor, memoria_expectativa) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">describe</span>(<span class="dt">fast =</span> T) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">print</span>()</code></pre></div>
+<span class="st">  </span><span class="kw">print</span>()</code></pre>
+</div>
 <pre><code>##                     vars     n  mean   sd   min max range   se
 ## memoria                1 11966  3.33 1.08   1.0   5   4.0 0.01
 ## reconciliacion         2 11966  3.41 6.22 -16.0  16  32.0 0.06
@@ -743,31 +1153,65 @@ datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
 ## memoria_expectativa    6 11966  3.38 1.25   0.6  15  14.4 0.01</code></pre>
 </div>
 <div id="merge-con-base-de-datos-cede-general" class="section level1">
-<h1><span class="header-section-number">5</span> MERGE con base de datos CEDE general</h1>
-<p>Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (aÃ±o, pib, poblacion, etc.)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a limpiar un poco la base general para que el merge sea mÃ¡s fÃ¡cil de entender</span>
+<h1>
+<span class="header-section-number">5</span> MERGE con base de datos CEDE general
+</h1>
+<p>
+Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (aÃƒÂ±o, pib, poblacion, etc.)
+</p>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a limpiar un poco la base general para que el merge sea mÃƒÂ¡s fÃƒÂ¡cil de entender</span>
 cede_general_<span class="dv">44</span> &lt;-<span class="st"> </span>cede_general_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(Municipio)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#Quitar variable que tienen las otras bases</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">ano_base_general=</span>ano) <span class="co">#Renombrar la variable aÃ±o asociada con la base general</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">ano_base_general=</span>ano) <span class="co">#Renombrar la variable aÃƒÂ±o asociada con la base general</span>
 
 <span class="co">#Merge con las bases</span>
 cede_conflicto_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_conflicto_<span class="dv">44</span>, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&quot;codmpio&quot;</span>)
 cede_educacion_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_educacion, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
 cede_gobierno_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_gobierno, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
 cede_salud_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_salud, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
-cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_tierras, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)</code></pre></div>
-<p>Por ultimo limpiamos las variables que ya no se vuelven a utilizar</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Limpiar environment</span>
+cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_tierras, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)</code></pre>
+</div>
+<p>
+Por ultimo limpiamos las variables que ya no se vuelven a utilizar
+</p>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Limpiar environment</span>
 
 <span class="kw">rm</span>(datos_cede_conflicto,datos_cede_educacion,
    datos_cede_generales,datos_cede_gobierno,
-   datos_cede_salud,datos_cede_tierras, cede_general_<span class="dv">44</span>)</code></pre></div>
+   datos_cede_salud,datos_cede_tierras, cede_general_<span class="dv">44</span>)</code></pre>
 </div>
+</div>
+</div>
+</div>
+</div>
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+</html>
 
 
 
-</div>
-</div>
 
 </div>
 
