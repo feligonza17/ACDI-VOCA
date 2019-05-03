@@ -727,60 +727,13 @@ datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
          violencia, rencor, memoria_expectativa) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">describe</span>(<span class="dt">fast =</span> T) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">print</span>()</code></pre></div>
-<pre><code>## . 
-## 
-##  6  Variables      11966  Observations
-## ---------------------------------------------------------------------------
-## memoria 
-##        n  missing distinct     Info     Mean      Gmd 
-##    11966        0        5    0.918    3.331    1.187 
-##                                         
-## Value          1     2     3     4     5
-## Frequency    665  2260  2934  4658  1449
-## Proportion 0.056 0.189 0.245 0.389 0.121
-## ---------------------------------------------------------------------------
-## reconciliacion 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##    11966        0       33    0.988    3.407    6.861       -8       -5 
-##      .25      .50      .75      .90      .95 
-##        0        4        8        9       13 
-## 
-## lowest : -16 -15 -14 -13 -12, highest:  12  13  14  15  16
-## ---------------------------------------------------------------------------
-## disculpas 
-##        n  missing distinct     Info     Mean      Gmd 
-##    11966        0        5    0.885   0.8022    1.066 
-##                                         
-## Value         -2    -1     0     1     2
-## Frequency    436   934  2186  5415  2995
-## Proportion 0.036 0.078 0.183 0.453 0.250
-## ---------------------------------------------------------------------------
-## violencia 
-##        n  missing distinct     Info     Mean      Gmd 
-##    11966        0        9    0.956   -1.227    1.628 
-##                                                                 
-## Value         -4    -3    -2    -1     0     1     2     3     4
-## Frequency    554  2107  2679  2316  3246   733   225    76    30
-## Proportion 0.046 0.176 0.224 0.194 0.271 0.061 0.019 0.006 0.003
-## ---------------------------------------------------------------------------
-## rencor 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##    11966        0       23    0.928    3.672    1.105    1.667    2.400 
-##      .25      .50      .75      .90      .95 
-##    3.000    4.000    4.000    5.000    5.000 
-## 
-## lowest :  0.6000000  0.6250000  0.6666667  0.7500000  1.0000000
-## highest:  6.0000000  6.6666667  8.7500000 10.0000000 15.0000000
-## ---------------------------------------------------------------------------
-## memoria_expectativa 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##    11966        0       23    0.971    3.375    1.303    1.500    2.000 
-##      .25      .50      .75      .90      .95 
-##    2.625    3.000    4.000    5.000    5.000 
-## 
-## lowest :  0.6000000  0.6250000  0.6666667  0.7500000  1.0000000
-## highest:  6.0000000  6.6666667  8.7500000 10.0000000 15.0000000
-## ---------------------------------------------------------------------------</code></pre>
+<pre><code>##                     vars     n  mean   sd   min max range   se
+## memoria                1 11966  3.33 1.08   1.0   5   4.0 0.01
+## reconciliacion         2 11966  3.41 6.22 -16.0  16  32.0 0.06
+## disculpas              3 11966  0.80 1.02  -2.0   2   4.0 0.01
+## violencia              4 11966 -1.23 1.46  -4.0   4   8.0 0.01
+## rencor                 5 11966  3.67 1.06   0.6  15  14.4 0.01
+## memoria_expectativa    6 11966  3.38 1.25   0.6  15  14.4 0.01</code></pre>
 </div>
 <div id="merge-con-base-de-datos-cede-general" class="section level1">
 <h1><span class="header-section-number">5</span> MERGE con base de datos CEDE general</h1>
