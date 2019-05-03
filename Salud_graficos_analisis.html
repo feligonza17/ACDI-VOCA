@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Felipe Gonzalez-Arango" />
+
+
+<title>Salud: Graficos y analisis</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="Merge_bases.html">Codigo para iniciar</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exploraciones
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Violencia_graficos_analisis.html">
+        <span class="fa fa-bomb"></span>
+         
+        Violencia
+      </a>
+    </li>
+    <li>
+      <a href="Gobierno_graficos_analisis.html">
+        <span class="fa fa-user-secret"></span>
+         
+        Gobierno
+      </a>
+    </li>
+    <li>
+      <a href="Salud_graficos_analisis.html">Salud</a>
+    </li>
+    <li class="dropdown-header">Educacion</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    More
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Exploraciones Viejas</li>
+    <li>
+      <a href="Exploracion_CEDE_Violencia_ACDIVOCA.html">Violencia y graficos</a>
+    </li>
+    <li>
+      <a href="acdivoca_analisis.html">Violencia y estadistica</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Salud: Graficos y analisis</h1>
+<h4 class="author">Felipe Gonzalez-Arango</h4>
+<h4 class="date">2 de mayo de 2019</h4>
+
+</div>
+
+
+<div id="setup" class="section level1">
+<h1><span class="header-section-number">1</span> Setup</h1>
+<p>Con este codigo se importan todas las bases de datos y todos los paquetes necesarios.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ANTES DE CORRER, Â¡CORRER LA PESTANA &quot;CODIGO PARA ARRANCAR TODO&quot;!</span>
+
+<span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
+
+
+<span class="co">#Cargar paquetes</span>
+<span class="kw">library</span>(readstata13)
+<span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(data.table)
+<span class="kw">library</span>(readxl)
+<span class="kw">library</span>(doBy)
+<span class="kw">library</span>(vtable)
+<span class="kw">library</span>(plyr)
+<span class="kw">library</span>(gridExtra)
+<span class="kw">library</span>(grid)
+<span class="kw">library</span>(purrr)
+<span class="kw">library</span>(psych)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(psych)
+<span class="kw">library</span>(Hmisc)
+<span class="kw">library</span>(matrixStats)
+<span class="kw">library</span>(ggpubr)
+<span class="kw">library</span>(vtable)
+<span class="kw">library</span>(ggthemes)</code></pre></div>
+</div>
+<div id="graficos-variables-importantes-y-algunos-descriptivos" class="section level1">
+<h1><span class="header-section-number">2</span> Graficos variables importantes y algunos descriptivos</h1>
+<p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
+<div id="analisis-tasa-mortalidad-infantil-tmi" class="section level2">
+<h2><span class="header-section-number">2.1</span> Analisis Tasa Mortalidad Infantil (TMI)</h2>
+<div id="graficos" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_salud_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> TMI)) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Tasa Mortalidad Infantil&#39;</span>, <span class="dt">title=</span><span class="st">&#39;TMI de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Ano&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DANE - Estadisticas Vitales&quot;</span>) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2005</span><span class="op">:</span><span class="dv">2015</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>TMI[<span class="kw">which.min</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>TMI)],
+                         cede_salud_<span class="dv">44</span><span class="op">$</span>TMI[<span class="kw">which.max</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>TMI)]))</code></pre></div>
+<p><img src="Salud_graficos_analisis_files/figure-html/unnamed-chunk-2-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Descriptivos</h3>
+<div id="agregados" class="section level4">
+<h4><span class="header-section-number">2.1.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_TMI &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(TMI <span class="op">~</span><span class="st"> </span>municipio, cede_salud_<span class="dv">44</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+<span class="kw">print</span>(descrip_TMI)</code></pre></div>
+<pre><code>##                 municipio   TMI.sum  TMI.mean    TMI.sd
+## 1                   Albán  5068.996 18.432714 2.4424713
+## 2               Algarrobo  7290.719 26.511704 1.5793595
+## 3                Apartadó  3678.568 13.376610 1.1463498
+## 4                  Arauca  7255.538 26.383773 3.3272112
+## 5               Arauquita  7048.405 25.630562 2.3785369
+## 6            Bogotá, D.C.  3607.565 13.118418 0.8506194
+## 7                  Bojaya 13335.136 48.491404 4.9864437
+## 8                 Briceño  7109.820 25.853889 1.7882519
+## 9            Buenaventura  8157.367 29.663154 1.7914457
+## 10                   Cali  2573.445  9.357983 1.1083553
+## 11              Cartagena  4349.467 15.816245 1.4436693
+## 12   Cartagena del Chairá  6475.036 23.545587 1.1090631
+## 13              Chaparral  6641.544 24.151068 2.6623346
+## 14                Ciénaga  4150.912 15.094226 1.5591415
+## 15                 Cúcuta  3091.144 11.240525 1.0391511
+## 16               El Tambo  6654.798 24.199267 2.8173045
+## 17               El Tarra  7120.188 25.891593 2.9150783
+## 18              Florencia  4186.684 15.224304 1.9075572
+## 19                Inírida  9501.409 34.550579 3.9282531
+## 20                Ituango  7455.107 27.109480 3.1644628
+## 21                 Maicao  7636.245 27.768164 3.4470786
+## 22               Medellín  3583.332 13.030297 1.0800461
+## 23                Mesetas  5919.369 21.524978 1.7910271
+## 24              Moniquirá  3787.810 13.773855 1.6529129
+## 25            Piedecuesta  2987.839 10.864870 1.2586155
+## 26            Puerto Asís  4206.827 15.297551 1.5008991
+## 27          Puerto Gaitán 16361.117 59.494969 2.5762718
+## 28          Puerto Guzmán  5546.210 20.168036 1.6518563
+## 29            Puerto Rico  8426.813 30.642957 2.0427149
+## 30                 Quibdó 11281.398 41.023266 5.9668492
+## 31              Rioblanco  8278.436 30.103405 3.1561157
+## 32                Sahagún  5623.991 20.450877 2.1834292
+## 33             San Carlos  4758.368 17.303155 0.9357805
+## 34   San Pedro de Cartago  6019.765 21.890054 2.0271529
+## 35 San Vicente del Caguán  6126.169 22.276977 2.9643503
+## 36            Santa Marta  3871.506 14.078203 1.4219012
+## 37                Soledad  4263.088 15.502137 1.2953000
+## 38                   Tibú  6023.160 21.902400 1.0718124
+## 39                Tocaima  3684.060 13.396581 1.0453858
+## 40                  Turbo  6348.390 23.085055 1.8261099
+## 41                 Uribia 14329.240 52.106326 2.9037217
+## 42          Villavicencio  6120.222 22.255352 2.2515408
+## 43           Vistahermosa  9503.860 34.559490 3.1500174
+## 44                  Yopal  4954.386 18.015950 1.3395631</code></pre>
+</div>
+<div id="delta" class="section level4">
+<h4><span class="header-section-number">2.1.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_TMI_5antes &lt;-<span class="st"> </span>cede_salud_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2005-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_TMI_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(TMI <span class="op">~</span><span class="st"> </span>municipio, descrip_TMI_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_TMI_5despues &lt;-<span class="st"> </span>cede_salud_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2010-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_TMI_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(TMI <span class="op">~</span><span class="st"> </span>municipio, descrip_TMI_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Descriptivos de esos anos. </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_TMI_mean &lt;-<span class="st"> </span>descrip_TMI_5antes<span class="op">$</span>TMI.mean <span class="op">-</span>descrip_TMI_5despues<span class="op">$</span>TMI.mean
+diff_TMI_sd &lt;-<span class="st"> </span>descrip_TMI_5antes<span class="op">$</span>TMI.sd <span class="op">-</span>descrip_TMI_5despues<span class="op">$</span>TMI.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_TMI_mean)</code></pre></div>
+<pre><code>##  [1]  5.506029  4.138251  2.139458  7.471699  5.808763  1.979480  8.906911
+##  [8]  3.755444  2.259060  2.748438  2.928260  3.067709  6.161650  3.596703
+## [15]  2.340846  6.813612  7.170496  4.206532 10.330727  7.437144  7.168039
+## [22]  1.945346  4.529048  4.285520  3.341285  3.247388  4.081067  4.246321
+## [29]  3.583494 15.352814  7.552509  4.714071  1.867059  4.981882  6.136651
+## [36]  3.311954  2.559299  1.820721  1.925523  4.382879  3.748083  5.140226
+## [43]  5.743123  3.326911</code></pre>
+</div>
+</div>
+</div>
+<div id="analisis-necesidades-basicas-insatisfechas-nbi" class="section level2">
+<h2><span class="header-section-number">2.2</span> Analisis Necesidades Basicas Insatisfechas (NBI)</h2>
+<div id="graficos-1" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<p>Cuidado el grafico es enganoso, analizar con cautela</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#GRAFICO ENGANOSO NO PONER CUIDADO</span>
+
+<span class="co">#Arreglamos la variable ano porque solo hay 4 anos en los que el indice esta reportado</span>
+cede_salud_<span class="dv">44</span><span class="op">$</span>ano_nbi &lt;-<span class="st"> </span>cede_salud_<span class="dv">44</span><span class="op">$</span>ano 
+cede_salud_<span class="dv">44</span><span class="op">$</span>ano_nbi &lt;-<span class="st"> </span><span class="kw">ordered</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano_nbi, <span class="dt">levels=</span><span class="kw">c</span>(<span class="dv">1993</span>,<span class="dv">1995</span>,<span class="dv">2000</span>,<span class="dv">2005</span>))
+
+cede_salud_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">as.factor</span>(ano), <span class="dt">y =</span> nbi)) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Necesidades Basicas Insatisfechas&#39;</span>, <span class="dt">title=</span><span class="st">&#39;nbi de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DANE - Estadisticas Vitales&quot;</span>) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim=</span><span class="kw">c</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>nbi[<span class="kw">which.min</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>nbi)],
+                         cede_salud_<span class="dv">44</span><span class="op">$</span>nbi[<span class="kw">which.max</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>nbi)]))</code></pre></div>
+<p><img src="Salud_graficos_analisis_files/figure-html/unnamed-chunk-6-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-1" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Descriptivos</h3>
+<div id="agregados-1" class="section level4">
+<h4><span class="header-section-number">2.2.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_nbi &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(nbi <span class="op">~</span><span class="st"> </span>municipio, cede_salud_<span class="dv">44</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+<span class="kw">print</span>(descrip_nbi)</code></pre></div>
+<pre><code>##                 municipio  nbi.sum nbi.mean       nbi.sd
+## 1                   Albán 6966.022 73.32654 23.386393546
+## 2               Algarrobo 2456.607 64.64754  0.002493508
+## 3                Apartadó 3669.348 38.62472 13.854142251
+## 4                  Arauca 3571.769 37.59757  4.020686343
+## 5               Arauquita 4800.508 50.53167  9.832716518
+## 6            Bogotá, D.C. 1245.336 13.10880  3.414495611
+## 7                  Bojaya 8234.125 86.67500  7.891594074
+## 8                 Briceño 5995.522 63.11076  7.601163561
+## 9            Buenaventura 3234.334 34.04562  2.638919957
+## 10                   Cali 1511.086 15.90617  4.157784096
+## 11              Cartagena 2727.745 28.71311  2.904417066
+## 12   Cartagena del Chairá 6261.285 65.90826 12.141276825
+## 13              Chaparral 4821.767 50.75544  3.396420522
+## 14                Ciénaga 4565.644 48.05941  3.767588028
+## 15                 Cúcuta 2509.271 26.41337  3.146514711
+## 16               El Tambo 5615.965 59.11542  6.173984412
+## 17               El Tarra 7603.188 80.03355  5.902813083
+## 18              Florencia 2887.404 30.39372  3.892266297
+## 19                Inírida 7882.636 82.97511 20.961832498
+## 20                Ituango 6666.914 70.17804  5.344943637
+## 21                 Maicao 5595.822 58.90339  8.765906119
+## 22               Medellín 1267.824 13.34552  1.706235533
+## 23                Mesetas 7840.665 82.53332 14.610049246
+## 24              Moniquirá 3216.483 33.85771  4.845589635
+## 25            Piedecuesta 1666.877 17.54608  3.831298964
+## 26            Puerto Asís 5316.311 55.96117 21.349162474
+## 27          Puerto Gaitán 6766.659 71.22799  4.895536189
+## 28          Puerto Guzmán 9408.864 99.04067  1.928837078
+## 29            Puerto Rico 8525.784 89.74509  8.421015212
+## 30                 Quibdó 8021.207 84.43376  4.152464194
+## 31              Rioblanco 6278.789 66.09252  1.848046708
+## 32                Sahagún 5699.718 59.99703  5.352998897
+## 33             San Carlos 4077.577 42.92186  9.922012554
+## 34   San Pedro de Cartago 5940.256 62.52902  4.823579096
+## 35 San Vicente del Caguán 6850.387 72.10934 15.122958709
+## 36            Santa Marta 3120.193 32.84414  3.155876323
+## 37                Soledad 2093.938 22.04145  2.361005261
+## 38                   Tibú 5880.004 61.89478  4.949795834
+## 39                Tocaima 3428.313 36.08750  3.481221846
+## 40                  Turbo 6379.845 67.15626  2.468672233
+## 41                 Uribia 9339.755 98.31321  1.854414474
+## 42          Villavicencio 1991.080 20.95874  3.532051065
+## 43           Vistahermosa 6413.784 67.51352 11.612101957
+## 44                  Yopal 2978.526 31.35291  6.404686791</code></pre>
+</div>
+<div id="delta-1" class="section level4">
+<h4><span class="header-section-number">2.2.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_nbi_5antes &lt;-<span class="st"> </span>cede_salud_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2001-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_nbi_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(nbi <span class="op">~</span><span class="st"> </span>municipio, descrip_nbi_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_nbi_5despues &lt;-<span class="st"> </span>cede_salud_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2011-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_nbi_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(nbi <span class="op">~</span><span class="st"> </span>municipio, descrip_nbi_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Descriptivos de esos anos. </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_nbi_mean &lt;-<span class="st"> </span>descrip_nbi_5antes<span class="op">$</span>nbi.mean <span class="op">-</span>descrip_nbi_5despues<span class="op">$</span>nbi.mean
+<span class="co">#OBSERVE QUE DIO VALORES DE 0 PORQUE NO HAY DIFERENCIA PORQUE SOLO HAY 4 ANOS DE DATOS. OJO SOLO UTILIZAR VALORES EN BRUTO. </span>
+
+diff_nbi_sd &lt;-<span class="st"> </span>descrip_nbi_5antes<span class="op">$</span>nbi.sd <span class="op">-</span>descrip_nbi_5despues<span class="op">$</span>nbi.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_nbi_mean)</code></pre></div>
+<pre><code>##  [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+## [36] 0 0 0 0 0 0 0 0 0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(diff_nbi_sd)</code></pre></div>
+<pre><code>##  [1] 1.246344e-01 3.679011e-05 7.383362e-02 2.142766e-02 5.240202e-02
+##  [6] 1.819705e-02 4.205709e-02 4.050929e-02 1.406374e-02 2.215830e-02
+## [11] 1.547866e-02 6.470515e-02 1.810072e-02 2.007881e-02 1.676889e-02
+## [16] 3.290334e-02 3.145818e-02 2.074326e-02 1.117130e-01 2.848509e-02
+## [21] 4.671661e-02 9.093132e-03 7.786211e-02 2.582386e-02 2.041835e-02
+## [26] 1.137772e-01 2.609004e-02 1.027945e-02 4.487857e-02 2.212995e-02
+## [31] 9.848894e-03 2.852802e-02 5.287791e-02 2.570656e-02 8.059559e-02
+## [36] 1.681878e-02 1.258263e-02 2.637921e-02 1.855266e-02 1.315643e-02
+## [41] 9.882830e-03 1.882355e-02 6.188499e-02 3.413284e-02</code></pre>
+</div>
+</div>
+</div>
+<div id="analisis-prestadoras-de-servicio" class="section level2">
+<h2><span class="header-section-number">2.3</span> Analisis prestadoras de servicio</h2>
+<p>Esta variable es el numero de prestadoras de servicio de salud publica. ***</p>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<div id="graficos-2" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Graficos</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+a &lt;-<span class="st">  </span><span class="kw">c</span>()
+cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
+cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(cede_salud_<span class="dv">44</span>)){
+  <span class="cf">if</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano[i]<span class="op">==</span>cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general[i]){
+    a &lt;-<span class="st"> </span><span class="kw">c</span>(a,i)
+  }
+}
+
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+
+cede_salud_44_eq &lt;-<span class="st"> </span>cede_salud_<span class="dv">44</span>[a,]
+
+cede_salud_44_eq &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">prestadores_cienmil=</span>(prestadores<span class="op">/</span>pobl_tot)<span class="op">*</span><span class="dv">100000</span>)</code></pre></div>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> prestadores_cienmil)) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Tasa Mortalidad Infantil&#39;</span>, <span class="dt">title=</span><span class="st">&#39;prestadores de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DANE - Estadisticas Vitales&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2010</span><span class="op">:</span><span class="dv">2016</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>prestadores[<span class="kw">which.min</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>prestadores)],
+                         cede_salud_<span class="dv">44</span><span class="op">$</span>prestadores[<span class="kw">which.max</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>prestadores)]))</code></pre></div>
+<p><img src="Salud_graficos_analisis_files/figure-html/unnamed-chunk-11-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-2" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Descriptivos</h3>
+<div id="agregados-2" class="section level4">
+<h4><span class="header-section-number">2.3.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_prestadores_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(prestadores_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_salud_44_eq, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+<span class="kw">print</span>(descrip_prestadores_cienmil)</code></pre></div>
+<pre><code>##                 municipio prestadores_cienmil.sum prestadores_cienmil.mean
+## 1                   Albán               32.495594                4.6422276
+## 2               Algarrobo               56.449752                8.0642503
+## 3                Apartadó                1.898731                0.6329103
+## 4                  Arauca               29.301230                4.1858900
+## 5               Arauquita                0.000000                      NaN
+## 6            Bogotá, D.C.                5.158473                0.7369248
+## 7                  Bojaya                0.000000                      NaN
+## 8                 Briceño               68.836556               11.4727593
+## 9            Buenaventura                4.970445                0.7100636
+## 10                   Cali                4.186221                0.5980315
+## 11              Cartagena                6.135986                0.8765695
+## 12   Cartagena del Chairá                0.000000                      NaN
+## 13              Chaparral               29.733701                4.2476716
+## 14                Ciénaga                8.676421                1.2394887
+## 15                 Cúcuta                8.813147                1.2590209
+## 16               El Tambo               14.829165                2.1184522
+## 17               El Tarra                0.000000                      NaN
+## 18              Florencia               16.850007                2.4071439
+## 19                Inírida               67.701461               11.2835768
+## 20                Ituango               32.194783                4.5992547
+## 21                 Maicao               51.570960                7.3672800
+## 22               Medellín                3.597825                0.5139750
+## 23                Mesetas                0.000000                      NaN
+## 24              Moniquirá               32.542750                4.6489643
+## 25            Piedecuesta                5.589998                0.7985712
+## 26            Puerto Asís               11.860031                1.6942902
+## 27          Puerto Gaitán               27.465790                5.4931579
+## 28          Puerto Guzmán               29.854156                4.2648795
+## 29            Puerto Rico               38.029689                5.4328127
+## 30                 Quibdó               18.230998                2.6044284
+## 31              Rioblanco               28.264524                4.0377892
+## 32                Sahagún               15.657421                2.2367744
+## 33             San Carlos               43.735316                6.2479023
+## 34   San Pedro de Cartago               80.515384               13.4192307
+## 35 San Vicente del Caguán               10.681745                1.5259636
+## 36            Santa Marta               10.036101                1.4337287
+## 37                Soledad                4.494448                0.6420640
+## 38                   Tibú               19.385464                2.7693520
+## 39                Tocaima               38.546966                5.5067094
+## 40                  Turbo                4.638115                0.6625879
+## 41                 Uribia               17.322113                2.4745875
+## 42          Villavicencio                9.328326                1.3326180
+## 43           Vistahermosa                0.000000                      NaN
+## 44                  Yopal               21.987844                3.1411206
+##    prestadores_cienmil.sd
+## 1              0.13443075
+## 2              0.11500323
+## 3              0.01920813
+## 4              1.46587888
+## 5                      NA
+## 6              0.12069768
+## 7                      NA
+## 8              0.02494323
+## 9              0.21587967
+## 10             0.04007853
+## 11             0.06405099
+## 12                     NA
+## 13             0.01030965
+## 14             0.47427591
+## 15             0.28804426
+## 16             0.01545615
+## 17                     NA
+## 18             0.09341981
+## 19             7.07639908
+## 20             0.17656055
+## 21             0.60346121
+## 22             0.03281428
+## 23                     NA
+## 24             0.02532602
+## 25             0.24096005
+## 26             0.03395189
+## 27             0.05640493
+## 28             0.04786494
+## 29             0.06603935
+## 30             0.51020003
+## 31             0.03746756
+## 32             0.01248371
+## 33             0.02382480
+## 34             0.19749766
+## 35             0.05967225
+## 36             0.18544391
+## 37             0.11301813
+## 38             0.03218937
+## 39             0.07527002
+## 40             0.03764118
+## 41             0.19479839
+## 42             0.45546210
+## 43                     NA
+## 44             0.79855292</code></pre>
+</div>
+<div id="delta-2" class="section level4">
+<h4><span class="header-section-number">2.3.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_prestadores_cienmil_5antes &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2014-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_prestadores_cienmil_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(prestadores_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_prestadores_cienmil_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_prestadores_cienmil_5despues &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2011-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_prestadores_cienmil_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(prestadores_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_prestadores_cienmil_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Descriptivos de esos anos. </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_prestadores_cienmil_mean &lt;-<span class="st"> </span>descrip_prestadores_cienmil_5antes<span class="op">$</span>prestadores_cienmil.mean <span class="op">-</span>descrip_prestadores_cienmil_5despues<span class="op">$</span>prestadores_cienmil.mean
+diff_prestadores_cienmil_sd &lt;-<span class="st"> </span>descrip_prestadores_cienmil_5antes<span class="op">$</span>prestadores_cienmil.sd <span class="op">-</span>descrip_prestadores_cienmil_5despues<span class="op">$</span>prestadores_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_prestadores_cienmil_mean)</code></pre></div>
+<pre><code>##  [1]  0.124342034  0.106454642  0.019089482  1.072695004          NaN
+##  [6]  0.054273846          NaN -0.020261851  0.134455073  0.029831100
+## [11]  0.040141301          NaN  0.009579026  0.198350325  0.179464107
+## [16]  0.014301868          NaN  0.086464810  4.822491772 -0.163344393
+## [21]  0.016870915 -0.023271872          NaN -0.023475568 -0.101157991
+## [26]  0.031422455  0.035785135  0.044327261  0.061137278  0.357590537
+## [31] -0.034775774  0.011541008  0.021942045  0.213365924  0.055239991
+## [36]  0.084207016  0.102130228  0.029774891  0.069475986  0.034835580
+## [41]  0.180102287  0.090032039          NaN  0.593167011</code></pre>
+</div>
+</div>
+</div>
+<div id="analisis-personas-afiliadas-al-regimen-subsidiado" class="section level2">
+<h2><span class="header-section-number">2.4</span> Analisis personas afiliadas al regimen subsidiado</h2>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
+<p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
+<div id="graficos-3" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> Graficos</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+a &lt;-<span class="st">  </span><span class="kw">c</span>()
+cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
+cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(cede_salud_<span class="dv">44</span>)){
+  <span class="cf">if</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano[i]<span class="op">==</span>cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general[i]){
+    a &lt;-<span class="st"> </span><span class="kw">c</span>(a,i)
+  }
+}
+
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+
+cede_salud_44_eq &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">subsidiado_cienmil=</span><span class="kw">log</span>((subsidiado<span class="op">/</span>pobl_tot)<span class="op">*</span><span class="dv">100000</span>)) <span class="co">#Se saca el logaritmo para reducir la magnitud</span></code></pre></div>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> subsidiado_cienmil)) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Log Numero de personas subsidiadas por cien mil&#39;</span>, <span class="dt">title=</span><span class="st">&#39;subsidiado de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DANE - Estadisticas Vitales&quot;</span>) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2009</span><span class="op">:</span><span class="dv">2016</span>))</code></pre></div>
+<p><img src="Salud_graficos_analisis_files/figure-html/unnamed-chunk-16-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-3" class="section level3">
+<h3><span class="header-section-number">2.4.2</span> Descriptivos</h3>
+<div id="agregados-3" class="section level4">
+<h4><span class="header-section-number">2.4.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_subsidiado_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(subsidiado_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_salud_44_eq, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T ) <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+<span class="kw">print</span>(descrip_subsidiado_cienmil)</code></pre></div>
+<pre><code>##                 municipio subsidiado_cienmil.sum subsidiado_cienmil.mean
+## 1                   Albán               200.5084               10.553072
+## 2               Algarrobo                   -Inf                    -Inf
+## 3                Apartadó               196.5672               10.345640
+## 4                  Arauca               204.1873               10.746702
+## 5               Arauquita               209.3932               11.020695
+## 6            Bogotá, D.C.               185.8261                9.780321
+## 7                  Bojaya               215.8594               11.361023
+## 8                 Briceño               211.4825               11.130658
+## 9            Buenaventura               197.3476               10.386713
+## 10                   Cali               188.0942                9.899695
+## 11              Cartagena               197.0719               10.372203
+## 12   Cartagena del Chairá               206.7497               10.881562
+## 13              Chaparral               205.7863               10.830857
+## 14                Ciénaga               204.1358               10.743987
+## 15                 Cúcuta               198.8668               10.466674
+## 16               El Tambo               209.4489               11.023626
+## 17               El Tarra               213.7057               11.247666
+## 18              Florencia               197.8902               10.415273
+## 19                Inírida               213.9729               11.261732
+## 20                Ituango               213.1454               11.218179
+## 21                 Maicao               209.5674               11.029864
+## 22               Medellín               189.4394                9.970495
+## 23                Mesetas               206.9774               10.893546
+## 24              Moniquirá               204.4247               10.759193
+## 25            Piedecuesta               188.5113                9.921647
+## 26            Puerto Asís               206.7573               10.881961
+## 27          Puerto Gaitán               215.0251               11.317112
+## 28          Puerto Guzmán               211.1790               11.114682
+## 29            Puerto Rico               203.5447               10.712882
+## 30                 Quibdó               206.1180               10.848317
+## 31              Rioblanco               209.9848               11.051831
+## 32                Sahagún               207.6237               10.927565
+## 33             San Carlos               206.5752               10.872381
+## 34   San Pedro de Cartago               212.4959               11.183995
+## 35 San Vicente del Caguán               204.0092               10.737324
+## 36            Santa Marta               197.1557               10.376615
+## 37                Soledad               191.0269               10.054046
+## 38                   Tibú               208.9509               10.997416
+## 39                Tocaima               209.9454               11.049761
+## 40                  Turbo               206.1762               10.851378
+## 41                 Uribia               205.1133               10.795438
+## 42          Villavicencio               190.7554               10.039757
+## 43           Vistahermosa               205.1576               10.797767
+## 44                  Yopal               200.9275               10.575130
+##    subsidiado_cienmil.sd
+## 1             0.17355881
+## 2                    NaN
+## 3             0.21870737
+## 4             0.41135384
+## 5             0.36805750
+## 6             0.27085337
+## 7             0.36911221
+## 8             0.16920552
+## 9             0.44498440
+## 10            0.38353947
+## 11            0.45745478
+## 12            0.29179617
+## 13            0.47435860
+## 14            0.45600933
+## 15            0.59436620
+## 16            0.37043320
+## 17            0.40742167
+## 18            0.52096290
+## 19            0.30463605
+## 20            0.26357372
+## 21            0.53086936
+## 22            0.52226352
+## 23            0.25777251
+## 24            0.45418401
+## 25            0.38077826
+## 26            0.38962194
+## 27            0.55378284
+## 28            0.28287650
+## 29            0.18427361
+## 30            0.45000525
+## 31            0.28171764
+## 32            0.30866535
+## 33            0.09918032
+## 34            0.18608290
+## 35            0.29882998
+## 36            0.53233259
+## 37            0.72503625
+## 38            0.38830836
+## 39            0.23664637
+## 40            0.23038717
+## 41            0.49723475
+## 42            0.49173338
+## 43            0.26602331
+## 44            0.46215475</code></pre>
+</div>
+<div id="delta-3" class="section level4">
+<h4><span class="header-section-number">2.4.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_subsidiado_cienmil_5antes &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2013-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_subsidiado_cienmil_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(subsidiado_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_subsidiado_cienmil_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T ) <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_subsidiado_cienmil_5despues &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2012-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_subsidiado_cienmil_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(subsidiado_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_subsidiado_cienmil_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T ) <span class="co">#Descriptivos de esos anos.  </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_subsidiado_cienmil_mean &lt;-<span class="st"> </span>descrip_subsidiado_cienmil_5antes<span class="op">$</span>subsidiado_cienmil.mean <span class="op">-</span>descrip_subsidiado_cienmil_5despues<span class="op">$</span>subsidiado_cienmil.mean
+diff_subsidiado_cienmil_sd &lt;-<span class="st"> </span>descrip_subsidiado_cienmil_5antes<span class="op">$</span>subsidiado_cienmil.sd <span class="op">-</span>descrip_subsidiado_cienmil_5despues<span class="op">$</span>subsidiado_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_subsidiado_cienmil_mean)</code></pre></div>
+<pre><code>##  [1]  0.29086955        -Inf  0.24273972 -0.20496526 -0.14996780
+##  [6]  0.49381252  0.06337546  0.03070993 -0.33022660 -0.07000106
+## [11] -0.28894310 -0.27224172 -0.41728200 -0.31847952 -0.51807910
+## [16] -0.34366701 -0.62200238 -0.32839761  0.05115908 -0.19426752
+## [21] -0.31496113 -0.03952259 -0.19330568 -0.23950673 -0.33900749
+## [26] -0.32663870 -0.25754502  0.09678105  0.09556149 -0.44187644
+## [31] -0.23811797 -0.31572221  0.04742658 -0.06035366 -0.34497008
+## [36] -0.41419265 -0.36921970 -0.31522967  0.47787581 -0.13846922
+## [41] -0.16295436 -0.45296162 -0.18516559 -0.08010662</code></pre>
+</div>
+</div>
+</div>
+<div id="analisis-personas-afilidas-al-regimen-contributivo" class="section level2">
+<h2><span class="header-section-number">2.5</span> Analisis personas afilidas al regimen contributivo</h2>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
+<p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
+<div id="graficos-4" class="section level3">
+<h3><span class="header-section-number">2.5.1</span> Graficos</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+a &lt;-<span class="st">  </span><span class="kw">c</span>()
+cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
+cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(cede_salud_<span class="dv">44</span>)){
+  <span class="cf">if</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano[i]<span class="op">==</span>cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general[i]){
+    a &lt;-<span class="st"> </span><span class="kw">c</span>(a,i)
+  }
+}
+
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+
+cede_salud_44_eq &lt;-<span class="st"> </span>cede_salud_<span class="dv">44</span>[a,]
+
+cede_salud_44_eq &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">contributivo_cienmil=</span><span class="kw">log</span>((contributivo<span class="op">/</span>pobl_tot)<span class="op">*</span><span class="dv">100000</span>)) <span class="co">#Se saca el logaritmo para reducir la magnitud</span></code></pre></div>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> contributivo_cienmil)) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Log Numero de personas subsidiadas por cien mil&#39;</span>, <span class="dt">title=</span><span class="st">&#39;contributivo de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DANE - Estadisticas Vitales&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2009</span><span class="op">:</span><span class="dv">2016</span>))</code></pre></div>
+<p><img src="Salud_graficos_analisis_files/figure-html/unnamed-chunk-21-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-4" class="section level3">
+<h3><span class="header-section-number">2.5.2</span> Descriptivos</h3>
+<div id="agregados-4" class="section level4">
+<h4><span class="header-section-number">2.5.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_contributivo_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(contributivo_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_salud_44_eq, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T ) <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+
+<span class="kw">print</span>(descrip_contributivo_cienmil)</code></pre></div>
+<pre><code>##                 municipio contributivo_cienmil.sum
+## 1                   Albán                 55.84473
+## 2               Algarrobo                 82.10864
+## 3                Apartadó                 86.53955
+## 4                  Arauca                 81.29679
+## 5               Arauquita                 67.11976
+## 6            Bogotá, D.C.                 89.43157
+## 7                  Bojaya                 52.60262
+## 8                 Briceño                 71.86658
+## 9            Buenaventura                 80.70202
+## 10                   Cali                 88.15190
+## 11              Cartagena                 86.93162
+## 12   Cartagena del Chairá                 67.00753
+## 13              Chaparral                 79.23376
+## 14                Ciénaga                 84.88922
+## 15                 Cúcuta                 86.83669
+## 16               El Tambo                 62.89505
+## 17               El Tarra                 49.15603
+## 18              Florencia                 82.91067
+## 19                Inírida                 79.06799
+## 20                Ituango                 73.92493
+## 21                 Maicao                 77.99389
+## 22               Medellín                 89.28210
+## 23                Mesetas                 67.10116
+## 24              Moniquirá                 82.40280
+## 25            Piedecuesta                 84.99423
+## 26            Puerto Asís                 79.14272
+## 27          Puerto Gaitán                 88.36156
+## 28          Puerto Guzmán                 59.46328
+## 29            Puerto Rico                 65.54603
+## 30                 Quibdó                 82.44273
+## 31              Rioblanco                 56.92380
+## 32                Sahagún                 78.25144
+## 33             San Carlos                 77.66227
+## 34   San Pedro de Cartago                 56.98453
+## 35 San Vicente del Caguán                 69.57316
+## 36            Santa Marta                 86.67681
+## 37                Soledad                 83.22000
+## 38                   Tibú                 78.36864
+## 39                Tocaima                 74.11628
+## 40                  Turbo                 79.80423
+## 41                 Uribia                 62.62473
+## 42          Villavicencio                 87.70390
+## 43           Vistahermosa                 63.73659
+## 44                  Yopal                 87.82434
+##    contributivo_cienmil.mean contributivo_cienmil.sd
+## 1                   6.980591              0.21168022
+## 2                  10.263580              0.08401321
+## 3                  10.817444              0.07508056
+## 4                  10.162099              0.05006661
+## 5                   8.389969              0.12457211
+## 6                  11.178946              0.04411725
+## 7                   6.575327              0.74901026
+## 8                   8.983322              0.19201241
+## 9                  10.087752              0.04055052
+## 10                 11.018988              0.01823392
+## 11                 10.866453              0.02074850
+## 12                  8.375942              0.10230181
+## 13                  9.904220              0.04138273
+## 14                 10.611152              0.03774540
+## 15                 10.854587              0.02316610
+## 16                  7.861881              0.10732572
+## 17                  6.144504              0.57310120
+## 18                 10.363833              0.01913646
+## 19                  9.883498              0.11663348
+## 20                  9.240616              0.21067093
+## 21                  9.749236              0.14021293
+## 22                 11.160262              0.04623241
+## 23                  8.387645              0.15947971
+## 24                 10.300350              0.06207116
+## 25                 10.624279              0.05539648
+## 26                  9.892839              0.04113926
+## 27                 11.045195              0.18101711
+## 28                  7.432910              0.28904273
+## 29                  8.193253              0.56418638
+## 30                 10.305341              0.05355322
+## 31                  7.115475              0.35864311
+## 32                  9.781430              0.07451038
+## 33                  9.707784              0.05436459
+## 34                  7.123066              0.29405442
+## 35                  8.696645              0.05970597
+## 36                 10.834602              0.04123080
+## 37                 10.402499              0.03507157
+## 38                  9.796080              0.13918923
+## 39                  9.264535              0.11955708
+## 40                  9.975528              0.05441241
+## 41                  7.828091              0.09845007
+## 42                 10.962987              0.04307672
+## 43                  7.967074              0.22450407
+## 44                 10.978043              0.14176493</code></pre>
+</div>
+<div id="delta-4" class="section level4">
+<h4><span class="header-section-number">2.5.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_contributivo_cienmil_5antes &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2013-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_contributivo_cienmil_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(contributivo_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_contributivo_cienmil_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_contributivo_cienmil_5despues &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2012-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_contributivo_cienmil_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(contributivo_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_contributivo_cienmil_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos.  </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_contributivo_cienmil_mean &lt;-<span class="st"> </span>descrip_contributivo_cienmil_5antes<span class="op">$</span>contributivo_cienmil.mean <span class="op">-</span>descrip_contributivo_cienmil_5despues<span class="op">$</span>contributivo_cienmil.mean
+diff_contributivo_cienmil_sd &lt;-<span class="st"> </span>descrip_contributivo_cienmil_5antes<span class="op">$</span>contributivo_cienmil.sd <span class="op">-</span>descrip_contributivo_cienmil_5despues<span class="op">$</span>contributivo_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos</span>
+
+<span class="kw">print</span>(diff_contributivo_cienmil_mean)</code></pre></div>
+<pre><code>##  [1] -0.261148972 -0.064672024  0.111410853 -0.059089299 -0.150364642
+##  [6] -0.053383981 -0.682789656 -0.261182701  0.053443168 -0.011056927
+## [11] -0.006119923  0.016216776  0.027162222  0.046686789  0.027745306
+## [16] -0.145613499 -0.817063562 -0.006710247 -0.158903992 -0.287193127
+## [21]  0.208378085 -0.056249509 -0.145695660 -0.077898236 -0.067356778
+## [26] -0.039631866 -0.104699176  0.347806583 -0.826061033 -0.048815564
+## [31] -0.405834396  0.075815617 -0.039083219 -0.311133921  0.050496232
+## [36]  0.054362559 -0.023862747 -0.203287308 -0.139648604  0.060813442
+## [41]  0.056075311 -0.013470033 -0.130686284 -0.167220747</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="analisis-estadisticos-con-el-acdivoca-correlaciones-y-regresiones" class="section level1">
+<h1><span class="header-section-number">3</span> Analisis Estadisticos CON EL ACDIVOCA (Correlaciones y regresiones)</h1>
+<p>El objetivo de esta seccion es hacer las estadisticas inferenciales de las variables de interes con los items del ACDIVOCA. Si no sabe cuales son las variables ACDI-VOCA dirigirse a la pestana <em>“Codigo para correr todo”</em>.</p>
+<div id="variables-agregadas-con-acdi-voca" class="section level2">
+<h2><span class="header-section-number">3.1</span> Variables Agregadas con ACDI-VOCA</h2>
+<p>En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo collapse en todos los anos. Primero se hacen correlaciones y, luego, se hacen regresiones lineales.</p>
+<p>Recuerde que las variables del ACDI-VOCA son: +Reconciliacion +Disculpas +Violencia +Rencor +Memoria (Memoria historica) +Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)</p>
+<div id="correlaciones" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Correlaciones</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. </span>
+
+
+<span class="co">#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos</span>
+
+
+diff_TMI_mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_TMI_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span> 
+diff_nbi_mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_nbi_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+diff_prestadores_cienmil_mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_prestadores_cienmil_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+diff_subsidiado_cienmil_mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_subsidiado_cienmil_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(diff_TMI_mean, 
+                       diff_nbi_mean, 
+                       diff_prestadores_cienmil_mean, 
+                       diff_subsidiado_cienmil_mean, 
+                       reconciliacion_agreg<span class="op">$</span>reconciliacion.mean, 
+                       disculpas_agreg<span class="op">$</span>disculpas.mean, 
+                       violencia_agreg<span class="op">$</span>violencia.mean, 
+                       rencor_agreg<span class="op">$</span>rencor.mean, 
+                       memoria_agreg<span class="op">$</span>memoria.mean, 
+                       memoria_expectativa_agreg<span class="op">$</span>memoria_expectativa.mean)
+
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;TMI&quot;</span>,
+             <span class="st">&quot;NBI&quot;</span>,
+             <span class="st">&quot;Numero Prestadores_cienmil&quot;</span>,
+             <span class="st">&quot;Afiliados regimen subsidiado&quot;</span>,
+             <span class="st">&quot;Reconciliacion&quot;</span>,
+             <span class="st">&quot;Disculpas&quot;</span>, 
+             <span class="st">&quot;Violencia&quot;</span>, 
+             <span class="st">&quot;Rencor&quot;</span>,
+             <span class="st">&quot;Memoria&quot;</span>, 
+             <span class="st">&quot;Memoria_Expectativa&quot;</span>)
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+
+
+
+<span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) <span class="co">#Aqui hay cosas bien interesantes}</span></code></pre></div>
+<pre><code>##                                TMI NBI Numero Prestadores_cienmil
+## TMI                           1.00 NaN                       0.06
+## NBI                            NaN   1                        NaN
+## Numero Prestadores_cienmil    0.06 NaN                       1.00
+## Afiliados regimen subsidiado -0.17 NaN                      -0.04
+## Reconciliacion               -0.03 NaN                      -0.11
+## Disculpas                     0.04 NaN                      -0.15
+## Violencia                    -0.29 NaN                      -0.05
+## Rencor                       -0.02 NaN                      -0.21
+## Memoria                       0.03 NaN                      -0.43
+## Memoria_Expectativa          -0.09 NaN                      -0.35
+##                              Afiliados regimen subsidiado Reconciliacion
+## TMI                                                 -0.17          -0.03
+## NBI                                                   NaN            NaN
+## Numero Prestadores_cienmil                          -0.04          -0.11
+## Afiliados regimen subsidiado                         1.00           0.10
+## Reconciliacion                                       0.10           1.00
+## Disculpas                                           -0.28           0.09
+## Violencia                                           -0.08          -0.12
+## Rencor                                               0.00           0.17
+## Memoria                                              0.08           0.18
+## Memoria_Expectativa                                 -0.18           0.20
+##                              Disculpas Violencia Rencor Memoria
+## TMI                               0.04     -0.29  -0.02    0.03
+## NBI                                NaN       NaN    NaN     NaN
+## Numero Prestadores_cienmil       -0.15     -0.05  -0.21   -0.43
+## Afiliados regimen subsidiado     -0.28     -0.08   0.00    0.08
+## Reconciliacion                    0.09     -0.12   0.17    0.18
+## Disculpas                         1.00     -0.46   0.27    0.14
+## Violencia                        -0.46      1.00  -0.23   -0.34
+## Rencor                            0.27     -0.23   1.00    0.35
+## Memoria                           0.14     -0.34   0.35    1.00
+## Memoria_Expectativa               0.06     -0.05   0.42    0.65
+##                              Memoria_Expectativa
+## TMI                                        -0.09
+## NBI                                          NaN
+## Numero Prestadores_cienmil                 -0.35
+## Afiliados regimen subsidiado               -0.18
+## Reconciliacion                              0.20
+## Disculpas                                   0.06
+## Violencia                                  -0.05
+## Rencor                                      0.42
+## Memoria                                     0.65
+## Memoria_Expectativa                         1.00
+## 
+## n
+##                              TMI NBI Numero Prestadores_cienmil
+## TMI                           44  44                         38
+## NBI                           44  44                         38
+## Numero Prestadores_cienmil    38  38                         38
+## Afiliados regimen subsidiado  43  43                         37
+## Reconciliacion                44  44                         38
+## Disculpas                     44  44                         38
+## Violencia                     44  44                         38
+## Rencor                        44  44                         38
+## Memoria                       44  44                         38
+## Memoria_Expectativa           44  44                         38
+##                              Afiliados regimen subsidiado Reconciliacion
+## TMI                                                    43             44
+## NBI                                                    43             44
+## Numero Prestadores_cienmil                             37             38
+## Afiliados regimen subsidiado                           43             43
+## Reconciliacion                                         43             44
+## Disculpas                                              43             44
+## Violencia                                              43             44
+## Rencor                                                 43             44
+## Memoria                                                43             44
+## Memoria_Expectativa                                    43             44
+##                              Disculpas Violencia Rencor Memoria
+## TMI                                 44        44     44      44
+## NBI                                 44        44     44      44
+## Numero Prestadores_cienmil          38        38     38      38
+## Afiliados regimen subsidiado        43        43     43      43
+## Reconciliacion                      44        44     44      44
+## Disculpas                           44        44     44      44
+## Violencia                           44        44     44      44
+## Rencor                              44        44     44      44
+## Memoria                             44        44     44      44
+## Memoria_Expectativa                 44        44     44      44
+##                              Memoria_Expectativa
+## TMI                                           44
+## NBI                                           44
+## Numero Prestadores_cienmil                    38
+## Afiliados regimen subsidiado                  43
+## Reconciliacion                                44
+## Disculpas                                     44
+## Violencia                                     44
+## Rencor                                        44
+## Memoria                                       44
+## Memoria_Expectativa                           44
+## 
+## P
+##                              TMI    NBI Numero Prestadores_cienmil
+## TMI                                     0.7398                    
+## NBI                                                               
+## Numero Prestadores_cienmil   0.7398                               
+## Afiliados regimen subsidiado 0.2875     0.8117                    
+## Reconciliacion               0.8303     0.5187                    
+## Disculpas                    0.8042     0.3786                    
+## Violencia                    0.0548     0.7876                    
+## Rencor                       0.9075     0.2082                    
+## Memoria                      0.8480     0.0074                    
+## Memoria_Expectativa          0.5573     0.0298                    
+##                              Afiliados regimen subsidiado Reconciliacion
+## TMI                          0.2875                       0.8303        
+## NBI                                                                     
+## Numero Prestadores_cienmil   0.8117                       0.5187        
+## Afiliados regimen subsidiado                              0.5123        
+## Reconciliacion               0.5123                                     
+## Disculpas                    0.0679                       0.5506        
+## Violencia                    0.6283                       0.4251        
+## Rencor                       0.9785                       0.2668        
+## Memoria                      0.6201                       0.2499        
+## Memoria_Expectativa          0.2381                       0.1821        
+##                              Disculpas Violencia Rencor Memoria
+## TMI                          0.8042    0.0548    0.9075 0.8480 
+## NBI                                                            
+## Numero Prestadores_cienmil   0.3786    0.7876    0.2082 0.0074 
+## Afiliados regimen subsidiado 0.0679    0.6283    0.9785 0.6201 
+## Reconciliacion               0.5506    0.4251    0.2668 0.2499 
+## Disculpas                              0.0018    0.0769 0.3727 
+## Violencia                    0.0018              0.1314 0.0238 
+## Rencor                       0.0769    0.1314           0.0212 
+## Memoria                      0.3727    0.0238    0.0212        
+## Memoria_Expectativa          0.7156    0.7539    0.0043 0.0000 
+##                              Memoria_Expectativa
+## TMI                          0.5573             
+## NBI                                             
+## Numero Prestadores_cienmil   0.0298             
+## Afiliados regimen subsidiado 0.2381             
+## Reconciliacion               0.1821             
+## Disculpas                    0.7156             
+## Violencia                    0.7539             
+## Rencor                       0.0043             
+## Memoria                      0.0000             
+## Memoria_Expectativa</code></pre>
+</div>
+<div id="regresion-lineal" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Regresion lineal</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reconciliacion <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regReconcililacion)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Reconciliacion ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.8642 -1.4391 -0.2126  1.3938  5.0985 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                                                  Estimate Std. Error
+## (Intercept)                                       3.92639    0.85709
+## correlaciones[, 1:4]TMI                          -0.02263    0.18389
+## correlaciones[, 1:4]NBI                                NA         NA
+## correlaciones[, 1:4]Numero Prestadores_cienmil    0.42381    0.60584
+## correlaciones[, 1:4]Afiliados regimen subsidiado  0.15974    1.82186
+##                                                  t value Pr(&gt;|t|)    
+## (Intercept)                                        4.581  6.3e-05 ***
+## correlaciones[, 1:4]TMI                           -0.123    0.903    
+## correlaciones[, 1:4]NBI                               NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil     0.700    0.489    
+## correlaciones[, 1:4]Afiliados regimen subsidiado   0.088    0.931    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.573 on 33 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.01763,    Adjusted R-squared:  -0.07167 
+## F-statistic: 0.1974 on 3 and 33 DF,  p-value: 0.8974</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regDisculpas &lt;-<span class="st"> </span><span class="kw">lm</span>(Disculpas <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regDisculpas)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Disculpas ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.52702 -0.13733  0.04042  0.14899  0.40798 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                                                   Estimate Std. Error
+## (Intercept)                                       0.714629   0.077257
+## correlaciones[, 1:4]TMI                          -0.002908   0.016575
+## correlaciones[, 1:4]NBI                                 NA         NA
+## correlaciones[, 1:4]Numero Prestadores_cienmil    0.006201   0.054610
+## correlaciones[, 1:4]Afiliados regimen subsidiado -0.452706   0.164222
+##                                                  t value Pr(&gt;|t|)    
+## (Intercept)                                        9.250  1.1e-10 ***
+## correlaciones[, 1:4]TMI                           -0.175  0.86180    
+## correlaciones[, 1:4]NBI                               NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil     0.114  0.91028    
+## correlaciones[, 1:4]Afiliados regimen subsidiado  -2.757  0.00944 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.232 on 33 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.2018, Adjusted R-squared:  0.1293 
+## F-statistic: 2.782 on 3 and 33 DF,  p-value: 0.05632</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regViolencia)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Violencia ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.88861 -0.35249  0.03007  0.28699  1.19988 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                                                  Estimate Std. Error
+## (Intercept)                                      -1.05606    0.15709
+## correlaciones[, 1:4]TMI                          -0.06700    0.03370
+## correlaciones[, 1:4]NBI                                NA         NA
+## correlaciones[, 1:4]Numero Prestadores_cienmil    0.07597    0.11104
+## correlaciones[, 1:4]Afiliados regimen subsidiado -0.41820    0.33391
+##                                                  t value Pr(&gt;|t|)    
+## (Intercept)                                       -6.723 1.17e-07 ***
+## correlaciones[, 1:4]TMI                           -1.988   0.0552 .  
+## correlaciones[, 1:4]NBI                               NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil     0.684   0.4986    
+## correlaciones[, 1:4]Afiliados regimen subsidiado  -1.252   0.2192    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4716 on 33 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.1188, Adjusted R-squared:  0.03874 
+## F-statistic: 1.484 on 3 and 33 DF,  p-value: 0.237</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regRencor &lt;-<span class="st"> </span><span class="kw">lm</span>(Rencor <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regRencor)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Rencor ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.03527 -0.17574  0.02918  0.26850  0.57469 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                                                  Estimate Std. Error
+## (Intercept)                                       3.67961    0.11018
+## correlaciones[, 1:4]TMI                          -0.00294    0.02364
+## correlaciones[, 1:4]NBI                                NA         NA
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.01480    0.07788
+## correlaciones[, 1:4]Afiliados regimen subsidiado -0.08809    0.23421
+##                                                  t value Pr(&gt;|t|)    
+## (Intercept)                                       33.395   &lt;2e-16 ***
+## correlaciones[, 1:4]TMI                           -0.124    0.902    
+## correlaciones[, 1:4]NBI                               NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.190    0.850    
+## correlaciones[, 1:4]Afiliados regimen subsidiado  -0.376    0.709    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3308 on 33 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.007447,   Adjusted R-squared:  -0.08278 
+## F-statistic: 0.08253 on 3 and 33 DF,  p-value: 0.9691</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria<span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.85586 -0.19298 -0.08095  0.22179  0.56477 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                                                  Estimate Std. Error
+## (Intercept)                                       3.33206    0.11031
+## correlaciones[, 1:4]TMI                           0.01713    0.02367
+## correlaciones[, 1:4]NBI                                NA         NA
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.15897    0.07797
+## correlaciones[, 1:4]Afiliados regimen subsidiado  0.08350    0.23448
+##                                                  t value Pr(&gt;|t|)    
+## (Intercept)                                       30.207   &lt;2e-16 ***
+## correlaciones[, 1:4]TMI                            0.724   0.4743    
+## correlaciones[, 1:4]NBI                               NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil    -2.039   0.0496 *  
+## correlaciones[, 1:4]Afiliados regimen subsidiado   0.356   0.7240    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3312 on 33 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.1136, Adjusted R-squared:  0.03302 
+## F-statistic:  1.41 on 3 and 33 DF,  p-value: 0.2574</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria_Expectativa &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria_Expectativa<span class="op">~</span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria_Expectativa)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria_Expectativa ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.8279 -0.1484  0.0120  0.2289  0.4875 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                                                   Estimate Std. Error
+## (Intercept)                                       3.406698   0.101716
+## correlaciones[, 1:4]TMI                          -0.009473   0.021823
+## correlaciones[, 1:4]NBI                                 NA         NA
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.128298   0.071900
+## correlaciones[, 1:4]Afiliados regimen subsidiado -0.282771   0.216213
+##                                                  t value Pr(&gt;|t|)    
+## (Intercept)                                       33.492   &lt;2e-16 ***
+## correlaciones[, 1:4]TMI                           -0.434   0.6671    
+## correlaciones[, 1:4]NBI                               NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil    -1.784   0.0836 .  
+## correlaciones[, 1:4]Afiliados regimen subsidiado  -1.308   0.2000    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3054 on 33 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.1855, Adjusted R-squared:  0.1114 
+## F-statistic: 2.505 on 3 and 33 DF,  p-value: 0.0762</code></pre>
+</div>
+</div>
+<div id="delta-variables-con-acdi-voca" class="section level2">
+<h2><span class="header-section-number">3.2</span> <span class="math inline">\(\Delta\)</span> variables con ACDI-VOCA</h2>
+<p>En esta seccion se tiene en cuenta el <span class="math inline">\(\Delta\)</span> de la variable de interes. Primero se hacen correlaciones y, luego, se hacen regresiones lineales.</p>
+<div id="correlaciones-1" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Correlaciones</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. </span>
+
+
+<span class="co">#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos</span>
+
+
+descrip_TMI<span class="op">$</span>TMI.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(descrip_TMI<span class="op">$</span>TMI.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span> 
+descrip_nbi<span class="op">$</span>nbi.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(descrip_nbi<span class="op">$</span>nbi.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+descrip_prestadores_cienmil<span class="op">$</span>prestadores_cienmil.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(descrip_prestadores_cienmil<span class="op">$</span>prestadores_cienmil.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+descrip_subsidiado_cienmil<span class="op">$</span>subsidiado_cienmil.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(descrip_subsidiado_cienmil<span class="op">$</span>subsidiado_cienmil.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(descrip_TMI<span class="op">$</span>TMI.mean, 
+                       descrip_nbi<span class="op">$</span>nbi.mean, 
+                       descrip_prestadores_cienmil<span class="op">$</span>prestadores_cienmil.mean, 
+                       descrip_subsidiado_cienmil<span class="op">$</span>subsidiado_cienmil.mean, 
+                       reconciliacion_agreg<span class="op">$</span>reconciliacion.mean, 
+                       disculpas_agreg<span class="op">$</span>disculpas.mean, 
+                       violencia_agreg<span class="op">$</span>violencia.mean, 
+                       rencor_agreg<span class="op">$</span>rencor.mean, 
+                       memoria_agreg<span class="op">$</span>memoria.mean, 
+                       memoria_expectativa_agreg<span class="op">$</span>memoria_expectativa.mean)
+
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;TMI&quot;</span>,
+             <span class="st">&quot;NBI&quot;</span>,
+             <span class="st">&quot;Numero Prestadores_cienmil&quot;</span>,
+             <span class="st">&quot;Afiliados regimen subsidiado&quot;</span>,
+             <span class="st">&quot;Reconciliacion&quot;</span>,
+             <span class="st">&quot;Disculpas&quot;</span>, 
+             <span class="st">&quot;Violencia&quot;</span>, 
+             <span class="st">&quot;Rencor&quot;</span>,
+             <span class="st">&quot;Memoria&quot;</span>, 
+             <span class="st">&quot;Memoria_Expectativa&quot;</span>)
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+
+<span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) <span class="co">#Aqui hay cosas bien interesantes}</span></code></pre></div>
+<pre><code>##                                TMI   NBI Numero Prestadores_cienmil
+## TMI                           1.00  0.73                       0.51
+## NBI                           0.73  1.00                       0.57
+## Numero Prestadores_cienmil    0.51  0.57                       1.00
+## Afiliados regimen subsidiado  0.60  0.69                       0.77
+## Reconciliacion                0.02 -0.02                      -0.01
+## Disculpas                     0.07  0.02                      -0.35
+## Violencia                    -0.21 -0.33                      -0.02
+## Rencor                        0.13  0.14                       0.14
+## Memoria                       0.00  0.06                      -0.07
+## Memoria_Expectativa          -0.03 -0.10                       0.03
+##                              Afiliados regimen subsidiado Reconciliacion
+## TMI                                                  0.60           0.02
+## NBI                                                  0.69          -0.02
+## Numero Prestadores_cienmil                           0.77          -0.01
+## Afiliados regimen subsidiado                         1.00           0.07
+## Reconciliacion                                       0.07           1.00
+## Disculpas                                           -0.28           0.09
+## Violencia                                           -0.08          -0.12
+## Rencor                                               0.23           0.17
+## Memoria                                              0.12           0.18
+## Memoria_Expectativa                                  0.10           0.20
+##                              Disculpas Violencia Rencor Memoria
+## TMI                               0.07     -0.21   0.13    0.00
+## NBI                               0.02     -0.33   0.14    0.06
+## Numero Prestadores_cienmil       -0.35     -0.02   0.14   -0.07
+## Afiliados regimen subsidiado     -0.28     -0.08   0.23    0.12
+## Reconciliacion                    0.09     -0.12   0.17    0.18
+## Disculpas                         1.00     -0.46   0.27    0.14
+## Violencia                        -0.46      1.00  -0.23   -0.34
+## Rencor                            0.27     -0.23   1.00    0.35
+## Memoria                           0.14     -0.34   0.35    1.00
+## Memoria_Expectativa               0.06     -0.05   0.42    0.65
+##                              Memoria_Expectativa
+## TMI                                        -0.03
+## NBI                                        -0.10
+## Numero Prestadores_cienmil                  0.03
+## Afiliados regimen subsidiado                0.10
+## Reconciliacion                              0.20
+## Disculpas                                   0.06
+## Violencia                                  -0.05
+## Rencor                                      0.42
+## Memoria                                     0.65
+## Memoria_Expectativa                         1.00
+## 
+## n
+##                              TMI NBI Numero Prestadores_cienmil
+## TMI                           44  44                         38
+## NBI                           44  44                         38
+## Numero Prestadores_cienmil    38  38                         38
+## Afiliados regimen subsidiado  43  43                         37
+## Reconciliacion                44  44                         38
+## Disculpas                     44  44                         38
+## Violencia                     44  44                         38
+## Rencor                        44  44                         38
+## Memoria                       44  44                         38
+## Memoria_Expectativa           44  44                         38
+##                              Afiliados regimen subsidiado Reconciliacion
+## TMI                                                    43             44
+## NBI                                                    43             44
+## Numero Prestadores_cienmil                             37             38
+## Afiliados regimen subsidiado                           43             43
+## Reconciliacion                                         43             44
+## Disculpas                                              43             44
+## Violencia                                              43             44
+## Rencor                                                 43             44
+## Memoria                                                43             44
+## Memoria_Expectativa                                    43             44
+##                              Disculpas Violencia Rencor Memoria
+## TMI                                 44        44     44      44
+## NBI                                 44        44     44      44
+## Numero Prestadores_cienmil          38        38     38      38
+## Afiliados regimen subsidiado        43        43     43      43
+## Reconciliacion                      44        44     44      44
+## Disculpas                           44        44     44      44
+## Violencia                           44        44     44      44
+## Rencor                              44        44     44      44
+## Memoria                             44        44     44      44
+## Memoria_Expectativa                 44        44     44      44
+##                              Memoria_Expectativa
+## TMI                                           44
+## NBI                                           44
+## Numero Prestadores_cienmil                    38
+## Afiliados regimen subsidiado                  43
+## Reconciliacion                                44
+## Disculpas                                     44
+## Violencia                                     44
+## Rencor                                        44
+## Memoria                                       44
+## Memoria_Expectativa                           44
+## 
+## P
+##                              TMI    NBI    Numero Prestadores_cienmil
+## TMI                                 0.0000 0.0011                    
+## NBI                          0.0000        0.0002                    
+## Numero Prestadores_cienmil   0.0011 0.0002                           
+## Afiliados regimen subsidiado 0.0000 0.0000 0.0000                    
+## Reconciliacion               0.9024 0.9132 0.9672                    
+## Disculpas                    0.6390 0.8866 0.0335                    
+## Violencia                    0.1757 0.0286 0.8844                    
+## Rencor                       0.3862 0.3485 0.4013                    
+## Memoria                      0.9986 0.6959 0.6785                    
+## Memoria_Expectativa          0.8709 0.5378 0.8607                    
+##                              Afiliados regimen subsidiado Reconciliacion
+## TMI                          0.0000                       0.9024        
+## NBI                          0.0000                       0.9132        
+## Numero Prestadores_cienmil   0.0000                       0.9672        
+## Afiliados regimen subsidiado                              0.6532        
+## Reconciliacion               0.6532                                     
+## Disculpas                    0.0675                       0.5506        
+## Violencia                    0.5978                       0.4251        
+## Rencor                       0.1430                       0.2668        
+## Memoria                      0.4467                       0.2499        
+## Memoria_Expectativa          0.5369                       0.1821        
+##                              Disculpas Violencia Rencor Memoria
+## TMI                          0.6390    0.1757    0.3862 0.9986 
+## NBI                          0.8866    0.0286    0.3485 0.6959 
+## Numero Prestadores_cienmil   0.0335    0.8844    0.4013 0.6785 
+## Afiliados regimen subsidiado 0.0675    0.5978    0.1430 0.4467 
+## Reconciliacion               0.5506    0.4251    0.2668 0.2499 
+## Disculpas                              0.0018    0.0769 0.3727 
+## Violencia                    0.0018              0.1314 0.0238 
+## Rencor                       0.0769    0.1314           0.0212 
+## Memoria                      0.3727    0.0238    0.0212        
+## Memoria_Expectativa          0.7156    0.7539    0.0043 0.0000 
+##                              Memoria_Expectativa
+## TMI                          0.8709             
+## NBI                          0.5378             
+## Numero Prestadores_cienmil   0.8607             
+## Afiliados regimen subsidiado 0.5369             
+## Reconciliacion               0.1821             
+## Disculpas                    0.7156             
+## Violencia                    0.7539             
+## Rencor                       0.0043             
+## Memoria                      0.0000             
+## Memoria_Expectativa</code></pre>
+</div>
+<div id="regresion-lineal-1" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Regresion lineal</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reconciliacion <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regReconcililacion)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Reconciliacion ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -6.4321 -1.3901  0.0798  1.2855  4.4535 
+## 
+## Coefficients:
+##                                                  Estimate Std. Error
+## (Intercept)                                      -9.81901   18.76965
+## correlaciones[, 1:4]TMI                           0.06147    0.05272
+## correlaciones[, 1:4]NBI                          -0.02662    0.03073
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.01655    0.17882
+## correlaciones[, 1:4]Afiliados regimen subsidiado  1.28634    1.87794
+##                                                  t value Pr(&gt;|t|)
+## (Intercept)                                       -0.523    0.604
+## correlaciones[, 1:4]TMI                            1.166    0.252
+## correlaciones[, 1:4]NBI                           -0.866    0.393
+## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.093    0.927
+## correlaciones[, 1:4]Afiliados regimen subsidiado   0.685    0.498
+## 
+## Residual standard error: 2.549 on 32 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.06551,    Adjusted R-squared:  -0.0513 
+## F-statistic: 0.5609 on 4 and 32 DF,  p-value: 0.6927</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regDisculpas &lt;-<span class="st"> </span><span class="kw">lm</span>(Disculpas <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regDisculpas)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Disculpas ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.47406 -0.16527 -0.04116  0.17426  0.40184 
+## 
+## Coefficients:
+##                                                   Estimate Std. Error
+## (Intercept)                                       1.775971   1.671051
+## correlaciones[, 1:4]TMI                           0.001949   0.004694
+## correlaciones[, 1:4]NBI                           0.001927   0.002736
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.037635   0.015920
+## correlaciones[, 1:4]Afiliados regimen subsidiado -0.094442   0.167192
+##                                                  t value Pr(&gt;|t|)  
+## (Intercept)                                        1.063   0.2958  
+## correlaciones[, 1:4]TMI                            0.415   0.6807  
+## correlaciones[, 1:4]NBI                            0.704   0.4862  
+## correlaciones[, 1:4]Numero Prestadores_cienmil    -2.364   0.0243 *
+## correlaciones[, 1:4]Afiliados regimen subsidiado  -0.565   0.5761  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2269 on 32 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.2593, Adjusted R-squared:  0.1667 
+## F-statistic: 2.801 on 4 and 32 DF,  p-value: 0.04225</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Numero de personas en el regiem de subsidiado</span>
+regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regViolencia)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Violencia ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.84848 -0.28305  0.02744  0.24763  1.05368 
+## 
+## Coefficients:
+##                                                   Estimate Std. Error
+## (Intercept)                                      -6.528773   3.438392
+## correlaciones[, 1:4]TMI                           0.002134   0.009658
+## correlaciones[, 1:4]NBI                          -0.012605   0.005629
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.020793   0.032758
+## correlaciones[, 1:4]Afiliados regimen subsidiado  0.553774   0.344018
+##                                                  t value Pr(&gt;|t|)  
+## (Intercept)                                       -1.899   0.0666 .
+## correlaciones[, 1:4]TMI                            0.221   0.8265  
+## correlaciones[, 1:4]NBI                           -2.239   0.0322 *
+## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.635   0.5301  
+## correlaciones[, 1:4]Afiliados regimen subsidiado   1.610   0.1173  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4669 on 32 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.1626, Adjusted R-squared:  0.05795 
+## F-statistic: 1.554 on 4 and 32 DF,  p-value: 0.2105</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regRencor &lt;-<span class="st"> </span><span class="kw">lm</span>(Rencor <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regRencor)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Rencor ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.0338 -0.1659 -0.0150  0.2089  0.5091 
+## 
+## Coefficients:
+##                                                    Estimate Std. Error
+## (Intercept)                                       9.842e-01  2.400e+00
+## correlaciones[, 1:4]TMI                          -3.032e-03  6.741e-03
+## correlaciones[, 1:4]NBI                          -8.165e-05  3.928e-03
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -7.491e-03  2.286e-02
+## correlaciones[, 1:4]Afiliados regimen subsidiado  2.613e-01  2.401e-01
+##                                                  t value Pr(&gt;|t|)
+## (Intercept)                                        0.410    0.684
+## correlaciones[, 1:4]TMI                           -0.450    0.656
+## correlaciones[, 1:4]NBI                           -0.021    0.984
+## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.328    0.745
+## correlaciones[, 1:4]Afiliados regimen subsidiado   1.088    0.285
+## 
+## Residual standard error: 0.3259 on 32 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.06617,    Adjusted R-squared:  -0.05056 
+## F-statistic: 0.5669 on 4 and 32 DF,  p-value: 0.6885</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria<span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.8648 -0.1667 -0.0148  0.2172  0.5968 
+## 
+## Coefficients:
+##                                                   Estimate Std. Error
+## (Intercept)                                       1.969869   2.600104
+## correlaciones[, 1:4]TMI                          -0.004701   0.007304
+## correlaciones[, 1:4]NBI                           0.000476   0.004256
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.004432   0.024771
+## correlaciones[, 1:4]Afiliados regimen subsidiado  0.139185   0.260146
+##                                                  t value Pr(&gt;|t|)
+## (Intercept)                                        0.758    0.454
+## correlaciones[, 1:4]TMI                           -0.644    0.524
+## correlaciones[, 1:4]NBI                            0.112    0.912
+## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.179    0.859
+## correlaciones[, 1:4]Afiliados regimen subsidiado   0.535    0.596
+## 
+## Residual standard error: 0.3531 on 32 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.02315,    Adjusted R-squared:  -0.09895 
+## F-statistic: 0.1896 on 4 and 32 DF,  p-value: 0.9421</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria_Expectativa &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria_Expectativa<span class="op">~</span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria_Expectativa)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria_Expectativa ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.82057 -0.09798  0.04570  0.23216  0.45329 
+## 
+## Coefficients:
+##                                                    Estimate Std. Error
+## (Intercept)                                       1.7180741  2.5090198
+## correlaciones[, 1:4]TMI                          -0.0001201  0.0070477
+## correlaciones[, 1:4]NBI                          -0.0023329  0.0041073
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.0033632  0.0239036
+## correlaciones[, 1:4]Afiliados regimen subsidiado  0.1680110  0.2510325
+##                                                  t value Pr(&gt;|t|)
+## (Intercept)                                        0.685    0.498
+## correlaciones[, 1:4]TMI                           -0.017    0.987
+## correlaciones[, 1:4]NBI                           -0.568    0.574
+## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.141    0.889
+## correlaciones[, 1:4]Afiliados regimen subsidiado   0.669    0.508
+## 
+## Residual standard error: 0.3407 on 32 degrees of freedom
+##   (7 observations deleted due to missingness)
+## Multiple R-squared:  0.01695,    Adjusted R-squared:  -0.1059 
+## F-statistic: 0.1379 on 4 and 32 DF,  p-value: 0.967</code></pre>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

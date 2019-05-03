@@ -3,9 +3,6 @@ title: "Merge Bases"
 author: "Felipe Gonzalez Arango"
 date: "23 de abril de 2019"
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
   html_document:
     code_folding: show
     highlight: tango
@@ -16,6 +13,9 @@ output:
     toc_float:
       collapsed: yes
       smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
 Objetivo de este documento
@@ -262,10 +262,34 @@ datos_acdivoca_num %>%
 Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (año, pib, poblacion, etc.)
 
 ```{r}
-#Vamos a limpiar un poco la base general para que el merge sea más fácil de entender
+
+
+#Collapse estadisticos por municipio
+
+reconciliacion_agreg <- summaryBy(reconciliacion ~ Municipio, 
+                                  datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+disculpas_agreg <- summaryBy(disculpas ~ Municipio, 
+                             datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+violencia_agreg <- summaryBy(violencia ~ Municipio, 
+                             datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+rencor_agreg <- summaryBy(rencor ~ Municipio, 
+                          datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+memoria_agreg <- summaryBy(memoria ~ Municipio, 
+                           datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+memoria_expectativa_agreg <- summaryBy(memoria_expectativa ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+
+
+
+# Merge con base de datos general -----------------------------------------
+#Vamos a limpiar un poco la base general para que el merge sea mas facil de entender
 cede_general_44 <- cede_general_44 %>% 
   select(-c(Municipio)) %>% #Quitar variable que tienen las otras bases
-  dplyr::rename(ano_base_general=ano) #Renombrar la variable año asociada con la base general
+  dplyr::rename(ano_base_general=ano) #Renombrar la variable ano asociada con la base general
+
+
+
+
 
 #Merge con las bases
 cede_conflicto_44 <- merge(cede_conflicto_44, cede_general_44, by="codmpio")
@@ -273,6 +297,9 @@ cede_educacion_44 <- merge(datos_cede_educacion, cede_general_44, by='codmpio')
 cede_gobierno_44 <- merge(datos_cede_gobierno, cede_general_44, by='codmpio')
 cede_salud_44 <- merge(datos_cede_salud, cede_general_44, by='codmpio')
 cede_tierras_44 <- merge(datos_cede_tierras, cede_general_44, by='codmpio')
+
+
+
 
 ```
 
@@ -287,3 +314,4 @@ rm(datos_cede_conflicto,datos_cede_educacion,
    datos_cede_salud,datos_cede_tierras, cede_general_44)
 ```
 
+#Creacion de indices importantes

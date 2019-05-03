@@ -1,0 +1,872 @@
+---
+title: 'Violencia: Graficos y analisis'
+author: "Felipe Gonzalez-Arango"
+date: "2 de mayo de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+#Setup
+Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
+
+```{r message=FALSE, warning=FALSE}
+#ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
+
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+
+
+#Cargar paquetes
+library(readstata13)
+library(tidyr)
+library(dplyr)
+library(data.table)
+library(readxl)
+library(doBy)
+library(vtable)
+library(plyr)
+library(gridExtra)
+library(grid)
+library(purrr)
+library(psych)
+library(ggplot2)
+library(psych)
+library(Hmisc)
+library(matrixStats)
+library(ggpubr)
+library(vtable)
+library(ggthemes)
+
+```
+
+
+
+
+# Graficos variables importantes y algunos descriptivos
+
+Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. 
+***
+La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion. 
+
+
+##  Analisis Homicidios
+
+### Creacion de variables
+
+En esta base de datos es necesario hacer un *tidy* de la base de datos. Es decir, transformar algunas columnas en filas. 
+
+Para mas informacion sobre la concepcion del *tidy* ver: [Paper tidy]()
+
+```{r}
+homi_GA <- grep('homi_{1}', names(cede_conflicto_44), value = T) %>% grep('_pn',.,value = T, invert = T)	
+# Tidy data table - homicidios de transito	
+conflicto_44_tidy <- gather(cede_conflicto_44, 'Grupo_Armado', 'Numero_Homicidios', homi_GA)	
+conflicto_44_tidy$ano_base_general <- as.Date(conflicto_44_tidy$ano_base_general, '%Y', na.rm=T)
+```
+
+
+
+###Graficos
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+for(i in 1:nrow(conflicto_44_tidy)){
+  if(conflicto_44_tidy$ano[i]==conflicto_44_tidy$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+conflicto_44_tidy <- conflicto_44_tidy[a,]
+
+conflicto_44_tidy <- conflicto_44_tidy %>% 
+  dplyr::mutate(homi_cienmil=(Numero_Homicidios/pobl_tot)*100000)
+
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+
+Grafico Homicidios FARC
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+conflicto_44_tidy %>% 
+  filter(Grupo_Armado=="homi_FARC") %>% 
+  ggplot(	
+    aes(x = ano, y = homi_cienmil)) +	
+  geom_col() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~Municipio) +	
+  labs(y='Número Homicidios por cien mil personas', title='Homicidios FARC 2013', x= 'Año', caption="Fuente: Ministerio de Defensa") +	
+  scale_x_date(date_breaks = '1 year', date_labels = '%Y',	
+               limits = c(as.Date('2003', format = '%Y'), as.Date('2013', format = '%Y'))) +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+```
+
+Graficos homicidios por ano y municipio
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+library(randomcoloR)	
+n <- 13	
+palette <- distinctColorPalette(n)	
+ggplot(conflicto_44_tidy,	
+       aes(x=ano, y = homi_cienmil, color= Grupo_Armado)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~Municipio) +	
+  labs(y='Número Homicidios por cien mil personas', title='Homicidios 2003-2013', x= 'Año', caption="Fuente: Ministerio de Defensa") +	
+  scale_x_date(date_breaks = '1 year', date_labels = '%Y',	
+               limits = c(as.Date('2003', format = '%Y'), as.Date('2013', format = '%Y'))) +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(ylim = c(0, 110))
+
+
+```
+
+### Descriptivos
+
+#### Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_homi <- summaryBy(homi_cienmil ~ Municipio, conflicto_44_tidy, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por años)
+
+print(descrip_homi)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_homi_5antes <- conflicto_44_tidy %>% 
+  filter(ano<"2008-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_homi_5antes <- summaryBy(homi_cienmil ~ Municipio, descrip_homi_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_homi_5despues <- conflicto_44_tidy %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_homi_5despues <- summaryBy(homi_cienmil ~ Municipio, descrip_homi_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+
+diff_homi_mean <- descrip_homi_5antes$homi_cienmil.mean -descrip_homi_5despues$homi_cienmil.mean
+diff_homi_sd <- descrip_homi_5antes$homi_cienmil.sd -descrip_homi_5despues$homi_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos. 
+
+print(diff_homi_mean)
+
+```
+
+
+## Analisis Ataques
+
+
+### Creacion de variables
+
+En esta base de datos es necesario hacer un *tidy* de la base de datos. Es decir, transformar algunas columnas en filas. 
+
+
+```{r}
+
+ataque_GA <- grep("tpobc_{1}", names(cede_conflicto_44), value = T)	
+conflicto_44_ataque <- gather(cede_conflicto_44, key= "Grupo_Armado", value= "Ataques_Pobl_Civil", ataque_GA)	
+```
+
+
+###Graficos
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+Graficos ataques, por Municipio por actor armado (numeros brutos)
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+ggplot(conflicto_44_ataque,	
+       aes(x=ano, y = Ataques_Pobl_Civil, color= Grupo_Armado)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~Municipio) +	
+  labs(y='Numero Ataques', title='Ataques 1993-2010', x= 'Año', caption="Fuente: Policia Nacional") +	
+  coord_cartesian(ylim=c(0,20))+	
+  theme_minimal()+	
+  scale_x_date(date_breaks = '2 year', date_labels = '%Y',	
+               limits = c(as.Date('1993', format = '%Y'), as.Date('2010', format = '%Y'))) +	
+  theme(plot.title = element_text(hjust = 0.3), axis.text.x = element_text(angle=90))
+
+```
+
+
+### Descriptivos
+
+#### Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_ataques <- summaryBy(Ataques_Pobl_Civil ~ Municipio, conflicto_44_ataque, FUN=c(sum,mean,sd), na.rm=T )		#Codigo para hacer descriptivos de los ataques (collapse por anos)
+print(descrip_ataques)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_ataques_5antes <- conflicto_44_ataque %>% 
+  filter(ano<"1997-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_ataques_5antes <- summaryBy(Ataques_Pobl_Civil ~ Municipio, 
+                                    descrip_ataques_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_ataques_5despues <- conflicto_44_ataque %>% 
+  filter(ano>"2004-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_ataques_5despues <- summaryBy(Ataques_Pobl_Civil ~ Municipio,
+                                      descrip_ataques_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+
+diff_ataques_mean <- 
+  descrip_ataques_5antes$Ataques_Pobl_Civil.mean - 
+  descrip_ataques_5despues$Ataques_Pobl_Civil.mean
+diff_ataques_sd <- 
+  descrip_ataques_5antes$Ataques_Pobl_Civil.sd -
+  descrip_ataques_5despues$Ataques_Pobl_Civil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos. 
+
+
+print(diff_ataques_mean)
+
+```
+
+
+## Analisis Secuestros
+
+### Creacion de variables
+
+En esta base de datos es necesario hacer un *tidy* de la base de datos. Es decir, transformar algunas columnas en filas. 
+
+
+```{r}
+
+secuestro_GA <- grep("secu_{1}", names(cede_conflicto_44), value = T)
+conflicto_44_secuestro <- gather(cede_conflicto_44, key= "Grupo_Armado", value= "Secuestros", secuestro_GA)
+
+conflicto_44_secuestro$ano_base_general <- as.Date(conflicto_44_secuestro$ano_base_general, '%Y', na.rm=T)
+
+```
+
+
+
+***
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+
+###Graficos
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+for(i in 1:nrow(conflicto_44_secuestro)){
+  if(conflicto_44_secuestro$ano[i]==conflicto_44_secuestro$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+conflicto_44_secuestro <- conflicto_44_secuestro[a,]
+
+conflicto_44_secuestro <- conflicto_44_secuestro %>% 
+  dplyr::mutate(secuestro_cienmil=(Secuestros/pobl_tot)*100000)
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+ggplot(conflicto_44_secuestro,	
+       aes(x=ano, y = secuestro_cienmil, color= Grupo_Armado)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~Municipio) +	
+  labs(y='Número Secuestros por cada mil habitantes', title='Secuestros 2003-2013', x= 'Año', caption="Fuente: Ministerio de Defensa") +	
+  theme_minimal()+	
+  scale_x_date(date_breaks = '1 year', date_labels = '%Y',	
+               limits = c(as.Date('2003', format = '%Y'), as.Date('2013', format = '%Y'))) +	
+  theme(plot.title = element_text(hjust = 0.3), axis.text.x = element_text(angle=90))+	
+  coord_cartesian(ylim=c(0,20))	
+
+
+```
+
+### Descriptivos
+
+#### Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_secuestro <- summaryBy(secuestro_cienmil ~ Municipio, conflicto_44_secuestro, FUN=c(sum,median,mean,sd), na.rm=T )
+print(descrip_secuestro)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_secuestro_5antes <- conflicto_44_secuestro %>% 
+  filter(ano<"2008-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_secuestro_5antes <- summaryBy(secuestro_cienmil ~ Municipio, 
+                                    descrip_secuestro_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_secuestro_5despues <- conflicto_44_secuestro %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_secuestro_5despues <- summaryBy(secuestro_cienmil ~ Municipio,
+                                      descrip_secuestro_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_secuestro_mean <- 
+  descrip_secuestro_5antes$secuestro_cienmil.mean - 
+  descrip_secuestro_5despues$secuestro_cienmil.mean
+diff_secuestro_sd <- 
+  descrip_secuestro_5antes$secuestro_cienmil.sd -
+  descrip_secuestro_5despues$secuestro_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas secuestro en los ultimos 5 anos. 
+
+print(diff_secuestro_mean)
+```
+
+##  Analisis Secuestros Politicos
+
+
+### Creacion de variables
+
+En esta base de datos es necesario hacer un *tidy* de la base de datos. Es decir, transformar algunas columnas en filas. 
+
+
+```{r}
+secuestrop_GA <- grep("secpo_{1}", names(cede_conflicto_44), value = T)	
+conflicto_44_secuestrop <- gather(cede_conflicto_44, key= "Grupo_Armado", value= "Secuestros_Politicos", secuestrop_GA)	
+
+conflicto_44_secuestrop$ano_base_general <- as.Date(conflicto_44_secuestrop$ano_base_general, '%Y', na.rm=T)
+
+```
+
+
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+###Graficos 
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+for(i in 1:nrow(conflicto_44_secuestrop)){
+  if(conflicto_44_secuestrop$ano[i]==conflicto_44_secuestrop$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+conflicto_44_secuestrop <- conflicto_44_secuestrop[a,]
+
+conflicto_44_secuestrop <- conflicto_44_secuestrop %>% 
+  dplyr::mutate(secuestrop_cienmil=(Secuestros_Politicos/pobl_tot)*100000)
+
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+ggplot(conflicto_44_secuestrop,	
+       aes(x=ano, y = secuestrop_cienmil, color= Grupo_Armado)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~Municipio) +	
+  labs(y='Número secuestrops por cada mil habitantes', title='secuestrops 2003-2013', x= 'Año', caption="Fuente: Ministerio de Defensa") +	
+  theme_minimal()+	
+  scale_x_date(date_breaks = '1 year', date_labels = '%Y',	
+               limits = c(as.Date('2003', format = '%Y'), as.Date('2013', format = '%Y'))) +	
+  theme(plot.title = element_text(hjust = 0.3), axis.text.x = element_text(angle=90))+	
+  coord_cartesian(ylim=c(0,2))	
+
+```
+
+### Descriptivos
+
+#### Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_secuestrop <- summaryBy(secuestrop_cienmil ~ Municipio, conflicto_44_secuestrop, FUN=c(sum,median,mean,sd), na.rm=T )
+print(descrip_secuestrop)
+```
+
+#### $\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_secuestrop_5antes <- conflicto_44_secuestrop %>% 
+  filter(ano<"1997-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_secuestrop_5antes <- summaryBy(secuestrop_cienmil ~ Municipio, 
+                                      descrip_secuestrop_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_secuestrop_5despues <- conflicto_44_secuestrop %>% 
+  filter(ano>"2004-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_secuestrop_5despues <- summaryBy(secuestrop_cienmil ~ Municipio,
+                                        descrip_secuestrop_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_secuestrop_mean <- 
+  descrip_secuestrop_5antes$secuestrop_cienmil.mean - 
+  descrip_secuestrop_5despues$secuestrop_cienmil.mean
+diff_secuestrop_sd <- 
+  descrip_secuestrop_5antes$secuestrop_cienmil.sd -
+  descrip_secuestrop_5despues$secuestrop_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas secuestrop en los ultimos 5 anos. 
+
+print(diff_secuestrop_mean)
+```
+
+
+## Analisis Desmovilizados
+
+### Creacion de variables
+
+En esta base de datos es necesario hacer un *tidy* de la base de datos. Es decir, transformar algunas columnas en filas. 
+
+
+```{r}
+desmovilizados <- grep("desmov_{1}", names(cede_conflicto_44), value = T) #Seleccionar variables que empiecen con desmov_	                                             
+desmovilizados <- desmovilizados[-c(2,4,7)]#Limpiar los nombres para poder hacer el gather	
+conflicto_44_desmovilizados <- gather(cede_conflicto_44, 
+                                      key="Grupo_Armado",	
+                                      value="Desmovilizados", 
+                                      c("desmov_OTRO","desmov_FARC","desmov_ELN",	
+                                                                "desmov_AUC"))	
+
+
+
+conflicto_44_desmovilizados$ano_base_general <- as.Date(conflicto_44_desmovilizados$ano_base_general, '%Y', na.rm=T)
+
+```
+
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+###Graficos 
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+for(i in 1:nrow(conflicto_44_desmovilizados)){
+  if(conflicto_44_desmovilizados$ano[i]==conflicto_44_desmovilizados$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+conflicto_44_desmovilizados <- conflicto_44_desmovilizados[a,]
+
+conflicto_44_desmovilizados <- conflicto_44_desmovilizados %>% 
+  dplyr::mutate(desmovilizados_cienmil=(Desmovilizados/pobl_tot)*100000)
+
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+ggplot(conflicto_44_desmovilizados,	
+       aes(x=ano, y = desmovilizados_cienmil, color= Grupo_Armado)) +	
+  geom_line() +	
+  facet_wrap(~Municipio) +	
+  labs(y='Desmovilizados por cada cien mil habitantes', title='Desmovilizados 1993-2010', x= 'Año', caption="Fuente: Policía Nacional") +	
+  theme_minimal()+	
+  scale_x_date(date_breaks = '2 year', date_labels = '%Y',	
+               limits = c(as.Date('1993', format = '%Y'), as.Date('2010', format = '%Y'))) +	
+  theme(plot.title = element_text(hjust = 0.3), axis.text.x = element_text(angle=90)) +	
+  coord_cartesian(ylim=c(0,30))	
+```
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_desmovilizados <- summaryBy(desmovilizados_cienmil ~ Municipio, conflicto_44_desmovilizados, FUN=c(sum,median,mean,sd), na.rm=T )
+
+print(descrip_desmovilizados)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_desmovilizados_5antes <- conflicto_44_desmovilizados %>% 
+  filter(ano<"1997-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_desmovilizados_5antes <- summaryBy(desmovilizados_cienmil ~ Municipio, 
+                                       descrip_desmovilizados_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_desmovilizados_5despues <- conflicto_44_desmovilizados %>% 
+  filter(ano>"2004-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_desmovilizados_5despues <- summaryBy(desmovilizados_cienmil ~ Municipio,
+                                         descrip_desmovilizados_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos.
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_desmovilizados_mean <- 
+  descrip_desmovilizados_5antes$desmovilizados_cienmil.mean - 
+  descrip_desmovilizados_5despues$desmovilizados_cienmil.mean
+diff_desmovilizados_sd <- 
+  descrip_desmovilizados_5antes$desmovilizados_cienmil.sd -
+  descrip_desmovilizados_5despues$desmovilizados_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas desmovilizados en los ultimos 5 anos. 
+
+print(diff_desmovilizados_mean)
+```
+
+
+# Analisis Estadisticos CON EL ACDIVOCA (Correlaciones y regresiones)
+
+El objetivo de esta seccion es hacer las estadisticas inferenciales de las variables de interes con los items del ACDIVOCA. Si no sabe cuales son las variables ACDI-VOCA dirigirse a la pestana *"Codigo para correr todo"*.
+
+## Variables Agregadas con ACDI-VOCA
+
+En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo collapse en todos los anos. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+Recuerde que las variables del ACDI-VOCA son:
++Reconciliacion
++Disculpas
++Violencia
++Rencor
++Memoria (Memoria historica)
++Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)
+
+### Correlaciones
+
+
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.  
+
+correlaciones <- cbind(descrip_homi$homi_cienmil.mean, 
+                       descrip_ataques$Ataques_Pobl_Civil.mean, 
+                       descrip_desmovilizados$desmovilizados_cienmil.mean, 
+                       descrip_secuestro$secuestro_cienmil.mean,
+                       descrip_secuestrop$secuestrop_cienmil.mean, 
+                       reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+
+nombres <- c("Homicidios",
+             "Ataques_Pobl_Civil",
+             "Desmovilizados",
+             "Secuestros",
+             "Secuestros_Politicos", 
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+colnames(correlaciones) <- nombres
+shapiro.test(descrip_ataques$Ataques_Pobl_Civil.mean) #Todos los de CEDE son no siguen distribución normal. Las escalas, por el contrario sí las siguen. Toca tomar una decisión allí.
+rcorr(correlaciones, type="spearman")
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regReconcililacion)
+
+regDisculpas <- lm(Disculpas ~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regDisculpas)
+
+regViolencia <- lm(Violencia ~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regViolencia) #AQUI HAY ALGO INTERESANTE!!!! El Indice ACDIVOCA que mide violencia es determinado por los homicidios, los ataques a la poblacion y los secuestros. 
+
+regRencor <- lm(Rencor ~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regRencor)  #AQUI HAY ALGO INTERESANTE!!!! El Indice ACDIVOCA que mide rencor es determinado por los ataques a la poblacion. El signo es negativo lo cual es contraintuitivo. 
+
+regMemoria <- lm(Memoria~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+
+```
+
+
+## $\Delta$ variables con ACDI-VOCA
+
+En esta seccion se tiene en cuenta el $\Delta$ de la variable de interes. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+### Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. 
+
+correlaciones <- cbind(diff_homi_mean, 
+                       diff_ataques_mean, 
+                       diff_desmovilizados_mean, 
+                       diff_secuestro_mean,
+                       diff_secuestrop_mean, 
+                       reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+
+nombres <- c("Homicidios",
+             "Ataques_Pobl_Civil",
+             "Desmovilizados",
+             "Secuestros",
+             "Secuestros_Politicos", 
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+colnames(correlaciones) <- nombres
+rcorr(correlaciones, type="spearman")
+
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+#Regresiones Lineales Exploratorias
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regReconcililacion)
+
+regDisculpas <- lm(Disculpas ~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regDisculpas)
+
+regViolencia <- lm(Violencia ~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regViolencia)
+
+regRencor <- lm(Rencor ~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regRencor)
+
+regMemoria <- lm(Memoria~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+
+
+```
+
+
+
+##Tendencias y correlaciones en un graficos
+
+
+Correlacion de Rencor (ACDIVOCA)con Homicidios en el tiempo
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+#Vamos a ver como cambia la correlacion de Rencor (ACDIVOCA) con Homicidios en el tiempo
+
+conflicto_44_tidy$ano_num <- substring(conflicto_44_tidy$ano,1,4)
+conflicto_44_tidy$ano_num <- as.numeric(conflicto_44_tidy$ano_num)
+
+#Loop para hacer la correlacion por año.
+
+homicidios <- c()
+x <- c()
+y <- c()
+
+for(i in 1:10) {
+  homicidios <- conflicto_44_tidy %>%
+    filter(ano_num==2002+i) %>%
+    select(homi_cienmil, Municipio) %>%
+    summaryBy(homi_cienmil ~ Municipio, ., FUN=c(sum, mean), na.rm=T ) %>%
+    select(homi_cienmil.mean) %>%
+    as.data.frame()
+  
+  conflicto_44_tidy$valores_corr[i] <- cor(homicidios,
+                                           rencor_agreg$rencor.mean,
+                                           method = "spearman")
+  x[i] <- 2002+i
+  y[i] <- cor(homicidios, rencor_agreg$rencor.mean, method = "spearman")
+}
+
+ plot(x,
+                       y, 
+                       type="b", 
+                       col="blue", 
+                       main= "Correlacion Rencor con Homicidios en el tiempo", 
+                       xlab="Años", 
+                       ylab= "Correlacion")
+```
+
+
+Correlacion de Violencia (ACDIVOCA)con Homicidios en el tiempo
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+#Vamos a ver como cambia la correlacion de Violencia (ACDIVOCA) con Homicidios en el tiempo
+
+conflicto_44_tidy$ano_num <- substring(conflicto_44_tidy$ano,1,4)
+conflicto_44_tidy$ano_num <- as.numeric(conflicto_44_tidy$ano_num)
+
+#Loop para hacer la correlacion por año.
+
+homicidios <- c()
+x <- c()
+y <- c()
+
+for(i in 1:10) {
+  homicidios <- conflicto_44_tidy %>%
+    filter(ano_num==2002+i) %>%
+    select(homi_cienmil, Municipio) %>%
+    summaryBy(homi_cienmil ~ Municipio, ., FUN=c(sum, mean), na.rm=T ) %>%
+    select(homi_cienmil.mean) %>%
+    as.data.frame()
+  
+  conflicto_44_tidy$valores_corr[i] <- cor(homicidios,
+                                           violencia_agreg$violencia.mean,
+                                           method = "spearman")
+  x[i] <- 2002+i
+  y[i] <- cor(homicidios, violencia_agreg$violencia.mean, method = "spearman")
+}
+
+
+ plot(x,
+                        y, 
+                        type="b", 
+                        col="blue", 
+                        main= "Correlacion Violencia (ACDIVOCA) con Homicidios en el tiempo", 
+                        xlab="Años", 
+                        ylab= "Correlacion")
+
+```
+
+
+
+
+
+
+
+
+
+
+

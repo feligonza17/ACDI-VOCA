@@ -1,0 +1,662 @@
+---
+title: 'Salud: Graficos y analisis'
+author: "Felipe Gonzalez-Arango"
+date: "2 de mayo de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+#Setup
+Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
+
+```{r message=FALSE, warning=FALSE}
+#ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
+
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+
+
+#Cargar paquetes
+library(readstata13)
+library(tidyr)
+library(dplyr)
+library(data.table)
+library(readxl)
+library(doBy)
+library(vtable)
+library(plyr)
+library(gridExtra)
+library(grid)
+library(purrr)
+library(psych)
+library(ggplot2)
+library(psych)
+library(Hmisc)
+library(matrixStats)
+library(ggpubr)
+library(vtable)
+library(ggthemes)
+
+```
+
+
+
+
+# Graficos variables importantes y algunos descriptivos
+
+Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. 
+***
+La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion. 
+
+
+## Analisis Tasa Mortalidad Infantil (TMI)
+
+###Graficos
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_salud_44 %>% 
+  ggplot(aes(x = ano, y = TMI)) +	
+  geom_line() +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Tasa Mortalidad Infantil', title='TMI de municipios por ano', x= 'Ano', caption="Fuente: DANE - Estadisticas Vitales") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2005:2015),
+                  ylim=c(cede_salud_44$TMI[which.min(cede_salud_44$TMI)],
+                         cede_salud_44$TMI[which.max(cede_salud_44$TMI)]))
+
+```
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_TMI <- summaryBy(TMI ~ municipio, cede_salud_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+print(descrip_TMI)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_TMI_5antes <- cede_salud_44 %>% 
+  filter(ano<"2005-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_TMI_5antes <- summaryBy(TMI ~ municipio, descrip_TMI_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_TMI_5despues <- cede_salud_44 %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_TMI_5despues <- summaryBy(TMI ~ municipio, descrip_TMI_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_TMI_mean <- descrip_TMI_5antes$TMI.mean -descrip_TMI_5despues$TMI.mean
+diff_TMI_sd <- descrip_TMI_5antes$TMI.sd -descrip_TMI_5despues$TMI.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_TMI_mean)
+```
+
+
+## Analisis Necesidades Basicas Insatisfechas (NBI)
+
+###Graficos
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+
+Cuidado el grafico es enganoso, analizar con cautela
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+#GRAFICO ENGANOSO NO PONER CUIDADO
+
+#Arreglamos la variable ano porque solo hay 4 anos en los que el indice esta reportado
+cede_salud_44$ano_nbi <- cede_salud_44$ano 
+cede_salud_44$ano_nbi <- ordered(cede_salud_44$ano_nbi, levels=c(1993,1995,2000,2005))
+
+cede_salud_44 %>% 
+  ggplot(aes(x = as.factor(ano), y = nbi)) +	
+  geom_point() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Necesidades Basicas Insatisfechas', title='nbi de municipios por ano', x= 'Año', caption="Fuente: DANE - Estadisticas Vitales") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(ylim=c(cede_salud_44$nbi[which.min(cede_salud_44$nbi)],
+                         cede_salud_44$nbi[which.max(cede_salud_44$nbi)]))
+
+```
+
+### Descriptivos
+
+#### Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_nbi <- summaryBy(nbi ~ municipio, cede_salud_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+print(descrip_nbi)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_nbi_5antes <- cede_salud_44 %>% 
+  filter(ano<"2001-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_nbi_5antes <- summaryBy(nbi ~ municipio, descrip_nbi_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_nbi_5despues <- cede_salud_44 %>% 
+  filter(ano>"2011-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_nbi_5despues <- summaryBy(nbi ~ municipio, descrip_nbi_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_nbi_mean <- descrip_nbi_5antes$nbi.mean -descrip_nbi_5despues$nbi.mean
+#OBSERVE QUE DIO VALORES DE 0 PORQUE NO HAY DIFERENCIA PORQUE SOLO HAY 4 ANOS DE DATOS. OJO SOLO UTILIZAR VALORES EN BRUTO. 
+
+diff_nbi_sd <- descrip_nbi_5antes$nbi.sd -descrip_nbi_5despues$nbi.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_nbi_mean)
+print(diff_nbi_sd)
+```
+
+
+## Analisis prestadoras de servicio
+
+Esta variable es el numero de prestadoras de servicio de salud publica.
+***
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+###Graficos
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_salud_44$ano_base_general <- substring(cede_salud_44$ano_base_general,1,4)
+cede_salud_44$ano_base_general <- as.numeric(cede_salud_44$ano_base_general)
+for(i in 1:nrow(cede_salud_44)){
+  if(cede_salud_44$ano[i]==cede_salud_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_salud_44_eq <- cede_salud_44[a,]
+
+cede_salud_44_eq <- cede_salud_44_eq %>% 
+  dplyr::mutate(prestadores_cienmil=(prestadores/pobl_tot)*100000)
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+cede_salud_44_eq %>% 
+  ggplot(aes(x = ano, y = prestadores_cienmil)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Tasa Mortalidad Infantil', title='prestadores de municipios por ano', x= 'Año', caption="Fuente: DANE - Estadisticas Vitales") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2010:2016),
+                  ylim=c(cede_salud_44$prestadores[which.min(cede_salud_44$prestadores)],
+                         cede_salud_44$prestadores[which.max(cede_salud_44$prestadores)]))
+
+```
+
+### Descriptivos
+
+#### Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_prestadores_cienmil <- summaryBy(prestadores_cienmil ~ municipio, cede_salud_44_eq, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+print(descrip_prestadores_cienmil)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_prestadores_cienmil_5antes <- cede_salud_44_eq %>% 
+  filter(ano<"2014-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_prestadores_cienmil_5antes <- summaryBy(prestadores_cienmil ~ municipio, descrip_prestadores_cienmil_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_prestadores_cienmil_5despues <- cede_salud_44_eq %>% 
+  filter(ano>"2011-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_prestadores_cienmil_5despues <- summaryBy(prestadores_cienmil ~ municipio, descrip_prestadores_cienmil_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_prestadores_cienmil_mean <- descrip_prestadores_cienmil_5antes$prestadores_cienmil.mean -descrip_prestadores_cienmil_5despues$prestadores_cienmil.mean
+diff_prestadores_cienmil_sd <- descrip_prestadores_cienmil_5antes$prestadores_cienmil.sd -descrip_prestadores_cienmil_5despues$prestadores_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_prestadores_cienmil_mean)
+```
+
+## Analisis personas afiliadas al regimen subsidiado
+
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones. 
+
+$T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)$
+
+
+
+###Graficos 
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_salud_44$ano_base_general <- substring(cede_salud_44$ano_base_general,1,4)
+cede_salud_44$ano_base_general <- as.numeric(cede_salud_44$ano_base_general)
+for(i in 1:nrow(cede_salud_44)){
+  if(cede_salud_44$ano[i]==cede_salud_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_salud_44_eq <- cede_salud_44_eq %>% 
+  dplyr::mutate(subsidiado_cienmil=log((subsidiado/pobl_tot)*100000)) #Se saca el logaritmo para reducir la magnitud
+
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+cede_salud_44_eq %>% 
+  ggplot(aes(x = ano, y = subsidiado_cienmil)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Log Numero de personas subsidiadas por cien mil', title='subsidiado de municipios por ano', x= 'Año', caption="Fuente: DANE - Estadisticas Vitales") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2009:2016))
+
+```
+
+### Descriptivos
+
+#### Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_subsidiado_cienmil <- summaryBy(subsidiado_cienmil ~ municipio, cede_salud_44_eq, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+print(descrip_subsidiado_cienmil)
+```
+
+#### $\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_subsidiado_cienmil_5antes <- cede_salud_44_eq %>% 
+  filter(ano<"2013-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_subsidiado_cienmil_5antes <- summaryBy(subsidiado_cienmil ~ municipio, descrip_subsidiado_cienmil_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_subsidiado_cienmil_5despues <- cede_salud_44_eq %>% 
+  filter(ano>"2012-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_subsidiado_cienmil_5despues <- summaryBy(subsidiado_cienmil ~ municipio, descrip_subsidiado_cienmil_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos.  
+
+
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_subsidiado_cienmil_mean <- descrip_subsidiado_cienmil_5antes$subsidiado_cienmil.mean -descrip_subsidiado_cienmil_5despues$subsidiado_cienmil.mean
+diff_subsidiado_cienmil_sd <- descrip_subsidiado_cienmil_5antes$subsidiado_cienmil.sd -descrip_subsidiado_cienmil_5despues$subsidiado_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_subsidiado_cienmil_mean)
+```
+
+
+## Analisis  personas afilidas al regimen contributivo
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones. 
+
+$T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)$
+
+###Graficos 
+
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_salud_44$ano_base_general <- substring(cede_salud_44$ano_base_general,1,4)
+cede_salud_44$ano_base_general <- as.numeric(cede_salud_44$ano_base_general)
+for(i in 1:nrow(cede_salud_44)){
+  if(cede_salud_44$ano[i]==cede_salud_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_salud_44_eq <- cede_salud_44[a,]
+
+cede_salud_44_eq <- cede_salud_44_eq %>% 
+  dplyr::mutate(contributivo_cienmil=log((contributivo/pobl_tot)*100000)) #Se saca el logaritmo para reducir la magnitud
+
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+cede_salud_44_eq %>% 
+  ggplot(aes(x = ano, y = contributivo_cienmil)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Log Numero de personas subsidiadas por cien mil', title='contributivo de municipios por ano', x= 'Año', caption="Fuente: DANE - Estadisticas Vitales") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2009:2016))
+
+
+```
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_contributivo_cienmil <- summaryBy(contributivo_cienmil ~ municipio, cede_salud_44_eq, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+print(descrip_contributivo_cienmil)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_contributivo_cienmil_5antes <- cede_salud_44_eq %>% 
+  filter(ano<"2013-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_contributivo_cienmil_5antes <- summaryBy(contributivo_cienmil ~ municipio, descrip_contributivo_cienmil_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_contributivo_cienmil_5despues <- cede_salud_44_eq %>% 
+  filter(ano>"2012-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_contributivo_cienmil_5despues <- summaryBy(contributivo_cienmil ~ municipio, descrip_contributivo_cienmil_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos.  
+
+
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_contributivo_cienmil_mean <- descrip_contributivo_cienmil_5antes$contributivo_cienmil.mean -descrip_contributivo_cienmil_5despues$contributivo_cienmil.mean
+diff_contributivo_cienmil_sd <- descrip_contributivo_cienmil_5antes$contributivo_cienmil.sd -descrip_contributivo_cienmil_5despues$contributivo_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos
+
+print(diff_contributivo_cienmil_mean)
+```
+
+
+# Analisis Estadisticos CON EL ACDIVOCA (Correlaciones y regresiones)
+
+El objetivo de esta seccion es hacer las estadisticas inferenciales de las variables de interes con los items del ACDIVOCA. Si no sabe cuales son las variables ACDI-VOCA dirigirse a la pestana *"Codigo para correr todo"*.
+
+## Variables Agregadas con ACDI-VOCA
+
+En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo collapse en todos los anos. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+Recuerde que las variables del ACDI-VOCA son:
++Reconciliacion
++Disculpas
++Violencia
++Rencor
++Memoria (Memoria historica)
++Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)
+
+### Correlaciones
+
+
+
+```{r}
+#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. 
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+diff_TMI_mean[which(!is.finite(diff_TMI_mean))] <- NA 
+diff_nbi_mean[which(!is.finite(diff_nbi_mean))] <- NA
+diff_prestadores_cienmil_mean[which(!is.finite(diff_prestadores_cienmil_mean))] <- NA
+diff_subsidiado_cienmil_mean[which(!is.finite(diff_subsidiado_cienmil_mean))] <- NA
+
+
+correlaciones <- cbind(diff_TMI_mean, 
+                       diff_nbi_mean, 
+                       diff_prestadores_cienmil_mean, 
+                       diff_subsidiado_cienmil_mean, 
+                       reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+
+nombres <- c("TMI",
+             "NBI",
+             "Numero Prestadores_cienmil",
+             "Afiliados regimen subsidiado",
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+colnames(correlaciones) <- nombres
+
+
+
+rcorr(correlaciones, type="spearman") #Aqui hay cosas bien interesantes}
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regReconcililacion)
+
+regDisculpas <- lm(Disculpas ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regDisculpas)
+
+regViolencia <- lm(Violencia ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regViolencia)
+
+regRencor <- lm(Rencor ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regRencor)
+
+regMemoria <- lm(Memoria~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~correlaciones[,1:4], data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+```
+
+
+## $\Delta$ variables con ACDI-VOCA
+
+En esta seccion se tiene en cuenta el $\Delta$ de la variable de interes. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+### Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. 
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+descrip_TMI$TMI.mean[which(!is.finite(descrip_TMI$TMI.mean))] <- NA 
+descrip_nbi$nbi.mean[which(!is.finite(descrip_nbi$nbi.mean))] <- NA
+descrip_prestadores_cienmil$prestadores_cienmil.mean[which(!is.finite(descrip_prestadores_cienmil$prestadores_cienmil.mean))] <- NA
+descrip_subsidiado_cienmil$subsidiado_cienmil.mean[which(!is.finite(descrip_subsidiado_cienmil$subsidiado_cienmil.mean))] <- NA
+
+
+correlaciones <- cbind(descrip_TMI$TMI.mean, 
+                       descrip_nbi$nbi.mean, 
+                       descrip_prestadores_cienmil$prestadores_cienmil.mean, 
+                       descrip_subsidiado_cienmil$subsidiado_cienmil.mean, 
+                       reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+
+nombres <- c("TMI",
+             "NBI",
+             "Numero Prestadores_cienmil",
+             "Afiliados regimen subsidiado",
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+colnames(correlaciones) <- nombres
+
+rcorr(correlaciones, type="spearman") #Aqui hay cosas bien interesantes}
+
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regReconcililacion)
+
+regDisculpas <- lm(Disculpas ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regDisculpas)
+
+#Numero de personas en el regiem de subsidiado
+regViolencia <- lm(Violencia ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regViolencia)
+
+regRencor <- lm(Rencor ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regRencor)
+
+regMemoria <- lm(Memoria~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~correlaciones[,1:4], data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+```
+
+
+
+
+
+
+

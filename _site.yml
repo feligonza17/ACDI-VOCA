@@ -6,29 +6,29 @@ navbar:
     - text: "Home"
       icon: fa-home
       href: index.html
-    - text: "Sobre la pagina"
-      icon: fa-info
-      href: about.html
     - text: "Codigo para iniciar"
       icon: 
       href: Merge_bases.html
-    - text: "Primeras Exploraciones"
-      menu:
-        - text: "Graficos BBDD Violencia"
-          icon: fa-user-secret
-          href: Exploracion_CEDE_Violencia_ACDIVOCA.html
-        - text: "Analisis Descriptivos"
-          href: acdivoca_analisis.html
-    - text: "Exploraciones avanzadas"
+    - text: "Exploraciones"
       menu:
         - text: "Violencia"
+          icon: fa-bomb
+          href: Violencia_graficos_analisis.html
         - text: "Gobierno"
+          icon: fa-user-secret
+          href: Gobierno_graficos_analisis.html
+        - text: "Salud"
+          href: Salud_graficos_analisis.html
+        - text: "Educacion"
+          href:
     - text: "More"
       icon: fa-gear
       menu:
-        - text: "Heading 1"
-        - text: "Page A"
-          href: page-a.html
+        - text: "Exploraciones Viejas"
+        - text: "Violencia y graficos"
+          href: Exploracion_CEDE_Violencia_ACDIVOCA.html
+        - text: "Violencia y estadistica"
+          href: acdivoca_analisis.html
 output:
   html_document:
     theme: lumen

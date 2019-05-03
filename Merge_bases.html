@@ -459,43 +459,33 @@ div.tocify {
   </a>
 </li>
 <li>
-  <a href="about.html">
-    <span class="fa fa-info"></span>
-     
-    Sobre la pagina
-  </a>
-</li>
-<li>
   <a href="Merge_bases.html">Codigo para iniciar</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Primeras Exploraciones
+    Exploraciones
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="Exploracion_CEDE_Violencia_ACDIVOCA.html">
-        <span class="fa fa-user-secret"></span>
+      <a href="Violencia_graficos_analisis.html">
+        <span class="fa fa-bomb"></span>
          
-        Graficos BBDD Violencia
+        Violencia
       </a>
     </li>
     <li>
-      <a href="acdivoca_analisis.html">Analisis Descriptivos</a>
+      <a href="Gobierno_graficos_analisis.html">
+        <span class="fa fa-user-secret"></span>
+         
+        Gobierno
+      </a>
     </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Exploraciones avanzadas
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Violencia</li>
-    <li class="dropdown-header">Gobierno</li>
+    <li>
+      <a href="Salud_graficos_analisis.html">Salud</a>
+    </li>
+    <li class="dropdown-header">Educacion</li>
   </ul>
 </li>
 <li class="dropdown">
@@ -507,9 +497,12 @@ div.tocify {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Heading 1</li>
+    <li class="dropdown-header">Exploraciones Viejas</li>
     <li>
-      <a href="page-a.html">Page A</a>
+      <a href="Exploracion_CEDE_Violencia_ACDIVOCA.html">Violencia y graficos</a>
+    </li>
+    <li>
+      <a href="acdivoca_analisis.html">Violencia y estadistica</a>
     </li>
   </ul>
 </li>
@@ -734,21 +727,90 @@ datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
          violencia, rencor, memoria_expectativa) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">describe</span>(<span class="dt">fast =</span> T) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">print</span>()</code></pre></div>
-<pre><code>##                     vars     n  mean   sd   min max range   se
-## memoria                1 11966  3.33 1.08   1.0   5   4.0 0.01
-## reconciliacion         2 11966  3.41 6.22 -16.0  16  32.0 0.06
-## disculpas              3 11966  0.80 1.02  -2.0   2   4.0 0.01
-## violencia              4 11966 -1.23 1.46  -4.0   4   8.0 0.01
-## rencor                 5 11966  3.67 1.06   0.6  15  14.4 0.01
-## memoria_expectativa    6 11966  3.38 1.25   0.6  15  14.4 0.01</code></pre>
+<pre><code>## . 
+## 
+##  6  Variables      11966  Observations
+## ---------------------------------------------------------------------------
+## memoria 
+##        n  missing distinct     Info     Mean      Gmd 
+##    11966        0        5    0.918    3.331    1.187 
+##                                         
+## Value          1     2     3     4     5
+## Frequency    665  2260  2934  4658  1449
+## Proportion 0.056 0.189 0.245 0.389 0.121
+## ---------------------------------------------------------------------------
+## reconciliacion 
+##        n  missing distinct     Info     Mean      Gmd      .05      .10 
+##    11966        0       33    0.988    3.407    6.861       -8       -5 
+##      .25      .50      .75      .90      .95 
+##        0        4        8        9       13 
+## 
+## lowest : -16 -15 -14 -13 -12, highest:  12  13  14  15  16
+## ---------------------------------------------------------------------------
+## disculpas 
+##        n  missing distinct     Info     Mean      Gmd 
+##    11966        0        5    0.885   0.8022    1.066 
+##                                         
+## Value         -2    -1     0     1     2
+## Frequency    436   934  2186  5415  2995
+## Proportion 0.036 0.078 0.183 0.453 0.250
+## ---------------------------------------------------------------------------
+## violencia 
+##        n  missing distinct     Info     Mean      Gmd 
+##    11966        0        9    0.956   -1.227    1.628 
+##                                                                 
+## Value         -4    -3    -2    -1     0     1     2     3     4
+## Frequency    554  2107  2679  2316  3246   733   225    76    30
+## Proportion 0.046 0.176 0.224 0.194 0.271 0.061 0.019 0.006 0.003
+## ---------------------------------------------------------------------------
+## rencor 
+##        n  missing distinct     Info     Mean      Gmd      .05      .10 
+##    11966        0       23    0.928    3.672    1.105    1.667    2.400 
+##      .25      .50      .75      .90      .95 
+##    3.000    4.000    4.000    5.000    5.000 
+## 
+## lowest :  0.6000000  0.6250000  0.6666667  0.7500000  1.0000000
+## highest:  6.0000000  6.6666667  8.7500000 10.0000000 15.0000000
+## ---------------------------------------------------------------------------
+## memoria_expectativa 
+##        n  missing distinct     Info     Mean      Gmd      .05      .10 
+##    11966        0       23    0.971    3.375    1.303    1.500    2.000 
+##      .25      .50      .75      .90      .95 
+##    2.625    3.000    4.000    5.000    5.000 
+## 
+## lowest :  0.6000000  0.6250000  0.6666667  0.7500000  1.0000000
+## highest:  6.0000000  6.6666667  8.7500000 10.0000000 15.0000000
+## ---------------------------------------------------------------------------</code></pre>
 </div>
 <div id="merge-con-base-de-datos-cede-general" class="section level1">
 <h1><span class="header-section-number">5</span> MERGE con base de datos CEDE general</h1>
 <p>Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (aÃ±o, pib, poblacion, etc.)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a limpiar un poco la base general para que el merge sea mÃ¡s fÃ¡cil de entender</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Collapse estadisticos por municipio</span>
+
+reconciliacion_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(reconciliacion <span class="op">~</span><span class="st"> </span>Municipio, 
+                                  datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+disculpas_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(disculpas <span class="op">~</span><span class="st"> </span>Municipio, 
+                             datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+violencia_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(violencia <span class="op">~</span><span class="st"> </span>Municipio, 
+                             datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+rencor_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(rencor <span class="op">~</span><span class="st"> </span>Municipio, 
+                          datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+memoria_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(memoria <span class="op">~</span><span class="st"> </span>Municipio, 
+                           datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+memoria_expectativa_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(memoria_expectativa <span class="op">~</span><span class="st"> </span>Municipio, 
+                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+
+
+
+<span class="co"># Merge con base de datos general -----------------------------------------</span>
+<span class="co">#Vamos a limpiar un poco la base general para que el merge sea mas facil de entender</span>
 cede_general_<span class="dv">44</span> &lt;-<span class="st"> </span>cede_general_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(Municipio)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#Quitar variable que tienen las otras bases</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">ano_base_general=</span>ano) <span class="co">#Renombrar la variable aÃ±o asociada con la base general</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">ano_base_general=</span>ano) <span class="co">#Renombrar la variable ano asociada con la base general</span>
+
+
+
+
 
 <span class="co">#Merge con las bases</span>
 cede_conflicto_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_conflicto_<span class="dv">44</span>, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&quot;codmpio&quot;</span>)
@@ -762,6 +824,9 @@ cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span clas
 <span class="kw">rm</span>(datos_cede_conflicto,datos_cede_educacion,
    datos_cede_generales,datos_cede_gobierno,
    datos_cede_salud,datos_cede_tierras, cede_general_<span class="dv">44</span>)</code></pre></div>
+</div>
+<div id="creacion-de-indices-importantes" class="section level1">
+<h1><span class="header-section-number">6</span> Creacion de indices importantes</h1>
 </div>
 
 

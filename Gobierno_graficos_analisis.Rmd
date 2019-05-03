@@ -1,0 +1,653 @@
+---
+title: 'Gobierno: Graficos y analisis'
+author: "Felipe Gonzalez-Arango"
+date: "2 de mayo de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+#Setup
+Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
+
+```{r, Gobierno, message=FALSE, warning=FALSE}
+#ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
+
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+
+
+#Cargar paquetes
+library(readstata13)
+library(tidyr)
+library(dplyr)
+library(data.table)
+library(readxl)
+library(doBy)
+library(vtable)
+library(plyr)
+library(gridExtra)
+library(grid)
+library(purrr)
+library(psych)
+library(ggplot2)
+library(psych)
+library(Hmisc)
+library(matrixStats)
+library(ggpubr)
+library(vtable)
+library(ggthemes)
+
+```
+
+
+
+
+# Graficos variables importantes y algunos descriptivos
+
+Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. 
+***
+La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion. 
+
+
+## Analisis Desempeno fiscal (indice)
+
+Este indice mide globalmente el resultado fiscal alcanzado en cada año y se encuentra en una escala de 0 a 100, donde los valores cercanos a 0 reflejan un bajo desempeño fiscal y valores cercanos a 100 significan que la entidad territorial logro en conjunto los siguientes resultados (DNP, 2013): Buen balance en su desempeño fiscal, Suficientes recursos para sostener su funcionamiento Cumplimiento de gasto de funcionamiento segun la Ley 617/00, Importante nivel de recursos propios (solvencia tributaria) como contrapartida a los recursos de SGP, Altos niveles de inversion,  Adecuada capacidad de respaldo del servicio de su deuda, Generacion de ahorro corriente, necesario para garantizar su solvencia financiera
+
+
+###Graficos
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_gobierno_44 %>% 
+  ggplot(aes(x = ano, y = DF_desemp_fisc)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~municipio) +	
+  labs(y='Desempeno fiscal', title='Desempeno fiscal de municipios por ano', x= 'Año', caption="Fuente: DNP") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2000:2016),
+                  ylim=c(cede_gobierno_44$DF_desemp_fisc[which.min(cede_gobierno_44$DF_desemp_fisc)],
+                         cede_gobierno_44$DF_desemp_fisc[which.max(cede_gobierno_44$DF_desemp_fisc)]))
+
+```
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_desemp_fisc <- summaryBy(DF_desemp_fisc ~ municipio, cede_gobierno_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+print(descrip_desemp_fisc)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_desemp_fisc_5antes <- cede_gobierno_44 %>% 
+  filter(ano<"2005-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_desemp_fisc_5antes <- summaryBy(DF_desemp_fisc ~ municipio, descrip_desemp_fisc_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_desemp_fisc_5despues <- cede_gobierno_44 %>% 
+  filter(ano>"2012-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_desemp_fisc_5despues <- summaryBy(DF_desemp_fisc ~ municipio, descrip_desemp_fisc_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos.
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_desemp_fisc_mean <- descrip_desemp_fisc_5antes$DF_desemp_fisc.mean -descrip_desemp_fisc_5despues$DF_desemp_fisc.mean
+diff_desemp_fisc_sd <- descrip_desemp_fisc_5antes$DF_desemp_fisc.sd -descrip_desemp_fisc_5despues$DF_desemp_fisc.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+  
+
+print(diff_desemp_fisc_mean)
+```
+
+
+## Analisis Desempeno integral (indice)
+
+La evaluacion del desempeno integral tiene por objeto evaluar, valga la redundancia, el desempeno de la gestion de las entidades territoriales en sus competencias fundamentales, basado en: los resultados obtenidos, en los compromisos adquiridos por estas entidades en los planes de desarrollo, el marco del proceso de descentralizacion de competencias y recursos, asi como, el cumplimiento del ordenamiento juridico que lo fundamenta.
+
+###Graficos
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_gobierno_44 %>% 
+  ggplot(aes(x = ano, y = DI_desemp_int)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~municipio) +	
+  labs(y='Desempeno integral', title='Desempeno integral de municipios por ano', x= 'Ano', caption="Fuente: DNP") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2005:2016),
+                  ylim=c(cede_gobierno_44$DI_desemp_int[which.min(cede_gobierno_44$DI_desemp_int)],
+                         cede_gobierno_44$DI_desemp_int[which.max(cede_gobierno_44$DI_desemp_int)]))
+
+```
+
+Grafico del desempeno integral junto con el fiscal
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_gobierno_44 %>% 
+  ggplot(aes(x = ano)) +	
+  geom_line(aes(y = DI_desemp_int)) +
+  geom_line(aes(y = DF_desemp_fisc), color="blue") +
+  labs(color="Desempeno integral")+
+  facet_wrap(~municipio) +	
+  labs(y='Desempeno integral', title='Desempeno fiscal e integral (azul) de municipios por ano', x= 'Año', caption="Fuente: DNP") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2000:2016),
+                  ylim=c(cede_gobierno_44$DI_desemp_int[which.min(cede_gobierno_44$DI_desemp_int)],
+                         cede_gobierno_44$DI_desemp_int[which.max(cede_gobierno_44$DI_desemp_int)]))
+
+```
+
+### Descriptivos
+
+#### Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_desemp_int <- summaryBy(DI_desemp_int ~ municipio, cede_gobierno_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+print(descrip_desemp_int)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_desemp_int_5antes <- cede_gobierno_44 %>% 
+  filter(ano<"2005-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_desemp_int_5antes <- summaryBy(DI_desemp_int ~ municipio, descrip_desemp_int_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_desemp_int_5despues <- cede_gobierno_44 %>% 
+  filter(ano>"2012-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_desemp_int_5despues <- summaryBy(DI_desemp_int ~ municipio, descrip_desemp_int_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+
+diff_desemp_int_mean <- descrip_desemp_int_5antes$DI_desemp_int.mean -descrip_desemp_int_5despues$DI_desemp_int.mean
+diff_desemp_int_sd <- descrip_desemp_int_5antes$DI_desemp_int.sd -descrip_desemp_int_5despues$DI_desemp_int.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_desemp_int_mean)
+
+```
+
+
+## Analisis Inversion total
+
+Esta variable mide: Inversion total (inv_total = inv_a_educacion + inv_crecusion + inv_fortinst + inv_promdllo + inv_sp + inv_tranporte + inv_cult + inv_agropecuario + inv_aguasani + inv_ambiental + inv_dllocomun+inv_dyr + inv_en_educacion + inv_equipamiento + inv_gruposvunera + inv_en_justicia +inv_prevdesastr + inv_en_salud + inv_en_vias + inv_en_vivienda)
+
+***
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones. 
+
+$T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)$
+
+###Graficos
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_gobierno_44$ano_base_general <- substring(cede_gobierno_44$ano_base_general,1,4)
+cede_gobierno_44$ano_base_general <- as.numeric(cede_gobierno_44$ano_base_general)
+for(i in 1:nrow(cede_gobierno_44)){
+  if(cede_gobierno_44$ano[i]==cede_gobierno_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_gobierno_44_inv <- cede_gobierno_44[a,]
+
+cede_gobierno_44_inv <- cede_gobierno_44_inv %>% 
+  dplyr::mutate(inv_total_cienmil=log((inv_total/pobl_tot)*100000)) #Se saca el logaritmo para reducir la magnitud
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+cede_gobierno_44_inv %>% 
+  ggplot(aes(x = ano, y = inv_total_cienmil)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~municipio) +	
+  labs(y='Inversion total', title='Logaritmo de la inversion total por municipios por ano', x= 'Año', caption="Fuente: DNP") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = seq(2000, 2010, by=1))
+
+```
+
+### Descriptivos
+
+#### Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_inv_total_cienmil <- summaryBy(inv_total_cienmil ~ municipio, cede_gobierno_44_inv, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+print(descrip_inv_total_cienmil)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_inv_total_cienmil_5antes <- cede_gobierno_44_inv %>% 
+  filter(ano<2005) #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_inv_total_cienmil_5antes <- summaryBy(inv_total_cienmil ~ municipio, descrip_inv_total_cienmil_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_inv_total_cienmil_5despues <- cede_gobierno_44_inv %>% 
+  filter(ano>2005) #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_inv_total_cienmil_5despues <- summaryBy(inv_total_cienmil ~ municipio, descrip_inv_total_cienmil_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+
+
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_inv_total_cienmil_mean <- descrip_inv_total_cienmil_5antes$inv_total_cienmil.mean -descrip_inv_total_cienmil_5despues$inv_total_cienmil.mean
+diff_inv_total_cienmil_sd <- descrip_inv_total_cienmil_5antes$inv_total_cienmil.sd -descrip_inv_total_cienmil_5despues$inv_total_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_inv_total_cienmil_mean)
+```
+
+##  Analisis Inversion en fortalecimiento institucional
+
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones. 
+
+$T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)$
+
+
+
+###Graficos 
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_gobierno_44$ano_base_general <- substring(cede_gobierno_44$ano_base_general,1,4)
+cede_gobierno_44$ano_base_general <- as.numeric(cede_gobierno_44$ano_base_general)
+for(i in 1:nrow(cede_gobierno_44)){
+  if(cede_gobierno_44$ano[i]==cede_gobierno_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_gobierno_44_inv <- cede_gobierno_44[a,]
+
+cede_gobierno_44_inv <- cede_gobierno_44_inv %>% 
+  dplyr::mutate(inv_fortinst_cienmil=log((inv_fortinst/pobl_tot)*100000)) #Se saca el logaritmo para reducir la magnitud
+
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+cede_gobierno_44_inv %>% 
+  ggplot(aes(x = ano, y = inv_fortinst_cienmil)) +	
+  geom_line() +	
+  scale_color_manual(values = palette) +	
+  facet_wrap(~municipio) +	
+  labs(y='Inversion al fortalecimiento institucional', title='Logaritmo de la inversion al fortalecimiento institucional por municipios por ano', x= 'Año', caption="Fuente: DNP") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = seq(2002, 2010, by=1))
+
+```
+
+### Descriptivos
+
+#### Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_inv_fortinst_cienmil <- summaryBy(inv_fortinst_cienmil ~ municipio, cede_gobierno_44_inv, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+print(descrip_inv_fortinst_cienmil)
+```
+
+#### $\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_inv_fortinst_cienmil_5antes <- cede_gobierno_44_inv %>% 
+  filter(ano<2006) #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_inv_fortinst_cienmil_5antes <- summaryBy(inv_fortinst_cienmil ~ municipio, descrip_inv_fortinst_cienmil_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_inv_fortinst_cienmil_5despues <- cede_gobierno_44_inv %>% 
+  filter(ano>2005) #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_inv_fortinst_cienmil_5despues <- summaryBy(inv_fortinst_cienmil ~ municipio, descrip_inv_fortinst_cienmil_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_inv_fortinst_cienmil_mean <- descrip_inv_fortinst_cienmil_5antes$inv_fortinst_cienmil.mean -descrip_inv_fortinst_cienmil_5despues$inv_fortinst_cienmil.mean
+diff_inv_fortinst_cienmil_sd <- descrip_inv_fortinst_cienmil_5antes$inv_fortinst_cienmil.sd -descrip_inv_fortinst_cienmil_5despues$inv_fortinst_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+
+print(diff_inv_fortinst_cienmil_mean)
+```
+
+
+## Analisis Indice de Gobierno Abierto
+
+Con esta dimension, el IGA pretende medir los niveles de organizacion y cumplimiento de las normas basicas de la administracion publica. Por esto se ubica al principio de la cadena y de la estructura operativa del indicador, pues dispone una capacidad instalada al interior de la administracion publica para que, tanto los funcionarios como la ciudadania, estructuren su relacion en torno a los flujos de informacion producidos y requeridos en el proceso de relacionamiento publico.Fuente: Procuraduria General de la Nacion
+
+
+###Graficos 
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+cede_gobierno_44 %>% 
+  ggplot(aes(x = ano, y = IGA_total)) +	
+  geom_line() +	
+  theme_bw()+
+  facet_wrap(~municipio) +	
+  labs(y='Indice de Gobierno Abierto', title='Indice de Gobierno Abierto por municipios por ano', x= 'Año', caption="Fuente: DNP") +	
+  theme(plot.title = element_text(hjust = 0.1), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = seq(2010,2016, by=1),
+                  ylim=c(cede_gobierno_44$IGA_total[which.min(cede_gobierno_44$IGA_total)],
+                         cede_gobierno_44$IGA_total[which.max(cede_gobierno_44$IGA_total)]))
+
+
+```
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_IGA_total <- summaryBy(IGA_total ~ municipio, cede_gobierno_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+print(descrip_IGA_total)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_IGA_total_5antes <- cede_gobierno_44 %>% 
+  filter(ano<"2014-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_IGA_total_5antes <- summaryBy(IGA_total ~ municipio, descrip_IGA_total_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_IGA_total_5despues <- cede_gobierno_44 %>% 
+  filter(ano>"2012-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_IGA_total_5despues <- summaryBy(IGA_total ~ municipio, descrip_IGA_total_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos.
+
+
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_IGA_total_mean <- descrip_IGA_total_5antes$IGA_total.mean -descrip_IGA_total_5despues$IGA_total.mean
+diff_IGA_total_sd <- descrip_IGA_total_5antes$IGA_total.sd -descrip_IGA_total_5despues$IGA_total.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_IGA_total_mean)
+```
+
+
+# Analisis Estadisticos CON EL ACDIVOCA (Correlaciones y regresiones)
+
+El objetivo de esta seccion es hacer las estadisticas inferenciales de las variables de interes con los items del ACDIVOCA. Si no sabe cuales son las variables ACDI-VOCA dirigirse a la pestana *"Codigo para correr todo"*.
+
+## Variables Agregadas con ACDI-VOCA
+
+En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo collapse en todos los anos. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+Recuerde que las variables del ACDI-VOCA son:
++Reconciliacion
++Disculpas
++Violencia
++Rencor
++Memoria (Memoria historica)
++Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)
+
+### Correlaciones
+
+
+
+```{r}
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+#Vamos a hacerlo primero con el indice agregado por anos. 
+
+descrip_inv_fortinst_cienmil$inv_fortinst_cienmil.mean[which(!is.finite(diff_inv_fortinst_cienmil_mean))] <- NA 
+
+descrip_inv_total_cienmil$inv_total_cienmil.mean[which(!is.finite(diff_inv_total_cienmil_mean))] <- NA
+
+
+correlaciones <- cbind(descrip_desemp_fisc$DF_desemp_fisc.mean, 
+                       descrip_desemp_int$DI_desemp_int.mean, 
+                       descrip_IGA_total$IGA_total.mean, 
+                       descrip_inv_fortinst_cienmil$inv_fortinst_cienmil.mean,
+                       descrip_inv_total_cienmil$inv_total_cienmil.mean, 
+                       reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+nombres <- c("Desempeno Fiscal",
+             "Desempeno Integral",
+             "Gobierno Abierto",
+             "Inv Fort Inst",
+             "Inv Total", 
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+colnames(correlaciones) <- nombres
+rcorr(correlaciones, type="spearman") #Aqui hay hartas cosas!! REVISAR
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ correlaciones[,1:5], data=dfcorrelaciones)
+summary(regReconcililacion)
+regDisculpas <- lm(Disculpas ~correlaciones[,1:5], data=dfcorrelaciones)
+summary(regDisculpas)
+
+regViolencia <- lm(Violencia ~correlaciones[,1:5], data=dfcorrelaciones)
+summary(regViolencia)
+
+regRencor <- lm(Rencor ~correlaciones[,1:5], data=dfcorrelaciones)
+summary(regRencor)
+
+regMemoria <- lm(Memoria~correlaciones[,1:5], data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~correlaciones[,1:5], 
+                             data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+
+```
+
+
+## $\Delta$ variables con ACDI-VOCA
+
+En esta seccion se tiene en cuenta el $\Delta$ de la variable de interes. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+### Correlaciones
+
+```{r}
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+diff_inv_fortinst_cienmil_mean[which(!is.finite(diff_inv_fortinst_cienmil_mean))] <- NA 
+
+diff_inv_total_cienmil_mean[which(!is.finite(diff_inv_total_cienmil_mean))] <- NA
+
+
+
+  correlaciones <- cbind(diff_desemp_fisc_mean, 
+                         diff_desemp_int_mean, 
+                         diff_IGA_total_mean, 
+                         diff_inv_fortinst_cienmil_mean,
+                         diff_inv_total_cienmil_mean, 
+                         reconciliacion_agreg$reconciliacion.mean, 
+                         disculpas_agreg$disculpas.mean, 
+                         violencia_agreg$violencia.mean, 
+                         rencor_agreg$rencor.mean, 
+                         memoria_agreg$memoria.mean, 
+                         memoria_expectativa_agreg$memoria_expectativa.mean)
+
+nombres <- c("Desempeno Fiscal",
+             "Desempeno Integral",
+             "Gobierno Abierto",
+             "Inv Fort Inst",
+             "Inv Total", 
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+colnames(correlaciones) <- nombres
+rcorr(correlaciones, type="spearman") #Hay algo entre la diferencia entre Desempeno Fiscal y rencor. 
+
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ diff_desemp_fisc_mean+ 
+                         diff_desemp_int_mean+ 
+                         diff_IGA_total_mean+ 
+                         diff_inv_fortinst_cienmil_mean+
+                         diff_inv_total_cienmil_mean, data=dfcorrelaciones)
+summary(regReconcililacion)
+
+#Reconciliacion es el unico que parece funcionar. Pues o el unico que arroja informacion sobre esta BBDD. 
+
+regDisculpas <- lm(Disculpas ~ diff_desemp_fisc_mean+                           diff_desemp_int_mean+                           diff_IGA_total_mean+                           diff_inv_fortinst_cienmil_mean+                          diff_inv_total_cienmil_mean, data=dfcorrelaciones)
+summary(regDisculpas)
+
+regViolencia <- lm(Violencia ~ diff_desemp_fisc_mean+                           diff_desemp_int_mean+                           diff_IGA_total_mean+                           diff_inv_fortinst_cienmil_mean+                          diff_inv_total_cienmil_mean, data=dfcorrelaciones)
+summary(regViolencia)
+
+regRencor <- lm(Rencor ~ diff_desemp_fisc_mean+                           diff_desemp_int_mean+                           diff_IGA_total_mean+                           diff_inv_fortinst_cienmil_mean+                          diff_inv_total_cienmil_mean, data=dfcorrelaciones)
+summary(regRencor)
+
+regMemoria <- lm(Memoria~ diff_desemp_fisc_mean+                           diff_desemp_int_mean+                           diff_IGA_total_mean+                           diff_inv_fortinst_cienmil_mean+                          diff_inv_total_cienmil_mean, data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~diff_desemp_fisc_mean+                           diff_desemp_int_mean+                           diff_IGA_total_mean+                           diff_inv_fortinst_cienmil_mean+                          diff_inv_total_cienmil_mean, data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+
+```
+
+
+
+
+
+
+

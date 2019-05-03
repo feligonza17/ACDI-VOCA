@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Felipe Gonzalez-Arango" />
+
+
+<title>Gobierno: Graficos y analisis</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="Merge_bases.html">Codigo para iniciar</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exploraciones
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Violencia_graficos_analisis.html">
+        <span class="fa fa-bomb"></span>
+         
+        Violencia
+      </a>
+    </li>
+    <li>
+      <a href="Gobierno_graficos_analisis.html">
+        <span class="fa fa-user-secret"></span>
+         
+        Gobierno
+      </a>
+    </li>
+    <li>
+      <a href="Salud_graficos_analisis.html">Salud</a>
+    </li>
+    <li class="dropdown-header">Educacion</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    More
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Exploraciones Viejas</li>
+    <li>
+      <a href="Exploracion_CEDE_Violencia_ACDIVOCA.html">Violencia y graficos</a>
+    </li>
+    <li>
+      <a href="acdivoca_analisis.html">Violencia y estadistica</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Gobierno: Graficos y analisis</h1>
+<h4 class="author">Felipe Gonzalez-Arango</h4>
+<h4 class="date">2 de mayo de 2019</h4>
+
+</div>
+
+
+<div id="setup" class="section level1">
+<h1><span class="header-section-number">1</span> Setup</h1>
+<p>Con este codigo se importan todas las bases de datos y todos los paquetes necesarios.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ANTES DE CORRER, Â¡CORRER LA PESTANA &quot;CODIGO PARA ARRANCAR TODO&quot;!</span>
+
+<span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
+
+
+<span class="co">#Cargar paquetes</span>
+<span class="kw">library</span>(readstata13)
+<span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(data.table)
+<span class="kw">library</span>(readxl)
+<span class="kw">library</span>(doBy)
+<span class="kw">library</span>(vtable)
+<span class="kw">library</span>(plyr)
+<span class="kw">library</span>(gridExtra)
+<span class="kw">library</span>(grid)
+<span class="kw">library</span>(purrr)
+<span class="kw">library</span>(psych)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(psych)
+<span class="kw">library</span>(Hmisc)
+<span class="kw">library</span>(matrixStats)
+<span class="kw">library</span>(ggpubr)
+<span class="kw">library</span>(vtable)
+<span class="kw">library</span>(ggthemes)</code></pre></div>
+</div>
+<div id="graficos-variables-importantes-y-algunos-descriptivos" class="section level1">
+<h1><span class="header-section-number">2</span> Graficos variables importantes y algunos descriptivos</h1>
+<p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
+<div id="analisis-desempeno-fiscal-indice" class="section level2">
+<h2><span class="header-section-number">2.1</span> Analisis Desempeno fiscal (indice)</h2>
+<p>Este indice mide globalmente el resultado fiscal alcanzado en cada aÃ±o y se encuentra en una escala de 0 a 100, donde los valores cercanos a 0 reflejan un bajo desempeÃ±o fiscal y valores cercanos a 100 significan que la entidad territorial logro en conjunto los siguientes resultados (DNP, 2013): Buen balance en su desempeÃ±o fiscal, Suficientes recursos para sostener su funcionamiento Cumplimiento de gasto de funcionamiento segun la Ley 617/00, Importante nivel de recursos propios (solvencia tributaria) como contrapartida a los recursos de SGP, Altos niveles de inversion, Adecuada capacidad de respaldo del servicio de su deuda, Generacion de ahorro corriente, necesario para garantizar su solvencia financiera</p>
+<div id="graficos" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> DF_desemp_fisc)) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno fiscal&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno fiscal de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2016</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc)],
+                         cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc)]))</code></pre></div>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-1-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Descriptivos</h3>
+<div id="agregados" class="section level4">
+<h4><span class="header-section-number">2.1.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_desemp_fisc &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(DF_desemp_fisc <span class="op">~</span><span class="st"> </span>municipio, cede_gobierno_<span class="dv">44</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )    <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+<span class="kw">print</span>(descrip_desemp_fisc)</code></pre></div>
+<pre><code>##                 municipio DF_desemp_fisc.sum DF_desemp_fisc.mean
+## 1                   Albán           25186.56            59.26249
+## 2               Algarrobo           23336.01            58.34003
+## 3                Apartadó           27260.27            64.14181
+## 4                  Arauca           29972.11            70.52261
+## 5               Arauquita           27000.89            67.50223
+## 6            Bogotá, D.C.           32497.52            76.46476
+## 7                  Bojaya           21070.31            56.18749
+## 8                 Briceño           27375.99            64.41410
+## 9            Buenaventura           25725.22            64.31304
+## 10                   Cali           28058.18            66.01925
+## 11              Cartagena           30281.95            71.25164
+## 12   Cartagena del Chairá           27971.98            65.81643
+## 13              Chaparral           26503.91            62.36213
+## 14                Ciénaga           24643.83            61.60958
+## 15                 Cúcuta           29268.79            68.86774
+## 16               El Tambo           23783.92            59.45980
+## 17               El Tarra           24672.93            61.68233
+## 18              Florencia           28215.01            66.38826
+## 19                Inírida           25918.10            60.98377
+## 20                Ituango           25613.74            60.26763
+## 21                 Maicao           27392.08            68.48019
+## 22               Medellín           32965.02            77.56475
+## 23                Mesetas           22210.15            59.22707
+## 24              Moniquirá           27251.85            64.12201
+## 25            Piedecuesta           30269.02            71.22122
+## 26            Puerto Asís           24719.23            61.79808
+## 27          Puerto Gaitán           31308.24            73.66645
+## 28          Puerto Guzmán           25454.99            59.89409
+## 29            Puerto Rico           26226.17            61.70864
+## 30                 Quibdó           26177.07            61.59310
+## 31              Rioblanco           25186.57            59.26253
+## 32                Sahagún           28328.54            66.65539
+## 33             San Carlos           26571.62            62.52147
+## 34   San Pedro de Cartago           24262.45            60.65613
+## 35 San Vicente del Caguán           26129.46            61.48109
+## 36            Santa Marta           28163.60            70.40900
+## 37                Soledad           25996.73            64.99182
+## 38                   Tibú           28466.51            66.98002
+## 39                Tocaima           27782.30            65.37012
+## 40                  Turbo           26439.36            62.21026
+## 41                 Uribia           27945.95            65.75518
+## 42          Villavicencio           29303.77            68.95005
+## 43           Vistahermosa           23322.86            66.63673
+## 44                  Yopal           31586.52            74.32122
+##    DF_desemp_fisc.sd
+## 1           4.021548
+## 2           4.868529
+## 3           7.335719
+## 4           8.270680
+## 5          10.924380
+## 6           6.746336
+## 7          12.490966
+## 8           9.497140
+## 9           9.556422
+## 10         11.985808
+## 11          8.287958
+## 12          6.381901
+## 13          8.900425
+## 14         14.359703
+## 15          8.795271
+## 16          7.777656
+## 17          6.074198
+## 18          7.201939
+## 19          8.948712
+## 20          8.776457
+## 21          8.052202
+## 22          8.298412
+## 23          6.800743
+## 24         10.525358
+## 25         10.682033
+## 26         11.077218
+## 27         10.878424
+## 28          4.345519
+## 29         10.166626
+## 30         12.144065
+## 31          4.968069
+## 32          7.400196
+## 33          7.025342
+## 34          6.196305
+## 35          8.875115
+## 36         10.749073
+## 37         19.293216
+## 38          8.059873
+## 39          6.749256
+## 40         10.289768
+## 41          7.548263
+## 42          6.967997
+## 43          5.901083
+## 44          6.148040</code></pre>
+</div>
+<div id="delta" class="section level4">
+<h4><span class="header-section-number">2.1.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_desemp_fisc_5antes &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2005-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_desemp_fisc_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(DF_desemp_fisc <span class="op">~</span><span class="st"> </span>municipio, descrip_desemp_fisc_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_desemp_fisc_5despues &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2012-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_desemp_fisc_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(DF_desemp_fisc <span class="op">~</span><span class="st"> </span>municipio, descrip_desemp_fisc_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos.</span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_desemp_fisc_mean &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<span class="op">$</span>DF_desemp_fisc.mean <span class="op">-</span>descrip_desemp_fisc_5despues<span class="op">$</span>DF_desemp_fisc.mean
+diff_desemp_fisc_sd &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<span class="op">$</span>DF_desemp_fisc.sd <span class="op">-</span>descrip_desemp_fisc_5despues<span class="op">$</span>DF_desemp_fisc.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+  
+
+<span class="kw">print</span>(diff_desemp_fisc_mean)</code></pre></div>
+<pre><code>##  [1]  -3.753393  -9.598813 -13.752079 -16.634993 -19.718782 -15.424402
+##  [7] -19.430496 -21.952868 -19.118087 -26.460359 -15.337144  -8.155480
+## [13] -19.370559 -29.822040 -16.329680 -10.801339 -13.641515 -13.375253
+## [19] -18.051973 -19.131169 -11.186996 -15.231943 -14.203141 -23.272581
+## [25] -21.178257 -18.473801 -23.134447  -6.289786 -17.178564 -22.991054
+## [31] -10.740434 -13.964213 -10.833514 -10.945557 -18.860533 -19.533545
+## [37] -34.191280 -18.283720 -14.137117 -16.310214 -14.006204  -9.167460
+## [43] -10.594037 -10.795986</code></pre>
+</div>
+</div>
+</div>
+<div id="analisis-desempeno-integral-indice" class="section level2">
+<h2><span class="header-section-number">2.2</span> Analisis Desempeno integral (indice)</h2>
+<p>La evaluacion del desempeno integral tiene por objeto evaluar, valga la redundancia, el desempeno de la gestion de las entidades territoriales en sus competencias fundamentales, basado en: los resultados obtenidos, en los compromisos adquiridos por estas entidades en los planes de desarrollo, el marco del proceso de descentralizacion de competencias y recursos, asi como, el cumplimiento del ordenamiento juridico que lo fundamenta.</p>
+<div id="graficos-1" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> DI_desemp_int)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno integral&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno integral de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Ano&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2005</span><span class="op">:</span><span class="dv">2016</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)],
+                         cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)]))</code></pre></div>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-5-1.png" width="1152" /></p>
+<p>Grafico del desempeno integral junto con el fiscal</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano)) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> DI_desemp_int)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> DF_desemp_fisc), <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">color=</span><span class="st">&quot;Desempeno integral&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno integral&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno fiscal e integral (azul) de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2016</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)],
+                         cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)]))</code></pre></div>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-6-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-1" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Descriptivos</h3>
+<div id="agregados-1" class="section level4">
+<h4><span class="header-section-number">2.2.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_desemp_int &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(DI_desemp_int <span class="op">~</span><span class="st"> </span>municipio, cede_gobierno_<span class="dv">44</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+<span class="kw">print</span>(descrip_desemp_int)</code></pre></div>
+<pre><code>##                 municipio DI_desemp_int.sum DI_desemp_int.mean
+## 1                   Albán          19921.47           66.40489
+## 2               Algarrobo          16465.71           54.88571
+## 3                Apartadó          20106.31           67.02104
+## 4                  Arauca          20860.76           69.53588
+## 5               Arauquita          18608.37           62.02791
+## 6            Bogotá, D.C.          23943.65           79.81217
+## 7                  Bojaya          15530.59           51.76863
+## 8                 Briceño          18396.71           61.32237
+## 9            Buenaventura          19842.97           66.14324
+## 10                   Cali          22234.11           74.11371
+## 11              Cartagena          18922.15           63.07382
+## 12   Cartagena del Chairá          16407.45           54.69149
+## 13              Chaparral          21250.62           70.83541
+## 14                Ciénaga          16790.69           55.96896
+## 15                 Cúcuta          20224.19           67.41396
+## 16               El Tambo          19493.67           64.97891
+## 17               El Tarra          20493.17           68.31056
+## 18              Florencia          21644.18           72.14727
+## 19                Inírida          11926.50           39.75500
+## 20                Ituango          17902.48           59.67492
+## 21                 Maicao          17497.27           58.32425
+## 22               Medellín          26029.73           86.76577
+## 23                Mesetas          17605.37           58.68457
+## 24              Moniquirá          21852.52           72.84175
+## 25            Piedecuesta          21650.77           72.16923
+## 26            Puerto Asís          12911.45           43.03817
+## 27          Puerto Gaitán          17590.72           58.63573
+## 28          Puerto Guzmán          17414.89           58.04965
+## 29            Puerto Rico          17565.69           58.55230
+## 30                 Quibdó          17303.02           57.67674
+## 31              Rioblanco          21714.45           72.38149
+## 32                Sahagún          16007.13           53.35712
+## 33             San Carlos          19182.23           63.94077
+## 34   San Pedro de Cartago          19526.97           65.08989
+## 35 San Vicente del Caguán          16553.26           55.17754
+## 36            Santa Marta          18365.93           61.21975
+## 37                Soledad          20706.96           69.02320
+## 38                   Tibú          21692.60           72.30865
+## 39                Tocaima          22635.34           75.45113
+## 40                  Turbo          17600.97           58.66990
+## 41                 Uribia          17420.44           58.06814
+## 42          Villavicencio          20991.55           69.97183
+## 43           Vistahermosa          17605.68           58.68561
+## 44                  Yopal          21779.45           72.59817
+##    DI_desemp_int.sd
+## 1         10.239091
+## 2         14.077682
+## 3         11.341393
+## 4         11.752489
+## 5         11.133396
+## 6          8.732603
+## 7         13.061704
+## 8         12.777582
+## 9          6.805283
+## 10         7.650715
+## 11        13.782988
+## 12        13.690042
+## 13         6.493170
+## 14        14.371764
+## 15         5.443014
+## 16        11.643352
+## 17         8.795576
+## 18         7.508825
+## 19         7.523801
+## 20        11.387228
+## 21        17.559274
+## 22         6.594914
+## 23        12.385153
+## 24         8.908927
+## 25         8.350580
+## 26        11.710620
+## 27        10.494996
+## 28         8.244658
+## 29        14.198295
+## 30         8.922810
+## 31         7.097689
+## 32        15.546253
+## 33        10.716338
+## 34        12.907683
+## 35        16.065114
+## 36        11.369414
+## 37        20.979729
+## 38         6.899996
+## 39         3.637860
+## 40        13.127228
+## 41        14.889568
+## 42         6.157653
+## 43        16.971782
+## 44         7.586489</code></pre>
+</div>
+<div id="delta-1" class="section level4">
+<h4><span class="header-section-number">2.2.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_desemp_int_5antes &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2005-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_desemp_int_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(DI_desemp_int <span class="op">~</span><span class="st"> </span>municipio, descrip_desemp_int_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_desemp_int_5despues &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2012-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_desemp_int_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(DI_desemp_int <span class="op">~</span><span class="st"> </span>municipio, descrip_desemp_int_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Descriptivos de esos anos. </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_desemp_int_mean &lt;-<span class="st"> </span>descrip_desemp_int_5antes<span class="op">$</span>DI_desemp_int.mean <span class="op">-</span>descrip_desemp_int_5despues<span class="op">$</span>DI_desemp_int.mean
+diff_desemp_int_sd &lt;-<span class="st"> </span>descrip_desemp_int_5antes<span class="op">$</span>DI_desemp_int.sd <span class="op">-</span>descrip_desemp_int_5despues<span class="op">$</span>DI_desemp_int.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_desemp_int_mean)</code></pre></div>
+<pre><code>##  [1] -24.4954429 -18.1484504 -23.0100038 -30.2110024 -16.9756597
+##  [6]   2.6826478 -29.0607604 -25.4223930  -0.9490785 -11.1922495
+## [11]  -9.4522479 -23.4633707 -14.5383434   2.5928041   3.0389555
+## [16] -27.8183722 -17.0303772  -5.6203377 -15.9094084  -5.5644718
+## [21] -34.8536905 -21.7782119 -16.8486526 -26.4234363 -22.1866096
+## [26]  -3.9437771 -16.9118602  -5.7938170 -20.7657391 -19.3014666
+## [31] -12.3897348  -5.4426565 -23.1462247 -21.7976012 -28.4863616
+## [36]  -5.6156437 -69.0374781 -13.6147078  -4.1933346 -17.8967940
+## [41] -21.5439391  -3.5598671 -25.0567273  -4.3333455</code></pre>
+</div>
+</div>
+</div>
+<div id="analisis-inversion-total" class="section level2">
+<h2><span class="header-section-number">2.3</span> Analisis Inversion total</h2>
+<p>Esta variable mide: Inversion total (inv_total = inv_a_educacion + inv_crecusion + inv_fortinst + inv_promdllo + inv_sp + inv_tranporte + inv_cult + inv_agropecuario + inv_aguasani + inv_ambiental + inv_dllocomun+inv_dyr + inv_en_educacion + inv_equipamiento + inv_gruposvunera + inv_en_justicia +inv_prevdesastr + inv_en_salud + inv_en_vias + inv_en_vivienda)</p>
+<hr />
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
+<p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
+<div id="graficos-2" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Graficos</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+a &lt;-<span class="st">  </span><span class="kw">c</span>()
+cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
+cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(cede_gobierno_<span class="dv">44</span>)){
+  <span class="cf">if</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano[i]<span class="op">==</span>cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general[i]){
+    a &lt;-<span class="st"> </span><span class="kw">c</span>(a,i)
+  }
+}
+
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+
+cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span>[a,]
+
+cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">inv_total_cienmil=</span><span class="kw">log</span>((inv_total<span class="op">/</span>pobl_tot)<span class="op">*</span><span class="dv">100000</span>)) <span class="co">#Se saca el logaritmo para reducir la magnitud</span></code></pre></div>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_44_inv <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> inv_total_cienmil)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion total&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion total por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2000</span>, <span class="dv">2010</span>, <span class="dt">by=</span><span class="dv">1</span>))</code></pre></div>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-11-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-2" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Descriptivos</h3>
+<div id="agregados-2" class="section level4">
+<h4><span class="header-section-number">2.3.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_inv_total_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(inv_total_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_gobierno_44_inv, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+<span class="kw">print</span>(descrip_inv_total_cienmil)</code></pre></div>
+<pre><code>##                 municipio inv_total_cienmil.sum inv_total_cienmil.mean
+## 1                   Albán              195.2280               17.74800
+## 2               Algarrobo              188.3312               17.12102
+## 3                Apartadó              184.5786               16.77988
+## 4                  Arauca              196.5275               17.86614
+## 5               Arauquita              178.2376               17.82376
+## 6            Bogotá, D.C.              196.8762               17.89784
+## 7                  Bojaya              155.7857               17.30952
+## 8                 Briceño              195.3404               17.75821
+## 9            Buenaventura              189.0850               17.18954
+## 10                   Cali              188.1505               17.10459
+## 11              Cartagena              193.1028               17.55480
+## 12   Cartagena del Chairá              169.0237               16.90237
+## 13              Chaparral              186.5684               16.96076
+## 14                Ciénaga              190.2113               17.29194
+## 15                 Cúcuta              189.5362               17.23056
+## 16               El Tambo              168.4091               16.84091
+## 17               El Tarra              173.9394               17.39394
+## 18              Florencia              189.9324               17.26658
+## 19                Inírida              193.9598               17.63271
+## 20                Ituango              192.1959               17.47235
+## 21                 Maicao                  -Inf                   -Inf
+## 22               Medellín              194.3251               17.66592
+## 23                Mesetas              174.3763               17.43763
+## 24              Moniquirá              186.5506               16.95914
+## 25            Piedecuesta              178.7313               16.24830
+## 26            Puerto Asís              168.8305               16.88305
+## 27          Puerto Gaitán              202.6043               18.41857
+## 28          Puerto Guzmán              191.2404               17.38549
+## 29            Puerto Rico              190.6527               17.33206
+## 30                 Quibdó              186.7601               16.97819
+## 31              Rioblanco              188.4036               17.12760
+## 32                Sahagún                  -Inf                   -Inf
+## 33             San Carlos              198.1623               18.01475
+## 34   San Pedro de Cartago              193.0548               17.55044
+## 35 San Vicente del Caguán              185.2208               16.83826
+## 36            Santa Marta              173.9756               17.39756
+## 37                Soledad              182.2280               16.56618
+## 38                   Tibú              191.3943               17.39948
+## 39                Tocaima              189.2438               17.20398
+## 40                  Turbo              192.3812               17.48920
+## 41                 Uribia              189.3541               17.21401
+## 42          Villavicencio              190.0010               17.27282
+## 43           Vistahermosa              172.9920               17.29920
+## 44                  Yopal              194.9000               17.71819
+##    inv_total_cienmil.sd
+## 1             2.0953488
+## 2             0.5311555
+## 3             0.3858226
+## 4             0.3045180
+## 5             0.9411664
+## 6             0.2445761
+## 7             0.3457146
+## 8             0.3824210
+## 9             0.8120659
+## 10            0.5145462
+## 11            0.4920383
+## 12            0.2354628
+## 13            0.5095171
+## 14            1.0600037
+## 15            0.6930016
+## 16            0.4342259
+## 17            0.5137744
+## 18            0.8601373
+## 19            0.5122668
+## 20            0.3598830
+## 21                  NaN
+## 22            0.8016582
+## 23            0.5471647
+## 24            0.5433214
+## 25            0.7131583
+## 26            0.5950522
+## 27            1.4143234
+## 28            0.5621678
+## 29            0.4865284
+## 30            0.8807797
+## 31            0.3458058
+## 32                  NaN
+## 33            0.2952332
+## 34            0.4678136
+## 35            0.4091786
+## 36            0.4957058
+## 37            0.6868757
+## 38            0.4365076
+## 39            0.4245734
+## 40            0.5944031
+## 41            0.8943880
+## 42            0.6672960
+## 43            0.6074247
+## 44            0.4836667</code></pre>
+</div>
+<div id="delta-2" class="section level4">
+<h4><span class="header-section-number">2.3.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_inv_total_cienmil_5antes &lt;-<span class="st"> </span>cede_gobierno_44_inv <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="dv">2005</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_inv_total_cienmil_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(inv_total_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_inv_total_cienmil_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )    <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_inv_total_cienmil_5despues &lt;-<span class="st"> </span>cede_gobierno_44_inv <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="dv">2005</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_inv_total_cienmil_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(inv_total_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_inv_total_cienmil_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )    <span class="co">#Descriptivos de esos anos. </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_inv_total_cienmil_mean &lt;-<span class="st"> </span>descrip_inv_total_cienmil_5antes<span class="op">$</span>inv_total_cienmil.mean <span class="op">-</span>descrip_inv_total_cienmil_5despues<span class="op">$</span>inv_total_cienmil.mean
+diff_inv_total_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_total_cienmil_5antes<span class="op">$</span>inv_total_cienmil.sd <span class="op">-</span>descrip_inv_total_cienmil_5despues<span class="op">$</span>inv_total_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_inv_total_cienmil_mean)</code></pre></div>
+<pre><code>##  [1]  1.03993496 -0.87137203 -0.60185569 -0.47051950 -1.76403483
+##  [6] -0.39078194 -0.44258433 -0.64239712 -1.23799982 -0.91384668
+## [11] -0.88591098 -0.04745714 -0.85563224 -1.62399458 -1.11119601
+## [16] -0.54222379 -0.93837988 -1.33725048 -0.49173926 -0.58743297
+## [21]         Inf -1.41652774 -0.88526002 -0.69345619 -1.08358472
+## [26] -0.99974877 -2.63773689 -0.57193391 -0.79674993 -1.16749094
+## [31] -0.59496616         Inf -0.53021354 -0.58190329 -0.63256181
+## [36] -0.48058322 -1.18358114 -0.77414381 -0.62726411 -1.02760824
+## [41] -1.62280374 -1.03243526 -1.02174954 -0.75736398</code></pre>
+</div>
+</div>
+</div>
+<div id="analisis-inversion-en-fortalecimiento-institucional" class="section level2">
+<h2><span class="header-section-number">2.4</span> Analisis Inversion en fortalecimiento institucional</h2>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
+<p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
+<div id="graficos-3" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> Graficos</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+a &lt;-<span class="st">  </span><span class="kw">c</span>()
+cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
+cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(cede_gobierno_<span class="dv">44</span>)){
+  <span class="cf">if</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano[i]<span class="op">==</span>cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general[i]){
+    a &lt;-<span class="st"> </span><span class="kw">c</span>(a,i)
+  }
+}
+
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+
+cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span>[a,]
+
+cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">inv_fortinst_cienmil=</span><span class="kw">log</span>((inv_fortinst<span class="op">/</span>pobl_tot)<span class="op">*</span><span class="dv">100000</span>)) <span class="co">#Se saca el logaritmo para reducir la magnitud</span></code></pre></div>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_44_inv <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> inv_fortinst_cienmil)) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion al fortalecimiento institucional&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion al fortalecimiento institucional por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2002</span>, <span class="dv">2010</span>, <span class="dt">by=</span><span class="dv">1</span>))</code></pre></div>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-16-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-3" class="section level3">
+<h3><span class="header-section-number">2.4.2</span> Descriptivos</h3>
+<div id="agregados-3" class="section level4">
+<h4><span class="header-section-number">2.4.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_inv_fortinst_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(inv_fortinst_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_gobierno_44_inv, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T ) <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+<span class="kw">print</span>(descrip_inv_fortinst_cienmil)</code></pre></div>
+<pre><code>##                 municipio inv_fortinst_cienmil.sum
+## 1                   Albán                 132.9325
+## 2               Algarrobo                 122.1601
+## 3                Apartadó                 116.9995
+## 4                  Arauca                 128.2216
+## 5               Arauquita                 105.8657
+## 6            Bogotá, D.C.                 133.8103
+## 7                  Bojaya                     -Inf
+## 8                 Briceño                 127.0901
+## 9            Buenaventura                 135.8832
+## 10                   Cali                 125.2061
+## 11              Cartagena                 124.5847
+## 12   Cartagena del Chairá                     -Inf
+## 13              Chaparral                 119.3178
+## 14                Ciénaga                     -Inf
+## 15                 Cúcuta                 116.7957
+## 16               El Tambo                 114.5338
+## 17               El Tarra                     -Inf
+## 18              Florencia                 115.4397
+## 19                Inírida                 128.8904
+## 20                Ituango                 122.5146
+## 21                 Maicao                     -Inf
+## 22               Medellín                 134.5621
+## 23                Mesetas                 120.7543
+## 24              Moniquirá                 114.9040
+## 25            Piedecuesta                 123.2935
+## 26            Puerto Asís                     -Inf
+## 27          Puerto Gaitán                 122.2857
+## 28          Puerto Guzmán                 122.1085
+## 29            Puerto Rico                 120.0360
+## 30                 Quibdó                 119.4905
+## 31              Rioblanco                     -Inf
+## 32                Sahagún                     -Inf
+## 33             San Carlos                 122.7060
+## 34   San Pedro de Cartago                 126.7343
+## 35 San Vicente del Caguán                 121.7545
+## 36            Santa Marta                     -Inf
+## 37                Soledad                 119.0831
+## 38                   Tibú                 118.9407
+## 39                Tocaima                 120.3711
+## 40                  Turbo                 120.6372
+## 41                 Uribia                 120.1775
+## 42          Villavicencio                 124.1440
+## 43           Vistahermosa                 106.6481
+## 44                  Yopal                 131.9681
+##    inv_fortinst_cienmil.mean inv_fortinst_cienmil.sd
+## 1                   14.77028               2.5072054
+## 2                   13.57334               0.8519551
+## 3                   12.99995               0.6370779
+## 4                   14.24685               0.5229048
+## 5                   13.23322               0.4048788
+## 6                   14.86781               0.5832559
+## 7                       -Inf                     NaN
+## 8                   14.12113               0.5898319
+## 9                   15.09813               1.5859332
+## 10                  13.91179               0.8084512
+## 11                  13.84274               0.5878717
+## 12                      -Inf                     NaN
+## 13                  13.25753               0.6738227
+## 14                      -Inf                     NaN
+## 15                  12.97730               1.0024323
+## 16                  12.72598               0.4793986
+## 17                      -Inf                     NaN
+## 18                  12.82663               0.5190656
+## 19                  14.32115               0.7401968
+## 20                  13.61273               0.8955598
+## 21                      -Inf                     NaN
+## 22                  14.95134               0.9032458
+## 23                  13.41715               1.1421307
+## 24                  12.76711               1.2687755
+## 25                  13.69928               0.7462165
+## 26                      -Inf                     NaN
+## 27                  13.58730               1.7776941
+## 28                  13.56761               0.6274275
+## 29                  13.33734               0.8964519
+## 30                  13.27672               0.7884174
+## 31                      -Inf                     NaN
+## 32                      -Inf                     NaN
+## 33                  13.63400               1.1090148
+## 34                  14.08159               0.6677164
+## 35                  13.52828               0.7249270
+## 36                      -Inf                     NaN
+## 37                  13.23146               0.7290142
+## 38                  13.21563               0.4300824
+## 39                  13.37457               0.6563258
+## 40                  13.40413               0.9558632
+## 41                  13.35306               0.7749304
+## 42                  13.79377               0.6958700
+## 43                  13.33102               0.4576636
+## 44                  14.66312               0.3780909</code></pre>
+</div>
+<div id="delta-3" class="section level4">
+<h4><span class="header-section-number">2.4.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_inv_fortinst_cienmil_5antes &lt;-<span class="st"> </span>cede_gobierno_44_inv <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="dv">2006</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_inv_fortinst_cienmil_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(inv_fortinst_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_inv_fortinst_cienmil_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_inv_fortinst_cienmil_5despues &lt;-<span class="st"> </span>cede_gobierno_44_inv <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="dv">2005</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_inv_fortinst_cienmil_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(inv_fortinst_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_inv_fortinst_cienmil_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos. </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_inv_fortinst_cienmil_mean &lt;-<span class="st"> </span>descrip_inv_fortinst_cienmil_5antes<span class="op">$</span>inv_fortinst_cienmil.mean <span class="op">-</span>descrip_inv_fortinst_cienmil_5despues<span class="op">$</span>inv_fortinst_cienmil.mean
+diff_inv_fortinst_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_fortinst_cienmil_5antes<span class="op">$</span>inv_fortinst_cienmil.sd <span class="op">-</span>descrip_inv_fortinst_cienmil_5despues<span class="op">$</span>inv_fortinst_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+
+<span class="kw">print</span>(diff_inv_fortinst_cienmil_mean)</code></pre></div>
+<pre><code>##  [1]  0.80686943 -0.91449264 -0.63008611  0.13228543 -0.51923666
+##  [6] -0.96354565         NaN  0.26804226 -1.89419338 -0.57855630
+## [11] -0.92566040        -Inf  0.80856651        -Inf -1.17361517
+## [16]  0.31324814         Inf  0.07746689  0.02934909  1.15882982
+## [21]         Inf -1.07288195 -0.54862539 -0.91847245 -0.38205838
+## [26]        -Inf -1.83764954  0.55016191 -0.37744741  0.06088783
+## [31]        -Inf         Inf -1.48848148 -1.01953819 -0.87441266
+## [36]         Inf  0.51909591 -0.47514283  0.17678470  0.66973727
+## [41] -0.74503637  0.57073981 -0.16977897 -0.02460481</code></pre>
+</div>
+</div>
+</div>
+<div id="analisis-indice-de-gobierno-abierto" class="section level2">
+<h2><span class="header-section-number">2.5</span> Analisis Indice de Gobierno Abierto</h2>
+<p>Con esta dimension, el IGA pretende medir los niveles de organizacion y cumplimiento de las normas basicas de la administracion publica. Por esto se ubica al principio de la cadena y de la estructura operativa del indicador, pues dispone una capacidad instalada al interior de la administracion publica para que, tanto los funcionarios como la ciudadania, estructuren su relacion en torno a los flujos de informacion producidos y requeridos en el proceso de relacionamiento publico.Fuente: Procuraduria General de la Nacion</p>
+<div id="graficos-4" class="section level3">
+<h3><span class="header-section-number">2.5.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> IGA_total)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Indice de Gobierno Abierto&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Indice de Gobierno Abierto por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.1</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2010</span>,<span class="dv">2016</span>, <span class="dt">by=</span><span class="dv">1</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total)],
+                         cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total)]))</code></pre></div>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-20-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-4" class="section level3">
+<h3><span class="header-section-number">2.5.2</span> Descriptivos</h3>
+<div id="agregados-4" class="section level4">
+<h4><span class="header-section-number">2.5.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_IGA_total &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(IGA_total <span class="op">~</span><span class="st"> </span>municipio, cede_gobierno_<span class="dv">44</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+
+<span class="kw">print</span>(descrip_IGA_total)</code></pre></div>
+<pre><code>##                 municipio IGA_total.sum IGA_total.mean IGA_total.sd
+## 1                   Albán     11413.386       65.21935     4.242079
+## 2               Algarrobo     11224.495       64.13997    18.698882
+## 3                Apartadó     12395.050       70.82885    10.894778
+## 4                  Arauca     12692.468       72.52839     5.257010
+## 5               Arauquita     11080.805       63.31889     5.312779
+## 6            Bogotá, D.C.     11599.914       66.28522    13.729270
+## 7                  Bojaya     10108.346       57.76198    10.915736
+## 8                 Briceño     11677.730       66.72989     6.994598
+## 9            Buenaventura      9412.170       53.78383     5.019577
+## 10                   Cali     12539.650       71.65514     9.281523
+## 11              Cartagena     11549.434       65.99677     6.737618
+## 12   Cartagena del Chairá      9772.422       55.84241    12.443876
+## 13              Chaparral     11688.109       66.78919    14.290844
+## 14                Ciénaga      9899.417       56.56810     4.478249
+## 15                 Cúcuta     12270.535       70.11734     7.123605
+## 16               El Tambo     11557.149       66.04085    10.445065
+## 17               El Tarra     10903.342       62.30481    10.011638
+## 18              Florencia     12483.388       71.33364     6.157128
+## 19                Inírida     10747.142       61.41224    15.370430
+## 20                Ituango     10281.419       58.75096    11.145467
+## 21                 Maicao     10801.521       61.72298     9.533829
+## 22               Medellín     13704.086       78.30906     9.351840
+## 23                Mesetas     11648.102       66.56058    10.888171
+## 24              Moniquirá     12669.243       72.39567    12.869554
+## 25            Piedecuesta     12317.084       70.38334    11.092261
+## 26            Puerto Asís      9984.953       57.05687     5.913114
+## 27          Puerto Gaitán     12846.004       73.40574     7.017985
+## 28          Puerto Guzmán      9185.378       52.48788     4.842803
+## 29            Puerto Rico     11891.875       67.95357     8.560689
+## 30                 Quibdó     11631.379       66.46502    14.351255
+## 31              Rioblanco     12508.942       71.47967     6.559527
+## 32                Sahagún     12720.028       72.68588     7.692569
+## 33             San Carlos     11348.012       64.84578     7.927955
+## 34   San Pedro de Cartago     11246.146       64.26369     7.587247
+## 35 San Vicente del Caguán     10850.688       62.00393    11.741452
+## 36            Santa Marta     11587.402       66.21373     6.044384
+## 37                Soledad     10484.174       59.90957     6.280271
+## 38                   Tibú     10957.445       62.61397     9.217889
+## 39                Tocaima     12099.251       69.13858     8.007260
+## 40                  Turbo     10914.513       62.36865    16.042741
+## 41                 Uribia      9857.411       56.32806    13.063710
+## 42          Villavicencio     13363.546       76.36312     8.913575
+## 43           Vistahermosa     12028.932       68.73676    12.194084
+## 44                  Yopal     13464.974       76.94271     6.665038</code></pre>
+</div>
+<div id="delta-4" class="section level4">
+<h4><span class="header-section-number">2.5.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_IGA_total_5antes &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2014-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_IGA_total_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(IGA_total <span class="op">~</span><span class="st"> </span>municipio, descrip_IGA_total_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )    <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_IGA_total_5despues &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2012-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_IGA_total_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(IGA_total <span class="op">~</span><span class="st"> </span>municipio, descrip_IGA_total_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )    <span class="co">#Descriptivos de esos anos.</span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_IGA_total_mean &lt;-<span class="st"> </span>descrip_IGA_total_5antes<span class="op">$</span>IGA_total.mean <span class="op">-</span>descrip_IGA_total_5despues<span class="op">$</span>IGA_total.mean
+diff_IGA_total_sd &lt;-<span class="st"> </span>descrip_IGA_total_5antes<span class="op">$</span>IGA_total.sd <span class="op">-</span>descrip_IGA_total_5despues<span class="op">$</span>IGA_total.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_IGA_total_mean)</code></pre></div>
+<pre><code>##  [1]  -0.4540991 -16.5086387  -5.9455434  -1.3669640   4.5887586
+##  [6] -15.7973686  -4.8759901   0.9401444   1.5033767  -5.1663229
+## [11]  -5.8597207 -10.6209062 -15.7670248  -2.8737718  -6.3976994
+## [16] -10.0901537  -8.2242404   2.4303779 -13.2279903  -1.8747627
+## [21] -10.1562442  -4.6313264  -9.0899661 -14.5838172  -8.2714788
+## [26]   1.9283079  -2.9808324   2.8910037  -4.1346221 -12.0454244
+## [31]  -6.5163583  -3.4887666   0.7200639  -8.7622453 -10.2354020
+## [36]   0.9960009  -2.8163547   1.7551467  -7.7817964 -14.4708796
+## [41]  -5.9486501  -8.3283346  -8.9481326  -2.9255670</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="analisis-estadisticos-con-el-acdivoca-correlaciones-y-regresiones" class="section level1">
+<h1><span class="header-section-number">3</span> Analisis Estadisticos CON EL ACDIVOCA (Correlaciones y regresiones)</h1>
+<p>El objetivo de esta seccion es hacer las estadisticas inferenciales de las variables de interes con los items del ACDIVOCA. Si no sabe cuales son las variables ACDI-VOCA dirigirse a la pestana <em>“Codigo para correr todo”</em>.</p>
+<div id="variables-agregadas-con-acdi-voca" class="section level2">
+<h2><span class="header-section-number">3.1</span> Variables Agregadas con ACDI-VOCA</h2>
+<p>En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo collapse en todos los anos. Primero se hacen correlaciones y, luego, se hacen regresiones lineales.</p>
+<p>Recuerde que las variables del ACDI-VOCA son: +Reconciliacion +Disculpas +Violencia +Rencor +Memoria (Memoria historica) +Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)</p>
+<div id="correlaciones" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Correlaciones</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos</span>
+<span class="co">#Vamos a hacerlo primero con el indice agregado por anos. </span>
+
+descrip_inv_fortinst_cienmil<span class="op">$</span>inv_fortinst_cienmil.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_inv_fortinst_cienmil_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span> 
+
+descrip_inv_total_cienmil<span class="op">$</span>inv_total_cienmil.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_inv_total_cienmil_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(descrip_desemp_fisc<span class="op">$</span>DF_desemp_fisc.mean, 
+                       descrip_desemp_int<span class="op">$</span>DI_desemp_int.mean, 
+                       descrip_IGA_total<span class="op">$</span>IGA_total.mean, 
+                       descrip_inv_fortinst_cienmil<span class="op">$</span>inv_fortinst_cienmil.mean,
+                       descrip_inv_total_cienmil<span class="op">$</span>inv_total_cienmil.mean, 
+                       reconciliacion_agreg<span class="op">$</span>reconciliacion.mean, 
+                       disculpas_agreg<span class="op">$</span>disculpas.mean, 
+                       violencia_agreg<span class="op">$</span>violencia.mean, 
+                       rencor_agreg<span class="op">$</span>rencor.mean, 
+                       memoria_agreg<span class="op">$</span>memoria.mean, 
+                       memoria_expectativa_agreg<span class="op">$</span>memoria_expectativa.mean)
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Desempeno Fiscal&quot;</span>,
+             <span class="st">&quot;Desempeno Integral&quot;</span>,
+             <span class="st">&quot;Gobierno Abierto&quot;</span>,
+             <span class="st">&quot;Inv Fort Inst&quot;</span>,
+             <span class="st">&quot;Inv Total&quot;</span>, 
+             <span class="st">&quot;Reconciliacion&quot;</span>,
+             <span class="st">&quot;Disculpas&quot;</span>, 
+             <span class="st">&quot;Violencia&quot;</span>, 
+             <span class="st">&quot;Rencor&quot;</span>,
+             <span class="st">&quot;Memoria&quot;</span>, 
+             <span class="st">&quot;Memoria_Expectativa&quot;</span>)
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+<span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) <span class="co">#Aqui hay hartas cosas!! REVISAR</span></code></pre></div>
+<pre><code>##                     Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                1.00               0.43             0.47
+## Desempeno Integral              0.43               1.00             0.57
+## Gobierno Abierto                0.47               0.57             1.00
+## Inv Fort Inst                   0.19               0.08             0.02
+## Inv Total                       0.23               0.03             0.11
+## Reconciliacion                 -0.07              -0.10             0.08
+## Disculpas                      -0.22              -0.18            -0.02
+## Violencia                       0.38               0.28             0.11
+## Rencor                         -0.29              -0.25            -0.26
+## Memoria                        -0.25              -0.01             0.08
+## Memoria_Expectativa            -0.10              -0.10             0.10
+##                     Inv Fort Inst Inv Total Reconciliacion Disculpas
+## Desempeno Fiscal             0.19      0.23          -0.07     -0.22
+## Desempeno Integral           0.08      0.03          -0.10     -0.18
+## Gobierno Abierto             0.02      0.11           0.08     -0.02
+## Inv Fort Inst                1.00      0.53          -0.24     -0.24
+## Inv Total                    0.53      1.00          -0.02     -0.53
+## Reconciliacion              -0.24     -0.02           1.00      0.09
+## Disculpas                   -0.24     -0.53           0.09      1.00
+## Violencia                    0.02      0.17          -0.12     -0.46
+## Rencor                       0.07     -0.08           0.17      0.27
+## Memoria                      0.03      0.03           0.18      0.14
+## Memoria_Expectativa         -0.08     -0.05           0.20      0.06
+##                     Violencia Rencor Memoria Memoria_Expectativa
+## Desempeno Fiscal         0.38  -0.29   -0.25               -0.10
+## Desempeno Integral       0.28  -0.25   -0.01               -0.10
+## Gobierno Abierto         0.11  -0.26    0.08                0.10
+## Inv Fort Inst            0.02   0.07    0.03               -0.08
+## Inv Total                0.17  -0.08    0.03               -0.05
+## Reconciliacion          -0.12   0.17    0.18                0.20
+## Disculpas               -0.46   0.27    0.14                0.06
+## Violencia                1.00  -0.23   -0.34               -0.05
+## Rencor                  -0.23   1.00    0.35                0.42
+## Memoria                 -0.34   0.35    1.00                0.65
+## Memoria_Expectativa     -0.05   0.42    0.65                1.00
+## 
+## n
+##                     Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                  44                 44               44
+## Desempeno Integral                44                 44               44
+## Gobierno Abierto                  44                 44               44
+## Inv Fort Inst                     35                 35               35
+## Inv Total                         42                 42               42
+## Reconciliacion                    44                 44               44
+## Disculpas                         44                 44               44
+## Violencia                         44                 44               44
+## Rencor                            44                 44               44
+## Memoria                           44                 44               44
+## Memoria_Expectativa               44                 44               44
+##                     Inv Fort Inst Inv Total Reconciliacion Disculpas
+## Desempeno Fiscal               35        42             44        44
+## Desempeno Integral             35        42             44        44
+## Gobierno Abierto               35        42             44        44
+## Inv Fort Inst                  35        35             35        35
+## Inv Total                      35        42             42        42
+## Reconciliacion                 35        42             44        44
+## Disculpas                      35        42             44        44
+## Violencia                      35        42             44        44
+## Rencor                         35        42             44        44
+## Memoria                        35        42             44        44
+## Memoria_Expectativa            35        42             44        44
+##                     Violencia Rencor Memoria Memoria_Expectativa
+## Desempeno Fiscal           44     44      44                  44
+## Desempeno Integral         44     44      44                  44
+## Gobierno Abierto           44     44      44                  44
+## Inv Fort Inst              35     35      35                  35
+## Inv Total                  42     42      42                  42
+## Reconciliacion             44     44      44                  44
+## Disculpas                  44     44      44                  44
+## Violencia                  44     44      44                  44
+## Rencor                     44     44      44                  44
+## Memoria                    44     44      44                  44
+## Memoria_Expectativa        44     44      44                  44
+## 
+## P
+##                     Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                     0.0037             0.0014          
+## Desempeno Integral  0.0037                              0.0000          
+## Gobierno Abierto    0.0014           0.0000                             
+## Inv Fort Inst       0.2840           0.6416             0.9110          
+## Inv Total           0.1390           0.8453             0.4999          
+## Reconciliacion      0.6566           0.5306             0.6163          
+## Disculpas           0.1598           0.2550             0.9219          
+## Violencia           0.0121           0.0654             0.4780          
+## Rencor              0.0571           0.1011             0.0941          
+## Memoria             0.1005           0.9320             0.5852          
+## Memoria_Expectativa 0.5336           0.5312             0.5092          
+##                     Inv Fort Inst Inv Total Reconciliacion Disculpas
+## Desempeno Fiscal    0.2840        0.1390    0.6566         0.1598   
+## Desempeno Integral  0.6416        0.8453    0.5306         0.2550   
+## Gobierno Abierto    0.9110        0.4999    0.6163         0.9219   
+## Inv Fort Inst                     0.0010    0.1705         0.1623   
+## Inv Total           0.0010                  0.8830         0.0003   
+## Reconciliacion      0.1705        0.8830                   0.5506   
+## Disculpas           0.1623        0.0003    0.5506                  
+## Violencia           0.9148        0.2839    0.4251         0.0018   
+## Rencor              0.6941        0.6327    0.2668         0.0769   
+## Memoria             0.8580        0.8326    0.2499         0.3727   
+## Memoria_Expectativa 0.6347        0.7687    0.1821         0.7156   
+##                     Violencia Rencor Memoria Memoria_Expectativa
+## Desempeno Fiscal    0.0121    0.0571 0.1005  0.5336             
+## Desempeno Integral  0.0654    0.1011 0.9320  0.5312             
+## Gobierno Abierto    0.4780    0.0941 0.5852  0.5092             
+## Inv Fort Inst       0.9148    0.6941 0.8580  0.6347             
+## Inv Total           0.2839    0.6327 0.8326  0.7687             
+## Reconciliacion      0.4251    0.2668 0.2499  0.1821             
+## Disculpas           0.0018    0.0769 0.3727  0.7156             
+## Violencia                     0.1314 0.0238  0.7539             
+## Rencor              0.1314           0.0212  0.0043             
+## Memoria             0.0238    0.0212         0.0000             
+## Memoria_Expectativa 0.7539    0.0043 0.0000</code></pre>
+</div>
+<div id="regresion-lineal" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Regresion lineal</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reconciliacion <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regReconcililacion)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Reconciliacion ~ correlaciones[, 1:5], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.9679 -1.3088 -0.3903  1.9311  4.6563 
+## 
+## Coefficients:
+##                                        Estimate Std. Error t value
+## (Intercept)                            11.49361   17.36409   0.662
+## correlaciones[, 1:5]Desempeno Fiscal    0.08315    0.12087   0.688
+## correlaciones[, 1:5]Desempeno Integral -0.09628    0.06664  -1.445
+## correlaciones[, 1:5]Gobierno Abierto    0.09074    0.08854   1.025
+## correlaciones[, 1:5]Inv Fort Inst      -1.49243    0.78854  -1.893
+## correlaciones[, 1:5]Inv Total           0.44222    1.14186   0.387
+##                                        Pr(&gt;|t|)  
+## (Intercept)                              0.5132  
+## correlaciones[, 1:5]Desempeno Fiscal     0.4970  
+## correlaciones[, 1:5]Desempeno Integral   0.1592  
+## correlaciones[, 1:5]Gobierno Abierto     0.3139  
+## correlaciones[, 1:5]Inv Fort Inst        0.0684 .
+## correlaciones[, 1:5]Inv Total            0.7014  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.394 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.2188, Adjusted R-squared:  0.08412 
+## F-statistic: 1.625 on 5 and 29 DF,  p-value: 0.1849</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regDisculpas &lt;-<span class="st"> </span><span class="kw">lm</span>(Disculpas <span class="op">~</span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regDisculpas)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Disculpas ~ correlaciones[, 1:5], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.40947 -0.14864 -0.01184  0.10521  0.48061 
+## 
+## Coefficients:
+##                                         Estimate Std. Error t value
+## (Intercept)                             6.474146   1.635347   3.959
+## correlaciones[, 1:5]Desempeno Fiscal    0.005742   0.011383   0.504
+## correlaciones[, 1:5]Desempeno Integral -0.011769   0.006276  -1.875
+## correlaciones[, 1:5]Gobierno Abierto    0.009246   0.008338   1.109
+## correlaciones[, 1:5]Inv Fort Inst       0.018977   0.074264   0.256
+## correlaciones[, 1:5]Inv Total          -0.354655   0.107540  -3.298
+##                                        Pr(&gt;|t|)    
+## (Intercept)                            0.000447 ***
+## correlaciones[, 1:5]Desempeno Fiscal   0.617756    
+## correlaciones[, 1:5]Desempeno Integral 0.070854 .  
+## correlaciones[, 1:5]Gobierno Abierto   0.276629    
+## correlaciones[, 1:5]Inv Fort Inst      0.800118    
+## correlaciones[, 1:5]Inv Total          0.002581 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2254 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.335,  Adjusted R-squared:  0.2203 
+## F-statistic: 2.921 on 5 and 29 DF,  p-value: 0.0296</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia <span class="op">~</span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regViolencia)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Violencia ~ correlaciones[, 1:5], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.73852 -0.25361 -0.02336  0.18151  0.96932 
+## 
+## Coefficients:
+##                                        Estimate Std. Error t value
+## (Intercept)                            -3.62969    2.89594  -1.253
+## correlaciones[, 1:5]Desempeno Fiscal    0.02468    0.02016   1.224
+## correlaciones[, 1:5]Desempeno Integral  0.01580    0.01111   1.421
+## correlaciones[, 1:5]Gobierno Abierto   -0.01546    0.01477  -1.047
+## correlaciones[, 1:5]Inv Fort Inst      -0.14883    0.13151  -1.132
+## correlaciones[, 1:5]Inv Total           0.15639    0.19044   0.821
+##                                        Pr(&gt;|t|)
+## (Intercept)                               0.220
+## correlaciones[, 1:5]Desempeno Fiscal      0.231
+## correlaciones[, 1:5]Desempeno Integral    0.166
+## correlaciones[, 1:5]Gobierno Abierto      0.304
+## correlaciones[, 1:5]Inv Fort Inst         0.267
+## correlaciones[, 1:5]Inv Total             0.418
+## 
+## Residual standard error: 0.3992 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:    0.2,  Adjusted R-squared:  0.06201 
+## F-statistic:  1.45 on 5 and 29 DF,  p-value: 0.2366</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regRencor &lt;-<span class="st"> </span><span class="kw">lm</span>(Rencor <span class="op">~</span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regRencor)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Rencor ~ correlaciones[, 1:5], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.76133 -0.12432  0.03685  0.16727  0.40828 
+## 
+## Coefficients:
+##                                         Estimate Std. Error t value
+## (Intercept)                             5.282952   2.053510   2.573
+## correlaciones[, 1:5]Desempeno Fiscal    0.001902   0.014294   0.133
+## correlaciones[, 1:5]Desempeno Integral  0.001094   0.007881   0.139
+## correlaciones[, 1:5]Gobierno Abierto   -0.023853   0.010471  -2.278
+## correlaciones[, 1:5]Inv Fort Inst      -0.035971   0.093254  -0.386
+## correlaciones[, 1:5]Inv Total           0.014292   0.135039   0.106
+##                                        Pr(&gt;|t|)  
+## (Intercept)                              0.0155 *
+## correlaciones[, 1:5]Desempeno Fiscal     0.8951  
+## correlaciones[, 1:5]Desempeno Integral   0.8905  
+## correlaciones[, 1:5]Gobierno Abierto     0.0303 *
+## correlaciones[, 1:5]Inv Fort Inst        0.7025  
+## correlaciones[, 1:5]Inv Total            0.9164  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2831 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.2114, Adjusted R-squared:  0.07542 
+## F-statistic: 1.555 on 5 and 29 DF,  p-value: 0.2041</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria<span class="op">~</span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria ~ correlaciones[, 1:5], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.8541 -0.2173 -0.0070  0.1797  0.5355 
+## 
+## Coefficients:
+##                                         Estimate Std. Error t value
+## (Intercept)                             2.034142   2.442481   0.833
+## correlaciones[, 1:5]Desempeno Fiscal   -0.024098   0.017002  -1.417
+## correlaciones[, 1:5]Desempeno Integral  0.012346   0.009373   1.317
+## correlaciones[, 1:5]Gobierno Abierto   -0.001161   0.012454  -0.093
+## correlaciones[, 1:5]Inv Fort Inst       0.038210   0.110918   0.344
+## correlaciones[, 1:5]Inv Total           0.094074   0.160617   0.586
+##                                        Pr(&gt;|t|)
+## (Intercept)                               0.412
+## correlaciones[, 1:5]Desempeno Fiscal      0.167
+## correlaciones[, 1:5]Desempeno Integral    0.198
+## correlaciones[, 1:5]Gobierno Abierto      0.926
+## correlaciones[, 1:5]Inv Fort Inst         0.733
+## correlaciones[, 1:5]Inv Total             0.563
+## 
+## Residual standard error: 0.3367 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.08736,    Adjusted R-squared:  -0.07 
+## F-statistic: 0.5552 on 5 and 29 DF,  p-value: 0.7332</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria_Expectativa &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria_Expectativa<span class="op">~</span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>], 
+                             <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria_Expectativa)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria_Expectativa ~ correlaciones[, 1:5], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.8166 -0.1621  0.0243  0.2209  0.5021 
+## 
+## Coefficients:
+##                                         Estimate Std. Error t value
+## (Intercept)                             2.820706   2.505939   1.126
+## correlaciones[, 1:5]Desempeno Fiscal   -0.014286   0.017443  -0.819
+## correlaciones[, 1:5]Desempeno Integral  0.007596   0.009617   0.790
+## correlaciones[, 1:5]Gobierno Abierto   -0.002113   0.012777  -0.165
+## correlaciones[, 1:5]Inv Fort Inst      -0.056861   0.113799  -0.500
+## correlaciones[, 1:5]Inv Total           0.108873   0.164790   0.661
+##                                        Pr(&gt;|t|)
+## (Intercept)                               0.270
+## correlaciones[, 1:5]Desempeno Fiscal      0.419
+## correlaciones[, 1:5]Desempeno Integral    0.436
+## correlaciones[, 1:5]Gobierno Abierto      0.870
+## correlaciones[, 1:5]Inv Fort Inst         0.621
+## correlaciones[, 1:5]Inv Total             0.514
+## 
+## Residual standard error: 0.3455 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.04341,    Adjusted R-squared:  -0.1215 
+## F-statistic: 0.2632 on 5 and 29 DF,  p-value: 0.9295</code></pre>
+</div>
+</div>
+<div id="delta-variables-con-acdi-voca" class="section level2">
+<h2><span class="header-section-number">3.2</span> <span class="math inline">\(\Delta\)</span> variables con ACDI-VOCA</h2>
+<p>En esta seccion se tiene en cuenta el <span class="math inline">\(\Delta\)</span> de la variable de interes. Primero se hacen correlaciones y, luego, se hacen regresiones lineales.</p>
+<div id="correlaciones-1" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Correlaciones</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos</span>
+
+
+diff_inv_fortinst_cienmil_mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_inv_fortinst_cienmil_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span> 
+
+diff_inv_total_cienmil_mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_inv_total_cienmil_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+
+
+  correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(diff_desemp_fisc_mean, 
+                         diff_desemp_int_mean, 
+                         diff_IGA_total_mean, 
+                         diff_inv_fortinst_cienmil_mean,
+                         diff_inv_total_cienmil_mean, 
+                         reconciliacion_agreg<span class="op">$</span>reconciliacion.mean, 
+                         disculpas_agreg<span class="op">$</span>disculpas.mean, 
+                         violencia_agreg<span class="op">$</span>violencia.mean, 
+                         rencor_agreg<span class="op">$</span>rencor.mean, 
+                         memoria_agreg<span class="op">$</span>memoria.mean, 
+                         memoria_expectativa_agreg<span class="op">$</span>memoria_expectativa.mean)
+
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Desempeno Fiscal&quot;</span>,
+             <span class="st">&quot;Desempeno Integral&quot;</span>,
+             <span class="st">&quot;Gobierno Abierto&quot;</span>,
+             <span class="st">&quot;Inv Fort Inst&quot;</span>,
+             <span class="st">&quot;Inv Total&quot;</span>, 
+             <span class="st">&quot;Reconciliacion&quot;</span>,
+             <span class="st">&quot;Disculpas&quot;</span>, 
+             <span class="st">&quot;Violencia&quot;</span>, 
+             <span class="st">&quot;Rencor&quot;</span>,
+             <span class="st">&quot;Memoria&quot;</span>, 
+             <span class="st">&quot;Memoria_Expectativa&quot;</span>)
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+<span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) <span class="co">#Hay algo entre la diferencia entre Desempeno Fiscal y rencor. </span></code></pre></div>
+<pre><code>##                     Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                1.00              -0.01            -0.14
+## Desempeno Integral             -0.01               1.00             0.20
+## Gobierno Abierto               -0.14               0.20             1.00
+## Inv Fort Inst                   0.09              -0.06             0.05
+## Inv Total                       0.34              -0.24            -0.13
+## Reconciliacion                 -0.20              -0.01            -0.10
+## Disculpas                      -0.12              -0.11            -0.23
+## Violencia                      -0.15               0.18             0.07
+## Rencor                         -0.31               0.12             0.03
+## Memoria                        -0.03              -0.10             0.18
+## Memoria_Expectativa            -0.08               0.01             0.09
+##                     Inv Fort Inst Inv Total Reconciliacion Disculpas
+## Desempeno Fiscal             0.09      0.34          -0.20     -0.12
+## Desempeno Integral          -0.06     -0.24          -0.01     -0.11
+## Gobierno Abierto             0.05     -0.13          -0.10     -0.23
+## Inv Fort Inst                1.00      0.24           0.21     -0.10
+## Inv Total                    0.24      1.00          -0.23     -0.25
+## Reconciliacion               0.21     -0.23           1.00      0.09
+## Disculpas                   -0.10     -0.25           0.09      1.00
+## Violencia                   -0.25     -0.12          -0.12     -0.46
+## Rencor                      -0.10      0.14           0.17      0.27
+## Memoria                      0.19      0.06           0.18      0.14
+## Memoria_Expectativa         -0.12     -0.18           0.20      0.06
+##                     Violencia Rencor Memoria Memoria_Expectativa
+## Desempeno Fiscal        -0.15  -0.31   -0.03               -0.08
+## Desempeno Integral       0.18   0.12   -0.10                0.01
+## Gobierno Abierto         0.07   0.03    0.18                0.09
+## Inv Fort Inst           -0.25  -0.10    0.19               -0.12
+## Inv Total               -0.12   0.14    0.06               -0.18
+## Reconciliacion          -0.12   0.17    0.18                0.20
+## Disculpas               -0.46   0.27    0.14                0.06
+## Violencia                1.00  -0.23   -0.34               -0.05
+## Rencor                  -0.23   1.00    0.35                0.42
+## Memoria                 -0.34   0.35    1.00                0.65
+## Memoria_Expectativa     -0.05   0.42    0.65                1.00
+## 
+## n
+##                     Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                  44                 44               44
+## Desempeno Integral                44                 44               44
+## Gobierno Abierto                  44                 44               44
+## Inv Fort Inst                     35                 35               35
+## Inv Total                         42                 42               42
+## Reconciliacion                    44                 44               44
+## Disculpas                         44                 44               44
+## Violencia                         44                 44               44
+## Rencor                            44                 44               44
+## Memoria                           44                 44               44
+## Memoria_Expectativa               44                 44               44
+##                     Inv Fort Inst Inv Total Reconciliacion Disculpas
+## Desempeno Fiscal               35        42             44        44
+## Desempeno Integral             35        42             44        44
+## Gobierno Abierto               35        42             44        44
+## Inv Fort Inst                  35        35             35        35
+## Inv Total                      35        42             42        42
+## Reconciliacion                 35        42             44        44
+## Disculpas                      35        42             44        44
+## Violencia                      35        42             44        44
+## Rencor                         35        42             44        44
+## Memoria                        35        42             44        44
+## Memoria_Expectativa            35        42             44        44
+##                     Violencia Rencor Memoria Memoria_Expectativa
+## Desempeno Fiscal           44     44      44                  44
+## Desempeno Integral         44     44      44                  44
+## Gobierno Abierto           44     44      44                  44
+## Inv Fort Inst              35     35      35                  35
+## Inv Total                  42     42      42                  42
+## Reconciliacion             44     44      44                  44
+## Disculpas                  44     44      44                  44
+## Violencia                  44     44      44                  44
+## Rencor                     44     44      44                  44
+## Memoria                    44     44      44                  44
+## Memoria_Expectativa        44     44      44                  44
+## 
+## P
+##                     Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                     0.9378             0.3629          
+## Desempeno Integral  0.9378                              0.1870          
+## Gobierno Abierto    0.3629           0.1870                             
+## Inv Fort Inst       0.5985           0.7263             0.7651          
+## Inv Total           0.0265           0.1304             0.4230          
+## Reconciliacion      0.1959           0.9537             0.5028          
+## Disculpas           0.4501           0.4775             0.1390          
+## Violencia           0.3158           0.2439             0.6593          
+## Rencor              0.0440           0.4219             0.8495          
+## Memoria             0.8438           0.5075             0.2519          
+## Memoria_Expectativa 0.6035           0.9284             0.5684          
+##                     Inv Fort Inst Inv Total Reconciliacion Disculpas
+## Desempeno Fiscal    0.5985        0.0265    0.1959         0.4501   
+## Desempeno Integral  0.7263        0.1304    0.9537         0.4775   
+## Gobierno Abierto    0.7651        0.4230    0.5028         0.1390   
+## Inv Fort Inst                     0.1669    0.2283         0.5557   
+## Inv Total           0.1669                  0.1504         0.1174   
+## Reconciliacion      0.2283        0.1504                   0.5506   
+## Disculpas           0.5557        0.1174    0.5506                  
+## Violencia           0.1454        0.4417    0.4251         0.0018   
+## Rencor              0.5720        0.3668    0.2668         0.0769   
+## Memoria             0.2716        0.7239    0.2499         0.3727   
+## Memoria_Expectativa 0.4897        0.2532    0.1821         0.7156   
+##                     Violencia Rencor Memoria Memoria_Expectativa
+## Desempeno Fiscal    0.3158    0.0440 0.8438  0.6035             
+## Desempeno Integral  0.2439    0.4219 0.5075  0.9284             
+## Gobierno Abierto    0.6593    0.8495 0.2519  0.5684             
+## Inv Fort Inst       0.1454    0.5720 0.2716  0.4897             
+## Inv Total           0.4417    0.3668 0.7239  0.2532             
+## Reconciliacion      0.4251    0.2668 0.2499  0.1821             
+## Disculpas           0.0018    0.0769 0.3727  0.7156             
+## Violencia                     0.1314 0.0238  0.7539             
+## Rencor              0.1314           0.0212  0.0043             
+## Memoria             0.0238    0.0212         0.0000             
+## Memoria_Expectativa 0.7539    0.0043 0.0000</code></pre>
+</div>
+<div id="regresion-lineal-1" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Regresion lineal</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reconciliacion <span class="op">~</span><span class="st"> </span>diff_desemp_fisc_mean<span class="op">+</span><span class="st"> </span>
+<span class="st">                         </span>diff_desemp_int_mean<span class="op">+</span><span class="st"> </span>
+<span class="st">                         </span>diff_IGA_total_mean<span class="op">+</span><span class="st"> </span>
+<span class="st">                         </span>diff_inv_fortinst_cienmil_mean<span class="op">+</span>
+<span class="st">                         </span>diff_inv_total_cienmil_mean, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regReconcililacion)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Reconciliacion ~ diff_desemp_fisc_mean + diff_desemp_int_mean + 
+##     diff_IGA_total_mean + diff_inv_fortinst_cienmil_mean + diff_inv_total_cienmil_mean, 
+##     data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.6354 -1.0635 -0.1481  1.2888  3.6297 
+## 
+## Coefficients:
+##                                Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)                     1.46653    1.12200   1.307   0.2015   
+## diff_desemp_fisc_mean           0.06623    0.07517   0.881   0.3855   
+## diff_desemp_int_mean           -0.05216    0.03138  -1.662   0.1072   
+## diff_IGA_total_mean            -0.13222    0.06105  -2.166   0.0387 * 
+## diff_inv_fortinst_cienmil_mean  1.38625    0.51947   2.669   0.0123 * 
+## diff_inv_total_cienmil_mean    -2.64508    0.80645  -3.280   0.0027 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.087 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.406,  Adjusted R-squared:  0.3035 
+## F-statistic: 3.964 on 5 and 29 DF,  p-value: 0.007328</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Reconciliacion es el unico que parece funcionar. Pues o el unico que arroja informacion sobre esta BBDD. </span>
+
+regDisculpas &lt;-<span class="st"> </span><span class="kw">lm</span>(Disculpas <span class="op">~</span><span class="st"> </span>diff_desemp_fisc_mean<span class="op">+</span><span class="st">                           </span>diff_desemp_int_mean<span class="op">+</span><span class="st">                           </span>diff_IGA_total_mean<span class="op">+</span><span class="st">                           </span>diff_inv_fortinst_cienmil_mean<span class="op">+</span><span class="st">                          </span>diff_inv_total_cienmil_mean, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regDisculpas)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Disculpas ~ diff_desemp_fisc_mean + diff_desemp_int_mean + 
+##     diff_IGA_total_mean + diff_inv_fortinst_cienmil_mean + diff_inv_total_cienmil_mean, 
+##     data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.45389 -0.12131 -0.01447  0.17438  0.42755 
+## 
+## Coefficients:
+##                                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     0.574480   0.130914   4.388 0.000138 ***
+## diff_desemp_fisc_mean           0.004312   0.008771   0.492 0.626691    
+## diff_desemp_int_mean           -0.005802   0.003661  -1.585 0.123850    
+## diff_IGA_total_mean            -0.013959   0.007124  -1.960 0.059728 .  
+## diff_inv_fortinst_cienmil_mean -0.037349   0.060612  -0.616 0.542572    
+## diff_inv_total_cienmil_mean    -0.117405   0.094097  -1.248 0.222121    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2436 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.2238, Adjusted R-squared:  0.08995 
+## F-statistic: 1.672 on 5 and 29 DF,  p-value: 0.1729</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia <span class="op">~</span><span class="st"> </span>diff_desemp_fisc_mean<span class="op">+</span><span class="st">                           </span>diff_desemp_int_mean<span class="op">+</span><span class="st">                           </span>diff_IGA_total_mean<span class="op">+</span><span class="st">                           </span>diff_inv_fortinst_cienmil_mean<span class="op">+</span><span class="st">                          </span>diff_inv_total_cienmil_mean, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regViolencia)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Violencia ~ diff_desemp_fisc_mean + diff_desemp_int_mean + 
+##     diff_IGA_total_mean + diff_inv_fortinst_cienmil_mean + diff_inv_total_cienmil_mean, 
+##     data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.64851 -0.34355  0.00942  0.27449  0.78693 
+## 
+## Coefficients:
+##                                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                    -1.536706   0.224492  -6.845 1.61e-07 ***
+## diff_desemp_fisc_mean          -0.022503   0.015040  -1.496    0.145    
+## diff_desemp_int_mean            0.007612   0.006278   1.213    0.235    
+## diff_IGA_total_mean             0.001822   0.012216   0.149    0.882    
+## diff_inv_fortinst_cienmil_mean -0.093794   0.103937  -0.902    0.374    
+## diff_inv_total_cienmil_mean     0.060661   0.161357   0.376    0.710    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4177 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.1244, Adjusted R-squared:  -0.0266 
+## F-statistic: 0.8238 on 5 and 29 DF,  p-value: 0.543</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regRencor &lt;-<span class="st"> </span><span class="kw">lm</span>(Rencor <span class="op">~</span><span class="st"> </span>diff_desemp_fisc_mean<span class="op">+</span><span class="st">                           </span>diff_desemp_int_mean<span class="op">+</span><span class="st">                           </span>diff_IGA_total_mean<span class="op">+</span><span class="st">                           </span>diff_inv_fortinst_cienmil_mean<span class="op">+</span><span class="st">                          </span>diff_inv_total_cienmil_mean, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regRencor)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Rencor ~ diff_desemp_fisc_mean + diff_desemp_int_mean + 
+##     diff_IGA_total_mean + diff_inv_fortinst_cienmil_mean + diff_inv_total_cienmil_mean, 
+##     data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.88434 -0.15695  0.05018  0.16763  0.38705 
+## 
+## Coefficients:
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     3.374e+00  1.568e-01  21.516   &lt;2e-16 ***
+## diff_desemp_fisc_mean          -1.985e-02  1.051e-02  -1.889   0.0689 .  
+## diff_desemp_int_mean           -4.855e-05  4.386e-03  -0.011   0.9912    
+## diff_IGA_total_mean            -4.979e-03  8.534e-03  -0.583   0.5641    
+## diff_inv_fortinst_cienmil_mean -6.963e-02  7.261e-02  -0.959   0.3455    
+## diff_inv_total_cienmil_mean     1.163e-01  1.127e-01   1.031   0.3109    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2918 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.1622, Adjusted R-squared:  0.01779 
+## F-statistic: 1.123 on 5 and 29 DF,  p-value: 0.3702</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria<span class="op">~</span><span class="st"> </span>diff_desemp_fisc_mean<span class="op">+</span><span class="st">                           </span>diff_desemp_int_mean<span class="op">+</span><span class="st">                           </span>diff_IGA_total_mean<span class="op">+</span><span class="st">                           </span>diff_inv_fortinst_cienmil_mean<span class="op">+</span><span class="st">                          </span>diff_inv_total_cienmil_mean, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria ~ diff_desemp_fisc_mean + diff_desemp_int_mean + 
+##     diff_IGA_total_mean + diff_inv_fortinst_cienmil_mean + diff_inv_total_cienmil_mean, 
+##     data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.72034 -0.16146  0.02758  0.10622  0.64804 
+## 
+## Coefficients:
+##                                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     3.328102   0.177400  18.760   &lt;2e-16 ***
+## diff_desemp_fisc_mean           0.004566   0.011885   0.384    0.704    
+## diff_desemp_int_mean           -0.007012   0.004961  -1.413    0.168    
+## diff_IGA_total_mean             0.007626   0.009653   0.790    0.436    
+## diff_inv_fortinst_cienmil_mean  0.076580   0.082134   0.932    0.359    
+## diff_inv_total_cienmil_mean    -0.040540   0.127509  -0.318    0.753    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.33 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.1231, Adjusted R-squared:  -0.02803 
+## F-statistic: 0.8146 on 5 and 29 DF,  p-value: 0.5491</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria_Expectativa &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria_Expectativa<span class="op">~</span>diff_desemp_fisc_mean<span class="op">+</span><span class="st">                           </span>diff_desemp_int_mean<span class="op">+</span><span class="st">                           </span>diff_IGA_total_mean<span class="op">+</span><span class="st">                           </span>diff_inv_fortinst_cienmil_mean<span class="op">+</span><span class="st">                          </span>diff_inv_total_cienmil_mean, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria_Expectativa)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria_Expectativa ~ diff_desemp_fisc_mean + diff_desemp_int_mean + 
+##     diff_IGA_total_mean + diff_inv_fortinst_cienmil_mean + diff_inv_total_cienmil_mean, 
+##     data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.73696 -0.12739  0.05315  0.21145  0.49904 
+## 
+## Coefficients:
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     3.2397962  0.1852142  17.492   &lt;2e-16 ***
+## diff_desemp_fisc_mean           0.0007433  0.0124087   0.060    0.953    
+## diff_desemp_int_mean           -0.0030842  0.0051796  -0.595    0.556    
+## diff_IGA_total_mean             0.0029981  0.0100784   0.297    0.768    
+## diff_inv_fortinst_cienmil_mean -0.0228330  0.0857515  -0.266    0.792    
+## diff_inv_total_cienmil_mean    -0.0931718  0.1331257  -0.700    0.490    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3446 on 29 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.04827,    Adjusted R-squared:  -0.1158 
+## F-statistic: 0.2941 on 5 and 29 DF,  p-value: 0.9123</code></pre>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
