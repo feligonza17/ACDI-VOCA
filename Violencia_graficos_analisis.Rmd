@@ -71,7 +71,7 @@ La segunda seccion tiene los descriptivos de esas variables. Para mas informacio
 
 En esta base de datos es necesario hacer un *tidy* de la base de datos. Es decir, transformar algunas columnas en filas. 
 
-Para mas informacion sobre la concepcion del *tidy* ver: [Paper tidy]()
+Para mas informacion sobre la concepcion del *tidy* ver: [Paper tidy](https://www.researchgate.net/publication/215990669_Tidy_data)
 
 ```{r}
 homi_GA <- grep('homi_{1}', names(cede_conflicto_44), value = T) %>% grep('_pn',.,value = T, invert = T)	

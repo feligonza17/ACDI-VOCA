@@ -570,7 +570,7 @@ div.tocify {
 <div id="creacion-de-variables" class="section level3">
 <h3><span class="header-section-number">2.1.1</span> Creacion de variables</h3>
 <p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
-<p>Para mas informacion sobre la concepcion del <em>tidy</em> ver: <a href="">Paper tidy</a></p>
+<p>Para mas informacion sobre la concepcion del <em>tidy</em> ver: <a href="https://www.researchgate.net/publication/215990669_Tidy_data">Paper tidy</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">homi_GA &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&#39;homi_{1}&#39;</span>, <span class="kw">names</span>(cede_conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">grep</span>(<span class="st">&#39;_pn&#39;</span>,.,<span class="dt">value =</span> T, <span class="dt">invert =</span> T)    
 <span class="co"># Tidy data table - homicidios de transito  </span>
 conflicto_44_tidy &lt;-<span class="st"> </span><span class="kw">gather</span>(cede_conflicto_<span class="dv">44</span>, <span class="st">&#39;Grupo_Armado&#39;</span>, <span class="st">&#39;Numero_Homicidios&#39;</span>, homi_GA)    
