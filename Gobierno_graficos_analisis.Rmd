@@ -76,9 +76,9 @@ En este codigo se crea el grafico que muestra las **tendencias** en funcion del 
 
 
 
-```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+```{r fig.height=11, fig.width=13, message=FALSE, warning=FALSE}
 
-cede_gobierno_44 %>% 
+ cede_gobierno_44 %>% 
   ggplot(aes(x = ano, y = DF_desemp_fisc)) +	
   geom_line() +	
   scale_color_manual(values = palette) +	
@@ -88,6 +88,7 @@ cede_gobierno_44 %>%
   coord_cartesian(xlim = c(2000:2016),
                   ylim=c(cede_gobierno_44$DF_desemp_fisc[which.min(cede_gobierno_44$DF_desemp_fisc)],
                          cede_gobierno_44$DF_desemp_fisc[which.max(cede_gobierno_44$DF_desemp_fisc)]))
+
 
 ```
 

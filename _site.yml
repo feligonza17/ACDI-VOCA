@@ -20,7 +20,7 @@ navbar:
         - text: "Salud"
           href: Salud_graficos_analisis.html
         - text: "Educacion"
-          href:
+          href: fa-briefcase-medical 
     - text: "More"
       icon: fa-gear
       menu:

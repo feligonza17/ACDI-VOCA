@@ -485,7 +485,9 @@ div.tocify {
     <li>
       <a href="Salud_graficos_analisis.html">Salud</a>
     </li>
-    <li class="dropdown-header">Educacion</li>
+    <li>
+      <a href="fa-briefcase-medical">Educacion</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -930,15 +932,14 @@ descrip_prestadores_cienmil_5despues &lt;-<span class="st"> </span><span class="
 diff_prestadores_cienmil_sd &lt;-<span class="st"> </span>descrip_prestadores_cienmil_5antes<span class="op">$</span>prestadores_cienmil.sd <span class="op">-</span>descrip_prestadores_cienmil_5despues<span class="op">$</span>prestadores_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
 
 <span class="kw">print</span>(diff_prestadores_cienmil_mean)</code></pre></div>
-<pre><code>##  [1]  0.124342034  0.106454642  0.019089482  1.072695004          NaN
-##  [6]  0.054273846          NaN -0.020261851  0.134455073  0.029831100
-## [11]  0.040141301          NaN  0.009579026  0.198350325  0.179464107
-## [16]  0.014301868          NaN  0.086464810  4.822491772 -0.163344393
-## [21]  0.016870915 -0.023271872          NaN -0.023475568 -0.101157991
-## [26]  0.031422455  0.035785135  0.044327261  0.061137278  0.357590537
-## [31] -0.034775774  0.011541008  0.021942045  0.213365924  0.055239991
-## [36]  0.084207016  0.102130228  0.029774891  0.069475986  0.034835580
-## [41]  0.180102287  0.090032039          NaN  0.593167011</code></pre>
+<pre><code>##  [1]  0.124342034  0.106454642  0.019089482  1.072695004          NaN  0.054273846
+##  [7]          NaN -0.020261851  0.134455073  0.029831100  0.040141301          NaN
+## [13]  0.009579026  0.198350325  0.179464107  0.014301868          NaN  0.086464810
+## [19]  4.822491772 -0.163344393  0.016870915 -0.023271872          NaN -0.023475568
+## [25] -0.101157991  0.031422455  0.035785135  0.044327261  0.061137278  0.357590537
+## [31] -0.034775774  0.011541008  0.021942045  0.213365924  0.055239991  0.084207016
+## [37]  0.102130228  0.029774891  0.069475986  0.034835580  0.180102287  0.090032039
+## [43]          NaN  0.593167011</code></pre>
 </div>
 </div>
 </div>
@@ -1094,15 +1095,13 @@ descrip_subsidiado_cienmil_5despues &lt;-<span class="st"> </span><span class="k
 diff_subsidiado_cienmil_sd &lt;-<span class="st"> </span>descrip_subsidiado_cienmil_5antes<span class="op">$</span>subsidiado_cienmil.sd <span class="op">-</span>descrip_subsidiado_cienmil_5despues<span class="op">$</span>subsidiado_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
 
 <span class="kw">print</span>(diff_subsidiado_cienmil_mean)</code></pre></div>
-<pre><code>##  [1]  0.29086955        -Inf  0.24273972 -0.20496526 -0.14996780
-##  [6]  0.49381252  0.06337546  0.03070993 -0.33022660 -0.07000106
-## [11] -0.28894310 -0.27224172 -0.41728200 -0.31847952 -0.51807910
-## [16] -0.34366701 -0.62200238 -0.32839761  0.05115908 -0.19426752
-## [21] -0.31496113 -0.03952259 -0.19330568 -0.23950673 -0.33900749
-## [26] -0.32663870 -0.25754502  0.09678105  0.09556149 -0.44187644
-## [31] -0.23811797 -0.31572221  0.04742658 -0.06035366 -0.34497008
-## [36] -0.41419265 -0.36921970 -0.31522967  0.47787581 -0.13846922
-## [41] -0.16295436 -0.45296162 -0.18516559 -0.08010662</code></pre>
+<pre><code>##  [1]  0.29086955        -Inf  0.24273972 -0.20496526 -0.14996780  0.49381252  0.06337546
+##  [8]  0.03070993 -0.33022660 -0.07000106 -0.28894310 -0.27224172 -0.41728200 -0.31847952
+## [15] -0.51807910 -0.34366701 -0.62200238 -0.32839761  0.05115908 -0.19426752 -0.31496113
+## [22] -0.03952259 -0.19330568 -0.23950673 -0.33900749 -0.32663870 -0.25754502  0.09678105
+## [29]  0.09556149 -0.44187644 -0.23811797 -0.31572221  0.04742658 -0.06035366 -0.34497008
+## [36] -0.41419265 -0.36921970 -0.31522967  0.47787581 -0.13846922 -0.16295436 -0.45296162
+## [43] -0.18516559 -0.08010662</code></pre>
 </div>
 </div>
 </div>
@@ -1154,96 +1153,96 @@ cede_salud_44_eq &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op"
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_contributivo_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(contributivo_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_salud_44_eq, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T ) <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
 
 <span class="kw">print</span>(descrip_contributivo_cienmil)</code></pre></div>
-<pre><code>##                 municipio contributivo_cienmil.sum
-## 1                   Albán                 55.84473
-## 2               Algarrobo                 82.10864
-## 3                Apartadó                 86.53955
-## 4                  Arauca                 81.29679
-## 5               Arauquita                 67.11976
-## 6            Bogotá, D.C.                 89.43157
-## 7                  Bojaya                 52.60262
-## 8                 Briceño                 71.86658
-## 9            Buenaventura                 80.70202
-## 10                   Cali                 88.15190
-## 11              Cartagena                 86.93162
-## 12   Cartagena del Chairá                 67.00753
-## 13              Chaparral                 79.23376
-## 14                Ciénaga                 84.88922
-## 15                 Cúcuta                 86.83669
-## 16               El Tambo                 62.89505
-## 17               El Tarra                 49.15603
-## 18              Florencia                 82.91067
-## 19                Inírida                 79.06799
-## 20                Ituango                 73.92493
-## 21                 Maicao                 77.99389
-## 22               Medellín                 89.28210
-## 23                Mesetas                 67.10116
-## 24              Moniquirá                 82.40280
-## 25            Piedecuesta                 84.99423
-## 26            Puerto Asís                 79.14272
-## 27          Puerto Gaitán                 88.36156
-## 28          Puerto Guzmán                 59.46328
-## 29            Puerto Rico                 65.54603
-## 30                 Quibdó                 82.44273
-## 31              Rioblanco                 56.92380
-## 32                Sahagún                 78.25144
-## 33             San Carlos                 77.66227
-## 34   San Pedro de Cartago                 56.98453
-## 35 San Vicente del Caguán                 69.57316
-## 36            Santa Marta                 86.67681
-## 37                Soledad                 83.22000
-## 38                   Tibú                 78.36864
-## 39                Tocaima                 74.11628
-## 40                  Turbo                 79.80423
-## 41                 Uribia                 62.62473
-## 42          Villavicencio                 87.70390
-## 43           Vistahermosa                 63.73659
-## 44                  Yopal                 87.82434
-##    contributivo_cienmil.mean contributivo_cienmil.sd
-## 1                   6.980591              0.21168022
-## 2                  10.263580              0.08401321
-## 3                  10.817444              0.07508056
-## 4                  10.162099              0.05006661
-## 5                   8.389969              0.12457211
-## 6                  11.178946              0.04411725
-## 7                   6.575327              0.74901026
-## 8                   8.983322              0.19201241
-## 9                  10.087752              0.04055052
-## 10                 11.018988              0.01823392
-## 11                 10.866453              0.02074850
-## 12                  8.375942              0.10230181
-## 13                  9.904220              0.04138273
-## 14                 10.611152              0.03774540
-## 15                 10.854587              0.02316610
-## 16                  7.861881              0.10732572
-## 17                  6.144504              0.57310120
-## 18                 10.363833              0.01913646
-## 19                  9.883498              0.11663348
-## 20                  9.240616              0.21067093
-## 21                  9.749236              0.14021293
-## 22                 11.160262              0.04623241
-## 23                  8.387645              0.15947971
-## 24                 10.300350              0.06207116
-## 25                 10.624279              0.05539648
-## 26                  9.892839              0.04113926
-## 27                 11.045195              0.18101711
-## 28                  7.432910              0.28904273
-## 29                  8.193253              0.56418638
-## 30                 10.305341              0.05355322
-## 31                  7.115475              0.35864311
-## 32                  9.781430              0.07451038
-## 33                  9.707784              0.05436459
-## 34                  7.123066              0.29405442
-## 35                  8.696645              0.05970597
-## 36                 10.834602              0.04123080
-## 37                 10.402499              0.03507157
-## 38                  9.796080              0.13918923
-## 39                  9.264535              0.11955708
-## 40                  9.975528              0.05441241
-## 41                  7.828091              0.09845007
-## 42                 10.962987              0.04307672
-## 43                  7.967074              0.22450407
-## 44                 10.978043              0.14176493</code></pre>
+<pre><code>##                 municipio contributivo_cienmil.sum contributivo_cienmil.mean
+## 1                   Albán                 55.84473                  6.980591
+## 2               Algarrobo                 82.10864                 10.263580
+## 3                Apartadó                 86.53955                 10.817444
+## 4                  Arauca                 81.29679                 10.162099
+## 5               Arauquita                 67.11976                  8.389969
+## 6            Bogotá, D.C.                 89.43157                 11.178946
+## 7                  Bojaya                 52.60262                  6.575327
+## 8                 Briceño                 71.86658                  8.983322
+## 9            Buenaventura                 80.70202                 10.087752
+## 10                   Cali                 88.15190                 11.018988
+## 11              Cartagena                 86.93162                 10.866453
+## 12   Cartagena del Chairá                 67.00753                  8.375942
+## 13              Chaparral                 79.23376                  9.904220
+## 14                Ciénaga                 84.88922                 10.611152
+## 15                 Cúcuta                 86.83669                 10.854587
+## 16               El Tambo                 62.89505                  7.861881
+## 17               El Tarra                 49.15603                  6.144504
+## 18              Florencia                 82.91067                 10.363833
+## 19                Inírida                 79.06799                  9.883498
+## 20                Ituango                 73.92493                  9.240616
+## 21                 Maicao                 77.99389                  9.749236
+## 22               Medellín                 89.28210                 11.160262
+## 23                Mesetas                 67.10116                  8.387645
+## 24              Moniquirá                 82.40280                 10.300350
+## 25            Piedecuesta                 84.99423                 10.624279
+## 26            Puerto Asís                 79.14272                  9.892839
+## 27          Puerto Gaitán                 88.36156                 11.045195
+## 28          Puerto Guzmán                 59.46328                  7.432910
+## 29            Puerto Rico                 65.54603                  8.193253
+## 30                 Quibdó                 82.44273                 10.305341
+## 31              Rioblanco                 56.92380                  7.115475
+## 32                Sahagún                 78.25144                  9.781430
+## 33             San Carlos                 77.66227                  9.707784
+## 34   San Pedro de Cartago                 56.98453                  7.123066
+## 35 San Vicente del Caguán                 69.57316                  8.696645
+## 36            Santa Marta                 86.67681                 10.834602
+## 37                Soledad                 83.22000                 10.402499
+## 38                   Tibú                 78.36864                  9.796080
+## 39                Tocaima                 74.11628                  9.264535
+## 40                  Turbo                 79.80423                  9.975528
+## 41                 Uribia                 62.62473                  7.828091
+## 42          Villavicencio                 87.70390                 10.962987
+## 43           Vistahermosa                 63.73659                  7.967074
+## 44                  Yopal                 87.82434                 10.978043
+##    contributivo_cienmil.sd
+## 1               0.21168022
+## 2               0.08401321
+## 3               0.07508056
+## 4               0.05006661
+## 5               0.12457211
+## 6               0.04411725
+## 7               0.74901026
+## 8               0.19201241
+## 9               0.04055052
+## 10              0.01823392
+## 11              0.02074850
+## 12              0.10230181
+## 13              0.04138273
+## 14              0.03774540
+## 15              0.02316610
+## 16              0.10732572
+## 17              0.57310120
+## 18              0.01913646
+## 19              0.11663348
+## 20              0.21067093
+## 21              0.14021293
+## 22              0.04623241
+## 23              0.15947971
+## 24              0.06207116
+## 25              0.05539648
+## 26              0.04113926
+## 27              0.18101711
+## 28              0.28904273
+## 29              0.56418638
+## 30              0.05355322
+## 31              0.35864311
+## 32              0.07451038
+## 33              0.05436459
+## 34              0.29405442
+## 35              0.05970597
+## 36              0.04123080
+## 37              0.03507157
+## 38              0.13918923
+## 39              0.11955708
+## 40              0.05441241
+## 41              0.09845007
+## 42              0.04307672
+## 43              0.22450407
+## 44              0.14176493</code></pre>
 </div>
 <div id="delta-4" class="section level4">
 <h4><span class="header-section-number">2.5.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
@@ -1261,15 +1260,14 @@ descrip_contributivo_cienmil_5despues &lt;-<span class="st"> </span><span class=
 diff_contributivo_cienmil_sd &lt;-<span class="st"> </span>descrip_contributivo_cienmil_5antes<span class="op">$</span>contributivo_cienmil.sd <span class="op">-</span>descrip_contributivo_cienmil_5despues<span class="op">$</span>contributivo_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos</span>
 
 <span class="kw">print</span>(diff_contributivo_cienmil_mean)</code></pre></div>
-<pre><code>##  [1] -0.261148972 -0.064672024  0.111410853 -0.059089299 -0.150364642
-##  [6] -0.053383981 -0.682789656 -0.261182701  0.053443168 -0.011056927
-## [11] -0.006119923  0.016216776  0.027162222  0.046686789  0.027745306
-## [16] -0.145613499 -0.817063562 -0.006710247 -0.158903992 -0.287193127
-## [21]  0.208378085 -0.056249509 -0.145695660 -0.077898236 -0.067356778
-## [26] -0.039631866 -0.104699176  0.347806583 -0.826061033 -0.048815564
-## [31] -0.405834396  0.075815617 -0.039083219 -0.311133921  0.050496232
-## [36]  0.054362559 -0.023862747 -0.203287308 -0.139648604  0.060813442
-## [41]  0.056075311 -0.013470033 -0.130686284 -0.167220747</code></pre>
+<pre><code>##  [1] -0.261148972 -0.064672024  0.111410853 -0.059089299 -0.150364642 -0.053383981
+##  [7] -0.682789656 -0.261182701  0.053443168 -0.011056927 -0.006119923  0.016216776
+## [13]  0.027162222  0.046686789  0.027745306 -0.145613499 -0.817063562 -0.006710247
+## [19] -0.158903992 -0.287193127  0.208378085 -0.056249509 -0.145695660 -0.077898236
+## [25] -0.067356778 -0.039631866 -0.104699176  0.347806583 -0.826061033 -0.048815564
+## [31] -0.405834396  0.075815617 -0.039083219 -0.311133921  0.050496232  0.054362559
+## [37] -0.023862747 -0.203287308 -0.139648604  0.060813442  0.056075311 -0.013470033
+## [43] -0.130686284 -0.167220747</code></pre>
 </div>
 </div>
 </div>
@@ -1332,39 +1330,28 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 ## Rencor                       -0.02 NaN                      -0.21
 ## Memoria                       0.03 NaN                      -0.43
 ## Memoria_Expectativa          -0.09 NaN                      -0.35
-##                              Afiliados regimen subsidiado Reconciliacion
-## TMI                                                 -0.17          -0.03
-## NBI                                                   NaN            NaN
-## Numero Prestadores_cienmil                          -0.04          -0.11
-## Afiliados regimen subsidiado                         1.00           0.10
-## Reconciliacion                                       0.10           1.00
-## Disculpas                                           -0.28           0.09
-## Violencia                                           -0.08          -0.12
-## Rencor                                               0.00           0.17
-## Memoria                                              0.08           0.18
-## Memoria_Expectativa                                 -0.18           0.20
-##                              Disculpas Violencia Rencor Memoria
-## TMI                               0.04     -0.29  -0.02    0.03
-## NBI                                NaN       NaN    NaN     NaN
-## Numero Prestadores_cienmil       -0.15     -0.05  -0.21   -0.43
-## Afiliados regimen subsidiado     -0.28     -0.08   0.00    0.08
-## Reconciliacion                    0.09     -0.12   0.17    0.18
-## Disculpas                         1.00     -0.46   0.27    0.14
-## Violencia                        -0.46      1.00  -0.23   -0.34
-## Rencor                            0.27     -0.23   1.00    0.35
-## Memoria                           0.14     -0.34   0.35    1.00
-## Memoria_Expectativa               0.06     -0.05   0.42    0.65
-##                              Memoria_Expectativa
-## TMI                                        -0.09
-## NBI                                          NaN
-## Numero Prestadores_cienmil                 -0.35
-## Afiliados regimen subsidiado               -0.18
-## Reconciliacion                              0.20
-## Disculpas                                   0.06
-## Violencia                                  -0.05
-## Rencor                                      0.42
-## Memoria                                     0.65
-## Memoria_Expectativa                         1.00
+##                              Afiliados regimen subsidiado Reconciliacion Disculpas
+## TMI                                                 -0.17          -0.03      0.04
+## NBI                                                   NaN            NaN       NaN
+## Numero Prestadores_cienmil                          -0.04          -0.11     -0.15
+## Afiliados regimen subsidiado                         1.00           0.10     -0.28
+## Reconciliacion                                       0.10           1.00      0.09
+## Disculpas                                           -0.28           0.09      1.00
+## Violencia                                           -0.08          -0.12     -0.46
+## Rencor                                               0.00           0.17      0.27
+## Memoria                                              0.08           0.18      0.14
+## Memoria_Expectativa                                 -0.18           0.20      0.06
+##                              Violencia Rencor Memoria Memoria_Expectativa
+## TMI                              -0.29  -0.02    0.03               -0.09
+## NBI                                NaN    NaN     NaN                 NaN
+## Numero Prestadores_cienmil       -0.05  -0.21   -0.43               -0.35
+## Afiliados regimen subsidiado     -0.08   0.00    0.08               -0.18
+## Reconciliacion                   -0.12   0.17    0.18                0.20
+## Disculpas                        -0.46   0.27    0.14                0.06
+## Violencia                         1.00  -0.23   -0.34               -0.05
+## Rencor                           -0.23   1.00    0.35                0.42
+## Memoria                          -0.34   0.35    1.00                0.65
+## Memoria_Expectativa              -0.05   0.42    0.65                1.00
 ## 
 ## n
 ##                              TMI NBI Numero Prestadores_cienmil
@@ -1378,39 +1365,28 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 ## Rencor                        44  44                         38
 ## Memoria                       44  44                         38
 ## Memoria_Expectativa           44  44                         38
-##                              Afiliados regimen subsidiado Reconciliacion
-## TMI                                                    43             44
-## NBI                                                    43             44
-## Numero Prestadores_cienmil                             37             38
-## Afiliados regimen subsidiado                           43             43
-## Reconciliacion                                         43             44
-## Disculpas                                              43             44
-## Violencia                                              43             44
-## Rencor                                                 43             44
-## Memoria                                                43             44
-## Memoria_Expectativa                                    43             44
-##                              Disculpas Violencia Rencor Memoria
-## TMI                                 44        44     44      44
-## NBI                                 44        44     44      44
-## Numero Prestadores_cienmil          38        38     38      38
-## Afiliados regimen subsidiado        43        43     43      43
-## Reconciliacion                      44        44     44      44
-## Disculpas                           44        44     44      44
-## Violencia                           44        44     44      44
-## Rencor                              44        44     44      44
-## Memoria                             44        44     44      44
-## Memoria_Expectativa                 44        44     44      44
-##                              Memoria_Expectativa
-## TMI                                           44
-## NBI                                           44
-## Numero Prestadores_cienmil                    38
-## Afiliados regimen subsidiado                  43
-## Reconciliacion                                44
-## Disculpas                                     44
-## Violencia                                     44
-## Rencor                                        44
-## Memoria                                       44
-## Memoria_Expectativa                           44
+##                              Afiliados regimen subsidiado Reconciliacion Disculpas
+## TMI                                                    43             44        44
+## NBI                                                    43             44        44
+## Numero Prestadores_cienmil                             37             38        38
+## Afiliados regimen subsidiado                           43             43        43
+## Reconciliacion                                         43             44        44
+## Disculpas                                              43             44        44
+## Violencia                                              43             44        44
+## Rencor                                                 43             44        44
+## Memoria                                                43             44        44
+## Memoria_Expectativa                                    43             44        44
+##                              Violencia Rencor Memoria Memoria_Expectativa
+## TMI                                 44     44      44                  44
+## NBI                                 44     44      44                  44
+## Numero Prestadores_cienmil          38     38      38                  38
+## Afiliados regimen subsidiado        43     43      43                  43
+## Reconciliacion                      44     44      44                  44
+## Disculpas                           44     44      44                  44
+## Violencia                           44     44      44                  44
+## Rencor                              44     44      44                  44
+## Memoria                             44     44      44                  44
+## Memoria_Expectativa                 44     44      44                  44
 ## 
 ## P
 ##                              TMI    NBI Numero Prestadores_cienmil
@@ -1424,39 +1400,28 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 ## Rencor                       0.9075     0.2082                    
 ## Memoria                      0.8480     0.0074                    
 ## Memoria_Expectativa          0.5573     0.0298                    
-##                              Afiliados regimen subsidiado Reconciliacion
-## TMI                          0.2875                       0.8303        
-## NBI                                                                     
-## Numero Prestadores_cienmil   0.8117                       0.5187        
-## Afiliados regimen subsidiado                              0.5123        
-## Reconciliacion               0.5123                                     
-## Disculpas                    0.0679                       0.5506        
-## Violencia                    0.6283                       0.4251        
-## Rencor                       0.9785                       0.2668        
-## Memoria                      0.6201                       0.2499        
-## Memoria_Expectativa          0.2381                       0.1821        
-##                              Disculpas Violencia Rencor Memoria
-## TMI                          0.8042    0.0548    0.9075 0.8480 
-## NBI                                                            
-## Numero Prestadores_cienmil   0.3786    0.7876    0.2082 0.0074 
-## Afiliados regimen subsidiado 0.0679    0.6283    0.9785 0.6201 
-## Reconciliacion               0.5506    0.4251    0.2668 0.2499 
-## Disculpas                              0.0018    0.0769 0.3727 
-## Violencia                    0.0018              0.1314 0.0238 
-## Rencor                       0.0769    0.1314           0.0212 
-## Memoria                      0.3727    0.0238    0.0212        
-## Memoria_Expectativa          0.7156    0.7539    0.0043 0.0000 
-##                              Memoria_Expectativa
-## TMI                          0.5573             
-## NBI                                             
-## Numero Prestadores_cienmil   0.0298             
-## Afiliados regimen subsidiado 0.2381             
-## Reconciliacion               0.1821             
-## Disculpas                    0.7156             
-## Violencia                    0.7539             
-## Rencor                       0.0043             
-## Memoria                      0.0000             
-## Memoria_Expectativa</code></pre>
+##                              Afiliados regimen subsidiado Reconciliacion Disculpas
+## TMI                          0.2875                       0.8303         0.8042   
+## NBI                                                                               
+## Numero Prestadores_cienmil   0.8117                       0.5187         0.3786   
+## Afiliados regimen subsidiado                              0.5123         0.0679   
+## Reconciliacion               0.5123                                      0.5506   
+## Disculpas                    0.0679                       0.5506                  
+## Violencia                    0.6283                       0.4251         0.0018   
+## Rencor                       0.9785                       0.2668         0.0769   
+## Memoria                      0.6201                       0.2499         0.3727   
+## Memoria_Expectativa          0.2381                       0.1821         0.7156   
+##                              Violencia Rencor Memoria Memoria_Expectativa
+## TMI                          0.0548    0.9075 0.8480  0.5573             
+## NBI                                                                      
+## Numero Prestadores_cienmil   0.7876    0.2082 0.0074  0.0298             
+## Afiliados regimen subsidiado 0.6283    0.9785 0.6201  0.2381             
+## Reconciliacion               0.4251    0.2668 0.2499  0.1821             
+## Disculpas                    0.0018    0.0769 0.3727  0.7156             
+## Violencia                              0.1314 0.0238  0.7539             
+## Rencor                       0.1314           0.0212  0.0043             
+## Memoria                      0.0238    0.0212         0.0000             
+## Memoria_Expectativa          0.7539    0.0043 0.0000</code></pre>
 </div>
 <div id="regresion-lineal" class="section level3">
 <h3><span class="header-section-number">3.1.2</span> Regresion lineal</h3>
@@ -1472,18 +1437,12 @@ regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reco
 ## -5.8642 -1.4391 -0.2126  1.3938  5.0985 
 ## 
 ## Coefficients: (1 not defined because of singularities)
-##                                                  Estimate Std. Error
-## (Intercept)                                       3.92639    0.85709
-## correlaciones[, 1:4]TMI                          -0.02263    0.18389
-## correlaciones[, 1:4]NBI                                NA         NA
-## correlaciones[, 1:4]Numero Prestadores_cienmil    0.42381    0.60584
-## correlaciones[, 1:4]Afiliados regimen subsidiado  0.15974    1.82186
-##                                                  t value Pr(&gt;|t|)    
-## (Intercept)                                        4.581  6.3e-05 ***
-## correlaciones[, 1:4]TMI                           -0.123    0.903    
-## correlaciones[, 1:4]NBI                               NA       NA    
-## correlaciones[, 1:4]Numero Prestadores_cienmil     0.700    0.489    
-## correlaciones[, 1:4]Afiliados regimen subsidiado   0.088    0.931    
+##                                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                                       3.92639    0.85709   4.581  6.3e-05 ***
+## correlaciones[, 1:4]TMI                          -0.02263    0.18389  -0.123    0.903    
+## correlaciones[, 1:4]NBI                                NA         NA      NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil    0.42381    0.60584   0.700    0.489    
+## correlaciones[, 1:4]Afiliados regimen subsidiado  0.15974    1.82186   0.088    0.931    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -1502,18 +1461,12 @@ regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reco
 ## -0.52702 -0.13733  0.04042  0.14899  0.40798 
 ## 
 ## Coefficients: (1 not defined because of singularities)
-##                                                   Estimate Std. Error
-## (Intercept)                                       0.714629   0.077257
-## correlaciones[, 1:4]TMI                          -0.002908   0.016575
-## correlaciones[, 1:4]NBI                                 NA         NA
-## correlaciones[, 1:4]Numero Prestadores_cienmil    0.006201   0.054610
-## correlaciones[, 1:4]Afiliados regimen subsidiado -0.452706   0.164222
-##                                                  t value Pr(&gt;|t|)    
-## (Intercept)                                        9.250  1.1e-10 ***
-## correlaciones[, 1:4]TMI                           -0.175  0.86180    
-## correlaciones[, 1:4]NBI                               NA       NA    
-## correlaciones[, 1:4]Numero Prestadores_cienmil     0.114  0.91028    
-## correlaciones[, 1:4]Afiliados regimen subsidiado  -2.757  0.00944 ** 
+##                                                   Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                                       0.714629   0.077257   9.250  1.1e-10 ***
+## correlaciones[, 1:4]TMI                          -0.002908   0.016575  -0.175  0.86180    
+## correlaciones[, 1:4]NBI                                 NA         NA      NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil    0.006201   0.054610   0.114  0.91028    
+## correlaciones[, 1:4]Afiliados regimen subsidiado -0.452706   0.164222  -2.757  0.00944 ** 
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -1532,18 +1485,12 @@ regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reco
 ## -0.88861 -0.35249  0.03007  0.28699  1.19988 
 ## 
 ## Coefficients: (1 not defined because of singularities)
-##                                                  Estimate Std. Error
-## (Intercept)                                      -1.05606    0.15709
-## correlaciones[, 1:4]TMI                          -0.06700    0.03370
-## correlaciones[, 1:4]NBI                                NA         NA
-## correlaciones[, 1:4]Numero Prestadores_cienmil    0.07597    0.11104
-## correlaciones[, 1:4]Afiliados regimen subsidiado -0.41820    0.33391
-##                                                  t value Pr(&gt;|t|)    
-## (Intercept)                                       -6.723 1.17e-07 ***
-## correlaciones[, 1:4]TMI                           -1.988   0.0552 .  
-## correlaciones[, 1:4]NBI                               NA       NA    
-## correlaciones[, 1:4]Numero Prestadores_cienmil     0.684   0.4986    
-## correlaciones[, 1:4]Afiliados regimen subsidiado  -1.252   0.2192    
+##                                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                                      -1.05606    0.15709  -6.723 1.17e-07 ***
+## correlaciones[, 1:4]TMI                          -0.06700    0.03370  -1.988   0.0552 .  
+## correlaciones[, 1:4]NBI                                NA         NA      NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil    0.07597    0.11104   0.684   0.4986    
+## correlaciones[, 1:4]Afiliados regimen subsidiado -0.41820    0.33391  -1.252   0.2192    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -1562,18 +1509,12 @@ regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reco
 ## -1.03527 -0.17574  0.02918  0.26850  0.57469 
 ## 
 ## Coefficients: (1 not defined because of singularities)
-##                                                  Estimate Std. Error
-## (Intercept)                                       3.67961    0.11018
-## correlaciones[, 1:4]TMI                          -0.00294    0.02364
-## correlaciones[, 1:4]NBI                                NA         NA
-## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.01480    0.07788
-## correlaciones[, 1:4]Afiliados regimen subsidiado -0.08809    0.23421
-##                                                  t value Pr(&gt;|t|)    
-## (Intercept)                                       33.395   &lt;2e-16 ***
-## correlaciones[, 1:4]TMI                           -0.124    0.902    
-## correlaciones[, 1:4]NBI                               NA       NA    
-## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.190    0.850    
-## correlaciones[, 1:4]Afiliados regimen subsidiado  -0.376    0.709    
+##                                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                                       3.67961    0.11018  33.395   &lt;2e-16 ***
+## correlaciones[, 1:4]TMI                          -0.00294    0.02364  -0.124    0.902    
+## correlaciones[, 1:4]NBI                                NA         NA      NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.01480    0.07788  -0.190    0.850    
+## correlaciones[, 1:4]Afiliados regimen subsidiado -0.08809    0.23421  -0.376    0.709    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -1592,18 +1533,12 @@ regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reco
 ## -0.85586 -0.19298 -0.08095  0.22179  0.56477 
 ## 
 ## Coefficients: (1 not defined because of singularities)
-##                                                  Estimate Std. Error
-## (Intercept)                                       3.33206    0.11031
-## correlaciones[, 1:4]TMI                           0.01713    0.02367
-## correlaciones[, 1:4]NBI                                NA         NA
-## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.15897    0.07797
-## correlaciones[, 1:4]Afiliados regimen subsidiado  0.08350    0.23448
-##                                                  t value Pr(&gt;|t|)    
-## (Intercept)                                       30.207   &lt;2e-16 ***
-## correlaciones[, 1:4]TMI                            0.724   0.4743    
-## correlaciones[, 1:4]NBI                               NA       NA    
-## correlaciones[, 1:4]Numero Prestadores_cienmil    -2.039   0.0496 *  
-## correlaciones[, 1:4]Afiliados regimen subsidiado   0.356   0.7240    
+##                                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                                       3.33206    0.11031  30.207   &lt;2e-16 ***
+## correlaciones[, 1:4]TMI                           0.01713    0.02367   0.724   0.4743    
+## correlaciones[, 1:4]NBI                                NA         NA      NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.15897    0.07797  -2.039   0.0496 *  
+## correlaciones[, 1:4]Afiliados regimen subsidiado  0.08350    0.23448   0.356   0.7240    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -1622,18 +1557,12 @@ regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reco
 ## -0.8279 -0.1484  0.0120  0.2289  0.4875 
 ## 
 ## Coefficients: (1 not defined because of singularities)
-##                                                   Estimate Std. Error
-## (Intercept)                                       3.406698   0.101716
-## correlaciones[, 1:4]TMI                          -0.009473   0.021823
-## correlaciones[, 1:4]NBI                                 NA         NA
-## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.128298   0.071900
-## correlaciones[, 1:4]Afiliados regimen subsidiado -0.282771   0.216213
-##                                                  t value Pr(&gt;|t|)    
-## (Intercept)                                       33.492   &lt;2e-16 ***
-## correlaciones[, 1:4]TMI                           -0.434   0.6671    
-## correlaciones[, 1:4]NBI                               NA       NA    
-## correlaciones[, 1:4]Numero Prestadores_cienmil    -1.784   0.0836 .  
-## correlaciones[, 1:4]Afiliados regimen subsidiado  -1.308   0.2000    
+##                                                   Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                                       3.406698   0.101716  33.492   &lt;2e-16 ***
+## correlaciones[, 1:4]TMI                          -0.009473   0.021823  -0.434   0.6671    
+## correlaciones[, 1:4]NBI                                 NA         NA      NA       NA    
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.128298   0.071900  -1.784   0.0836 .  
+## correlaciones[, 1:4]Afiliados regimen subsidiado -0.282771   0.216213  -1.308   0.2000    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -1695,39 +1624,28 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 ## Rencor                        0.13  0.14                       0.14
 ## Memoria                       0.00  0.06                      -0.07
 ## Memoria_Expectativa          -0.03 -0.10                       0.03
-##                              Afiliados regimen subsidiado Reconciliacion
-## TMI                                                  0.60           0.02
-## NBI                                                  0.69          -0.02
-## Numero Prestadores_cienmil                           0.77          -0.01
-## Afiliados regimen subsidiado                         1.00           0.07
-## Reconciliacion                                       0.07           1.00
-## Disculpas                                           -0.28           0.09
-## Violencia                                           -0.08          -0.12
-## Rencor                                               0.23           0.17
-## Memoria                                              0.12           0.18
-## Memoria_Expectativa                                  0.10           0.20
-##                              Disculpas Violencia Rencor Memoria
-## TMI                               0.07     -0.21   0.13    0.00
-## NBI                               0.02     -0.33   0.14    0.06
-## Numero Prestadores_cienmil       -0.35     -0.02   0.14   -0.07
-## Afiliados regimen subsidiado     -0.28     -0.08   0.23    0.12
-## Reconciliacion                    0.09     -0.12   0.17    0.18
-## Disculpas                         1.00     -0.46   0.27    0.14
-## Violencia                        -0.46      1.00  -0.23   -0.34
-## Rencor                            0.27     -0.23   1.00    0.35
-## Memoria                           0.14     -0.34   0.35    1.00
-## Memoria_Expectativa               0.06     -0.05   0.42    0.65
-##                              Memoria_Expectativa
-## TMI                                        -0.03
-## NBI                                        -0.10
-## Numero Prestadores_cienmil                  0.03
-## Afiliados regimen subsidiado                0.10
-## Reconciliacion                              0.20
-## Disculpas                                   0.06
-## Violencia                                  -0.05
-## Rencor                                      0.42
-## Memoria                                     0.65
-## Memoria_Expectativa                         1.00
+##                              Afiliados regimen subsidiado Reconciliacion Disculpas
+## TMI                                                  0.60           0.02      0.07
+## NBI                                                  0.69          -0.02      0.02
+## Numero Prestadores_cienmil                           0.77          -0.01     -0.35
+## Afiliados regimen subsidiado                         1.00           0.07     -0.28
+## Reconciliacion                                       0.07           1.00      0.09
+## Disculpas                                           -0.28           0.09      1.00
+## Violencia                                           -0.08          -0.12     -0.46
+## Rencor                                               0.23           0.17      0.27
+## Memoria                                              0.12           0.18      0.14
+## Memoria_Expectativa                                  0.10           0.20      0.06
+##                              Violencia Rencor Memoria Memoria_Expectativa
+## TMI                              -0.21   0.13    0.00               -0.03
+## NBI                              -0.33   0.14    0.06               -0.10
+## Numero Prestadores_cienmil       -0.02   0.14   -0.07                0.03
+## Afiliados regimen subsidiado     -0.08   0.23    0.12                0.10
+## Reconciliacion                   -0.12   0.17    0.18                0.20
+## Disculpas                        -0.46   0.27    0.14                0.06
+## Violencia                         1.00  -0.23   -0.34               -0.05
+## Rencor                           -0.23   1.00    0.35                0.42
+## Memoria                          -0.34   0.35    1.00                0.65
+## Memoria_Expectativa              -0.05   0.42    0.65                1.00
 ## 
 ## n
 ##                              TMI NBI Numero Prestadores_cienmil
@@ -1741,39 +1659,28 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 ## Rencor                        44  44                         38
 ## Memoria                       44  44                         38
 ## Memoria_Expectativa           44  44                         38
-##                              Afiliados regimen subsidiado Reconciliacion
-## TMI                                                    43             44
-## NBI                                                    43             44
-## Numero Prestadores_cienmil                             37             38
-## Afiliados regimen subsidiado                           43             43
-## Reconciliacion                                         43             44
-## Disculpas                                              43             44
-## Violencia                                              43             44
-## Rencor                                                 43             44
-## Memoria                                                43             44
-## Memoria_Expectativa                                    43             44
-##                              Disculpas Violencia Rencor Memoria
-## TMI                                 44        44     44      44
-## NBI                                 44        44     44      44
-## Numero Prestadores_cienmil          38        38     38      38
-## Afiliados regimen subsidiado        43        43     43      43
-## Reconciliacion                      44        44     44      44
-## Disculpas                           44        44     44      44
-## Violencia                           44        44     44      44
-## Rencor                              44        44     44      44
-## Memoria                             44        44     44      44
-## Memoria_Expectativa                 44        44     44      44
-##                              Memoria_Expectativa
-## TMI                                           44
-## NBI                                           44
-## Numero Prestadores_cienmil                    38
-## Afiliados regimen subsidiado                  43
-## Reconciliacion                                44
-## Disculpas                                     44
-## Violencia                                     44
-## Rencor                                        44
-## Memoria                                       44
-## Memoria_Expectativa                           44
+##                              Afiliados regimen subsidiado Reconciliacion Disculpas
+## TMI                                                    43             44        44
+## NBI                                                    43             44        44
+## Numero Prestadores_cienmil                             37             38        38
+## Afiliados regimen subsidiado                           43             43        43
+## Reconciliacion                                         43             44        44
+## Disculpas                                              43             44        44
+## Violencia                                              43             44        44
+## Rencor                                                 43             44        44
+## Memoria                                                43             44        44
+## Memoria_Expectativa                                    43             44        44
+##                              Violencia Rencor Memoria Memoria_Expectativa
+## TMI                                 44     44      44                  44
+## NBI                                 44     44      44                  44
+## Numero Prestadores_cienmil          38     38      38                  38
+## Afiliados regimen subsidiado        43     43      43                  43
+## Reconciliacion                      44     44      44                  44
+## Disculpas                           44     44      44                  44
+## Violencia                           44     44      44                  44
+## Rencor                              44     44      44                  44
+## Memoria                             44     44      44                  44
+## Memoria_Expectativa                 44     44      44                  44
 ## 
 ## P
 ##                              TMI    NBI    Numero Prestadores_cienmil
@@ -1787,39 +1694,28 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 ## Rencor                       0.3862 0.3485 0.4013                    
 ## Memoria                      0.9986 0.6959 0.6785                    
 ## Memoria_Expectativa          0.8709 0.5378 0.8607                    
-##                              Afiliados regimen subsidiado Reconciliacion
-## TMI                          0.0000                       0.9024        
-## NBI                          0.0000                       0.9132        
-## Numero Prestadores_cienmil   0.0000                       0.9672        
-## Afiliados regimen subsidiado                              0.6532        
-## Reconciliacion               0.6532                                     
-## Disculpas                    0.0675                       0.5506        
-## Violencia                    0.5978                       0.4251        
-## Rencor                       0.1430                       0.2668        
-## Memoria                      0.4467                       0.2499        
-## Memoria_Expectativa          0.5369                       0.1821        
-##                              Disculpas Violencia Rencor Memoria
-## TMI                          0.6390    0.1757    0.3862 0.9986 
-## NBI                          0.8866    0.0286    0.3485 0.6959 
-## Numero Prestadores_cienmil   0.0335    0.8844    0.4013 0.6785 
-## Afiliados regimen subsidiado 0.0675    0.5978    0.1430 0.4467 
-## Reconciliacion               0.5506    0.4251    0.2668 0.2499 
-## Disculpas                              0.0018    0.0769 0.3727 
-## Violencia                    0.0018              0.1314 0.0238 
-## Rencor                       0.0769    0.1314           0.0212 
-## Memoria                      0.3727    0.0238    0.0212        
-## Memoria_Expectativa          0.7156    0.7539    0.0043 0.0000 
-##                              Memoria_Expectativa
-## TMI                          0.8709             
-## NBI                          0.5378             
-## Numero Prestadores_cienmil   0.8607             
-## Afiliados regimen subsidiado 0.5369             
-## Reconciliacion               0.1821             
-## Disculpas                    0.7156             
-## Violencia                    0.7539             
-## Rencor                       0.0043             
-## Memoria                      0.0000             
-## Memoria_Expectativa</code></pre>
+##                              Afiliados regimen subsidiado Reconciliacion Disculpas
+## TMI                          0.0000                       0.9024         0.6390   
+## NBI                          0.0000                       0.9132         0.8866   
+## Numero Prestadores_cienmil   0.0000                       0.9672         0.0335   
+## Afiliados regimen subsidiado                              0.6532         0.0675   
+## Reconciliacion               0.6532                                      0.5506   
+## Disculpas                    0.0675                       0.5506                  
+## Violencia                    0.5978                       0.4251         0.0018   
+## Rencor                       0.1430                       0.2668         0.0769   
+## Memoria                      0.4467                       0.2499         0.3727   
+## Memoria_Expectativa          0.5369                       0.1821         0.7156   
+##                              Violencia Rencor Memoria Memoria_Expectativa
+## TMI                          0.1757    0.3862 0.9986  0.8709             
+## NBI                          0.0286    0.3485 0.6959  0.5378             
+## Numero Prestadores_cienmil   0.8844    0.4013 0.6785  0.8607             
+## Afiliados regimen subsidiado 0.5978    0.1430 0.4467  0.5369             
+## Reconciliacion               0.4251    0.2668 0.2499  0.1821             
+## Disculpas                    0.0018    0.0769 0.3727  0.7156             
+## Violencia                              0.1314 0.0238  0.7539             
+## Rencor                       0.1314           0.0212  0.0043             
+## Memoria                      0.0238    0.0212         0.0000             
+## Memoria_Expectativa          0.7539    0.0043 0.0000</code></pre>
 </div>
 <div id="regresion-lineal-1" class="section level3">
 <h3><span class="header-section-number">3.2.2</span> Regresion lineal</h3>
@@ -1835,18 +1731,12 @@ regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reco
 ## -6.4321 -1.3901  0.0798  1.2855  4.4535 
 ## 
 ## Coefficients:
-##                                                  Estimate Std. Error
-## (Intercept)                                      -9.81901   18.76965
-## correlaciones[, 1:4]TMI                           0.06147    0.05272
-## correlaciones[, 1:4]NBI                          -0.02662    0.03073
-## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.01655    0.17882
-## correlaciones[, 1:4]Afiliados regimen subsidiado  1.28634    1.87794
-##                                                  t value Pr(&gt;|t|)
-## (Intercept)                                       -0.523    0.604
-## correlaciones[, 1:4]TMI                            1.166    0.252
-## correlaciones[, 1:4]NBI                           -0.866    0.393
-## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.093    0.927
-## correlaciones[, 1:4]Afiliados regimen subsidiado   0.685    0.498
+##                                                  Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                                      -9.81901   18.76965  -0.523    0.604
+## correlaciones[, 1:4]TMI                           0.06147    0.05272   1.166    0.252
+## correlaciones[, 1:4]NBI                          -0.02662    0.03073  -0.866    0.393
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.01655    0.17882  -0.093    0.927
+## correlaciones[, 1:4]Afiliados regimen subsidiado  1.28634    1.87794   0.685    0.498
 ## 
 ## Residual standard error: 2.549 on 32 degrees of freedom
 ##   (7 observations deleted due to missingness)
@@ -1863,18 +1753,12 @@ regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reco
 ## -0.47406 -0.16527 -0.04116  0.17426  0.40184 
 ## 
 ## Coefficients:
-##                                                   Estimate Std. Error
-## (Intercept)                                       1.775971   1.671051
-## correlaciones[, 1:4]TMI                           0.001949   0.004694
-## correlaciones[, 1:4]NBI                           0.001927   0.002736
-## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.037635   0.015920
-## correlaciones[, 1:4]Afiliados regimen subsidiado -0.094442   0.167192
-##                                                  t value Pr(&gt;|t|)  
-## (Intercept)                                        1.063   0.2958  
-## correlaciones[, 1:4]TMI                            0.415   0.6807  
-## correlaciones[, 1:4]NBI                            0.704   0.4862  
-## correlaciones[, 1:4]Numero Prestadores_cienmil    -2.364   0.0243 *
-## correlaciones[, 1:4]Afiliados regimen subsidiado  -0.565   0.5761  
+##                                                   Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)                                       1.775971   1.671051   1.063   0.2958  
+## correlaciones[, 1:4]TMI                           0.001949   0.004694   0.415   0.6807  
+## correlaciones[, 1:4]NBI                           0.001927   0.002736   0.704   0.4862  
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.037635   0.015920  -2.364   0.0243 *
+## correlaciones[, 1:4]Afiliados regimen subsidiado -0.094442   0.167192  -0.565   0.5761  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -1894,18 +1778,12 @@ regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia 
 ## -0.84848 -0.28305  0.02744  0.24763  1.05368 
 ## 
 ## Coefficients:
-##                                                   Estimate Std. Error
-## (Intercept)                                      -6.528773   3.438392
-## correlaciones[, 1:4]TMI                           0.002134   0.009658
-## correlaciones[, 1:4]NBI                          -0.012605   0.005629
-## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.020793   0.032758
-## correlaciones[, 1:4]Afiliados regimen subsidiado  0.553774   0.344018
-##                                                  t value Pr(&gt;|t|)  
-## (Intercept)                                       -1.899   0.0666 .
-## correlaciones[, 1:4]TMI                            0.221   0.8265  
-## correlaciones[, 1:4]NBI                           -2.239   0.0322 *
-## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.635   0.5301  
-## correlaciones[, 1:4]Afiliados regimen subsidiado   1.610   0.1173  
+##                                                   Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)                                      -6.528773   3.438392  -1.899   0.0666 .
+## correlaciones[, 1:4]TMI                           0.002134   0.009658   0.221   0.8265  
+## correlaciones[, 1:4]NBI                          -0.012605   0.005629  -2.239   0.0322 *
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.020793   0.032758  -0.635   0.5301  
+## correlaciones[, 1:4]Afiliados regimen subsidiado  0.553774   0.344018   1.610   0.1173  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -1924,18 +1802,12 @@ regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia 
 ## -1.0338 -0.1659 -0.0150  0.2089  0.5091 
 ## 
 ## Coefficients:
-##                                                    Estimate Std. Error
-## (Intercept)                                       9.842e-01  2.400e+00
-## correlaciones[, 1:4]TMI                          -3.032e-03  6.741e-03
-## correlaciones[, 1:4]NBI                          -8.165e-05  3.928e-03
-## correlaciones[, 1:4]Numero Prestadores_cienmil   -7.491e-03  2.286e-02
-## correlaciones[, 1:4]Afiliados regimen subsidiado  2.613e-01  2.401e-01
-##                                                  t value Pr(&gt;|t|)
-## (Intercept)                                        0.410    0.684
-## correlaciones[, 1:4]TMI                           -0.450    0.656
-## correlaciones[, 1:4]NBI                           -0.021    0.984
-## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.328    0.745
-## correlaciones[, 1:4]Afiliados regimen subsidiado   1.088    0.285
+##                                                    Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                                       9.842e-01  2.400e+00   0.410    0.684
+## correlaciones[, 1:4]TMI                          -3.032e-03  6.741e-03  -0.450    0.656
+## correlaciones[, 1:4]NBI                          -8.165e-05  3.928e-03  -0.021    0.984
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -7.491e-03  2.286e-02  -0.328    0.745
+## correlaciones[, 1:4]Afiliados regimen subsidiado  2.613e-01  2.401e-01   1.088    0.285
 ## 
 ## Residual standard error: 0.3259 on 32 degrees of freedom
 ##   (7 observations deleted due to missingness)
@@ -1952,18 +1824,12 @@ regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia 
 ## -0.8648 -0.1667 -0.0148  0.2172  0.5968 
 ## 
 ## Coefficients:
-##                                                   Estimate Std. Error
-## (Intercept)                                       1.969869   2.600104
-## correlaciones[, 1:4]TMI                          -0.004701   0.007304
-## correlaciones[, 1:4]NBI                           0.000476   0.004256
-## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.004432   0.024771
-## correlaciones[, 1:4]Afiliados regimen subsidiado  0.139185   0.260146
-##                                                  t value Pr(&gt;|t|)
-## (Intercept)                                        0.758    0.454
-## correlaciones[, 1:4]TMI                           -0.644    0.524
-## correlaciones[, 1:4]NBI                            0.112    0.912
-## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.179    0.859
-## correlaciones[, 1:4]Afiliados regimen subsidiado   0.535    0.596
+##                                                   Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                                       1.969869   2.600104   0.758    0.454
+## correlaciones[, 1:4]TMI                          -0.004701   0.007304  -0.644    0.524
+## correlaciones[, 1:4]NBI                           0.000476   0.004256   0.112    0.912
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.004432   0.024771  -0.179    0.859
+## correlaciones[, 1:4]Afiliados regimen subsidiado  0.139185   0.260146   0.535    0.596
 ## 
 ## Residual standard error: 0.3531 on 32 degrees of freedom
 ##   (7 observations deleted due to missingness)
@@ -1980,18 +1846,12 @@ regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia 
 ## -0.82057 -0.09798  0.04570  0.23216  0.45329 
 ## 
 ## Coefficients:
-##                                                    Estimate Std. Error
-## (Intercept)                                       1.7180741  2.5090198
-## correlaciones[, 1:4]TMI                          -0.0001201  0.0070477
-## correlaciones[, 1:4]NBI                          -0.0023329  0.0041073
-## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.0033632  0.0239036
-## correlaciones[, 1:4]Afiliados regimen subsidiado  0.1680110  0.2510325
-##                                                  t value Pr(&gt;|t|)
-## (Intercept)                                        0.685    0.498
-## correlaciones[, 1:4]TMI                           -0.017    0.987
-## correlaciones[, 1:4]NBI                           -0.568    0.574
-## correlaciones[, 1:4]Numero Prestadores_cienmil    -0.141    0.889
-## correlaciones[, 1:4]Afiliados regimen subsidiado   0.669    0.508
+##                                                    Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                                       1.7180741  2.5090198   0.685    0.498
+## correlaciones[, 1:4]TMI                          -0.0001201  0.0070477  -0.017    0.987
+## correlaciones[, 1:4]NBI                          -0.0023329  0.0041073  -0.568    0.574
+## correlaciones[, 1:4]Numero Prestadores_cienmil   -0.0033632  0.0239036  -0.141    0.889
+## correlaciones[, 1:4]Afiliados regimen subsidiado  0.1680110  0.2510325   0.669    0.508
 ## 
 ## Residual standard error: 0.3407 on 32 degrees of freedom
 ##   (7 observations deleted due to missingness)

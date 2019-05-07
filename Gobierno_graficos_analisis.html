@@ -485,7 +485,9 @@ div.tocify {
     <li>
       <a href="Salud_graficos_analisis.html">Salud</a>
     </li>
-    <li class="dropdown-header">Educacion</li>
+    <li>
+      <a href="fa-briefcase-medical">Educacion</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -536,7 +538,7 @@ div.tocify {
 <div id="setup" class="section level1">
 <h1><span class="header-section-number">1</span> Setup</h1>
 <p>Con este codigo se importan todas las bases de datos y todos los paquetes necesarios.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ANTES DE CORRER, Â¡CORRER LA PESTANA &quot;CODIGO PARA ARRANCAR TODO&quot;!</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ANTES DE CORRER, ¡CORRER LA PESTANA &quot;CODIGO PARA ARRANCAR TODO&quot;!</span>
 
 <span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
 
@@ -567,21 +569,21 @@ div.tocify {
 <p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="analisis-desempeno-fiscal-indice" class="section level2">
 <h2><span class="header-section-number">2.1</span> Analisis Desempeno fiscal (indice)</h2>
-<p>Este indice mide globalmente el resultado fiscal alcanzado en cada aÃ±o y se encuentra en una escala de 0 a 100, donde los valores cercanos a 0 reflejan un bajo desempeÃ±o fiscal y valores cercanos a 100 significan que la entidad territorial logro en conjunto los siguientes resultados (DNP, 2013): Buen balance en su desempeÃ±o fiscal, Suficientes recursos para sostener su funcionamiento Cumplimiento de gasto de funcionamiento segun la Ley 617/00, Importante nivel de recursos propios (solvencia tributaria) como contrapartida a los recursos de SGP, Altos niveles de inversion, Adecuada capacidad de respaldo del servicio de su deuda, Generacion de ahorro corriente, necesario para garantizar su solvencia financiera</p>
+<p>Este indice mide globalmente el resultado fiscal alcanzado en cada año y se encuentra en una escala de 0 a 100, donde los valores cercanos a 0 reflejan un bajo desempeño fiscal y valores cercanos a 100 significan que la entidad territorial logro en conjunto los siguientes resultados (DNP, 2013): Buen balance en su desempeño fiscal, Suficientes recursos para sostener su funcionamiento Cumplimiento de gasto de funcionamiento segun la Ley 617/00, Importante nivel de recursos propios (solvencia tributaria) como contrapartida a los recursos de SGP, Altos niveles de inversion, Adecuada capacidad de respaldo del servicio de su deuda, Generacion de ahorro corriente, necesario para garantizar su solvencia financiera</p>
 <div id="graficos" class="section level3">
 <h3><span class="header-section-number">2.1.1</span> Graficos</h3>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> DF_desemp_fisc)) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno fiscal&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno fiscal de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno fiscal&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno fiscal de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc)],
                          cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc)]))</code></pre></div>
-<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-1-1.png" width="1152" /></p>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-1-1.png" width="1248" /></p>
 </div>
 <div id="descriptivos" class="section level3">
 <h3><span class="header-section-number">2.1.2</span> Descriptivos</h3>
@@ -735,7 +737,7 @@ diff_desemp_fisc_sd &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<spa
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> DF_desemp_fisc), <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">color=</span><span class="st">&quot;Desempeno integral&quot;</span>)<span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno integral&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno fiscal e integral (azul) de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno integral&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno fiscal e integral (azul) de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)],
@@ -882,7 +884,7 @@ diff_desemp_int_sd &lt;-<span class="st"> </span>descrip_desemp_int_5antes<span 
 <p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-2" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Graficos</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general)
@@ -892,7 +894,7 @@ cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_genera
   }
 }
 
-<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
 
 cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span>[a,]
 
@@ -904,7 +906,7 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion total&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion total por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion total&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion total por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2000</span>, <span class="dv">2010</span>, <span class="dt">by=</span><span class="dv">1</span>))</code></pre></div>
 <p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-11-1.png" width="1152" /></p>
@@ -1047,7 +1049,7 @@ diff_inv_total_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_total_cienmi
 <p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-3" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> Graficos</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general)
@@ -1057,7 +1059,7 @@ cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_genera
   }
 }
 
-<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
 
 cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span>[a,]
 
@@ -1069,7 +1071,7 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion al fortalecimiento institucional&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion al fortalecimiento institucional por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion al fortalecimiento institucional&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion al fortalecimiento institucional por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2002</span>, <span class="dv">2010</span>, <span class="dt">by=</span><span class="dv">1</span>))</code></pre></div>
 <p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-16-1.png" width="1152" /></p>
@@ -1214,7 +1216,7 @@ diff_inv_fortinst_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_fortinst_
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Indice de Gobierno Abierto&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Indice de Gobierno Abierto por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Indice de Gobierno Abierto&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Indice de Gobierno Abierto por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.1</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2010</span>,<span class="dv">2016</span>, <span class="dt">by=</span><span class="dv">1</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total)],
