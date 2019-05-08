@@ -15,12 +15,14 @@ navbar:
           icon: fa-bomb
           href: Violencia_graficos_analisis.html
         - text: "Gobierno"
-          icon: fa-user-secret
+          icon: fa-university
           href: Gobierno_graficos_analisis.html
         - text: "Salud"
+          icon: fa-user-md
           href: Salud_graficos_analisis.html
         - text: "Educacion"
-          href: fa-briefcase-medical 
+          icon: fa-chalkboard-teacher
+          href:
     - text: "More"
       icon: fa-gear
       menu:
