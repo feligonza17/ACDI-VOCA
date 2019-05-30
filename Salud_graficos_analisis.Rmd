@@ -8,6 +8,7 @@ output:
     highlight: tango
     number_sections: yes
     theme: journal
+    self_contained: no
     toc: yes
     toc_depth: 2
     toc_float:

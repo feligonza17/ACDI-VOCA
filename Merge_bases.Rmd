@@ -9,6 +9,7 @@ output:
     number_sections: yes
     theme: journal
     toc: yes
+    self_contained: no
     toc_depth: 2
     toc_float:
       collapsed: yes

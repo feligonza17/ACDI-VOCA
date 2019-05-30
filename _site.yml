@@ -9,24 +9,35 @@ navbar:
     - text: "Codigo para iniciar"
       icon: 
       href: Merge_bases.html
-    - text: "Exploraciones"
+    - text: "Panel CEDE Municipal"
       menu:
-        - text: "Violencia"
-          icon: fa-bomb
-          href: Violencia_graficos_analisis.html
-        - text: "Gobierno"
-          icon: fa-university
-          href: Gobierno_graficos_analisis.html
-        - text: "Salud"
-          icon: fa-user-md
-          href: Salud_graficos_analisis.html
-        - text: "Educacion"
-          icon: fa-chalkboard-teacher
+        - text: "Exploraciones"
+          menu:
+          - text: "Violencia"
+            icon: fa-bomb
+            href: Violencia_graficos_analisis.html
+          - text: "Gobierno"
+            icon: fa-university
+            href: Gobierno_graficos_analisis.html
+          - text: "Salud"
+            icon: fa-user-md
+            href: Salud_graficos_analisis.html
+          - text: "Educacion"
+            icon: fa-chalkboard-teacher
+            href:
+    - text: "ELCA"
+      menu:
+        - text: "Depuracion y merge"
+          icon:
+          href: elca_exploracion.html
+        - text: "Modulo Politica"
+          icon:
           href:
     - text: "More"
       icon: fa-gear
       menu:
         - text: "Exploraciones Viejas"
+          icon: fa-recycle
         - text: "Violencia y graficos"
           href: Exploracion_CEDE_Violencia_ACDIVOCA.html
         - text: "Violencia y estadistica"

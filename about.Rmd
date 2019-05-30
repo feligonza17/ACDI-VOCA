@@ -2,9 +2,3 @@
 title: "Aqui vamos a poner los codigos y resultados del proyecto (hasta que nos de)"
 ---
 
-
-
-
-- __Name:__ Nick
-- __Ocupation:__ "Student"
-- __Hobbies:__ Learning software development instead of studying for exams. 

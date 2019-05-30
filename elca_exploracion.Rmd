@@ -1,0 +1,225 @@
+---
+title: "ELCA y ACDIVOCA"
+author: "FGA"
+date: "29 de mayo de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    self_contained: no
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+El objetivo de este documento es hacerla depuracion y el merge entre las bases de datos de la ELCA (en sus tres ronda: 2010, 2013 y 2016). La mayoria de los datos que se van a utilizar son de la ELCA urbanos porque, solo en ellos hay datos del instrumento de medicion de reconciliacion (IMR). Es decir, son solamente 12 municipios que tienen datos de la ELCA y, a la vez, de la IMR. Sin embargo, dos de ellos (Shagun, Cordoba y Tocaima, Cundinamarca) tienen los datos en la base de datos de la ELCA rural. Por ello, en ese caso se utilizaran los datos rurales. En los otros 10 municipios (Medellin, Antioquia; Turbo, Antioquia; Soledad, Atlantico; Bogota, Bogota; Cartagena de Indias, Bolivar; Santa Marta, Magadalena; Cali, Valle del Cauca, Vistahermosa, Meta; Villavicencio, Meta y Piedecuesta, Santander) se utilizaran las bases de datos urbanas. El objetivo de este documento es tener esas bases de datos depuradas y unidas con la base de datos de ACDI-VOCA y el indice IMR. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+#Preparar environment para el analisis
+
+Script para organizar las bases de datos con las que vamos a trabajar en el proyecto (aqui se hace merge de las bases CEDE con el acdivoca y se definen las variables importantes)
+
+##Cargar paquetes y base de datos
+
+```{r message=FALSE, warning=FALSE}
+library(readstata13)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(data.table)
+library(readxl)
+library(doBy)
+library(vtable)
+library(plyr)
+library(gridExtra)
+library(grid)
+library(purrr)
+library(psych)
+library(Hmisc)
+library(matrixStats)
+library(ggpubr)
+library(vtable)
+library(ggthemes)
+library(httpuv)
+
+
+
+```
+
+##Importar bases de datos
+```{r message=FALSE, warning=FALSE}
+
+#Set Working Directory
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+rm(list=ls())
+#Importar datos de items ACDIVOCA (ver pestana "Codigo para iniciar")
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+
+#Importar datos Urbanos
+
+#Urbano 2016 
+elca2016_uchoques <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Urbano/Bases/UChoques.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_ucomunidad <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Urbano/Bases/Ucomunidades.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_ugastos <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Urbano/Bases/Ugastos.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_uhogar <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Urbano/Bases/Uhogar.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_upersonas <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Urbano/Bases/Upersonas.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+
+
+#Urbano 2013 
+elca2013_uchoques <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Urbano/Bases/UChoques.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2013_ucomunidad <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Urbano/Bases/Ucomunidades.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2013_ugastos <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Urbano/Bases/Ugastos.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2013_uhogar <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Urbano/Bases/Uhogar.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2013_upersonas <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Urbano/Bases/Upersonas.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+
+
+#Urbano 2010 
+elca2010_uchoques <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Urbano/Bases/UChoques.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2010_ucomunidad <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Urbano/Bases/Ucomunidades.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2010_ugastos <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Urbano/Bases/Ugastos.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2010_uhogar <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Urbano/Bases/Uhogar.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2010_upersonas <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Urbano/Bases/Upersonas.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+
+ 
+#Importar datos Rurals
+
+#Rural 2016 
+elca2016_rchoques <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Rural/Bases/RChoques.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_rcomunidad <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Rural/Bases/Rcomunidades.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_rgastos <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Rural/Bases/Rgastos.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_rhogar <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Rural/Bases/Rhogar.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_rpersonas <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Rural/Bases/Rpersonas.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+
+
+#Rural 2013 
+elca2013_rchoques <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Rural/Bases/RChoques.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2013_rcomunidad <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Rural/Bases/Rcomunidades.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2013_rgastos <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Rural/Bases/Rgastos.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2013_rhogar <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Rural/Bases/Rhogar.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2013_rpersonas <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Rural/Bases/Rpersonas.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+
+
+#Rural 2010 
+elca2010_rchoques <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Rural/Bases/RChoques.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2010_rcomunidad <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Rural/Bases/Rcomunidades.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2010_rgastos <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Rural/Bases/Rgastos.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2010_rhogar <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Rural/Bases/Rhogar.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2010_rpersonas <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Rural/Bases/Rpersonas.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+
+#Importar bases del ACDIVOCA para ver que municipios tiene la ELCA
+
+#Ojo siempre abrir desde el dropbox de Felipe Gonzalez porque se hizo el cambio de variables character a numerica desde Excel.
+datos_acdivoca_num <- as.data.table(
+  read_excel('ACDI-VOCA - Base de Datos y Tabulados_F.xlsx',sheet=2))
+ 
+
+```
+
+Utilizando el documento "Municipios PAR_ELCA.xlsx" y mendiante la cantidad de observaciones por municipio se deduce cuales son los codigos falsos de la base ELCA para poder nombrarlos. El siguiente codigo elimina las observaciones de los municipios que no nos sirven. 
+Note que la limpieza para poder hacer las exploraciones espaciales se hara en otro documento. 
+
+```{r message=FALSE, warning=FALSE}
+
+#Codigo para limpiar los urbanos
+  elca2016_uhogar <- elca2016_uhogar %>% 
+    filter(id_mpioU=="23102"| id_mpioU=="23010"| id_mpioU=="22015"| id_mpioU=="21102"| id_mpioU=="20102"| id_mpioU=="11102"| id_mpioU=="02102"| id_mpioU=="10021"| id_mpioU=="10102"| id_mpioU=="05040")
+  elca2013_uhogar <- elca2013_uhogar %>% 
+    filter(id_mpioU=="23102"| id_mpioU=="23010"| id_mpioU=="22015"| id_mpioU=="21102"| id_mpioU=="20102"| id_mpioU=="11102"| id_mpioU=="02102"| id_mpioU=="10021"| id_mpioU=="10102"| id_mpioU=="05040")
+    elca2010_uhogar <- elca2010_uhogar %>% 
+    filter(id_mpioU=="23102"| id_mpioU=="23010"| id_mpioU=="22015"| id_mpioU=="21102"| id_mpioU=="20102"| id_mpioU=="11102"| id_mpioU=="02102"| id_mpioU=="10021"| id_mpioU=="10102"| id_mpioU=="05040")
+#Codigo para limpiar los rurales
+elca2016_rhogar <- elca2016_rhogar %>% 
+    filter(id_mpioU=="15029" | id_mpioU=="14149")
+elca2013_rhogar <- elca2013_rhogar %>% 
+    filter(id_mpioU=="15029" | id_mpioU=="14149")
+elca2010_rhogar <- elca2010_rhogar %>% 
+    filter(id_mpioU=="15029" | id_mpioU=="14149") 
+```
+
+Ahora le vamos a cambiar el nombre a los municipios para poder juntarlos con la base ACDIVOCA. El codigo es muy largo asi que lo escondemos. Se muestra a continuacion una linea para que el lector pueda ver como se hizo.
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="23102"] <- "Medellín"
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="23102"] <- "Medellín"
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="23010"] <- "Turbo"
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="22015"] <- "Soledad"
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="21102"] <- "Bogotá, D.c."
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="20102"] <- "Cartagena de Indias"
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="11102"] <- "Santa Marta"
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="02102"] <- "Cali"
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="10021"] <- "Vistahermosa"
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="10102"] <- "Villavicencio"
+elca2010_uhogar$id_mpioU[elca2010_uhogar$id_mpioU=="05040"] <- "Piedecuesta"
+
+elca2013_uhogar$id_mpioU[elca2013_uhogar$id_mpioU=="23102"] <- "Medellín"
+elca2013_uhogar$id_mpioU[elca2013_uhogar$id_mpioU=="23010"] <- "Turbo"
+elca2013_uhogar$id_mpioU[elca2013_uhogar$id_mpioU=="22015"] <- "Soledad"
+elca2013_uhogar$id_mpioU[elca2013_uhogar$id_mpioU=="21102"] <- "Bogotá, D.c."
+elca2013_uhogar$id_mpioU[elca2013_uhogar$id_mpioU=="20102"] <- "Cartagena de Indias"
+elca2013_uhogar$id_mpioU[elca2013_uhogar$id_mpioU=="11102"] <- "Santa Marta"
+elca2013_uhogar$id_mpioU[elca2013_uhogar$id_mpioU=="02102"] <- "Cali"
+elca2013_uhogar$id_mpioU[elca2013_uhogar$id_mpioU=="10021"] <- "Vistahermosa"
+elca2013_uhogar$id_mpioU[elca2013_uhogar$id_mpioU=="10102"] <- "Villavicencio"
+elca2013_uhogar$id_mpioU[elca2013_uhogar$id_mpioU=="05040"] <- "Piedecuesta"
+
+elca2016_uhogar$id_mpioU[elca2016_uhogar$id_mpioU=="23102"] <- "Medellín"
+elca2016_uhogar$id_mpioU[elca2016_uhogar$id_mpioU=="23010"] <- "Turbo"
+elca2016_uhogar$id_mpioU[elca2016_uhogar$id_mpioU=="22015"] <- "Soledad"
+elca2016_uhogar$id_mpioU[elca2016_uhogar$id_mpioU=="21102"] <- "Bogotá, D.c."
+elca2016_uhogar$id_mpioU[elca2016_uhogar$id_mpioU=="20102"] <- "Cartagena de Indias"
+elca2016_uhogar$id_mpioU[elca2016_uhogar$id_mpioU=="11102"] <- "Santa Marta"
+elca2016_uhogar$id_mpioU[elca2016_uhogar$id_mpioU=="02102"] <- "Cali"
+elca2016_uhogar$id_mpioU[elca2016_uhogar$id_mpioU=="10021"] <- "Vistahermosa"
+elca2016_uhogar$id_mpioU[elca2016_uhogar$id_mpioU=="10102"] <- "Villavicencio"
+elca2016_uhogar$id_mpioU[elca2016_uhogar$id_mpioU=="05040"] <- "Piedecuesta"
+
+elca2010_rhogar$id_mpioU[elca2010_rhogar$id_mpioU=="15029"] <- "Sahagún"
+elca2010_rhogar$id_mpioU[elca2010_rhogar$id_mpioU=="14149"] <- "Tocaima"
+
+elca2013_rhogar$id_mpioU[elca2013_rhogar$id_mpioU=="15029"] <- "Sahagún"
+elca2013_rhogar$id_mpioU[elca2013_rhogar$id_mpioU=="14149"] <- "Tocaima"
+
+elca2016_rhogar$id_mpioU[elca2016_rhogar$id_mpioU=="15029"] <- "Sahagún"
+elca2016_rhogar$id_mpioU[elca2016_rhogar$id_mpioU=="14149"] <- "Tocaima"
+```
+
+Merge con ACDIV-VOCA
+
+```{r message=FALSE, warning=FALSE}
+
+#Agrupar variables del acdivoca
+items_acdivoca <- cbind(violencia_agreg,
+                        disculpas_agreg[-1],
+                        rencor_agreg[-1],
+                        reconciliacion_agreg[-1],
+                        memoria_agreg[-1],
+                        memoria_expectativa_agreg[-1])
+
+#Merge con la base hogar
+elca2010_uhogar <- merge(elca2010_uhogar, 
+                         items_acdivoca, by.x="id_mpioU", by.y="Municipio")
+elca2013_uhogar <- merge(elca2013_uhogar, 
+                         items_acdivoca, by.x="id_mpioU", by.y="Municipio")
+elca2016_uhogar <- merge(elca2016_uhogar, 
+                         items_acdivoca, by.x="id_mpioU", by.y="Municipio")
+elca2010_rhogar <- merge(elca2010_rhogar, 
+                         items_acdivoca, by.x="id_mpioU", by.y="Municipio")
+elca2013_rhogar <- merge(elca2013_rhogar, 
+                         items_acdivoca, by.x="id_mpioU", by.y="Municipio")
+elca2016_rhogar <- merge(elca2016_rhogar, 
+                         items_acdivoca, by.x="id_mpioU", by.y="Municipio")
+```
+
+Luego de correr este codigo ya tenemos la informacion sobre los items del ACDVICOA con los que vamos a trabajar. 
+

@@ -3,6 +3,16 @@ title: "Proyecto ACDI/VOCA"
 ---
 Proyecto de Juan Camilo Cardenas con ACDIVOCA.
 
-La idea de esta pagina es tener el codigo y sus respectivos resultados en un lugar comun y de facil acceso. Habran ventanas en donde estar el codigo con sus resultados.
+La idea de esta pagina es tener el codigo y sus respectivos resultados en un lugar comun y de facil acceso. Habran ventanas en donde estara el codigo con sus respectivos resultados.
+
+Si quiere mas informacion sobre los involucrados en el proyecto haga click sobre los nombres de las personas y/o instituciones
+<br><br>
+
+
+Sobre: 
+* ACDIVOCA:  [ACDIVOCA](http://www.acdivoca.org.co/)
+* Programa de alianzas para la reconciliacion: [PAR](http://pagina-web.azurewebsites.net/programadealianzas/)
+* Cardenas: [JCC](https://economia.uniandes.edu.co/index.php?option=com_profesor&view=profesorp&profesor=9&Itemid=474)
+
 
 
