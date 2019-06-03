@@ -12,7 +12,7 @@
 <meta name="author" content="FGA" />
 
 
-<title>ELCA y ACDIVOCA</title>
+<title>Elca y ACDIVOCA</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -548,14 +548,14 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">ELCA y ACDIVOCA</h1>
+<h1 class="title toc-ignore">Elca y ACDIVOCA</h1>
 <h4 class="author">FGA</h4>
 <h4 class="date">29 de mayo de 2019</h4>
 
 </div>
 
 
-<p>El objetivo de este documento es hacerla depuracion y el merge entre las bases de datos de la ELCA (en sus tres ronda: 2010, 2013 y 2016). La mayoria de los datos que se van a utilizar son de la ELCA urbanos porque, solo en ellos hay datos del instrumento de medicion de reconciliacion (IMR). Es decir, son solamente 12 municipios que tienen datos de la ELCA y, a la vez, de la IMR. Sin embargo, dos de ellos (Shagun, Cordoba y Tocaima, Cundinamarca) tienen los datos en la base de datos de la ELCA rural. Por ello, en ese caso se utilizaran los datos rurales. En los otros 10 municipios (Medellin, Antioquia; Turbo, Antioquia; Soledad, Atlantico; Bogota, Bogota; Cartagena de Indias, Bolivar; Santa Marta, Magadalena; Cali, Valle del Cauca, Vistahermosa, Meta; Villavicencio, Meta y Piedecuesta, Santander) se utilizaran las bases de datos urbanas. El objetivo de este documento es tener esas bases de datos depuradas y unidas con la base de datos de ACDI-VOCA y el indice IMR.</p>
+<p>El objetivo de este documento es hacerla depuracion y el merge entre las bases de datos de la ELCA (en sus tres ronda: 2010, 2013 y 2016), el panel CEDE, la encuesta ACDIVOCA y los datos del instrumento de medicion de reconciliacion (IMR). La mayoria de los datos que se van a utilizar son de la ELCA urbanos porque, solo en ellos hay datos del instrumento de medicion de reconciliacion (IMR). Es decir, son solamente 7 municipios que tienen datos de la ELCA y, a la vez, de la IMR. Los 7 municipios (Medellin, Antioquia; Turbo, Antioquia; Bogota, Bogota; Cartagena de Indias, Bolivar; Santa Marta, Magadalena; Cali, Valle del Cauca; Vistahermosa, Meta) se utilizaran las bases de datos urbanas. El objetivo de este documento es tener esas bases de datos depuradas y unidas con la base de datos de ACDI-VOCA y el indice IMR.</p>
 <div id="preparar-environment-para-el-analisis" class="section level1">
 <h1><span class="header-section-number">1</span> Preparar environment para el analisis</h1>
 <p>Script para organizar las bases de datos con las que vamos a trabajar en el proyecto (aqui se hace merge de las bases CEDE con el acdivoca y se definen las variables importantes)</p>
@@ -579,7 +579,8 @@ div.tocify {
 <span class="kw">library</span>(ggpubr)
 <span class="kw">library</span>(vtable)
 <span class="kw">library</span>(ggthemes)
-<span class="kw">library</span>(httpuv)</code></pre></div>
+<span class="kw">library</span>(httpuv)
+<span class="kw">library</span>(janitor)</code></pre></div>
 </div>
 <div id="importar-bases-de-datos" class="section level2">
 <h2><span class="header-section-number">1.2</span> Importar bases de datos</h2>
@@ -614,31 +615,6 @@ elca2010_ugastos &lt;-<span class="st"> </span><span class="kw">read.dta13</span
 elca2010_uhogar &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Urbano/Bases/Uhogar.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
 elca2010_upersonas &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Urbano/Bases/Upersonas.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
 
- 
-<span class="co">#Importar datos Rurals</span>
-
-<span class="co">#Rural 2016 </span>
-elca2016_rchoques &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Rural/Bases/RChoques.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2016_rcomunidad &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Rural/Bases/Rcomunidades.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2016_rgastos &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Rural/Bases/Rgastos.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2016_rhogar &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Rural/Bases/Rhogar.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2016_rpersonas &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Rural/Bases/Rpersonas.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-
-
-<span class="co">#Rural 2013 </span>
-elca2013_rchoques &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Rural/Bases/RChoques.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2013_rcomunidad &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Rural/Bases/Rcomunidades.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2013_rgastos &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Rural/Bases/Rgastos.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2013_rhogar &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Rural/Bases/Rhogar.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2013_rpersonas &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2013/Rural/Bases/Rpersonas.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-
-
-<span class="co">#Rural 2010 </span>
-elca2010_rchoques &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Rural/Bases/RChoques.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2010_rcomunidad &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Rural/Bases/Rcomunidades.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2010_rgastos &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Rural/Bases/Rgastos.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2010_rhogar &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Rural/Bases/Rhogar.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
-elca2010_rpersonas &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2010/Rural/Bases/Rpersonas.dta&quot;</span>,<span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>,<span class="dt">nonint.factors=</span><span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>)
 
 <span class="co">#Importar bases del ACDIVOCA para ver que municipios tiene la ELCA</span>
 
@@ -652,16 +628,81 @@ datos_acdivoca_num &lt;-<span class="st"> </span><span class="kw">as.data.table<
   elca2013_uhogar &lt;-<span class="st"> </span>elca2013_uhogar <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">    </span><span class="kw">filter</span>(id_mpioU<span class="op">==</span><span class="st">&quot;23102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;23010&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;22015&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;21102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;20102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;11102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;02102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;10021&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;10102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;05040&quot;</span>)
     elca2010_uhogar &lt;-<span class="st"> </span>elca2010_uhogar <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">filter</span>(id_mpioU<span class="op">==</span><span class="st">&quot;23102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;23010&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;22015&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;21102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;20102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;11102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;02102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;10021&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;10102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;05040&quot;</span>)
-<span class="co">#Codigo para limpiar los rurales</span>
-elca2016_rhogar &lt;-<span class="st"> </span>elca2016_rhogar <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">filter</span>(id_mpioU<span class="op">==</span><span class="st">&quot;15029&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;14149&quot;</span>)
-elca2013_rhogar &lt;-<span class="st"> </span>elca2013_rhogar <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">filter</span>(id_mpioU<span class="op">==</span><span class="st">&quot;15029&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;14149&quot;</span>)
-elca2010_rhogar &lt;-<span class="st"> </span>elca2010_rhogar <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">filter</span>(id_mpioU<span class="op">==</span><span class="st">&quot;15029&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;14149&quot;</span>) </code></pre></div>
-<p>Ahora le vamos a cambiar el nombre a los municipios para poder juntarlos con la base ACDIVOCA. El codigo es muy largo asi que lo escondemos. Se muestra a continuacion una linea para que el lector pueda ver como se hizo. elca2010_uhogar<span class="math inline">\(id_mpioU[elca2010_uhogar\)</span>id_mpioU==“23102”] &lt;- “MedellÃ­n”</p>
-<p>Merge con ACDIV-VOCA</p>
+<span class="st">    </span><span class="kw">filter</span>(id_mpioU<span class="op">==</span><span class="st">&quot;23102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;23010&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;22015&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;21102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;20102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;11102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;02102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;10021&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;10102&quot;</span><span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;05040&quot;</span>)</code></pre></div>
+<p>Ahora le vamos a cambiar el nombre a los municipios para poder juntarlos con la base ACDIVOCA. El codigo es muy largo asi que lo escondemos. Se muestra a continuacion una linea para que el lector pueda ver como se hizo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">elca2010_uhogar<span class="op">$</span>id_mpioU[elca2010_uhogar<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;23102&quot;</span>] &lt;-<span class="st"> &quot;MedellÃ­n&quot;</span></code></pre></div>
+</div>
+</div>
+<div id="merge-con-acdiv-voca" class="section level1">
+<h1><span class="header-section-number">2</span> Merge con ACDIV-VOCA</h1>
+<div id="importar-base-de-indice-imr" class="section level2">
+<h2><span class="header-section-number">2.1</span> Importar Base de Indice IMR</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">acdi_imr &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(
+  <span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Documentos ACDIVOCA/7.IndiceReconciliacion_31oct2017.xlsx&quot;</span>,<span class="dt">sheet=</span><span class="dv">2</span>))
+
+<span class="co">#Limpiar tildes y mayusculas de los nombres de las variables del indice IMR</span>
+acdi_imr &lt;-<span class="st"> </span>acdi_imr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">clean_names</span>()
+<span class="co">#Limpiar los otros nombres</span>
+acdi_imr &lt;-<span class="st"> </span>acdi_imr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="dv">20</span><span class="op">:</span><span class="dv">21</span>))
+<span class="kw">colnames</span>(acdi_imr)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;Municipio&quot;</span>
+<span class="kw">colnames</span>(acdi_imr)[<span class="dv">15</span>] &lt;-<span class="st"> &quot;1-agresion&quot;</span>
+<span class="co">#Limpirar nombre de Municipios para hacer el merge. Importante notar que solo se hacen estos 7 municipios porque estos tambien estan en la base de la ELCA.</span>
+acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;MEDELLIN&quot;</span>] &lt;-<span class="st"> &quot;MedellÃ­n&quot;</span>
+acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;TURBO&quot;</span>] &lt;-<span class="st"> &quot;Turbo&quot;</span>
+acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;BOGOTA, D.C.&quot;</span>] &lt;-<span class="st"> &quot;BogotÃ¡, D.c.&quot;</span>
+acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;CARTAGENA&quot;</span>] &lt;-<span class="st"> &quot;Cartagena De Indias&quot;</span>
+acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;SANTA MARTA&quot;</span>] &lt;-<span class="st"> &quot;Santa Marta&quot;</span>
+acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;CALI&quot;</span>] &lt;-<span class="st"> &quot;Cali&quot;</span>
+acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;VISTAHERMOSA&quot;</span>] &lt;-<span class="st"> &quot;Vistahermosa&quot;</span></code></pre></div>
+</div>
+<div id="merge-imr-con-elca" class="section level2">
+<h2><span class="header-section-number">2.2</span> Merge IMR con ELCA</h2>
+<p>Todas las variables que pertenecen a la base de datos IMR se van a poner con el sufijo _imr</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Merge 2016. Toca crear una variable temporal para poder poner la etiqueta al nombre de la variable que proviene de la base de datos IMR. Se recicla una variable que termina en _temp y luego la eliminamos. </span>
+elca2016_uhogar_temp &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2016_uhogar, 
+                         acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, 
+                         <span class="dt">all.x =</span> T, <span class="dt">no.dups =</span> T, <span class="dt">suffixes =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>,<span class="st">&quot;_imr&quot;</span>))
+<span class="co">#Poner el sufijo</span>
+<span class="kw">setnames</span>(elca2016_uhogar_temp,
+         <span class="kw">paste0</span>(<span class="kw">names</span>(elca2016_uhogar_temp),
+                <span class="kw">ifelse</span>(<span class="kw">names</span>(elca2016_uhogar_temp) <span class="op">%in%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(acdi_imr),
+                                              <span class="kw">names</span>(elca2016_uhogar)),<span class="st">&quot;_imr&quot;</span>,<span class="st">&quot;&quot;</span>)))
+
+elca2016_uhogar_temp <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span>(cohesion_imr<span class="op">==</span><span class="st">&quot;NA&quot;</span>))
+elca2016_uhogar &lt;-<span class="st"> </span>elca2016_uhogar_temp
+<span class="kw">rm</span>(elca2016_uhogar_temp)
+
+<span class="co">#Merge 2013</span>
+elca2013_uhogar_temp &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2013_uhogar, 
+                         acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, 
+                         <span class="dt">all.x =</span> T, <span class="dt">no.dups =</span> T, <span class="dt">suffixes =</span> <span class="kw">c</span>(<span class="st">&quot;_imr&quot;</span>))
+<span class="co">#Poner el sufijo</span>
+<span class="kw">setnames</span>(elca2013_uhogar_temp,
+         <span class="kw">paste0</span>(<span class="kw">names</span>(elca2013_uhogar_temp),
+                <span class="kw">ifelse</span>(<span class="kw">names</span>(elca2013_uhogar_temp) <span class="op">%in%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(acdi_imr),
+                                              <span class="kw">names</span>(elca2013_uhogar)),<span class="st">&quot;_imr&quot;</span>,<span class="st">&quot;&quot;</span>)))
+
+elca2013_uhogar_temp <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span>(cohesion_imr<span class="op">==</span><span class="st">&quot;NA&quot;</span>))
+elca2013_uhogar &lt;-<span class="st"> </span>elca2013_uhogar_temp
+<span class="kw">rm</span>(elca2013_uhogar_temp)
+
+<span class="co">#Merge 2010</span>
+elca2010_uhogar_temp &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2010_uhogar, 
+                         acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, 
+                         <span class="dt">all.x =</span> T, <span class="dt">no.dups =</span> T, <span class="dt">suffixes =</span> <span class="kw">c</span>(<span class="st">&quot;_imr&quot;</span>))
+<span class="co">#Poner el sufijo</span>
+<span class="kw">setnames</span>(elca2010_uhogar_temp,
+         <span class="kw">paste0</span>(<span class="kw">names</span>(elca2010_uhogar_temp),
+                <span class="kw">ifelse</span>(<span class="kw">names</span>(elca2010_uhogar_temp) <span class="op">%in%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(acdi_imr),
+                                              <span class="kw">names</span>(elca2010_uhogar)),<span class="st">&quot;_imr&quot;</span>,<span class="st">&quot;&quot;</span>)))
+
+elca2010_uhogar_temp <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span>(cohesion_imr<span class="op">==</span><span class="st">&quot;NA&quot;</span>))
+elca2010_uhogar &lt;-<span class="st"> </span>elca2010_uhogar_temp
+<span class="kw">rm</span>(elca2010_uhogar_temp)</code></pre></div>
+</div>
+<div id="merge-items-creados-por-nosotros-con-la-elca" class="section level2">
+<h2><span class="header-section-number">2.3</span> Merge items creados por nosotros con la ELCA</h2>
+<p>El indicador de estas variables va ser .mean; .sd; .sum y .median</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Agrupar variables del acdivoca</span>
 items_acdivoca &lt;-<span class="st"> </span><span class="kw">cbind</span>(violencia_agreg,
                         disculpas_agreg[<span class="op">-</span><span class="dv">1</span>],
@@ -670,21 +711,112 @@ items_acdivoca &lt;-<span class="st"> </span><span class="kw">cbind</span>(viole
                         memoria_agreg[<span class="op">-</span><span class="dv">1</span>],
                         memoria_expectativa_agreg[<span class="op">-</span><span class="dv">1</span>])
 
+
 <span class="co">#Merge con la base hogar</span>
 elca2010_uhogar &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2010_uhogar, 
-                         items_acdivoca, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>)
+                         items_acdivoca, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, <span class="dt">all.x =</span> T)
 elca2013_uhogar &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2013_uhogar, 
-                         items_acdivoca, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>)
+                         items_acdivoca, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, <span class="dt">all.x =</span> T)
 elca2016_uhogar &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2016_uhogar, 
-                         items_acdivoca, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>)
-elca2010_rhogar &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2010_rhogar, 
-                         items_acdivoca, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>)
-elca2013_rhogar &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2013_rhogar, 
-                         items_acdivoca, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>)
-elca2016_rhogar &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2016_rhogar, 
-                         items_acdivoca, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>)</code></pre></div>
-<p>Luego de correr este codigo ya tenemos la informacion sobre los items del ACDVICOA con los que vamos a trabajar.</p>
+                         items_acdivoca, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, <span class="dt">all.x =</span> T)</code></pre></div>
 </div>
+<div id="merge-items-acdivoca-encuesta-con-elca" class="section level2">
+<h2><span class="header-section-number">2.4</span> Merge Items ACDIVOCA encuesta con ELCA</h2>
+<p>Todas las variables que pertenecen a la base de datos de la encuesta ACDIVOCA se van a poner con el sufijo _acdivoca</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Merge 2016. Toca crear una variable temporal para poder poner la etiqueta al nombre de la variable que proviene de la base de datos ADCIVOCA. Se recicla una variable que termina en _temp y luego la eliminamos. </span>
+elca2016_uhogar_temp &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2016_uhogar, 
+                         datos_acdivoca_num, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, 
+                         <span class="dt">all.x =</span> T, <span class="dt">no.dups =</span> T, <span class="dt">suffixes =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>,<span class="st">&quot;_acdivoca&quot;</span>))
+<span class="co">#Poner el sufijo</span>
+<span class="kw">setnames</span>(elca2016_uhogar_temp,
+         <span class="kw">paste0</span>(<span class="kw">names</span>(elca2016_uhogar_temp),
+                <span class="kw">ifelse</span>(<span class="kw">names</span>(elca2016_uhogar_temp) <span class="op">%in%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(datos_acdivoca_num),
+                                              <span class="kw">names</span>(elca2016_uhogar)),<span class="st">&quot;_acdivoca&quot;</span>,<span class="st">&quot;&quot;</span>)))
+
+elca2016_uhogar &lt;-<span class="st"> </span>elca2016_uhogar_temp
+<span class="kw">rm</span>(elca2016_uhogar_temp)
+
+<span class="co">#Merge 2013</span>
+elca2013_uhogar_temp &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2013_uhogar, 
+                         datos_acdivoca_num, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, 
+                         <span class="dt">all.x =</span> T, <span class="dt">no.dups =</span> T, <span class="dt">suffixes =</span> <span class="kw">c</span>(<span class="st">&quot;_acdivoca&quot;</span>))
+<span class="co">#Poner el sufijo</span>
+<span class="kw">setnames</span>(elca2013_uhogar_temp,
+         <span class="kw">paste0</span>(<span class="kw">names</span>(elca2013_uhogar_temp),
+                <span class="kw">ifelse</span>(<span class="kw">names</span>(elca2013_uhogar_temp) <span class="op">%in%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(datos_acdivoca_num),
+                                              <span class="kw">names</span>(elca2013_uhogar)),<span class="st">&quot;_acdivoca&quot;</span>,<span class="st">&quot;&quot;</span>)))
+
+elca2013_uhogar &lt;-<span class="st"> </span>elca2013_uhogar_temp
+<span class="kw">rm</span>(elca2013_uhogar_temp)
+
+<span class="co">#Merge 2010</span>
+elca2010_uhogar_temp &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2010_uhogar, 
+                         datos_acdivoca_num, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, 
+                         <span class="dt">all.x =</span> T, <span class="dt">no.dups =</span> T, <span class="dt">suffixes =</span> <span class="kw">c</span>(<span class="st">&quot;_acdivoca&quot;</span>))
+<span class="co">#Poner el sufijo</span>
+<span class="kw">setnames</span>(elca2010_uhogar_temp,
+         <span class="kw">paste0</span>(<span class="kw">names</span>(elca2010_uhogar_temp),
+                <span class="kw">ifelse</span>(<span class="kw">names</span>(elca2010_uhogar_temp) <span class="op">%in%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(datos_acdivoca_num),
+                                              <span class="kw">names</span>(elca2010_uhogar)),<span class="st">&quot;_acdivoca&quot;</span>,<span class="st">&quot;&quot;</span>)))
+
+elca2010_uhogar &lt;-<span class="st"> </span>elca2010_uhogar_temp
+<span class="kw">rm</span>(elca2010_uhogar_temp)</code></pre></div>
+</div>
+<div id="merge-panel-cede-con-elca" class="section level2">
+<h2><span class="header-section-number">2.5</span> Merge Panel CEDE con ELCA</h2>
+<p>Todas las variables que pertenecen a la base de datos del panel CEDE se van a poner con el sufijo _cede. Hay 5 bases de datos del _cede. Por lo tanto habran 5 sufijos: _cede_conflicto; _cede_educacion;_cede_gobierno;_cede_salud;_cede_tierras.</p>
+<p>CUIDADO. La base de datos queda MUY PESADA por lo que R no deja crear los objetos. Se adjunta el codigo para que el lector sea como se deberia hacer. Sin embargo, se recomienda seleccionar las bases de datos por separado y hacer los analisis que se requieran. Por ejemplo, si se quiere trabajar con la encuesta ACDIVOCA, seleccionar los items que se requieren y pegarla luego con el IMR o con la ELCA o con el CEDE. A modo de ejemplo, si el lector se dirige a la pestana “Panel Municipal” ahi vera un ejemplo de analisis de datos con la encuesta ACDIVOCA y con diferentes bases de datos del Panel Municipal.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Se llena la memoria por lo que hacemos una guardada-borrada-recuperada de datos. Este comando toma tiempo asi que hay que tener paciencia.</span>
+<span class="kw">save.image</span>(<span class="dt">file=</span><span class="st">&quot;temp.RData&quot;</span>)
+<span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
+<span class="kw">load</span>(<span class="dt">file=</span><span class="st">&quot;temp.RData&quot;</span>)
+
+
+<span class="co">#Merge 2016. Toca crear una variable temporal para poder poner la etiqueta al nombre de la variable que proviene de la base de datos CEDE conflicto. Se recicla una variable que termina en _temp y luego la eliminamos. </span>
+elca2016_uhogar_temp &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2016_uhogar, 
+                         cede_conflicto_<span class="dv">44</span>, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, 
+                         <span class="dt">all.x =</span> T, <span class="dt">no.dups =</span> T, <span class="dt">suffixes =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>,<span class="st">&quot;_cede_conflicto&quot;</span>))
+<span class="co">#Poner el sufijo</span>
+<span class="kw">setnames</span>(elca2016_uhogar_temp,
+         <span class="kw">paste0</span>(<span class="kw">names</span>(elca2016_uhogar_temp),
+                <span class="kw">ifelse</span>(<span class="kw">names</span>(elca2016_uhogar_temp) <span class="op">%in%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(cede_conflicto_<span class="dv">44</span>),
+                                              <span class="kw">names</span>(elca2016_uhogar)),<span class="st">&quot;_cede_conflicto&quot;</span>,<span class="st">&quot;&quot;</span>)))
+
+elca2016_uhogar &lt;-<span class="st"> </span>elca2016_uhogar_temp
+<span class="kw">rm</span>(elca2016_uhogar_temp)
+
+<span class="co">#Merge 2013</span>
+elca2013_uhogar_temp &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2013_uhogar, 
+                         cede_conflicto_<span class="dv">44</span>, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, 
+                         <span class="dt">all.x =</span> T, <span class="dt">no.dups =</span> T, <span class="dt">suffixes =</span> <span class="kw">c</span>(<span class="st">&quot;_cede_conflicto&quot;</span>))
+<span class="co">#Poner el sufijo</span>
+<span class="kw">setnames</span>(elca2013_uhogar_temp,
+         <span class="kw">paste0</span>(<span class="kw">names</span>(elca2013_uhogar_temp),
+                <span class="kw">ifelse</span>(<span class="kw">names</span>(elca2013_uhogar_temp) <span class="op">%in%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(cede_conflicto_<span class="dv">44</span>),
+                                              <span class="kw">names</span>(elca2013_uhogar)),<span class="st">&quot;_cede_conflicto&quot;</span>,<span class="st">&quot;&quot;</span>)))
+
+elca2013_uhogar &lt;-<span class="st"> </span>elca2013_uhogar_temp
+<span class="kw">rm</span>(elca2013_uhogar_temp)
+
+<span class="co">#Merge 2010</span>
+elca2010_uhogar_temp &lt;-<span class="st"> </span><span class="kw">merge</span>(elca2010_uhogar, 
+                         cede_conflicto_<span class="dv">44</span>, <span class="dt">by.x=</span><span class="st">&quot;id_mpioU&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio&quot;</span>, 
+                         <span class="dt">all.x =</span> T, <span class="dt">no.dups =</span> T, <span class="dt">suffixes =</span> <span class="kw">c</span>(<span class="st">&quot;_cede_conflicto&quot;</span>))
+<span class="co">#Poner el sufijo</span>
+<span class="kw">setnames</span>(elca2010_uhogar_temp,
+         <span class="kw">paste0</span>(<span class="kw">names</span>(elca2010_uhogar_temp),
+                <span class="kw">ifelse</span>(<span class="kw">names</span>(elca2010_uhogar_temp) <span class="op">%in%</span><span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(cede_conflicto_<span class="dv">44</span>),
+                                              <span class="kw">names</span>(elca2010_uhogar)),<span class="st">&quot;_cede_conflicto&quot;</span>,<span class="st">&quot;&quot;</span>)))
+
+elca2010_uhogar &lt;-<span class="st"> </span>elca2010_uhogar_temp
+<span class="kw">rm</span>(elca2010_uhogar_temp)</code></pre></div>
+<p>Asi, note que se logro hacer una base: indicePAR+encuestaPAR+ELCA(parcial)</p>
+</div>
+</div>
+<div id="guardar-environment" class="section level1">
+<h1><span class="header-section-number">3</span> Guardar Environment</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Codigo para guardar el environement (la base de datos), para poder importarla en otros scripts. </span>
+<span class="kw">save.image</span>(<span class="dt">file=</span><span class="st">&#39;MergeBases_Environment_ELCA.RData&#39;</span>)</code></pre></div>
 </div>
 
 
