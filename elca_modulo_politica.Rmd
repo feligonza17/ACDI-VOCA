@@ -1,0 +1,451 @@
+---
+title: "ELCA 2016: Modulo 6 (Politica) y ACDIVOCA"
+author: "FGA"
+date: "29 de mayo de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+Aqui se muestran algunos analisis que se hacen sobre la encuesta de la ELCA2016 (ronda 3) y se relacionan con las preguntas del ACDIVOCA.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+#Preparar environment para el analisis
+
+##Cargar paquetes y base de datos
+
+```{r message=FALSE, warning=FALSE}
+library(readstata13)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(data.table)
+library(readxl)
+library(doBy)
+library(vtable)
+library(plyr)
+library(gridExtra)
+library(grid)
+library(purrr)
+library(psych)
+library(Hmisc)
+library(matrixStats)
+library(ggpubr)
+library(vtable)
+library(ggthemes)
+library(httpuv)
+library(janitor)
+
+
+
+```
+
+#Importar bases de datos que se van a utilizar para estos analisis
+
+```{r warning=FALSE, message=FALSE}
+rm(list=ls())
+#Importar los datos de la base "Depuracion y Merge"
+#load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment_ELCA.RData")
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+
+elca2016_uchoques <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Urbano/Bases/UChoques.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_ucomunidad <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Urbano/Bases/Ucomunidades.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_ugastos <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Urbano/Bases/Ugastos.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_uhogar <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Urbano/Bases/Uhogar.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+elca2016_upersonas <- read.dta13("C:/Users/felig/Dropbox/Proyecto Juan Camilo/elca/ELCA 2016/Urbano/Bases/Upersonas.dta",encoding="UTF-8", fromEncoding="latin1", convert.factors = TRUE,nonint.factors=TRUE, generate.factors = TRUE)
+```
+
+
+#Politica y ACDIVOCA (Modulo 6 ; Personas)
+
+El objetivo de estos analisis es ver como se comportan algunas variables del modulo de politica de la encuesta de la ELCA del 2016 con los indices PAR (o IMR)
+
+##Union Politica y PAR/ACDIVOCA
+
+Se debe hacer un analisis por hogar porque, por persona es mas dificil encontrar los municipios correspondientes. Para ello y, dado que la mayoria de las preguntas de la encuesta son categoricas, se cogio la moda de cada pregunta para asignar a ese hogar la mayoria de respuesta que tuvieran sus integrantes. 
+
+```{r}
+
+#Vamos a hacer el merge de las bases de datos para poder hacer los analisis correspondientes. Solo vamos a juntar las preguntas que nos interesan, es decir las del modulo de politica. 
+
+#Cortamos la base de datos
+
+elca_politica2016 <- elca2016_upersonas %>% 
+  select(c(1:20),c(591:644))
+
+#elca2016_uhogar_merge <- elca2016_uhogar %>% 
+ # select(c(1:16), c(ends_with("_imr"), c(ends_with(".mean"), c(ends_with(".sd")))))
+
+elca_politica2016 <- merge(elca_politica2016, 
+                         elca2016_uhogar, by="llave")
+
+#elca_politica2016 %<>% distinct(llave_n16, keep_all=T)
+
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+ensayo <- elca_politica2016
+
+#Agrupar por hogar y por municipio.
+ensayo <- elca_politica2016 %>% 
+  select(c(id_mpioU, llave, firma_paz, convence, tendencia_pol, voto_secreto)) %>% 
+  dplyr::group_by(llave, id_mpioU) %>% 
+  dplyr::summarise(firma_paz_hogar=getmode(firma_paz),
+convence_hogar=getmode(convence),
+tendencia_pol_hogar=getmode(tendencia_pol),
+                  voto_secreto_hogar=getmode(voto_secreto)) %>% 
+  na.omit()
+
+ensayo$id_mpioU[ensayo$id_mpioU=="23102"] <- "Medellín"
+ensayo$id_mpioU[ensayo$id_mpioU=="23010"] <- "Turbo"
+ensayo$id_mpioU[ensayo$id_mpioU=="22015"] <- "Soledad"
+ensayo$id_mpioU[ensayo$id_mpioU=="21102"] <- "Bogotá, D.c."
+ensayo$id_mpioU[ensayo$id_mpioU=="20102"] <- "Cartagena De Indias"
+ensayo$id_mpioU[ensayo$id_mpioU=="11102"] <- "Santa Marta"
+ensayo$id_mpioU[ensayo$id_mpioU=="02102"] <- "Cali"
+ensayo$id_mpioU[ensayo$id_mpioU=="10021"] <- "Vistahermosa"
+ensayo$id_mpioU[ensayo$id_mpioU=="10102"] <- "Villavicencio"
+ensayo$id_mpioU[ensayo$id_mpioU=="05040"] <- "Piedecuesta"
+
+ensayo %<>% filter(id_mpioU=="Bogotá, D.c." | id_mpioU=="Cali" | id_mpioU=="Cartagena De Indias" | id_mpioU=="Medellín" | id_mpioU=="Santa Marta" | id_mpioU=="Turbo" | id_mpioU=="Soledad" | id_mpioU=="Villaciencio" | id_mpioU=="Vistahermosa") 
+
+
+
+```
+
+
+
+
+#Merge con ACDIV-VOCA
+
+##Importar Base de Indice IMR
+
+```{r message=FALSE, warning=FALSE}
+
+acdi_imr <- as.data.table(
+  read_excel("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Documentos ACDIVOCA/7.IndiceReconciliacion_31oct2017.xlsx",sheet=2))
+
+#Limpiar tildes y mayusculas de los nombres de las variables del indice IMR
+acdi_imr <- acdi_imr %>% clean_names()
+#Limpiar los otros nombres
+acdi_imr <- acdi_imr %>% select(-c(20:21))
+colnames(acdi_imr)[1] <- "Municipio"
+colnames(acdi_imr)[15] <- "1-agresion"
+#Limpirar nombre de Municipios para hacer el merge. Importante notar que solo se hacen estos 7 municipios porque estos tambien estan en la base de la ELCA.
+acdi_imr$Municipio[acdi_imr$Municipio=="MEDELLIN"] <- "Medellín"
+acdi_imr$Municipio[acdi_imr$Municipio=="TURBO"] <- "Turbo"
+acdi_imr$Municipio[acdi_imr$Municipio=="BOGOTA, D.C."] <- "Bogotá, D.c."
+acdi_imr$Municipio[acdi_imr$Municipio=="CARTAGENA"] <- "Cartagena De Indias"
+acdi_imr$Municipio[acdi_imr$Municipio=="SANTA MARTA"] <- "Santa Marta"
+acdi_imr$Municipio[acdi_imr$Municipio=="CALI"] <- "Cali"
+acdi_imr$Municipio[acdi_imr$Municipio=="VISTAHERMOSA"] <- "Vistahermosa"
+
+
+#Merge
+
+merge_acdi_temp <- merge(ensayo, acdi_imr, by.x="id_mpioU", 
+                    by.y="Municipio",suffixes = c("","_imr"))
+
+#Poner el sufijo
+setnames(merge_acdi_temp,
+         paste0(names(merge_acdi_temp),
+                ifelse(names(merge_acdi_temp) %in% setdiff(names(acdi_imr),
+                                              names(ensayo)),"_imr","")))
+
+merge_acdi_temp %<>% filter(!(cohesion_imr=="NA"))
+merge_acdi <- merge_acdi_temp
+rm(merge_acdi_temp)
+
+#Asignarle los labels a los valores
+merge_acdi$firma_paz_hogar_lab <- cut(as.numeric(merge_acdi$firma_paz_hogar), breaks=4, labels=c("Mejorar","Permanecer igual","Empeorar", "No sabe"))
+
+```
+
+#Analisis Estadisticos
+
+
+##Descriptivos de variables de la ELCA modulo politica por municipio
+Luego de agrupar las variables por hogar y hacer el merge con el indice PAR del acdivoca, vamos a hacer algunos analisis descriptivos y algunas correlaciones. 
+
+A continuacion se hace la descripcion de las varibales que se pueden encontrar:
+
+**firma_paz_hogar**:
+Cree usted que con la firma del acuerdo de paz con las FARC, su vida puede:
+<br>
+1 Mejorar
+<br>
+2 Permanecer igual
+<br>
+3 Empeorar
+<br>
+4 No sabe
+
+**convence_hogar**: Durante las elecciones, alguna gente trata de convencer a otras para que voten por algun partido o candidato. ¿Con que frecuencia ha tratado usted de convencer a otros para que voten por un partido o candidato?
+<br>
+1 Frecuentemente
+<br>
+2 De vez en cuando
+<br>
+3 Rara vez
+<br>
+4 Nunca
+<br>
+5 No sabe /No responde
+
+**voto_secreto_hogar**: ¿... cree que el voto es secreto o no es secreto?
+<br>
+1 Si, el voto es secreto
+<br>
+2 No, el voto no es secreto
+<br>
+3 No sabe/No responde
+
+**tendencia_pol_hogar**:Con frecuencia se habla de tendencias politica de izquierda y de derecha. Segun el sentido que hagan para usted los terminos "izquierda" y "derecha", ¿con que tendencia politica simpatiza usted?
+<br>
+1 Izquierda
+<br>
+2 Centro-izquierda
+<br>
+3 Centro
+<br>
+4 Centro-derecha
+<br>
+5 Derecha
+<br>
+6 No sabe
+
+```{r}
+summary(merge_acdi)
+  
+```
+
+Recuerde que estos analisis estan hechos por hogar. Por lo tanto, observe que hay 5 hogares que simpatizan con la tendencia politica de la izquierda, 28 hogares que simpatizan con la tendencia politica de derecha. Por otro lado, hay 51 hogares que creen que su vida va a mejorar con el proceso de paz con las FARC, hay 53 que creen que el sus vidas van a empeorar gracias al proceso de paz. Asimismo, hay 9 hogares que que han tratado frecuentemente de convencer a los otros de votar por algun partido politico, mientras que 177 hogares nunca lo han hecho. 
+
+##Graficos
+
+###Firma_paz FARC
+
+Cree usted que con la firma del acuerdo de paz con las FARC, su vida puede:
+<br>
+1 Mejorar
+<br>
+2 Permanecer igual
+<br>
+3 Empeorar
+<br>
+4 No sabe
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+merge_acdi %>% 
+  ggplot(aes(x=as.numeric((firma_paz_hogar)))) +
+  geom_histogram()+
+  facet_wrap(~id_mpioU)+
+  labs(y='Frecuencia', title='Frecuencia pregunta Firma_paz por municipio', 
+       x= 'Opciones de respuesta', caption="Fuente: ELCA") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  scale_x_discrete(limits=c("Mejorar",
+                            "Permanecer igual", 
+                            "Empeorar","No sabe"))
+  
+  
+
+```
+
+###Convence_hogar 
+
+Durante las elecciones, alguna gente trata de convencer a otras para que voten por algun partido o candidato. ¿Con que frecuencia ha tratado usted de convencer a otros para que voten por un partido o candidato?
+<br>
+1 Frecuentemente
+<br>
+2 De vez en cuando
+<br>
+3 Rara vez
+<br>
+4 Nunca
+<br>
+5 No sabe /No responde
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+merge_acdi %>% 
+  ggplot(aes(x=as.numeric((convence_hogar)))) +
+  geom_histogram()+
+  facet_wrap(~id_mpioU)+
+  labs(y='Frecuencia', title='Frecuencia pregunta convence, por municipio', 
+       x= 'Opciones de respuesta', caption="Fuente: ELCA") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  scale_x_discrete(limits=c("Frecuentemente",
+                            "De vez en cuando", 
+                            "Rara vez",
+                            "Nunca",
+                            "No sabe no responde"))
+  
+  
+
+```
+
+###Voto Secreto
+
+¿... cree que el voto es secreto o no es secreto?
+<br>
+1 Si, el voto es secreto
+<br>
+2 No, el voto no es secreto
+<br>
+3 No sabe/No responde
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+merge_acdi %>% 
+  ggplot(aes(x=as.numeric((voto_secreto_hogar)))) +
+  geom_histogram()+
+  facet_wrap(~id_mpioU)+
+  labs(y='Frecuencia', title='Frecuencia pregunta voto_secreto, por municipio', 
+       x= 'Opciones de respuesta', caption="Fuente: ELCA") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  scale_x_discrete(limits=c("Si, el voto es secreto",
+                            "No, el voto no es secreto", 
+                            "No sabe no responde"))
+  
+  
+
+```
+
+###Tendencia Politica
+
+Con frecuencia se habla de tendencias politica de izquierda y de derecha. Segun el sentido que hagan para usted los terminos "izquierda" y "derecha", ¿con que tendencia politica simpatiza usted?
+<br>
+1 Izquierda
+<br>
+2 Centro-izquierda
+<br>
+3 Centro
+<br>
+4 Centro-derecha
+<br>
+5 Derecha
+<br>
+6 No sabe
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+merge_acdi %>% 
+  ggplot(aes(x=as.numeric((tendencia_pol_hogar)))) +
+  geom_histogram()+
+  facet_wrap(~id_mpioU)+
+  labs(y='Frecuencia', title='Frecuencia pregunta tendencia politica, por municipio', 
+       x= 'Opciones de respuesta', caption="Fuente: ELCA") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  scale_x_discrete(limits=c("Izquierda",
+                            "Centro-Izquierda", 
+                            "Centro",
+                            "Centro-Derecha",
+                            "Derecha",
+                            "No sabe"))
+  
+  
+
+```
+
+##Correlaciones ELCA-PAR
+
+A continuacion haremos correlacions de estos items con algunas preguntas del indice PAR. Note que las respuestas de "no sabe, no responde" tienen un peso alto por lo que, a la hora de hacer los analisis se van a quitar para que no sesguen los resultado.
+
+```{r}
+
+merge_corr <- merge_acdi %>% 
+  filter(!(firma_paz_hogar=="No sabe")) %>% 
+  filter(!(convence_hogar=="No sabe o No responde"))
+
+merge_corr %<>% filter(!(tendencia_pol_hogar=="No sabe"))
+merge_corr %<>%   filter(!(voto_secreto_hogar=="No sabe o no responde"))
+
+  
+  
+  
+
+
+correlaciones <- cbind(as.numeric(merge_corr$firma_paz_hogar),
+                       as.numeric(merge_corr$convence_hogar),
+                       as.numeric(merge_corr$tendencia_pol_hogar),
+                       as.numeric(merge_corr$voto_secreto_hogar),
+                       merge_corr$restauracion_imr,
+                       merge_corr$resiliencia_imr,
+                       merge_corr$reconocimiento_imr,
+                       merge_corr$indice_de_reconciliacion_imr,
+                       merge_corr$confianza_imr
+                       )
+
+nombres <- c("Firma_paz",
+             "Convencer_votar",
+             "Tendencia_politica",
+             "Voto_secreto",
+             "Restauracion_imr",
+             "resiliencia_imr", 
+             "reconocimiento_imr", 
+             "indice_reconciliacion_imr",
+             "confianza_imr")
+colnames(correlaciones) <- nombres
+rcorr(correlaciones, type="spearman")
+
+```
+
+
+Observe que aqui, a pesar de que no hay ninguna correlacion que sea positiva hay ciertas cosas que pueden ser interesantes de discutir. Por un lado, observe las correlaciones entre la variable Firma_paz y los indices PAR. Recuerde que la variable firma_paz, a menor numero mayor es el bienestar que creen las personas que traera la firma de la paz con las FARC para sus vidas. 
+__Firma_paz___:Observe que entre la variable firma_paz y la variable resiliencia_imr hay una correlacion negativa de 0.20. Esto lo que quiere decir es que son inversamente proporcionales. A mayor resiliencia, menor puntaje en la variable firma_paz. Esto indica que, a mayor resiliencia, mayor es la creencia que la firma del acuerdo traera bienestar. Es interesante ver esto porque parece ser coherente. Las personas resilientes suelven ver con optimismo el futuro y suelen olvidar los danos del pasado y creen en un futuro prospero. Lo que vemos aqui es que las personas resilientes ven en el acuerdo de las FARC una posibilidad, un futuro prospero. 
+
+__Convencer_votar___:Por otro lado, la variable convencer_votar, la cual indica que, a menor valor, mayor es la intencion de convencer a las personas de votar por un partido. Las correlaciones muestran un valor negativo con las variables indice_reconciliacion y reconomiciento. Esto quiere decir que a mayor indice de reconciliacion, mayor sera la influencia (o el empoderamiento) de las personas sobre sus cercanos o sobre su comunidad. 
+
+__Tendencia_politica___:Esta variable, a mayor valor mas de derecha se considera la persona. Observe que aqui hay una relacion positiva reconocimiento_imr y indice_reconciliacion_imr. Esto indica que entre mas la persona se sienta que pertenece a un partido politico de derecha mayor indice de reconciliacion tendra o reconocimiento.
+
+__Voto_secreto__: Esta variable, como es dicotomica no se puede interpretear de la misma forma que las otras. Por esta razon se decide omitir. 
+### Regresion lineal 
+
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+
+regReconcililacion <- lm(indice_reconciliacion_imr ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regReconcililacion)
+
+regRestauracion <- lm(Restauracion_imr ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regRestauracion)
+
+regconfianza <- lm(confianza_imr ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regconfianza)
+
+regresiliencia <- lm(resiliencia_imr ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regresiliencia)
+
+regreconocimiento <- lm(reconocimiento_imr ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regreconocimiento)
+
+```
+ 
+ ___indice_reconciliacion_imr__: Observe que en la regresion lineal, esta variable es marginalmente significativa con la tendencia politica. Es decir, si sube un punto de la tendencia politica (ser mas de derecha) el indice de reconciliacion aumenta en 0.014 unidades. Esto nos muestra la misma informacion que la correlacion.
+ 
+ ___Restauracion_imr___: Aqui no hay resultados lo suficientemente llamativos como para hacer una interpretacion o un comentario. 
+ 
+ ___confianza_imr___: Observe que en la regresion lineal, esta variable es marginalmente significativa con convencer_votar. Esta relacion es positiva, lo que quiere decir que, si aumenta en un punto la variable convencer_votar (es decir que las personas son menos propensas a convencer a los otros de votar) mayor sera la confianza que tienene. 
+ 
+ ___resiliencia_imr___: Observe que en la regresion lineal, esta variable es marginalmente significativa con convencer_votar. Esta relacion es negativa y sifgnificativa, lo que quiere decir que, si aumenta en un punto la variable convencer_votar (es decir que las personas son menos propensas a convencer a los otros de votar) la resiliencia de las personas disminuye. Aqui hay una relacion interesante ya que indica que el no querer compartir las ideologias politicas o no sentirse seguro con las convicciones politicas tiene una influenica sobre la resiliencia. 
+ 
+ ___reconocimiento_imr___: Observe que en la regresion lineal, esta variable es marginalmente significativa con tendencia politica. Esta relaciona es positivia lo que indica que si aumenta en un punto la tendencia politica (acercarse mas a las ideologias de derecha) el indice de reconocimiento va a aumentar en 0.015 unidades. 

@@ -32,7 +32,7 @@ navbar:
           href: elca_exploracion.html
         - text: "Modulo Politica"
           icon:
-          href:
+          href: elca_modulo_politica.html
     - text: "More"
       icon: fa-gear
       menu:
