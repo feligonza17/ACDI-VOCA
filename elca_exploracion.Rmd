@@ -426,6 +426,27 @@ rm(elca2010_uhogar_temp)
 Asi, note que se logro hacer una base: indicePAR+encuestaPAR+ELCA(parcial)
 
 
+
+#Ejemplo de datos que se encuentran en la base
+
+
+A continuacion, se presentan, los nombres de los municipios que quedaron en la base final
+```{r}
+unique(elca2016_uhogar$id_mpioU)
+```
+Aqui se presetnan los nombres de las variables y el tipo de variables que quedaron en la base final. 
+
+```{r}
+names(elca2016_uhogar)
+```
+
+Aqui se presenta la informacion de cada variable
+
+```{r}
+glimpse(elca2016_uhogar)
+```
+
+
 #Guardar Environment
 ```{r}
 #Codigo para guardar el environement (la base de datos), para poder importarla en otros scripts. 
