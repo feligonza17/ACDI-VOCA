@@ -8,7 +8,6 @@ output:
     highlight: tango
     number_sections: yes
     theme: journal
-    self_contained: no
     toc: yes
     toc_depth: 2
     toc_float:
@@ -29,6 +28,10 @@ Con este codigo se importan todas las bases de datos y todos los paquetes necesa
 
 ```{r message=FALSE, warning=FALSE}
 #ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
+
+#Set Working Directory
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+rm(list=ls())
 
 load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
 
@@ -57,6 +60,16 @@ library(ggthemes)
 ```
 
 
+```{r}
+#Cambiarle los nombres a algunos municipios que no estan codificados igual
+
+cede_salud_44$municipio[cede_salud_44$municipio=="Bojaya"] <- "Bojayá"
+cede_salud_44$municipio[cede_salud_44$municipio=="Bogotá, D.C."] <- "Bogotá, D.c."
+cede_salud_44$municipio[cede_salud_44$municipio=="Cartagena"] <- "Cartagena De Indias"
+cede_salud_44$municipio[cede_salud_44$municipio=="Bojaya"] <- "Bojayá"
+cede_salud_44$municipio[cede_salud_44$municipio=="Cartagena del Chairá"] <- "Cartagena Del Chairá"
+cede_salud_44$municipio[cede_salud_44$municipio=="San Vicente del Caguán"] <- "San Vicente Del Caguán"
+```
 
 
 # Graficos variables importantes y algunos descriptivos
@@ -98,6 +111,9 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_TMI <- summaryBy(TMI ~ municipio, cede_salud_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_TMI %<>% arrange(municipio)
+
 print(descrip_TMI)
 ```
 
@@ -167,6 +183,9 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_nbi <- summaryBy(nbi ~ municipio, cede_salud_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_nbi %<>% arrange(municipio)
+
 print(descrip_nbi)
 ```
 
@@ -266,6 +285,8 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_prestadores_cienmil <- summaryBy(prestadores_cienmil ~ municipio, cede_salud_44_eq, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+descrip_prestadores_cienmil %<>% arrange(municipio)
+
 print(descrip_prestadores_cienmil)
 ```
 
@@ -364,6 +385,9 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_subsidiado_cienmil <- summaryBy(subsidiado_cienmil ~ municipio, cede_salud_44_eq, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_subsidiado_cienmil %<>% arrange(municipio)
+
 print(descrip_subsidiado_cienmil)
 ```
 
@@ -465,6 +489,8 @@ El nombre de la variable agregada es : **descrip_**
 ```{r}
 descrip_contributivo_cienmil <- summaryBy(contributivo_cienmil ~ municipio, cede_salud_44_eq, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
 
+descrip_contributivo_cienmil %<>% arrange(municipio)
+
 print(descrip_contributivo_cienmil)
 ```
 
@@ -506,86 +532,17 @@ En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo c
 
 Recuerde que las variables del ACDI-VOCA son:
 +Reconciliacion
+<br>
 +Disculpas
+<br>
 +Violencia
+<br>
 +Rencor
+<br>
 +Memoria (Memoria historica)
+<br>
 +Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)
-
-### Correlaciones
-
-
-
-```{r}
-#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. 
-
-
-#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
-
-
-diff_TMI_mean[which(!is.finite(diff_TMI_mean))] <- NA 
-diff_nbi_mean[which(!is.finite(diff_nbi_mean))] <- NA
-diff_prestadores_cienmil_mean[which(!is.finite(diff_prestadores_cienmil_mean))] <- NA
-diff_subsidiado_cienmil_mean[which(!is.finite(diff_subsidiado_cienmil_mean))] <- NA
-
-
-correlaciones <- cbind(diff_TMI_mean, 
-                       diff_nbi_mean, 
-                       diff_prestadores_cienmil_mean, 
-                       diff_subsidiado_cienmil_mean, 
-                       reconciliacion_agreg$reconciliacion.mean, 
-                       disculpas_agreg$disculpas.mean, 
-                       violencia_agreg$violencia.mean, 
-                       rencor_agreg$rencor.mean, 
-                       memoria_agreg$memoria.mean, 
-                       memoria_expectativa_agreg$memoria_expectativa.mean)
-
-nombres <- c("TMI",
-             "NBI",
-             "Numero Prestadores_cienmil",
-             "Afiliados regimen subsidiado",
-             "Reconciliacion",
-             "Disculpas", 
-             "Violencia", 
-             "Rencor",
-             "Memoria", 
-             "Memoria_Expectativa")
-colnames(correlaciones) <- nombres
-
-
-
-rcorr(correlaciones, type="spearman") #Aqui hay cosas bien interesantes}
-```
-
-
-### Regresion lineal 
-
-
-```{r}
-dfcorrelaciones <- as.data.frame(correlaciones)
-regReconcililacion <- lm(Reconciliacion ~ correlaciones[,1:4], data=dfcorrelaciones)
-summary(regReconcililacion)
-
-regDisculpas <- lm(Disculpas ~ correlaciones[,1:4], data=dfcorrelaciones)
-summary(regDisculpas)
-
-regViolencia <- lm(Violencia ~ correlaciones[,1:4], data=dfcorrelaciones)
-summary(regViolencia)
-
-regRencor <- lm(Rencor ~ correlaciones[,1:4], data=dfcorrelaciones)
-summary(regRencor)
-
-regMemoria <- lm(Memoria~ correlaciones[,1:4], data=dfcorrelaciones)
-summary(regMemoria)
-
-regMemoria_Expectativa <- lm(Memoria_Expectativa~correlaciones[,1:4], data=dfcorrelaciones)
-summary(regMemoria_Expectativa)
-```
-
-
-## $\Delta$ variables con ACDI-VOCA
-
-En esta seccion se tiene en cuenta el $\Delta$ de la variable de interes. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+<br>
 
 ### Correlaciones
 
@@ -655,6 +612,209 @@ regMemoria_Expectativa <- lm(Memoria_Expectativa~correlaciones[,1:4], data=dfcor
 summary(regMemoria_Expectativa)
 ```
 
+
+## $\Delta$ variables con ACDI-VOCA
+
+En esta seccion se tiene en cuenta el $\Delta$ de la variable de interes. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+### Correlaciones
+
+
+```{r}
+#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. 
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+diff_TMI_mean[which(!is.finite(diff_TMI_mean))] <- NA 
+diff_nbi_mean[which(!is.finite(diff_nbi_mean))] <- NA
+diff_prestadores_cienmil_mean[which(!is.finite(diff_prestadores_cienmil_mean))] <- NA
+diff_subsidiado_cienmil_mean[which(!is.finite(diff_subsidiado_cienmil_mean))] <- NA
+
+
+correlaciones <- cbind(diff_TMI_mean, 
+                       diff_nbi_mean, 
+                       diff_prestadores_cienmil_mean, 
+                       diff_subsidiado_cienmil_mean, 
+                       reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+ nombres <- c("TMI",
+             "NBI",
+             "Numero Prestadores_cienmil",
+             "Afiliados regimen subsidiado",
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+colnames(correlaciones) <- nombres
+
+
+
+rcorr(correlaciones, type="spearman") 
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regReconcililacion)
+
+regDisculpas <- lm(Disculpas ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regDisculpas)
+
+regViolencia <- lm(Violencia ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regViolencia)
+
+regRencor <- lm(Rencor ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regRencor)
+
+regMemoria <- lm(Memoria~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~correlaciones[,1:4], data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+```
+
+
+
+#Analisis con Indice PAR (Instrumento de medicion de reconciliacion)
+
+
+Ahora se haran regresiones con el indice de reconciliacion.
+
+
+##Variables con valores absolutos (agregados) con indice PAR
+
+A continuacion se haran las correlaciones con las variables de salud y el indice PAR. Recuerde que estas variables son las **agregadas**. 
+
+##Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.
+names_acdi <- acdi_imr$Municipio_imr
+
+acdi_imr <- acdi_imr %>% arrange(Municipio_imr)
+
+
+par_descrip_TMI <- descrip_TMI[descrip_TMI$municipio %in% names_acdi,]
+par_descrip_TMI <- par_descrip_TMI %>% arrange(municipio)
+
+
+par_descrip_nbi <- descrip_nbi[descrip_nbi$municipio %in% names_acdi,]
+par_descrip_nbi <- par_descrip_nbi %>% arrange(municipio)
+
+par_descrip_prestadores_cienmil <- descrip_prestadores_cienmil[descrip_prestadores_cienmil$municipio %in% names_acdi,]
+par_descrip_prestadores_cienmil <- par_descrip_prestadores_cienmil %>% arrange(municipio)
+
+par_descrip_subsidiado_cienmil <- descrip_subsidiado_cienmil[descrip_subsidiado_cienmil$municipio %in% names_acdi,]
+par_descrip_subsidiado_cienmil <- par_descrip_subsidiado_cienmil %>% arrange(municipio)
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+par_descrip_TMI$TMI.mean[which(!is.finite(par_descrip_TMI$TMI.mean))] <- NA 
+par_descrip_nbi$nbi.mean[which(!is.finite(par_descrip_nbi$nbi.mean))] <- NA
+par_descrip_prestadores_cienmil$prestadores_cienmil.mean[which(!is.finite(par_descrip_prestadores_cienmil$prestadores_cienmil.mean))] <- NA
+par_descrip_subsidiado_cienmil$subsidiado_cienmil.mean[which(!is.finite(par_descrip_subsidiado_cienmil$subsidiado_cienmil.mean))] <- NA
+
+
+correlaciones <- cbind(par_descrip_TMI$TMI.mean, 
+                       par_descrip_nbi$nbi.mean, 
+                       par_descrip_prestadores_cienmil$prestadores_cienmil.mean, 
+                       par_descrip_subsidiado_cienmil$subsidiado_cienmil.mean, 
+                       acdi_imr$indice_de_reconciliacion_imr)
+
+nombres <- c("TMI",
+             "NBI",
+             "Numero Prestadores_cienmil",
+             "Afiliados regimen subsidiado",
+             "Indice_reconciliacion")
+colnames(correlaciones) <- nombres
+rcorr(correlaciones, type="spearman") 
+```
+
+
+##Regresion lineal
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regSalud_PAR <- lm(Indice_reconciliacion ~., data = dfcorrelaciones)
+summary(regSalud_PAR)
+```
+
+
+##Variables con diferencias (Deltas $\Delta$) con indice PAR
+
+A continuacion se haran las correlaciones con las variables de gobierno y el indice PAR. Recuerde que estas variables son las **diferencias entre los primeros cinco anos a los ultimos 5 anos**. 
+
+##Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.  
+
+par_diff_TMI <- descrip_TMI_5antes[descrip_TMI_5antes$municipio %in% names_acdi,]$TMI.mean -descrip_TMI_5despues[descrip_TMI_5despues$municipio %in% names_acdi,]$TMI.mean
+
+par_diff_nbi <- descrip_nbi_5antes[descrip_nbi_5antes$municipio %in% names_acdi,]$nbi.mean - descrip_nbi_5despues[descrip_nbi_5despues$municipio %in% names_acdi,]$nbi.mean
+
+par_diff_prestadores_cienmil <- descrip_prestadores_cienmil_5antes[descrip_prestadores_cienmil_5antes$municipio %in% names_acdi,]$prestadores_cienmil.mean-descrip_prestadores_cienmil_5despues[descrip_prestadores_cienmil_5despues$municipio %in% names_acdi,]$prestadores_cienmil.mean
+
+
+par_diff_subsidiado_cienmil <- descrip_subsidiado_cienmil_5antes[descrip_subsidiado_cienmil_5antes$municipio %in% names_acdi,]$subsidiado_cienmil.mean-descrip_subsidiado_cienmil_5despues[descrip_subsidiado_cienmil_5despues$municipio %in% names_acdi,]$subsidiado_cienmil.mean
+
+
+par_diff_TMI[which(!is.finite(par_diff_TMI))] <- NA 
+par_diff_nbi[which(!is.finite(par_diff_nbi))] <- NA
+par_diff_prestadores_cienmil[which(!is.finite(par_diff_prestadores_cienmil))] <- NA
+par_diff_subsidiado_cienmil[which(!is.finite(par_diff_subsidiado_cienmil))] <- NA
+
+
+correlaciones <- cbind(par_diff_TMI, 
+                       par_diff_nbi, 
+                       par_diff_prestadores_cienmil, 
+                       par_diff_subsidiado_cienmil,
+                       acdi_imr$indice_de_reconciliacion_imr)
+
+
+nombres <- c("TMI",
+             "NBI",
+             "Numero Prestadores_cienmil",
+             "Afiliados regimen subsidiado",
+             "Indice_reconciliacion")
+
+
+colnames(correlaciones) <- nombres
+
+rcorr(correlaciones, type="spearman") #Aqui hay cosas bien interesantes}
+
+
+
+
+
+```
+
+Aqui note que hay una correlacion muy negativa entre el indice de reconciliacion y la diferncia entre los primeros 5 anos y los ultimos 5 anos de las personas que esta afiliadas al regimen subsidiado
+
+##Regresion lineal
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regSalud_diff_PAR <- lm(Indice_reconciliacion ~., data=dfcorrelaciones)
+summary(regSalud_diff_PAR)
+```
+
+
+
+En esta regresion tambien se puede ver el mismo resultado, de manera significativa tambien. 
 
 
 

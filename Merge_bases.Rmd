@@ -9,7 +9,6 @@ output:
     number_sections: yes
     theme: journal
     toc: yes
-    self_contained: no
     toc_depth: 2
     toc_float:
       collapsed: yes
@@ -54,7 +53,7 @@ library(gridExtra)
 library(grid)
 library(purrr)
 library(psych)
-library(httpuv)
+library(janitor)
 ```
 
 
@@ -97,7 +96,58 @@ datos_cede_tierras <-  read.dta13("PANEL_AGRICULTURA_Y_TIERRA.dta",
                                   encoding="latin1", fromEncoding="UTF-8",
                                   convert.factors = TRUE, generate.factors = TRUE,
                                   nonint.factors=TRUE)
+
+#Indice PAR - ACDIVOCA
+
+acdi_imr <- as.data.table(
+  read_excel("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Documentos ACDIVOCA/7.IndiceReconciliacion_31oct2017.xlsx",sheet=2))
+#Limpiar tildes y mayusculas de los nombres de las variables del indice IMR
+acdi_imr <- acdi_imr %>% clean_names()
+#Limpiar los otros nombres
+acdi_imr <- acdi_imr %>% select(-c(20:21))
+colnames(acdi_imr)[1] <- "Municipio"
+colnames(acdi_imr)[15] <- "1-agresion"
+
+acdi_imr <- acdi_imr %>% slice(.,1:22) 
+
+#Le agregamos el sufijo distintivo
+
+colnames(acdi_imr) <- paste(colnames(acdi_imr), "imr", sep = "_")
+
+#Limpieza de nombres de Municipios (solo se muestra una limpieza)
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="MEDELLIN"] <- "Medellín"
+
 ```
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="TURBO"] <- "Turbo"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="BOGOTA, D.C."] <- "Bogotá, D.c."
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="CARTAGENA"] <- "Cartagena De Indias"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="SANTA MARTA"] <- "Santa Marta"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="CALI"] <- "Cali"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="VISTAHERMOSA"] <- "Vistahermosa"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="ARAUCA"] <- "Arauca"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="ARAUQUITA"] <- "Arauquita"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="SAN CARLOS"] <- "San Carlos"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="QUIBDO"] <- "Quibdó"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="APARTADO"] <- "Apartadó"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="BOJAYA"] <- "Bojayá"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="PUERTO RICO"] <- "Puerto Rico"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="CIENAGA"] <- "Ciénaga"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="CHAPARRAL"] <- "Chaparral"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="CARTAGENA DEL CHAIRA"] <- "Cartagena Del Chairá"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="RIOBLANCO"] <- "Rioblanco"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="FLORENCIA"] <- "Florencia"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="BUENAVENTURA"] <- "Buenaventura"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="MESETAS"] <- "Mesetas"
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="SAN VICENTE DEL CAGUAN"] <- "San Vicente Del Caguán"
+
+
+
+
+```
+
 
 Aqui revisamos, por encima, el numero de municipios que tiene cada base de datos 
 ```{r message=FALSE, warning=FALSE}
@@ -248,7 +298,7 @@ Aqui exponemos las estadisticas descriptivas de los items que se acaban de crear
 
 ```{r}
 
-#Otra forma de ver los estadisticos 
+ 
 datos_acdivoca_num %>% 
   select(memoria, reconciliacion, disculpas, 
          violencia, rencor, memoria_expectativa) %>% 
@@ -261,10 +311,9 @@ datos_acdivoca_num %>%
 
 #MERGE con base de datos CEDE general
 
-Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (año, pib, poblacion, etc.)
+Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (ano, pib, poblacion, etc.)
 
 ```{r}
-
 
 #Collapse estadisticos por municipio
 
@@ -289,19 +338,17 @@ cede_general_44 <- cede_general_44 %>%
   select(-c(Municipio)) %>% #Quitar variable que tienen las otras bases
   dplyr::rename(ano_base_general=ano) #Renombrar la variable ano asociada con la base general
 
-
-
-
-
 #Merge con las bases
 cede_conflicto_44 <- merge(cede_conflicto_44, cede_general_44, by="codmpio")
+cede_conflicto_44 <- merge(cede_conflicto_44, acdi_imr, by.x="Municipio", by.y="Municipio_imr", all.x = T)
 cede_educacion_44 <- merge(datos_cede_educacion, cede_general_44, by='codmpio')
+cede_educacion_44 <- merge(cede_educacion_44, acdi_imr, by.x="municipio", by.y="Municipio_imr", all.x = T)
 cede_gobierno_44 <- merge(datos_cede_gobierno, cede_general_44, by='codmpio')
+cede_gobierno_44 <- merge(cede_gobierno_44, acdi_imr, by.x="municipio", by.y="Municipio_imr", all.x = T)
 cede_salud_44 <- merge(datos_cede_salud, cede_general_44, by='codmpio')
+cede_salud_44 <- merge(cede_salud_44, acdi_imr, by.x="municipio", by.y="Municipio_imr", all.x = T)
 cede_tierras_44 <- merge(datos_cede_tierras, cede_general_44, by='codmpio')
-
-
-
+cede_tierras_44 <- merge(cede_tierras_44, acdi_imr, by.x="municipio", by.y="Municipio_imr", all.x = T)
 
 ```
 
@@ -316,4 +363,11 @@ rm(datos_cede_conflicto,datos_cede_educacion,
    datos_cede_salud,datos_cede_tierras, cede_general_44)
 ```
 
-#Creacion de indices importantes
+#Guardar Environment
+
+```{r}
+#Codigo para guardar el environement (la base de datos), para poder importarla en otros scripts. 
+save.image(file='MergeBases_Environment.RData')
+```
+
+

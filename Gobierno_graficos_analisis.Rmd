@@ -8,7 +8,6 @@ output:
     highlight: tango
     number_sections: yes
     theme: journal
-    self_contained: no
     toc: yes
     toc_depth: 2
     toc_float:
@@ -27,9 +26,11 @@ knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
 #Setup
 Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
 
-```{r, Gobierno, message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 #ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
-
+#Set Working Directory
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+rm(list=ls())
 load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
 
 
@@ -57,6 +58,16 @@ library(ggthemes)
 ```
 
 
+```{r}
+#Cambiarle los nombres a algunos municipios que no estan codificados igual
+
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="Bojaya"] <- "Bojayá"
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="Bogotá, D.C."] <- "Bogotá, D.c."
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="Cartagena"] <- "Cartagena De Indias"
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="Bojaya"] <- "Bojayá"
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="Cartagena del Chairá"] <- "Cartagena Del Chairá"
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="San Vicente del Caguán"] <- "San Vicente Del Caguán"
+```
 
 
 # Graficos variables importantes y algunos descriptivos
@@ -77,9 +88,9 @@ En este codigo se crea el grafico que muestra las **tendencias** en funcion del 
 
 
 
-```{r fig.height=11, fig.width=13, message=FALSE, warning=FALSE}
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
 
- cede_gobierno_44 %>% 
+cede_gobierno_44 %>% 
   ggplot(aes(x = ano, y = DF_desemp_fisc)) +	
   geom_line() +	
   scale_color_manual(values = palette) +	
@@ -89,7 +100,6 @@ En este codigo se crea el grafico que muestra las **tendencias** en funcion del 
   coord_cartesian(xlim = c(2000:2016),
                   ylim=c(cede_gobierno_44$DF_desemp_fisc[which.min(cede_gobierno_44$DF_desemp_fisc)],
                          cede_gobierno_44$DF_desemp_fisc[which.max(cede_gobierno_44$DF_desemp_fisc)]))
-
 
 ```
 
@@ -104,6 +114,9 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_desemp_fisc <- summaryBy(DF_desemp_fisc ~ municipio, cede_gobierno_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_desemp_fisc %<>% arrange(municipio) 
+
 print(descrip_desemp_fisc)
 ```
 
@@ -186,6 +199,9 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_desemp_int <- summaryBy(DI_desemp_int ~ municipio, cede_gobierno_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_desemp_int %<>% arrange(municipio) 
+
 print(descrip_desemp_int)
 ```
 
@@ -286,6 +302,9 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_inv_total_cienmil <- summaryBy(inv_total_cienmil ~ municipio, cede_gobierno_44_inv, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_inv_total_cienmil %<>% arrange(municipio) 
+
 print(descrip_inv_total_cienmil)
 ```
 
@@ -387,6 +406,9 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_inv_fortinst_cienmil <- summaryBy(inv_fortinst_cienmil ~ municipio, cede_gobierno_44_inv, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_inv_fortinst_cienmil %<>% arrange(municipio) 
+
 print(descrip_inv_fortinst_cienmil)
 ```
 
@@ -457,6 +479,8 @@ El nombre de la variable agregada es : **descrip_**
 ```{r}
 descrip_IGA_total <- summaryBy(IGA_total ~ municipio, cede_gobierno_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
 
+descrip_IGA_total %<>% arrange(municipio)
+
 print(descrip_IGA_total)
 ```
 
@@ -497,12 +521,19 @@ El objetivo de esta seccion es hacer las estadisticas inferenciales de las varia
 En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo collapse en todos los anos. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
 
 Recuerde que las variables del ACDI-VOCA son:
+<br>
 +Reconciliacion
+<br>
 +Disculpas
+<br>
 +Violencia
+<br>
 +Rencor
+<br>
 +Memoria (Memoria historica)
+<br>
 +Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)
+<br>
 
 ### Correlaciones
 
@@ -648,7 +679,120 @@ summary(regMemoria_Expectativa)
 ```
 
 
+#Analisis con Indice PAR (Instrumento de medicion de reconciliacion)
 
+
+Ahora se haran regresiones con el indice de reconciliacion.
+
+
+##Variables con valores absolutos (agregados) con indice PAR
+
+A continuacion se haran las correlaciones con las variables de gobierno y el indice PAR. Recuerde que estas variables son las **agregadas**. 
+
+##Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.
+names_acdi <- acdi_imr$Municipio_imr
+
+acdi_imr <- acdi_imr %>% arrange(Municipio_imr)
+
+
+par_descrip_desemp_fisc <- descrip_desemp_fisc[descrip_desemp_fisc$municipio %in% names_acdi,]
+par_descrip_desemp_fisc <- par_descrip_desemp_fisc %>% arrange(municipio)
+
+
+par_descrip_desemp_int <- descrip_desemp_int[descrip_desemp_int$municipio %in% names_acdi,]
+par_descrip_desemp_int <- par_descrip_desemp_int %>% arrange(municipio)
+
+par_descrip_IGA_total <- descrip_IGA_total[descrip_IGA_total$municipio %in% names_acdi,]
+par_descrip_IGA_total <- par_descrip_IGA_total %>% arrange(municipio)
+
+par_descrip_inv_fortinst_cienmil <- descrip_inv_fortinst_cienmil[descrip_inv_fortinst_cienmil$municipio %in% names_acdi,]
+par_descrip_inv_fortinst_cienmil <- par_descrip_inv_fortinst_cienmil %>% arrange(municipio)
+
+par_descrip_inv_total_cienmil <- descrip_inv_total_cienmil[descrip_inv_total_cienmil$municipio %in% names_acdi,]
+par_descrip_inv_total_cienmil <- par_descrip_inv_total_cienmil %>% arrange(municipio)
+
+
+correlaciones <- cbind(par_descrip_desemp_fisc$DF_desemp_fisc.mean, 
+                       par_descrip_desemp_int$DI_desemp_int.mean, 
+                       par_descrip_IGA_total$IGA_total.mean, 
+                       par_descrip_inv_fortinst_cienmil$inv_fortinst_cienmil.mean,
+                       par_descrip_inv_total_cienmil$inv_total_cienmil.mean, 
+                       acdi_imr$indice_de_reconciliacion_imr)
+
+nombres <- c("Desempeno Fiscal",
+             "Desempeno Integral",
+             "Gobierno Abierto",
+             "Inv Fort Inst",
+             "Inv Total", 
+             "Indice_reconciliacion")
+colnames(correlaciones) <- nombres
+rcorr(correlaciones, type="spearman") 
+```
+
+
+##Regresion lineal
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regGob_PAR <- lm(Indice_reconciliacion ~., data = dfcorrelaciones)
+summary(regGob_PAR)
+```
+
+
+##Variables con diferencias (Deltas $\Delta$) con indice PAR
+
+A continuacion se haran las correlaciones con las variables de gobierno y el indice PAR. Recuerde que estas variables son las **diferencias entre los primeros cinco anos a los ultimos 5 anos**. 
+
+##Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.  
+
+par_diff_desemp_fisc <- descrip_desemp_fisc_5antes[descrip_desemp_fisc_5antes$municipio %in% names_acdi,]$DF_desemp_fisc.mean -descrip_desemp_fisc_5despues[descrip_desemp_fisc_5despues$municipio %in% names_acdi,]$DF_desemp_fisc.mean
+
+par_diff_desemp_int <- descrip_desemp_int_5antes[descrip_desemp_int_5antes$municipio %in% names_acdi,]$DI_desemp_int.mean -descrip_desemp_int_5despues[descrip_desemp_int_5despues$municipio %in% names_acdi,]$DI_desemp_int.mean
+
+par_diff_IGA_total <- descrip_IGA_total_5antes[descrip_IGA_total_5antes$municipio %in% names_acdi,]$IGA_total.mean-descrip_IGA_total_5despues[descrip_IGA_total_5despues$municipio %in% names_acdi,]$IGA_total.mean
+
+
+par_diff_inv_fortinst_cienmil <- descrip_inv_fortinst_cienmil_5antes[descrip_inv_fortinst_cienmil_5antes$municipio %in% names_acdi,]$inv_fortinst_cienmil.mean  -descrip_inv_fortinst_cienmil_5despues[descrip_inv_fortinst_cienmil_5despues$municipio %in% names_acdi,]$inv_fortinst_cienmil.mean
+
+par_diff_inv_total_cienmil <- descrip_inv_total_cienmil_5antes[descrip_inv_total_cienmil_5antes$municipio %in% names_acdi,]$inv_total_cienmil.mean -descrip_inv_total_cienmil_5despues[descrip_inv_total_cienmil_5despues$municipio %in% names_acdi,]$inv_total_cienmil.mean
+
+
+par_diff_inv_fortinst_cienmil[which(!is.finite(par_diff_inv_fortinst_cienmil))] <- NA 
+
+par_diff_inv_total_cienmil[which(!is.finite(par_diff_inv_total_cienmil))] <- NA
+
+correlaciones <- cbind(par_diff_desemp_fisc, 
+                       par_diff_desemp_int, 
+                       par_diff_IGA_total, 
+                       par_diff_inv_fortinst_cienmil,
+                       par_diff_inv_total_cienmil, 
+                       acdi_imr$indice_de_reconciliacion_imr)
+
+nombres <- c("Desempeno Fiscal",
+             "Desempeno Integral",
+             "Gobierno Abierto",
+             "Inv Fort Inst",
+             "Inv Total", 
+             "Indice_reconciliacion")
+colnames(correlaciones) <- nombres
+rcorr(correlaciones) 
+```
+
+
+
+##Regresion lineal
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regGob_diff_PAR <- lm(Indice_reconciliacion ~., data=dfcorrelaciones)
+summary(regGob_diff_PAR)
+```
 
 
 

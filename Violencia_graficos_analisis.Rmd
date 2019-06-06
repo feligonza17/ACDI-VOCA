@@ -8,7 +8,6 @@ output:
     highlight: tango
     number_sections: yes
     theme: journal
-    self_contained: no
     toc: yes
     toc_depth: 2
     toc_float:
@@ -29,6 +28,11 @@ Con este codigo se importan todas las bases de datos y todos los paquetes necesa
 
 ```{r message=FALSE, warning=FALSE}
 #ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
+
+
+#Set Working Directory
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+rm(list=ls())
 
 load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
 
@@ -53,6 +57,7 @@ library(matrixStats)
 library(ggpubr)
 library(vtable)
 library(ggthemes)
+library(stringr)
 
 ```
 
@@ -167,6 +172,8 @@ El nombre de la variable agregada es : **descrip_**
 ```{r}
 descrip_homi <- summaryBy(homi_cienmil ~ Municipio, conflicto_44_tidy, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por años)
 
+descrip_homi %<>% arrange(Municipio) 
+
 print(descrip_homi)
 ```
 
@@ -247,6 +254,9 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_ataques <- summaryBy(Ataques_Pobl_Civil ~ Municipio, conflicto_44_ataque, FUN=c(sum,mean,sd), na.rm=T )		#Codigo para hacer descriptivos de los ataques (collapse por anos)
+
+descrip_ataques %<>% arrange(Municipio) 
+
 print(descrip_ataques)
 ```
 
@@ -367,6 +377,9 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_secuestro <- summaryBy(secuestro_cienmil ~ Municipio, conflicto_44_secuestro, FUN=c(sum,median,mean,sd), na.rm=T )
+
+descrip_secuestro %<>% arrange(Municipio) 
+
 print(descrip_secuestro)
 ```
 
@@ -481,6 +494,9 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_secuestrop <- summaryBy(secuestrop_cienmil ~ Municipio, conflicto_44_secuestrop, FUN=c(sum,median,mean,sd), na.rm=T )
+
+descrip_secuestrop %<>% arrange(Municipio) 
+
 print(descrip_secuestrop)
 ```
 
@@ -599,6 +615,10 @@ El nombre de la variable agregada es : **descrip_**
 
 ```{r}
 descrip_desmovilizados <- summaryBy(desmovilizados_cienmil ~ Municipio, conflicto_44_desmovilizados, FUN=c(sum,median,mean,sd), na.rm=T )
+
+
+descrip_desmovilizados %<>% arrange(Municipio) 
+
 
 print(descrip_desmovilizados)
 ```
@@ -865,9 +885,118 @@ for(i in 1:10) {
 
 
 
+#Analisis con Indice PAR (Instrumento de medicion de reconciliacion)
 
 
+Ahora se haran regresiones con el indice de reconciliacion.
 
+
+##Variables con valores absolutos (agregados) con indice PAR
+
+A continuacion se haran las correlaciones con las variables de violencia y el indice PAR. Recuerde que estas variables son las **agregadas**. 
+
+##Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.
+names_acdi <- acdi_imr$Municipio_imr
+
+acdi_imr <- acdi_imr %>% arrange(Municipio_imr)
+par_descrip_homi <- descrip_homi[descrip_homi$Municipio %in% names_acdi,]
+par_descrip_homi <- par_descrip_homi %>% arrange(Municipio)
+par_descrip_ataques <- descrip_ataques[descrip_ataques$Municipio %in% names_acdi,]
+par_descrip_ataques <- par_descrip_ataques %>% arrange(Municipio)
+par_descrip_desmovilizados <- descrip_desmovilizados[descrip_desmovilizados$Municipio %in% names_acdi,]
+par_descrip_desmovilizados <- par_descrip_desmovilizados %>% arrange(Municipio)
+par_descrip_secuestro <- descrip_secuestro[descrip_secuestro$Municipio %in% names_acdi,]
+par_descrip_secuestro <- par_descrip_secuestro %>% arrange(Municipio)
+par_descrip_secuestrop <- descrip_secuestrop[descrip_secuestrop$Municipio %in% names_acdi,]
+par_descrip_secuestrop <- par_descrip_secuestrop %>% arrange(Municipio)
+
+
+correlaciones <- cbind(par_descrip_homi$homi_cienmil.mean, 
+                       par_descrip_ataques$Ataques_Pobl_Civil.mean, 
+                       par_descrip_desmovilizados$desmovilizados_cienmil.mean, 
+                       par_descrip_secuestro$secuestro_cienmil.mean,
+                       par_descrip_secuestrop$secuestrop_cienmil.mean,
+                       acdi_imr$indice_de_reconciliacion_imr)
+
+nombres <- c("Homicidios",
+             "Ataques_Pobl_Civil",
+             "Desmovilizados",
+             "Secuestros",
+             "Secuestros_Politicos", 
+             "Indice_reconciliacion")
+
+colnames(correlaciones) <- nombres
+```
+
+```{r}
+rcorr(correlaciones, type="spearman")
+```
+
+
+##Regresion lineal
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regViol_PAR <- lm(Indice_reconciliacion ~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regViol_PAR)
+```
+
+
+##Variables con diferencias (Deltas $\Delta$) con indice PAR
+
+A continuacion se haran las correlaciones con las variables de violencia y el indice PAR. Recuerde que estas variables son las **diferencias entre los primeros cinco anos a los ultimos 5 anos**. 
+
+##Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.  
+
+par_diff_homi <- descrip_homi_5antes[descrip_homi_5antes$Municipio %in% names_acdi,]$homi_cienmil.mean -descrip_homi_5despues[descrip_homi_5despues$Municipio %in% names_acdi,]$homi_cienmil.mean
+
+par_diff_ataques <- descrip_ataques_5antes[descrip_ataques_5antes$Municipio %in% names_acdi,]$Ataques_Pobl_Civil.mean -descrip_ataques_5despues[descrip_ataques_5despues$Municipio %in% names_acdi,]$Ataques_Pobl_Civil.mean
+
+par_diff_desmovilizados <- descrip_desmovilizados_5antes[descrip_desmovilizados_5antes$Municipio %in% names_acdi,]$desmovilizados_cienmil.mean -descrip_desmovilizados_5despues[descrip_desmovilizados_5despues$Municipio %in% names_acdi,]$desmovilizados_cienmil.mean
+
+
+par_diff_secuestro <- descrip_secuestro_5antes[descrip_secuestro_5antes$Municipio %in% names_acdi,]$secuestro_cienmil.mean -descrip_secuestro_5despues[descrip_secuestro_5despues$Municipio %in% names_acdi,]$secuestro_cienmil.mean
+
+par_diff_secuestrop <- descrip_secuestrop_5antes[descrip_secuestrop_5antes$Municipio %in% names_acdi,]$secuestrop_cienmil.mean -descrip_secuestrop_5despues[descrip_secuestrop_5despues$Municipio %in% names_acdi,]$secuestrop_cienmil.mean
+
+
+correlaciones <- cbind(par_diff_homi, 
+                       par_diff_ataques, 
+                       par_diff_desmovilizados, 
+                       par_diff_secuestro,
+                       par_diff_secuestrop,
+                       acdi_imr$indice_de_reconciliacion_imr)
+
+nombres <- c("Homicidios",
+             "Ataques_Pobl_Civil",
+             "Desmovilizados",
+             "Secuestros",
+             "Secuestros_Politicos", 
+             "Indice_reconciliacion")
+
+colnames(correlaciones) <- nombres
+```
+
+```{r}
+rcorr(correlaciones, type="spearman")
+```
+
+
+Aqui hay un resultado significativo. El indice de reconciliacion tiene un coeficiente de 0.46 (p<0.05) con el numero de secuestros por cien mil habitantes. 
+
+##Regresion lineal
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regViol_diff_PAR <- lm(Indice_reconciliacion ~ Homicidios+Ataques_Pobl_Civil+Desmovilizados+Secuestros+Secuestros_Politicos, data=dfcorrelaciones)
+summary(regViol_diff_PAR)
+```
 
 
 

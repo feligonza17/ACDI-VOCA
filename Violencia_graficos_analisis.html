@@ -507,7 +507,9 @@ div.tocify {
     <li>
       <a href="elca_exploracion.html">Depuracion y merge</a>
     </li>
-    <li class="dropdown-header">Modulo Politica</li>
+    <li>
+      <a href="elca_modulo_politica.html">Modulo Politica</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -558,7 +560,12 @@ div.tocify {
 <div id="setup" class="section level1">
 <h1><span class="header-section-number">1</span> Setup</h1>
 <p>Con este codigo se importan todas las bases de datos y todos los paquetes necesarios.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ANTES DE CORRER, Â¡CORRER LA PESTANA &quot;CODIGO PARA ARRANCAR TODO&quot;!</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ANTES DE CORRER, ¡CORRER LA PESTANA &quot;CODIGO PARA ARRANCAR TODO&quot;!</span>
+
+
+<span class="co">#Set Working Directory</span>
+<span class="kw">setwd</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo&quot;</span>)
+<span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 
 <span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
 
@@ -582,7 +589,8 @@ div.tocify {
 <span class="kw">library</span>(matrixStats)
 <span class="kw">library</span>(ggpubr)
 <span class="kw">library</span>(vtable)
-<span class="kw">library</span>(ggthemes)</code></pre></div>
+<span class="kw">library</span>(ggthemes)
+<span class="kw">library</span>(stringr)</code></pre></div>
 </div>
 <div id="graficos-variables-importantes-y-algunos-descriptivos" class="section level1">
 <h1><span class="header-section-number">2</span> Graficos variables importantes y algunos descriptivos</h1>
@@ -604,14 +612,14 @@ conflicto_44_tidy<span class="op">$</span>ano_base_general &lt;-<span class="st"
 <p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
 <p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
 <p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(conflicto_44_tidy)){
   <span class="cf">if</span>(conflicto_44_tidy<span class="op">$</span>ano[i]<span class="op">==</span>conflicto_44_tidy<span class="op">$</span>ano_base_general[i]){
     a &lt;-<span class="st"> </span><span class="kw">c</span>(a,i)
   }
 }
-<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
 
 conflicto_44_tidy &lt;-<span class="st"> </span>conflicto_44_tidy[a,]
 
@@ -626,7 +634,7 @@ conflicto_44_tidy &lt;-<span class="st"> </span>conflicto_44_tidy <span class="o
 <span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;NÃºmero Homicidios por cien mil personas&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Homicidios FARC 2013&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Ministerio de Defensa&quot;</span>) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Número Homicidios por cien mil personas&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Homicidios FARC 2013&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Ministerio de Defensa&quot;</span>) <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&#39;1 year&#39;</span>, <span class="dt">date_labels =</span> <span class="st">&#39;%Y&#39;</span>,  
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;2003&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2013&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
@@ -640,7 +648,7 @@ palette &lt;-<span class="st"> </span><span class="kw">distinctColorPalette</spa
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;NÃºmero Homicidios por cien mil personas&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Homicidios 2003-2013&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Ministerio de Defensa&quot;</span>) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Número Homicidios por cien mil personas&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Homicidios 2003-2013&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Ministerio de Defensa&quot;</span>) <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&#39;1 year&#39;</span>, <span class="dt">date_labels =</span> <span class="st">&#39;%Y&#39;</span>,  
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;2003&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2013&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
@@ -654,7 +662,9 @@ palette &lt;-<span class="st"> </span><span class="kw">distinctColorPalette</spa
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_homi &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(homi_cienmil <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_tidy, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )    <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por aÃ±os)</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_homi &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(homi_cienmil <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_tidy, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )    <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por años)</span>
+
+descrip_homi <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio) 
 
 <span class="kw">print</span>(descrip_homi)</code></pre></div>
 <pre><code>##                 Municipio homi_cienmil.sum homi_cienmil.mean
@@ -792,7 +802,7 @@ conflicto_44_ataque &lt;-<span class="st"> </span><span class="kw">gather</span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Numero Ataques&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Ataques 1993-2010&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Policia Nacional&quot;</span>) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Numero Ataques&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Ataques 1993-2010&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Policia Nacional&quot;</span>) <span class="op">+</span><span class="st">   </span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>))<span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&#39;2 year&#39;</span>, <span class="dt">date_labels =</span> <span class="st">&#39;%Y&#39;</span>,  
@@ -808,6 +818,9 @@ conflicto_44_ataque &lt;-<span class="st"> </span><span class="kw">gather</span>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_ataques &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(Ataques_Pobl_Civil <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_ataque, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )     <span class="co">#Codigo para hacer descriptivos de los ataques (collapse por anos)</span>
+
+descrip_ataques <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio) 
+
 <span class="kw">print</span>(descrip_ataques)</code></pre></div>
 <pre><code>##                 Municipio Ataques_Pobl_Civil.sum Ataques_Pobl_Civil.mean
 ## 1                   Albán                     75              0.04166667
@@ -952,7 +965,7 @@ conflicto_44_secuestro<span class="op">$</span>ano_base_general &lt;-<span class
 </div>
 <div id="graficos-2" class="section level3">
 <h3><span class="header-section-number">2.3.2</span> Graficos</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(conflicto_44_secuestro)){
   <span class="cf">if</span>(conflicto_44_secuestro<span class="op">$</span>ano[i]<span class="op">==</span>conflicto_44_secuestro<span class="op">$</span>ano_base_general[i]){
@@ -960,7 +973,7 @@ a &lt;-<span class="st">  </span><span class="kw">c</span>()
   }
 }
 
-<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
 
 conflicto_44_secuestro &lt;-<span class="st"> </span>conflicto_44_secuestro[a,]
 
@@ -972,7 +985,7 @@ conflicto_44_secuestro &lt;-<span class="st"> </span>conflicto_44_secuestro <spa
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;NÃºmero Secuestros por cada mil habitantes&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Secuestros 2003-2013&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Ministerio de Defensa&quot;</span>) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Número Secuestros por cada mil habitantes&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Secuestros 2003-2013&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Ministerio de Defensa&quot;</span>) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&#39;1 year&#39;</span>, <span class="dt">date_labels =</span> <span class="st">&#39;%Y&#39;</span>,  
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;2003&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2013&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
@@ -988,6 +1001,9 @@ conflicto_44_secuestro &lt;-<span class="st"> </span>conflicto_44_secuestro <spa
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_secuestro &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(secuestro_cienmil <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_secuestro, <span class="dt">FUN=</span><span class="kw">c</span>(sum,median,mean,sd), <span class="dt">na.rm=</span>T )
+
+descrip_secuestro <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio) 
+
 <span class="kw">print</span>(descrip_secuestro)</code></pre></div>
 <pre><code>##                 Municipio secuestro_cienmil.sum secuestro_cienmil.median
 ## 1                   Albán             4.7664442                        0
@@ -1130,7 +1146,7 @@ conflicto_44_secuestrop<span class="op">$</span>ano_base_general &lt;-<span clas
 </div>
 <div id="graficos-3" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> Graficos</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(conflicto_44_secuestrop)){
   <span class="cf">if</span>(conflicto_44_secuestrop<span class="op">$</span>ano[i]<span class="op">==</span>conflicto_44_secuestrop<span class="op">$</span>ano_base_general[i]){
@@ -1139,7 +1155,7 @@ a &lt;-<span class="st">  </span><span class="kw">c</span>()
 }
 
 
-<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
 conflicto_44_secuestrop &lt;-<span class="st"> </span>conflicto_44_secuestrop[a,]
 
 conflicto_44_secuestrop &lt;-<span class="st"> </span>conflicto_44_secuestrop <span class="op">%&gt;%</span><span class="st"> </span>
@@ -1150,7 +1166,7 @@ conflicto_44_secuestrop &lt;-<span class="st"> </span>conflicto_44_secuestrop <s
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;NÃºmero secuestrops por cada mil habitantes&#39;</span>, <span class="dt">title=</span><span class="st">&#39;secuestrops 2003-2013&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Ministerio de Defensa&quot;</span>) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Número secuestrops por cada mil habitantes&#39;</span>, <span class="dt">title=</span><span class="st">&#39;secuestrops 2003-2013&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Ministerio de Defensa&quot;</span>) <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&#39;1 year&#39;</span>, <span class="dt">date_labels =</span> <span class="st">&#39;%Y&#39;</span>,  
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;2003&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2013&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
@@ -1166,6 +1182,9 @@ conflicto_44_secuestrop &lt;-<span class="st"> </span>conflicto_44_secuestrop <s
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_secuestrop &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(secuestrop_cienmil <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_secuestrop, <span class="dt">FUN=</span><span class="kw">c</span>(sum,median,mean,sd), <span class="dt">na.rm=</span>T )
+
+descrip_secuestrop <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio) 
+
 <span class="kw">print</span>(descrip_secuestrop)</code></pre></div>
 <pre><code>##                 Municipio secuestrop_cienmil.sum secuestrop_cienmil.median
 ## 1                   Albán             6.08050590                         0
@@ -1315,7 +1334,7 @@ conflicto_44_desmovilizados<span class="op">$</span>ano_base_general &lt;-<span 
 </div>
 <div id="graficos-4" class="section level3">
 <h3><span class="header-section-number">2.5.2</span> Graficos</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(conflicto_44_desmovilizados)){
   <span class="cf">if</span>(conflicto_44_desmovilizados<span class="op">$</span>ano[i]<span class="op">==</span>conflicto_44_desmovilizados<span class="op">$</span>ano_base_general[i]){
@@ -1324,7 +1343,7 @@ a &lt;-<span class="st">  </span><span class="kw">c</span>()
 }
 
 
-<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
 conflicto_44_desmovilizados &lt;-<span class="st"> </span>conflicto_44_desmovilizados[a,]
 
 conflicto_44_desmovilizados &lt;-<span class="st"> </span>conflicto_44_desmovilizados <span class="op">%&gt;%</span><span class="st"> </span>
@@ -1334,7 +1353,7 @@ conflicto_44_desmovilizados &lt;-<span class="st"> </span>conflicto_44_desmovili
        <span class="kw">aes</span>(<span class="dt">x=</span>ano, <span class="dt">y =</span> desmovilizados_cienmil, <span class="dt">color=</span> Grupo_Armado)) <span class="op">+</span><span class="st">   </span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desmovilizados por cada cien mil habitantes&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desmovilizados 1993-2010&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: PolicÃ­a Nacional&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desmovilizados por cada cien mil habitantes&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desmovilizados 1993-2010&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: Policía Nacional&quot;</span>) <span class="op">+</span><span class="st">   </span>
 <span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&#39;2 year&#39;</span>, <span class="dt">date_labels =</span> <span class="st">&#39;%Y&#39;</span>,  
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;1993&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2010&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
@@ -1350,6 +1369,10 @@ conflicto_44_desmovilizados &lt;-<span class="st"> </span>conflicto_44_desmovili
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_desmovilizados &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(desmovilizados_cienmil <span class="op">~</span><span class="st"> </span>Municipio, conflicto_44_desmovilizados, <span class="dt">FUN=</span><span class="kw">c</span>(sum,median,mean,sd), <span class="dt">na.rm=</span>T )
+
+
+descrip_desmovilizados <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio) 
+
 
 <span class="kw">print</span>(descrip_desmovilizados)</code></pre></div>
 <pre><code>##                 Municipio desmovilizados_cienmil.sum
@@ -1558,7 +1581,7 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
              <span class="st">&quot;Memoria&quot;</span>, 
              <span class="st">&quot;Memoria_Expectativa&quot;</span>)
 <span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
-<span class="kw">shapiro.test</span>(descrip_ataques<span class="op">$</span>Ataques_Pobl_Civil.mean) <span class="co">#Todos los de CEDE son no siguen distribuciÃ³n normal. Las escalas, por el contrario sÃ­ las siguen. Toca tomar una decisiÃ³n allÃ­.</span></code></pre></div>
+<span class="kw">shapiro.test</span>(descrip_ataques<span class="op">$</span>Ataques_Pobl_Civil.mean) <span class="co">#Todos los de CEDE son no siguen distribución normal. Las escalas, por el contrario sí las siguen. Toca tomar una decisión allí.</span></code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
 ## 
@@ -2173,7 +2196,7 @@ regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reco
 conflicto_44_tidy<span class="op">$</span>ano_num &lt;-<span class="st"> </span><span class="kw">substring</span>(conflicto_44_tidy<span class="op">$</span>ano,<span class="dv">1</span>,<span class="dv">4</span>)
 conflicto_44_tidy<span class="op">$</span>ano_num &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(conflicto_44_tidy<span class="op">$</span>ano_num)
 
-<span class="co">#Loop para hacer la correlacion por aÃ±o.</span>
+<span class="co">#Loop para hacer la correlacion por año.</span>
 
 homicidios &lt;-<span class="st"> </span><span class="kw">c</span>()
 x &lt;-<span class="st"> </span><span class="kw">c</span>()
@@ -2199,7 +2222,7 @@ y &lt;-<span class="st"> </span><span class="kw">c</span>()
                        <span class="dt">type=</span><span class="st">&quot;b&quot;</span>, 
                        <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>, 
                        <span class="dt">main=</span> <span class="st">&quot;Correlacion Rencor con Homicidios en el tiempo&quot;</span>, 
-                       <span class="dt">xlab=</span><span class="st">&quot;AÃ±os&quot;</span>, 
+                       <span class="dt">xlab=</span><span class="st">&quot;Años&quot;</span>, 
                        <span class="dt">ylab=</span> <span class="st">&quot;Correlacion&quot;</span>)</code></pre></div>
 <p><img src="Violencia_graficos_analisis_files/figure-html/unnamed-chunk-36-1.png" width="1152" /></p>
 <p>Correlacion de Violencia (ACDIVOCA)con Homicidios en el tiempo</p>
@@ -2208,7 +2231,7 @@ y &lt;-<span class="st"> </span><span class="kw">c</span>()
 conflicto_44_tidy<span class="op">$</span>ano_num &lt;-<span class="st"> </span><span class="kw">substring</span>(conflicto_44_tidy<span class="op">$</span>ano,<span class="dv">1</span>,<span class="dv">4</span>)
 conflicto_44_tidy<span class="op">$</span>ano_num &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(conflicto_44_tidy<span class="op">$</span>ano_num)
 
-<span class="co">#Loop para hacer la correlacion por aÃ±o.</span>
+<span class="co">#Loop para hacer la correlacion por año.</span>
 
 homicidios &lt;-<span class="st"> </span><span class="kw">c</span>()
 x &lt;-<span class="st"> </span><span class="kw">c</span>()
@@ -2235,9 +2258,242 @@ y &lt;-<span class="st"> </span><span class="kw">c</span>()
                         <span class="dt">type=</span><span class="st">&quot;b&quot;</span>, 
                         <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>, 
                         <span class="dt">main=</span> <span class="st">&quot;Correlacion Violencia (ACDIVOCA) con Homicidios en el tiempo&quot;</span>, 
-                        <span class="dt">xlab=</span><span class="st">&quot;AÃ±os&quot;</span>, 
+                        <span class="dt">xlab=</span><span class="st">&quot;Años&quot;</span>, 
                         <span class="dt">ylab=</span> <span class="st">&quot;Correlacion&quot;</span>)</code></pre></div>
 <p><img src="Violencia_graficos_analisis_files/figure-html/unnamed-chunk-37-1.png" width="1152" /></p>
+</div>
+</div>
+<div id="analisis-con-indice-par-instrumento-de-medicion-de-reconciliacion" class="section level1">
+<h1><span class="header-section-number">4</span> Analisis con Indice PAR (Instrumento de medicion de reconciliacion)</h1>
+<p>Ahora se haran regresiones con el indice de reconciliacion.</p>
+<div id="variables-con-valores-absolutos-agregados-con-indice-par" class="section level2">
+<h2><span class="header-section-number">4.1</span> Variables con valores absolutos (agregados) con indice PAR</h2>
+<p>A continuacion se haran las correlaciones con las variables de violencia y el indice PAR. Recuerde que estas variables son las <strong>agregadas</strong>.</p>
+</div>
+<div id="correlaciones-2" class="section level2">
+<h2><span class="header-section-number">4.2</span> Correlaciones</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a hacerlo primero con el indice agregado por anos.</span>
+names_acdi &lt;-<span class="st"> </span>acdi_imr<span class="op">$</span>Municipio_imr
+
+acdi_imr &lt;-<span class="st"> </span>acdi_imr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio_imr)
+par_descrip_homi &lt;-<span class="st"> </span>descrip_homi[descrip_homi<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_homi &lt;-<span class="st"> </span>par_descrip_homi <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio)
+par_descrip_ataques &lt;-<span class="st"> </span>descrip_ataques[descrip_ataques<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_ataques &lt;-<span class="st"> </span>par_descrip_ataques <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio)
+par_descrip_desmovilizados &lt;-<span class="st"> </span>descrip_desmovilizados[descrip_desmovilizados<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_desmovilizados &lt;-<span class="st"> </span>par_descrip_desmovilizados <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio)
+par_descrip_secuestro &lt;-<span class="st"> </span>descrip_secuestro[descrip_secuestro<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_secuestro &lt;-<span class="st"> </span>par_descrip_secuestro <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio)
+par_descrip_secuestrop &lt;-<span class="st"> </span>descrip_secuestrop[descrip_secuestrop<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_secuestrop &lt;-<span class="st"> </span>par_descrip_secuestrop <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio)
+
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(par_descrip_homi<span class="op">$</span>homi_cienmil.mean, 
+                       par_descrip_ataques<span class="op">$</span>Ataques_Pobl_Civil.mean, 
+                       par_descrip_desmovilizados<span class="op">$</span>desmovilizados_cienmil.mean, 
+                       par_descrip_secuestro<span class="op">$</span>secuestro_cienmil.mean,
+                       par_descrip_secuestrop<span class="op">$</span>secuestrop_cienmil.mean,
+                       acdi_imr<span class="op">$</span>indice_de_reconciliacion_imr)
+
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Homicidios&quot;</span>,
+             <span class="st">&quot;Ataques_Pobl_Civil&quot;</span>,
+             <span class="st">&quot;Desmovilizados&quot;</span>,
+             <span class="st">&quot;Secuestros&quot;</span>,
+             <span class="st">&quot;Secuestros_Politicos&quot;</span>, 
+             <span class="st">&quot;Indice_reconciliacion&quot;</span>)
+
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>)</code></pre></div>
+<pre><code>##                       Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                  1.00              -0.27           0.54
+## Ataques_Pobl_Civil         -0.27               1.00          -0.56
+## Desmovilizados              0.54              -0.56           1.00
+## Secuestros                  0.66              -0.15           0.67
+## Secuestros_Politicos        0.34              -0.11           0.52
+## Indice_reconciliacion       0.16              -0.37           0.28
+##                       Secuestros Secuestros_Politicos
+## Homicidios                  0.66                 0.34
+## Ataques_Pobl_Civil         -0.15                -0.11
+## Desmovilizados              0.67                 0.52
+## Secuestros                  1.00                 0.44
+## Secuestros_Politicos        0.44                 1.00
+## Indice_reconciliacion       0.13                 0.17
+##                       Indice_reconciliacion
+## Homicidios                             0.16
+## Ataques_Pobl_Civil                    -0.37
+## Desmovilizados                         0.28
+## Secuestros                             0.13
+## Secuestros_Politicos                   0.17
+## Indice_reconciliacion                  1.00
+## 
+## n= 22 
+## 
+## 
+## P
+##                       Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                       0.2195             0.0100        
+## Ataques_Pobl_Civil    0.2195                        0.0073        
+## Desmovilizados        0.0100     0.0073                           
+## Secuestros            0.0009     0.5161             0.0006        
+## Secuestros_Politicos  0.1188     0.6381             0.0139        
+## Indice_reconciliacion 0.4650     0.0871             0.2078        
+##                       Secuestros Secuestros_Politicos
+## Homicidios            0.0009     0.1188              
+## Ataques_Pobl_Civil    0.5161     0.6381              
+## Desmovilizados        0.0006     0.0139              
+## Secuestros                       0.0404              
+## Secuestros_Politicos  0.0404                         
+## Indice_reconciliacion 0.5663     0.4593              
+##                       Indice_reconciliacion
+## Homicidios            0.4650               
+## Ataques_Pobl_Civil    0.0871               
+## Desmovilizados        0.2078               
+## Secuestros            0.5663               
+## Secuestros_Politicos  0.4593               
+## Indice_reconciliacion</code></pre>
+</div>
+<div id="regresion-lineal-2" class="section level2">
+<h2><span class="header-section-number">4.3</span> Regresion lineal</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regViol_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> </span>Homicidios<span class="op">+</span>Ataques_Pobl_Civil<span class="op">+</span>Desmovilizados<span class="op">+</span>Secuestros<span class="op">+</span>Secuestros_Politicos, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regViol_PAR)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ Homicidios + Ataques_Pobl_Civil + 
+##     Desmovilizados + Secuestros + Secuestros_Politicos, data = dfcorrelaciones)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.125599 -0.044079  0.004347  0.033802  0.141386 
+## 
+## Coefficients:
+##                        Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           0.5343093  0.0373021  14.324 1.52e-10 ***
+## Homicidios            0.0000921  0.0058682   0.016    0.988    
+## Ataques_Pobl_Civil   -0.0045384  0.0033096  -1.371    0.189    
+## Desmovilizados        0.0084457  0.0099950   0.845    0.411    
+## Secuestros           -0.0465157  0.0620595  -0.750    0.464    
+## Secuestros_Politicos  0.1682399  0.1790557   0.940    0.361    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.07828 on 16 degrees of freedom
+## Multiple R-squared:  0.2671, Adjusted R-squared:  0.038 
+## F-statistic: 1.166 on 5 and 16 DF,  p-value: 0.368</code></pre>
+</div>
+<div id="variables-con-diferencias-deltas-delta-con-indice-par" class="section level2">
+<h2><span class="header-section-number">4.4</span> Variables con diferencias (Deltas <span class="math inline">\(\Delta\)</span>) con indice PAR</h2>
+<p>A continuacion se haran las correlaciones con las variables de violencia y el indice PAR. Recuerde que estas variables son las <strong>diferencias entre los primeros cinco anos a los ultimos 5 anos</strong>.</p>
+</div>
+<div id="correlaciones-3" class="section level2">
+<h2><span class="header-section-number">4.5</span> Correlaciones</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a hacerlo primero con el indice agregado por anos.  </span>
+
+par_diff_homi &lt;-<span class="st"> </span>descrip_homi_5antes[descrip_homi_5antes<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>homi_cienmil.mean <span class="op">-</span>descrip_homi_5despues[descrip_homi_5despues<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>homi_cienmil.mean
+
+par_diff_ataques &lt;-<span class="st"> </span>descrip_ataques_5antes[descrip_ataques_5antes<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>Ataques_Pobl_Civil.mean <span class="op">-</span>descrip_ataques_5despues[descrip_ataques_5despues<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>Ataques_Pobl_Civil.mean
+
+par_diff_desmovilizados &lt;-<span class="st"> </span>descrip_desmovilizados_5antes[descrip_desmovilizados_5antes<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>desmovilizados_cienmil.mean <span class="op">-</span>descrip_desmovilizados_5despues[descrip_desmovilizados_5despues<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>desmovilizados_cienmil.mean
+
+
+par_diff_secuestro &lt;-<span class="st"> </span>descrip_secuestro_5antes[descrip_secuestro_5antes<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>secuestro_cienmil.mean <span class="op">-</span>descrip_secuestro_5despues[descrip_secuestro_5despues<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>secuestro_cienmil.mean
+
+par_diff_secuestrop &lt;-<span class="st"> </span>descrip_secuestrop_5antes[descrip_secuestrop_5antes<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>secuestrop_cienmil.mean <span class="op">-</span>descrip_secuestrop_5despues[descrip_secuestrop_5despues<span class="op">$</span>Municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>secuestrop_cienmil.mean
+
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(par_diff_homi, 
+                       par_diff_ataques, 
+                       par_diff_desmovilizados, 
+                       par_diff_secuestro,
+                       par_diff_secuestrop,
+                       acdi_imr<span class="op">$</span>indice_de_reconciliacion_imr)
+
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Homicidios&quot;</span>,
+             <span class="st">&quot;Ataques_Pobl_Civil&quot;</span>,
+             <span class="st">&quot;Desmovilizados&quot;</span>,
+             <span class="st">&quot;Secuestros&quot;</span>,
+             <span class="st">&quot;Secuestros_Politicos&quot;</span>, 
+             <span class="st">&quot;Indice_reconciliacion&quot;</span>)
+
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>)</code></pre></div>
+<pre><code>##                       Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                  1.00              -0.06          -0.44
+## Ataques_Pobl_Civil         -0.06               1.00           0.20
+## Desmovilizados             -0.44               0.20           1.00
+## Secuestros                  0.38              -0.34          -0.52
+## Secuestros_Politicos        0.05               0.44           0.11
+## Indice_reconciliacion       0.28              -0.36          -0.30
+##                       Secuestros Secuestros_Politicos
+## Homicidios                  0.38                 0.05
+## Ataques_Pobl_Civil         -0.34                 0.44
+## Desmovilizados             -0.52                 0.11
+## Secuestros                  1.00                -0.13
+## Secuestros_Politicos       -0.13                 1.00
+## Indice_reconciliacion       0.46                 0.10
+##                       Indice_reconciliacion
+## Homicidios                             0.28
+## Ataques_Pobl_Civil                    -0.36
+## Desmovilizados                        -0.30
+## Secuestros                             0.46
+## Secuestros_Politicos                   0.10
+## Indice_reconciliacion                  1.00
+## 
+## n= 22 
+## 
+## 
+## P
+##                       Homicidios Ataques_Pobl_Civil Desmovilizados
+## Homicidios                       0.7933             0.0399        
+## Ataques_Pobl_Civil    0.7933                        0.3822        
+## Desmovilizados        0.0399     0.3822                           
+## Secuestros            0.0772     0.1197             0.0129        
+## Secuestros_Politicos  0.8211     0.0400             0.6190        
+## Indice_reconciliacion 0.2002     0.1036             0.1769        
+##                       Secuestros Secuestros_Politicos
+## Homicidios            0.0772     0.8211              
+## Ataques_Pobl_Civil    0.1197     0.0400              
+## Desmovilizados        0.0129     0.6190              
+## Secuestros                       0.5751              
+## Secuestros_Politicos  0.5751                         
+## Indice_reconciliacion 0.0321     0.6523              
+##                       Indice_reconciliacion
+## Homicidios            0.2002               
+## Ataques_Pobl_Civil    0.1036               
+## Desmovilizados        0.1769               
+## Secuestros            0.0321               
+## Secuestros_Politicos  0.6523               
+## Indice_reconciliacion</code></pre>
+<p>Aqui hay un resultado significativo. El indice de reconciliacion tiene un coeficiente de 0.46 (p&lt;0.05) con el numero de secuestros por cien mil habitantes.</p>
+</div>
+<div id="regresion-lineal-3" class="section level2">
+<h2><span class="header-section-number">4.6</span> Regresion lineal</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regViol_diff_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> </span>Homicidios<span class="op">+</span>Ataques_Pobl_Civil<span class="op">+</span>Desmovilizados<span class="op">+</span>Secuestros<span class="op">+</span>Secuestros_Politicos, <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regViol_diff_PAR)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ Homicidios + Ataques_Pobl_Civil + 
+##     Desmovilizados + Secuestros + Secuestros_Politicos, data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.13699 -0.03990  0.00517  0.03550  0.14049 
+## 
+## Coefficients:
+##                        Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           4.988e-01  2.310e-02  21.590 2.93e-13 ***
+## Homicidios           -5.909e-05  3.638e-03  -0.016    0.987    
+## Ataques_Pobl_Civil   -3.797e-03  2.932e-03  -1.295    0.214    
+## Desmovilizados       -2.005e-03  4.157e-03  -0.482    0.636    
+## Secuestros            4.099e-02  3.649e-02   1.123    0.278    
+## Secuestros_Politicos  3.265e-01  1.910e-01   1.709    0.107    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.07313 on 16 degrees of freedom
+## Multiple R-squared:  0.3604, Adjusted R-squared:  0.1605 
+## F-statistic: 1.803 on 5 and 16 DF,  p-value: 0.1692</code></pre>
 </div>
 </div>
 

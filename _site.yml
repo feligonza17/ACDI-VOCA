@@ -23,7 +23,7 @@ navbar:
             icon: fa-user-md
             href: Salud_graficos_analisis.html
           - text: "Educacion"
-            icon: fa-chalkboard-teacher
+            icon: fa-graduation-cap
             href:
     - text: "ELCA"
       menu:
@@ -31,7 +31,7 @@ navbar:
           icon:
           href: elca_exploracion.html
         - text: "Modulo Politica"
-          icon:
+          icon: fa-person-booth
           href: elca_modulo_politica.html
     - text: "More"
       icon: fa-gear

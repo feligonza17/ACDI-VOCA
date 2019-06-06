@@ -449,3 +449,9 @@ summary(regreconocimiento)
  ___resiliencia_imr___: Observe que en la regresion lineal, esta variable es marginalmente significativa con convencer_votar. Esta relacion es negativa y sifgnificativa, lo que quiere decir que, si aumenta en un punto la variable convencer_votar (es decir que las personas son menos propensas a convencer a los otros de votar) la resiliencia de las personas disminuye. Aqui hay una relacion interesante ya que indica que el no querer compartir las ideologias politicas o no sentirse seguro con las convicciones politicas tiene una influenica sobre la resiliencia. 
  
  ___reconocimiento_imr___: Observe que en la regresion lineal, esta variable es marginalmente significativa con tendencia politica. Esta relaciona es positivia lo que indica que si aumenta en un punto la tendencia politica (acercarse mas a las ideologias de derecha) el indice de reconocimiento va a aumentar en 0.015 unidades. 
+ 
+ 
+```{r}
+#Guardar bsae de datos. 
+```
+ 

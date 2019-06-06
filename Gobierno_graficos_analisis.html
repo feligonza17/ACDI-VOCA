@@ -507,7 +507,9 @@ div.tocify {
     <li>
       <a href="elca_exploracion.html">Depuracion y merge</a>
     </li>
-    <li class="dropdown-header">Modulo Politica</li>
+    <li>
+      <a href="elca_modulo_politica.html">Modulo Politica</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -558,8 +560,10 @@ div.tocify {
 <div id="setup" class="section level1">
 <h1><span class="header-section-number">1</span> Setup</h1>
 <p>Con este codigo se importan todas las bases de datos y todos los paquetes necesarios.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ANTES DE CORRER, Â¡CORRER LA PESTANA &quot;CODIGO PARA ARRANCAR TODO&quot;!</span>
-
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ANTES DE CORRER, ¡CORRER LA PESTANA &quot;CODIGO PARA ARRANCAR TODO&quot;!</span>
+<span class="co">#Set Working Directory</span>
+<span class="kw">setwd</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo&quot;</span>)
+<span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
 
 
@@ -583,27 +587,35 @@ div.tocify {
 <span class="kw">library</span>(ggpubr)
 <span class="kw">library</span>(vtable)
 <span class="kw">library</span>(ggthemes)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Cambiarle los nombres a algunos municipios que no estan codificados igual</span>
+
+cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Bojaya&quot;</span>] &lt;-<span class="st"> &quot;Bojayá&quot;</span>
+cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Bogotá, D.C.&quot;</span>] &lt;-<span class="st"> &quot;Bogotá, D.c.&quot;</span>
+cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Cartagena&quot;</span>] &lt;-<span class="st"> &quot;Cartagena De Indias&quot;</span>
+cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Bojaya&quot;</span>] &lt;-<span class="st"> &quot;Bojayá&quot;</span>
+cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Cartagena del Chairá&quot;</span>] &lt;-<span class="st"> &quot;Cartagena Del Chairá&quot;</span>
+cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;San Vicente del Caguán&quot;</span>] &lt;-<span class="st"> &quot;San Vicente Del Caguán&quot;</span></code></pre></div>
 </div>
 <div id="graficos-variables-importantes-y-algunos-descriptivos" class="section level1">
 <h1><span class="header-section-number">2</span> Graficos variables importantes y algunos descriptivos</h1>
 <p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="analisis-desempeno-fiscal-indice" class="section level2">
 <h2><span class="header-section-number">2.1</span> Analisis Desempeno fiscal (indice)</h2>
-<p>Este indice mide globalmente el resultado fiscal alcanzado en cada aÃ±o y se encuentra en una escala de 0 a 100, donde los valores cercanos a 0 reflejan un bajo desempeÃ±o fiscal y valores cercanos a 100 significan que la entidad territorial logro en conjunto los siguientes resultados (DNP, 2013): Buen balance en su desempeÃ±o fiscal, Suficientes recursos para sostener su funcionamiento Cumplimiento de gasto de funcionamiento segun la Ley 617/00, Importante nivel de recursos propios (solvencia tributaria) como contrapartida a los recursos de SGP, Altos niveles de inversion, Adecuada capacidad de respaldo del servicio de su deuda, Generacion de ahorro corriente, necesario para garantizar su solvencia financiera</p>
+<p>Este indice mide globalmente el resultado fiscal alcanzado en cada año y se encuentra en una escala de 0 a 100, donde los valores cercanos a 0 reflejan un bajo desempeño fiscal y valores cercanos a 100 significan que la entidad territorial logro en conjunto los siguientes resultados (DNP, 2013): Buen balance en su desempeño fiscal, Suficientes recursos para sostener su funcionamiento Cumplimiento de gasto de funcionamiento segun la Ley 617/00, Importante nivel de recursos propios (solvencia tributaria) como contrapartida a los recursos de SGP, Altos niveles de inversion, Adecuada capacidad de respaldo del servicio de su deuda, Generacion de ahorro corriente, necesario para garantizar su solvencia financiera</p>
 <div id="graficos" class="section level3">
 <h3><span class="header-section-number">2.1.1</span> Graficos</h3>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> DF_desemp_fisc)) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno fiscal&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno fiscal de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno fiscal&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno fiscal de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc)],
                          cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc)]))</code></pre></div>
-<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-1-1.png" width="1248" /></p>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-3-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos" class="section level3">
 <h3><span class="header-section-number">2.1.2</span> Descriptivos</h3>
@@ -613,6 +625,9 @@ div.tocify {
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_desemp_fisc &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(DF_desemp_fisc <span class="op">~</span><span class="st"> </span>municipio, cede_gobierno_<span class="dv">44</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )    <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+
+descrip_desemp_fisc <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio) 
+
 <span class="kw">print</span>(descrip_desemp_fisc)</code></pre></div>
 <pre><code>##                 municipio DF_desemp_fisc.sum DF_desemp_fisc.mean
 ## 1                   Albán           25186.56            59.26249
@@ -620,13 +635,13 @@ div.tocify {
 ## 3                Apartadó           27260.27            64.14181
 ## 4                  Arauca           29972.11            70.52261
 ## 5               Arauquita           27000.89            67.50223
-## 6            Bogotá, D.C.           32497.52            76.46476
-## 7                  Bojaya           21070.31            56.18749
+## 6            Bogotá, D.c.           32497.52            76.46476
+## 7                  Bojayá           21070.31            56.18749
 ## 8                 Briceño           27375.99            64.41410
 ## 9            Buenaventura           25725.22            64.31304
 ## 10                   Cali           28058.18            66.01925
-## 11              Cartagena           30281.95            71.25164
-## 12   Cartagena del Chairá           27971.98            65.81643
+## 11    Cartagena De Indias           30281.95            71.25164
+## 12   Cartagena Del Chairá           27971.98            65.81643
 ## 13              Chaparral           26503.91            62.36213
 ## 14                Ciénaga           24643.83            61.60958
 ## 15                 Cúcuta           29268.79            68.86774
@@ -649,7 +664,7 @@ div.tocify {
 ## 32                Sahagún           28328.54            66.65539
 ## 33             San Carlos           26571.62            62.52147
 ## 34   San Pedro de Cartago           24262.45            60.65613
-## 35 San Vicente del Caguán           26129.46            61.48109
+## 35 San Vicente Del Caguán           26129.46            61.48109
 ## 36            Santa Marta           28163.60            70.40900
 ## 37                Soledad           25996.73            64.99182
 ## 38                   Tibú           28466.51            66.98002
@@ -749,7 +764,7 @@ diff_desemp_fisc_sd &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<spa
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2005</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)],
                          cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)]))</code></pre></div>
-<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-5-1.png" width="1152" /></p>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-7-1.png" width="1152" /></p>
 <p>Grafico del desempeno integral junto con el fiscal</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano)) <span class="op">+</span><span class="st">    </span>
@@ -757,12 +772,12 @@ diff_desemp_fisc_sd &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<spa
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> DF_desemp_fisc), <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">color=</span><span class="st">&quot;Desempeno integral&quot;</span>)<span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno integral&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno fiscal e integral (azul) de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Desempeno integral&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Desempeno fiscal e integral (azul) de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)],
                          cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)]))</code></pre></div>
-<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-6-1.png" width="1152" /></p>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-8-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-1" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Descriptivos</h3>
@@ -772,6 +787,9 @@ diff_desemp_fisc_sd &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<spa
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_desemp_int &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(DI_desemp_int <span class="op">~</span><span class="st"> </span>municipio, cede_gobierno_<span class="dv">44</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+
+descrip_desemp_int <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio) 
+
 <span class="kw">print</span>(descrip_desemp_int)</code></pre></div>
 <pre><code>##                 municipio DI_desemp_int.sum DI_desemp_int.mean
 ## 1                   Albán          19921.47           66.40489
@@ -779,13 +797,13 @@ diff_desemp_fisc_sd &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<spa
 ## 3                Apartadó          20106.31           67.02104
 ## 4                  Arauca          20860.76           69.53588
 ## 5               Arauquita          18608.37           62.02791
-## 6            Bogotá, D.C.          23943.65           79.81217
-## 7                  Bojaya          15530.59           51.76863
+## 6            Bogotá, D.c.          23943.65           79.81217
+## 7                  Bojayá          15530.59           51.76863
 ## 8                 Briceño          18396.71           61.32237
 ## 9            Buenaventura          19842.97           66.14324
 ## 10                   Cali          22234.11           74.11371
-## 11              Cartagena          18922.15           63.07382
-## 12   Cartagena del Chairá          16407.45           54.69149
+## 11    Cartagena De Indias          18922.15           63.07382
+## 12   Cartagena Del Chairá          16407.45           54.69149
 ## 13              Chaparral          21250.62           70.83541
 ## 14                Ciénaga          16790.69           55.96896
 ## 15                 Cúcuta          20224.19           67.41396
@@ -808,7 +826,7 @@ diff_desemp_fisc_sd &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<spa
 ## 32                Sahagún          16007.13           53.35712
 ## 33             San Carlos          19182.23           63.94077
 ## 34   San Pedro de Cartago          19526.97           65.08989
-## 35 San Vicente del Caguán          16553.26           55.17754
+## 35 San Vicente Del Caguán          16553.26           55.17754
 ## 36            Santa Marta          18365.93           61.21975
 ## 37                Soledad          20706.96           69.02320
 ## 38                   Tibú          21692.60           72.30865
@@ -904,7 +922,7 @@ diff_desemp_int_sd &lt;-<span class="st"> </span>descrip_desemp_int_5antes<span 
 <p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-2" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Graficos</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general)
@@ -914,7 +932,7 @@ cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_genera
   }
 }
 
-<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
 
 cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span>[a,]
 
@@ -926,10 +944,10 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion total&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion total por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion total&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion total por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2000</span>, <span class="dv">2010</span>, <span class="dt">by=</span><span class="dv">1</span>))</code></pre></div>
-<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-11-1.png" width="1152" /></p>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-13-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-2" class="section level3">
 <h3><span class="header-section-number">2.3.2</span> Descriptivos</h3>
@@ -939,6 +957,9 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_inv_total_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(inv_total_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_gobierno_44_inv, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+
+descrip_inv_total_cienmil <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio) 
+
 <span class="kw">print</span>(descrip_inv_total_cienmil)</code></pre></div>
 <pre><code>##                 municipio inv_total_cienmil.sum inv_total_cienmil.mean
 ## 1                   Albán              195.2280               17.74800
@@ -946,13 +967,13 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 ## 3                Apartadó              184.5786               16.77988
 ## 4                  Arauca              196.5275               17.86614
 ## 5               Arauquita              178.2376               17.82376
-## 6            Bogotá, D.C.              196.8762               17.89784
-## 7                  Bojaya              155.7857               17.30952
+## 6            Bogotá, D.c.              196.8762               17.89784
+## 7                  Bojayá              155.7857               17.30952
 ## 8                 Briceño              195.3404               17.75821
 ## 9            Buenaventura              189.0850               17.18954
 ## 10                   Cali              188.1505               17.10459
-## 11              Cartagena              193.1028               17.55480
-## 12   Cartagena del Chairá              169.0237               16.90237
+## 11    Cartagena De Indias              193.1028               17.55480
+## 12   Cartagena Del Chairá              169.0237               16.90237
 ## 13              Chaparral              186.5684               16.96076
 ## 14                Ciénaga              190.2113               17.29194
 ## 15                 Cúcuta              189.5362               17.23056
@@ -975,7 +996,7 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 ## 32                Sahagún                  -Inf                   -Inf
 ## 33             San Carlos              198.1623               18.01475
 ## 34   San Pedro de Cartago              193.0548               17.55044
-## 35 San Vicente del Caguán              185.2208               16.83826
+## 35 San Vicente Del Caguán              185.2208               16.83826
 ## 36            Santa Marta              173.9756               17.39756
 ## 37                Soledad              182.2280               16.56618
 ## 38                   Tibú              191.3943               17.39948
@@ -1069,7 +1090,7 @@ diff_inv_total_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_total_cienmi
 <p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-3" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> Graficos</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber quÃ© observaciones concuerdan tanto en el aÃ±o del censo como en el aÃ±o del conflicto. Esto es necesario para generar el Ã­ndice porque debe haber concordancia en el aÃ±o de ambas bases. </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general)
@@ -1079,7 +1100,7 @@ cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_genera
   }
 }
 
-<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en aÃ±o de conflicto y en aÃ±o del censo</span>
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
 
 cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span>[a,]
 
@@ -1091,10 +1112,10 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> palette) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion al fortalecimiento institucional&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion al fortalecimiento institucional por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion al fortalecimiento institucional&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion al fortalecimiento institucional por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2002</span>, <span class="dv">2010</span>, <span class="dt">by=</span><span class="dv">1</span>))</code></pre></div>
-<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-16-1.png" width="1152" /></p>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-18-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-3" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> Descriptivos</h3>
@@ -1104,6 +1125,9 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_inv_fortinst_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(inv_fortinst_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_gobierno_44_inv, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T ) <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+
+descrip_inv_fortinst_cienmil <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio) 
+
 <span class="kw">print</span>(descrip_inv_fortinst_cienmil)</code></pre></div>
 <pre><code>##                 municipio inv_fortinst_cienmil.sum
 ## 1                   Albán                 132.9325
@@ -1111,13 +1135,13 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 ## 3                Apartadó                 116.9995
 ## 4                  Arauca                 128.2216
 ## 5               Arauquita                 105.8657
-## 6            Bogotá, D.C.                 133.8103
-## 7                  Bojaya                     -Inf
+## 6            Bogotá, D.c.                 133.8103
+## 7                  Bojayá                     -Inf
 ## 8                 Briceño                 127.0901
 ## 9            Buenaventura                 135.8832
 ## 10                   Cali                 125.2061
-## 11              Cartagena                 124.5847
-## 12   Cartagena del Chairá                     -Inf
+## 11    Cartagena De Indias                 124.5847
+## 12   Cartagena Del Chairá                     -Inf
 ## 13              Chaparral                 119.3178
 ## 14                Ciénaga                     -Inf
 ## 15                 Cúcuta                 116.7957
@@ -1140,7 +1164,7 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 ## 32                Sahagún                     -Inf
 ## 33             San Carlos                 122.7060
 ## 34   San Pedro de Cartago                 126.7343
-## 35 San Vicente del Caguán                 121.7545
+## 35 San Vicente Del Caguán                 121.7545
 ## 36            Santa Marta                     -Inf
 ## 37                Soledad                 119.0831
 ## 38                   Tibú                 118.9407
@@ -1236,12 +1260,12 @@ diff_inv_fortinst_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_fortinst_
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Indice de Gobierno Abierto&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Indice de Gobierno Abierto por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;AÃ±o&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Indice de Gobierno Abierto&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Indice de Gobierno Abierto por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.1</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2010</span>,<span class="dv">2016</span>, <span class="dt">by=</span><span class="dv">1</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total)],
                          cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total)]))</code></pre></div>
-<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-20-1.png" width="1152" /></p>
+<p><img src="Gobierno_graficos_analisis_files/figure-html/unnamed-chunk-22-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-4" class="section level3">
 <h3><span class="header-section-number">2.5.2</span> Descriptivos</h3>
@@ -1252,6 +1276,8 @@ diff_inv_fortinst_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_fortinst_
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_IGA_total &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(IGA_total <span class="op">~</span><span class="st"> </span>municipio, cede_gobierno_<span class="dv">44</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
 
+descrip_IGA_total <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
 <span class="kw">print</span>(descrip_IGA_total)</code></pre></div>
 <pre><code>##                 municipio IGA_total.sum IGA_total.mean IGA_total.sd
 ## 1                   Albán     11413.386       65.21935     4.242079
@@ -1259,13 +1285,13 @@ diff_inv_fortinst_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_fortinst_
 ## 3                Apartadó     12395.050       70.82885    10.894778
 ## 4                  Arauca     12692.468       72.52839     5.257010
 ## 5               Arauquita     11080.805       63.31889     5.312779
-## 6            Bogotá, D.C.     11599.914       66.28522    13.729270
-## 7                  Bojaya     10108.346       57.76198    10.915736
+## 6            Bogotá, D.c.     11599.914       66.28522    13.729270
+## 7                  Bojayá     10108.346       57.76198    10.915736
 ## 8                 Briceño     11677.730       66.72989     6.994598
 ## 9            Buenaventura      9412.170       53.78383     5.019577
 ## 10                   Cali     12539.650       71.65514     9.281523
-## 11              Cartagena     11549.434       65.99677     6.737618
-## 12   Cartagena del Chairá      9772.422       55.84241    12.443876
+## 11    Cartagena De Indias     11549.434       65.99677     6.737618
+## 12   Cartagena Del Chairá      9772.422       55.84241    12.443876
 ## 13              Chaparral     11688.109       66.78919    14.290844
 ## 14                Ciénaga      9899.417       56.56810     4.478249
 ## 15                 Cúcuta     12270.535       70.11734     7.123605
@@ -1288,7 +1314,7 @@ diff_inv_fortinst_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_fortinst_
 ## 32                Sahagún     12720.028       72.68588     7.692569
 ## 33             San Carlos     11348.012       64.84578     7.927955
 ## 34   San Pedro de Cartago     11246.146       64.26369     7.587247
-## 35 San Vicente del Caguán     10850.688       62.00393    11.741452
+## 35 San Vicente Del Caguán     10850.688       62.00393    11.741452
 ## 36            Santa Marta     11587.402       66.21373     6.044384
 ## 37                Soledad     10484.174       59.90957     6.280271
 ## 38                   Tibú     10957.445       62.61397     9.217889
@@ -1334,7 +1360,7 @@ diff_IGA_total_sd &lt;-<span class="st"> </span>descrip_IGA_total_5antes<span cl
 <div id="variables-agregadas-con-acdi-voca" class="section level2">
 <h2><span class="header-section-number">3.1</span> Variables Agregadas con ACDI-VOCA</h2>
 <p>En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo collapse en todos los anos. Primero se hacen correlaciones y, luego, se hacen regresiones lineales.</p>
-<p>Recuerde que las variables del ACDI-VOCA son: +Reconciliacion +Disculpas +Violencia +Rencor +Memoria (Memoria historica) +Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)</p>
+<p>Recuerde que las variables del ACDI-VOCA son: <br> +Reconciliacion <br> +Disculpas <br> +Violencia <br> +Rencor <br> +Memoria (Memoria historica) <br> +Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta) <br></p>
 <div id="correlaciones" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> Correlaciones</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos</span>
@@ -1998,6 +2024,245 @@ regDisculpas &lt;-<span class="st"> </span><span class="kw">lm</span>(Disculpas 
 ## Multiple R-squared:  0.04827,    Adjusted R-squared:  -0.1158 
 ## F-statistic: 0.2941 on 5 and 29 DF,  p-value: 0.9123</code></pre>
 </div>
+</div>
+</div>
+<div id="analisis-con-indice-par-instrumento-de-medicion-de-reconciliacion" class="section level1">
+<h1><span class="header-section-number">4</span> Analisis con Indice PAR (Instrumento de medicion de reconciliacion)</h1>
+<p>Ahora se haran regresiones con el indice de reconciliacion.</p>
+<div id="variables-con-valores-absolutos-agregados-con-indice-par" class="section level2">
+<h2><span class="header-section-number">4.1</span> Variables con valores absolutos (agregados) con indice PAR</h2>
+<p>A continuacion se haran las correlaciones con las variables de gobierno y el indice PAR. Recuerde que estas variables son las <strong>agregadas</strong>.</p>
+</div>
+<div id="correlaciones-2" class="section level2">
+<h2><span class="header-section-number">4.2</span> Correlaciones</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a hacerlo primero con el indice agregado por anos.</span>
+names_acdi &lt;-<span class="st"> </span>acdi_imr<span class="op">$</span>Municipio_imr
+
+acdi_imr &lt;-<span class="st"> </span>acdi_imr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio_imr)
+
+
+par_descrip_desemp_fisc &lt;-<span class="st"> </span>descrip_desemp_fisc[descrip_desemp_fisc<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_desemp_fisc &lt;-<span class="st"> </span>par_descrip_desemp_fisc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+
+par_descrip_desemp_int &lt;-<span class="st"> </span>descrip_desemp_int[descrip_desemp_int<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_desemp_int &lt;-<span class="st"> </span>par_descrip_desemp_int <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+par_descrip_IGA_total &lt;-<span class="st"> </span>descrip_IGA_total[descrip_IGA_total<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_IGA_total &lt;-<span class="st"> </span>par_descrip_IGA_total <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+par_descrip_inv_fortinst_cienmil &lt;-<span class="st"> </span>descrip_inv_fortinst_cienmil[descrip_inv_fortinst_cienmil<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_inv_fortinst_cienmil &lt;-<span class="st"> </span>par_descrip_inv_fortinst_cienmil <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+par_descrip_inv_total_cienmil &lt;-<span class="st"> </span>descrip_inv_total_cienmil[descrip_inv_total_cienmil<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_inv_total_cienmil &lt;-<span class="st"> </span>par_descrip_inv_total_cienmil <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(par_descrip_desemp_fisc<span class="op">$</span>DF_desemp_fisc.mean, 
+                       par_descrip_desemp_int<span class="op">$</span>DI_desemp_int.mean, 
+                       par_descrip_IGA_total<span class="op">$</span>IGA_total.mean, 
+                       par_descrip_inv_fortinst_cienmil<span class="op">$</span>inv_fortinst_cienmil.mean,
+                       par_descrip_inv_total_cienmil<span class="op">$</span>inv_total_cienmil.mean, 
+                       acdi_imr<span class="op">$</span>indice_de_reconciliacion_imr)
+
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Desempeno Fiscal&quot;</span>,
+             <span class="st">&quot;Desempeno Integral&quot;</span>,
+             <span class="st">&quot;Gobierno Abierto&quot;</span>,
+             <span class="st">&quot;Inv Fort Inst&quot;</span>,
+             <span class="st">&quot;Inv Total&quot;</span>, 
+             <span class="st">&quot;Indice_reconciliacion&quot;</span>)
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+<span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) </code></pre></div>
+<pre><code>##                       Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                  1.00               0.56             0.29
+## Desempeno Integral                0.56               1.00             0.67
+## Gobierno Abierto                  0.29               0.67             1.00
+## Inv Fort Inst                     0.36               0.31            -0.08
+## Inv Total                         0.45               0.22             0.06
+## Indice_reconciliacion            -0.29              -0.33            -0.36
+##                       Inv Fort Inst Inv Total Indice_reconciliacion
+## Desempeno Fiscal               0.36      0.45                 -0.29
+## Desempeno Integral             0.31      0.22                 -0.33
+## Gobierno Abierto              -0.08      0.06                 -0.36
+## Inv Fort Inst                  1.00      0.42                 -0.19
+## Inv Total                      0.42      1.00                 -0.34
+## Indice_reconciliacion         -0.19     -0.34                  1.00
+## 
+## n
+##                       Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                    22                 22               22
+## Desempeno Integral                  22                 22               22
+## Gobierno Abierto                    22                 22               22
+## Inv Fort Inst                       17                 17               17
+## Inv Total                           22                 22               22
+## Indice_reconciliacion               22                 22               22
+##                       Inv Fort Inst Inv Total Indice_reconciliacion
+## Desempeno Fiscal                 17        22                    22
+## Desempeno Integral               17        22                    22
+## Gobierno Abierto                 17        22                    22
+## Inv Fort Inst                    17        17                    17
+## Inv Total                        17        22                    22
+## Indice_reconciliacion            17        22                    22
+## 
+## P
+##                       Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                       0.0068             0.1874          
+## Desempeno Integral    0.0068                              0.0006          
+## Gobierno Abierto      0.1874           0.0006                             
+## Inv Fort Inst         0.1615           0.2278             0.7719          
+## Inv Total             0.0377           0.3260             0.7971          
+## Indice_reconciliacion 0.1892           0.1347             0.1001          
+##                       Inv Fort Inst Inv Total Indice_reconciliacion
+## Desempeno Fiscal      0.1615        0.0377    0.1892               
+## Desempeno Integral    0.2278        0.3260    0.1347               
+## Gobierno Abierto      0.7719        0.7971    0.1001               
+## Inv Fort Inst                       0.0940    0.4741               
+## Inv Total             0.0940                  0.1223               
+## Indice_reconciliacion 0.4741        0.1223</code></pre>
+</div>
+<div id="regresion-lineal-2" class="section level2">
+<h2><span class="header-section-number">4.3</span> Regresion lineal</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regGob_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span>., <span class="dt">data =</span> dfcorrelaciones)
+<span class="kw">summary</span>(regGob_PAR)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ ., data = dfcorrelaciones)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.092085 -0.048312 -0.006352  0.046466  0.120173 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)           2.575711   1.151561   2.237    0.047 *
+## `Desempeno Fiscal`    0.005257   0.007778   0.676    0.513  
+## `Desempeno Integral` -0.003334   0.004558  -0.732    0.480  
+## `Gobierno Abierto`   -0.005857   0.005983  -0.979    0.349  
+## `Inv Fort Inst`      -0.010289   0.051056  -0.202    0.844  
+## `Inv Total`          -0.095293   0.065355  -1.458    0.173  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.08268 on 11 degrees of freedom
+##   (5 observations deleted due to missingness)
+## Multiple R-squared:  0.3772, Adjusted R-squared:  0.09409 
+## F-statistic: 1.332 on 5 and 11 DF,  p-value: 0.3203</code></pre>
+</div>
+<div id="variables-con-diferencias-deltas-delta-con-indice-par" class="section level2">
+<h2><span class="header-section-number">4.4</span> Variables con diferencias (Deltas <span class="math inline">\(\Delta\)</span>) con indice PAR</h2>
+<p>A continuacion se haran las correlaciones con las variables de gobierno y el indice PAR. Recuerde que estas variables son las <strong>diferencias entre los primeros cinco anos a los ultimos 5 anos</strong>.</p>
+</div>
+<div id="correlaciones-3" class="section level2">
+<h2><span class="header-section-number">4.5</span> Correlaciones</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a hacerlo primero con el indice agregado por anos.  </span>
+
+par_diff_desemp_fisc &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes[descrip_desemp_fisc_5antes<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>DF_desemp_fisc.mean <span class="op">-</span>descrip_desemp_fisc_5despues[descrip_desemp_fisc_5despues<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>DF_desemp_fisc.mean
+
+par_diff_desemp_int &lt;-<span class="st"> </span>descrip_desemp_int_5antes[descrip_desemp_int_5antes<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>DI_desemp_int.mean <span class="op">-</span>descrip_desemp_int_5despues[descrip_desemp_int_5despues<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>DI_desemp_int.mean
+
+par_diff_IGA_total &lt;-<span class="st"> </span>descrip_IGA_total_5antes[descrip_IGA_total_5antes<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>IGA_total.mean<span class="op">-</span>descrip_IGA_total_5despues[descrip_IGA_total_5despues<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>IGA_total.mean
+
+
+par_diff_inv_fortinst_cienmil &lt;-<span class="st"> </span>descrip_inv_fortinst_cienmil_5antes[descrip_inv_fortinst_cienmil_5antes<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>inv_fortinst_cienmil.mean  <span class="op">-</span>descrip_inv_fortinst_cienmil_5despues[descrip_inv_fortinst_cienmil_5despues<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>inv_fortinst_cienmil.mean
+
+par_diff_inv_total_cienmil &lt;-<span class="st"> </span>descrip_inv_total_cienmil_5antes[descrip_inv_total_cienmil_5antes<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>inv_total_cienmil.mean <span class="op">-</span>descrip_inv_total_cienmil_5despues[descrip_inv_total_cienmil_5despues<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>inv_total_cienmil.mean
+
+
+par_diff_inv_fortinst_cienmil[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(par_diff_inv_fortinst_cienmil))] &lt;-<span class="st"> </span><span class="ot">NA</span> 
+
+par_diff_inv_total_cienmil[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(par_diff_inv_total_cienmil))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(par_diff_desemp_fisc, 
+                       par_diff_desemp_int, 
+                       par_diff_IGA_total, 
+                       par_diff_inv_fortinst_cienmil,
+                       par_diff_inv_total_cienmil, 
+                       acdi_imr<span class="op">$</span>indice_de_reconciliacion_imr)
+
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Desempeno Fiscal&quot;</span>,
+             <span class="st">&quot;Desempeno Integral&quot;</span>,
+             <span class="st">&quot;Gobierno Abierto&quot;</span>,
+             <span class="st">&quot;Inv Fort Inst&quot;</span>,
+             <span class="st">&quot;Inv Total&quot;</span>, 
+             <span class="st">&quot;Indice_reconciliacion&quot;</span>)
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+<span class="kw">rcorr</span>(correlaciones) </code></pre></div>
+<pre><code>##                       Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                  1.00              -0.35            -0.10
+## Desempeno Integral               -0.35               1.00             0.11
+## Gobierno Abierto                 -0.10               0.11             1.00
+## Inv Fort Inst                    -0.13              -0.24            -0.43
+## Inv Total                         0.46              -0.32            -0.34
+## Indice_reconciliacion             0.16               0.19            -0.07
+##                       Inv Fort Inst Inv Total Indice_reconciliacion
+## Desempeno Fiscal              -0.13      0.46                  0.16
+## Desempeno Integral            -0.24     -0.32                  0.19
+## Gobierno Abierto              -0.43     -0.34                 -0.07
+## Inv Fort Inst                  1.00     -0.05                 -0.07
+## Inv Total                     -0.05      1.00                  0.05
+## Indice_reconciliacion         -0.07      0.05                  1.00
+## 
+## n
+##                       Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                    22                 22               22
+## Desempeno Integral                  22                 22               22
+## Gobierno Abierto                    22                 22               22
+## Inv Fort Inst                       17                 17               17
+## Inv Total                           22                 22               22
+## Indice_reconciliacion               22                 22               22
+##                       Inv Fort Inst Inv Total Indice_reconciliacion
+## Desempeno Fiscal                 17        22                    22
+## Desempeno Integral               17        22                    22
+## Gobierno Abierto                 17        22                    22
+## Inv Fort Inst                    17        17                    17
+## Inv Total                        17        22                    22
+## Indice_reconciliacion            17        22                    22
+## 
+## P
+##                       Desempeno Fiscal Desempeno Integral Gobierno Abierto
+## Desempeno Fiscal                       0.1092             0.6637          
+## Desempeno Integral    0.1092                              0.6295          
+## Gobierno Abierto      0.6637           0.6295                             
+## Inv Fort Inst         0.6230           0.3480             0.0863          
+## Inv Total             0.0298           0.1402             0.1241          
+## Indice_reconciliacion 0.4739           0.3911             0.7528          
+##                       Inv Fort Inst Inv Total Indice_reconciliacion
+## Desempeno Fiscal      0.6230        0.0298    0.4739               
+## Desempeno Integral    0.3480        0.1402    0.3911               
+## Gobierno Abierto      0.0863        0.1241    0.7528               
+## Inv Fort Inst                       0.8516    0.7765               
+## Inv Total             0.8516                  0.8190               
+## Indice_reconciliacion 0.7765        0.8190</code></pre>
+</div>
+<div id="regresion-lineal-3" class="section level2">
+<h2><span class="header-section-number">4.6</span> Regresion lineal</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regGob_diff_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span>., <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regGob_diff_PAR)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ ., data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.13301 -0.06120 -0.02522  0.06838  0.15914 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)           0.543287   0.159765   3.401  0.00592 **
+## `Desempeno Fiscal`    0.006064   0.006330   0.958  0.35861   
+## `Desempeno Integral`  0.001002   0.002897   0.346  0.73583   
+## `Gobierno Abierto`   -0.004206   0.005018  -0.838  0.41971   
+## `Inv Fort Inst`      -0.019045   0.042100  -0.452  0.65979   
+## `Inv Total`          -0.055826   0.080719  -0.692  0.50351   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.09742 on 11 degrees of freedom
+##   (5 observations deleted due to missingness)
+## Multiple R-squared:  0.1354, Adjusted R-squared:  -0.2576 
+## F-statistic: 0.3446 on 5 and 11 DF,  p-value: 0.8753</code></pre>
 </div>
 </div>
 

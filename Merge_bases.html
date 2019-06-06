@@ -507,7 +507,9 @@ div.tocify {
     <li>
       <a href="elca_exploracion.html">Depuracion y merge</a>
     </li>
-    <li class="dropdown-header">Modulo Politica</li>
+    <li>
+      <a href="elca_modulo_politica.html">Modulo Politica</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -576,7 +578,7 @@ div.tocify {
 <span class="kw">library</span>(grid)
 <span class="kw">library</span>(purrr)
 <span class="kw">library</span>(psych)
-<span class="kw">library</span>(httpuv)</code></pre></div>
+<span class="kw">library</span>(janitor)</code></pre></div>
 </div>
 <div id="importar-bases-de-datos" class="section level2">
 <h2><span class="header-section-number">1.2</span> Importar bases de datos</h2>
@@ -589,7 +591,7 @@ div.tocify {
 <span class="co">#Importar datos ACDIVOCA</span>
 datos_acdivoca &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&#39;ACDI-VOCA - Base de Datos y Tabulados_F.xlsx&#39;</span>)
 
-<span class="co">#Ojo siempre abrir desde el dropbox de Felipe GonzÃ¡lez porque se hizo el cambio de variables chaacter a numerica desde Excel.</span>
+<span class="co">#Ojo siempre abrir desde el dropbox de Felipe González porque se hizo el cambio de variables chaacter a numerica desde Excel.</span>
 datos_acdivoca_num &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(
   <span class="kw">read_excel</span>(<span class="st">&#39;ACDI-VOCA - Base de Datos y Tabulados_F.xlsx&#39;</span>,<span class="dt">sheet=</span><span class="dv">2</span>))
 <span class="co">#Importar datos CEDE</span>
@@ -616,7 +618,27 @@ datos_cede_gobierno &lt;-<span class="st">  </span><span class="kw">read.dta13</
 datos_cede_tierras &lt;-<span class="st">  </span><span class="kw">read.dta13</span>(<span class="st">&quot;PANEL_AGRICULTURA_Y_TIERRA.dta&quot;</span>,
                                   <span class="dt">encoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;UTF-8&quot;</span>,
                                   <span class="dt">convert.factors =</span> <span class="ot">TRUE</span>, <span class="dt">generate.factors =</span> <span class="ot">TRUE</span>,
-                                  <span class="dt">nonint.factors=</span><span class="ot">TRUE</span>)</code></pre></div>
+                                  <span class="dt">nonint.factors=</span><span class="ot">TRUE</span>)
+
+<span class="co">#Indice PAR - ACDIVOCA</span>
+
+acdi_imr &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(
+  <span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Documentos ACDIVOCA/7.IndiceReconciliacion_31oct2017.xlsx&quot;</span>,<span class="dt">sheet=</span><span class="dv">2</span>))
+<span class="co">#Limpiar tildes y mayusculas de los nombres de las variables del indice IMR</span>
+acdi_imr &lt;-<span class="st"> </span>acdi_imr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">clean_names</span>()
+<span class="co">#Limpiar los otros nombres</span>
+acdi_imr &lt;-<span class="st"> </span>acdi_imr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="dv">20</span><span class="op">:</span><span class="dv">21</span>))
+<span class="kw">colnames</span>(acdi_imr)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;Municipio&quot;</span>
+<span class="kw">colnames</span>(acdi_imr)[<span class="dv">15</span>] &lt;-<span class="st"> &quot;1-agresion&quot;</span>
+
+acdi_imr &lt;-<span class="st"> </span>acdi_imr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(.,<span class="dv">1</span><span class="op">:</span><span class="dv">22</span>) 
+
+<span class="co">#Le agregamos el sufijo distintivo</span>
+
+<span class="kw">colnames</span>(acdi_imr) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">colnames</span>(acdi_imr), <span class="st">&quot;imr&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>)
+
+<span class="co">#Limpieza de nombres de Municipios (solo se muestra una limpieza)</span>
+acdi_imr<span class="op">$</span>Municipio_imr[acdi_imr<span class="op">$</span>Municipio_imr<span class="op">==</span><span class="st">&quot;MEDELLIN&quot;</span>] &lt;-<span class="st"> &quot;Medellín&quot;</span></code></pre></div>
 <p>Aqui revisamos, por encima, el numero de municipios que tiene cada base de datos</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Contar municipios dentro de las bases</span>
 <span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_generales<span class="op">$</span>codmpio)) <span class="co"># --&gt; 1122 municipios</span></code></pre></div>
@@ -636,7 +658,7 @@ datos_cede_tierras &lt;-<span class="st">  </span><span class="kw">read.dta13</s
 </div>
 <div id="limpiar-y-organizar-bases-de-datos" class="section level2">
 <h2><span class="header-section-number">1.3</span> Limpiar y organizar bases de datos</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Limpiar el cÃ³digo ID de la base acdivoca. Hay ciertos municipios que empiezan con un &#39;0&#39; y hay que quitarlo.  </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Limpiar el código ID de la base acdivoca. Hay ciertos municipios que empiezan con un &#39;0&#39; y hay que quitarlo.   </span>
 datos_acdivoca<span class="op">$</span>MPIO_IK &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">startsWith</span>(datos_acdivoca<span class="op">$</span>MPIO_IK,<span class="st">&quot;0&quot;</span>),    
                                  <span class="kw">sub</span>(<span class="st">&quot;0{1}&quot;</span>,<span class="st">&quot;&quot;</span>,datos_acdivoca<span class="op">$</span>MPIO_IK, 
                                      <span class="dt">ignore.case=</span><span class="ot">TRUE</span>), 
@@ -644,7 +666,7 @@ datos_acdivoca<span class="op">$</span>MPIO_IK &lt;-<span class="st"> </span><sp
 datos_acdivoca_num<span class="op">$</span>MPIO_IK &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">startsWith</span>(<span class="kw">as.character</span>(datos_acdivoca_num<span class="op">$</span>MPIO_IK),<span class="st">&quot;0&quot;</span>),
                                      <span class="kw">sub</span>(<span class="st">&quot;0{1}&quot;</span>,<span class="st">&quot;&quot;</span>,datos_acdivoca_num<span class="op">$</span>MPIO_IK, <span class="dt">ignore.case=</span><span class="ot">TRUE</span>),
                                      datos_acdivoca_num<span class="op">$</span>MPIO_IK)
-<span class="kw">setnames</span>(datos_acdivoca, <span class="st">&#39;MPIO_IK&#39;</span>, <span class="st">&#39;codmpio&#39;</span>) <span class="co">#Para que el merge sea mÃ¡s fÃ¡cil   </span>
+<span class="kw">setnames</span>(datos_acdivoca, <span class="st">&#39;MPIO_IK&#39;</span>, <span class="st">&#39;codmpio&#39;</span>) <span class="co">#Para que el merge sea más fácil </span>
 <span class="kw">setnames</span>(datos_acdivoca_num, <span class="st">&#39;MPIO_IK&#39;</span>, <span class="st">&#39;codmpio&#39;</span>)
 <span class="co"># Meter municipio en codigo </span>
 Nombre_cod_municipio &lt;-<span class="st"> </span>datos_acdivoca[,<span class="kw">c</span>(<span class="st">&#39;Municipio&#39;</span>,<span class="st">&#39;codmpio&#39;</span>)]   
@@ -677,7 +699,7 @@ cede_general_<span class="dv">44</span><span class="op">$</span>ano &lt;-<span c
 <div id="items-acdivoca" class="section level1">
 <h1><span class="header-section-number">3</span> Items ACDI/VOCA</h1>
 <p>Primero recodificamos los valores para que la respuesta “Totalmente en desacuerdo” tome el valor -2, la respuesta “En desacuerdo” tome el valor -1 y asi sucesivamente hasta que la respuesta “Totalmente de acuerdo” tome el valor 2.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Recodificar valores de los Ã­tems para que sean mÃ¡s interpretables (cÃ³digo para los no invertidos y los invertidos) (el 1 es -2; el 2 es 1; el 3 es 0; el 4 es 1 y el 5 es 2)</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Recodificar valores de los ítems para que sean más interpretables (código para los no invertidos y los invertidos) (el 1 es -2; el 2 es 1; el 3 es 0; el 4 es 1 y el 5 es 2)</span>
 datos_acdivoca_num<span class="op">$</span>memoria &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p075_<span class="dv">1</span> 
 datos_acdivoca_num &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">c</span>(<span class="st">&quot;p024_1&quot;</span>, <span class="st">&quot;p024_2&quot;</span>, <span class="st">&quot;p024_3&quot;</span>, <span class="st">&quot;p024_4&quot;</span>, <span class="st">&quot;p024_5&quot;</span>, 
@@ -688,7 +710,7 @@ datos_acdivoca_num &lt;-<span class="st"> </span>datos_acdivoca_num <span class=
                                 <span class="st">&quot;4&quot;</span>=<span class="op">-</span><span class="dv">1</span>,<span class="st">&quot;5&quot;</span>=<span class="op">-</span><span class="dv">2</span>, <span class="st">&quot;3&quot;</span>=<span class="dv">0</span>)</code></pre></div>
 <div id="reconciliacion" class="section level2">
 <h2><span class="header-section-number">3.1</span> Reconciliacion</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pregunta p024 -- Preguntas de Reconciliacion. Todos son Directos, se suman para sacar un indice mÃ¡s global.</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pregunta p024 -- Preguntas de Reconciliacion. Todos son Directos, se suman para sacar un indice más global.</span>
 datos_acdivoca_num<span class="op">$</span>reconciliacion &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(p024_<span class="dv">1</span>, p024_<span class="dv">2</span>, p024_<span class="dv">3</span>, p024_<span class="dv">4</span>, p024_<span class="dv">5</span>, p024_<span class="dv">6</span>, p024_<span class="dv">7</span>, p024_<span class="dv">8</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rowSums</span>()</code></pre></div>
@@ -710,7 +732,7 @@ datos_acdivoca_num<span class="op">$</span>violencia &lt;-<span class="st"> </sp
 <h2><span class="header-section-number">3.4</span> Rencor</h2>
 <p>Este indice es interesante. Se hace una formula para sacar un indice entre 0 y 15. Un valor bajito representa una persona con mucho rencor mientras que un valor alto representa a una persona con culpa. La formula es la siguiente:</p>
 <p><span class="math inline">\(Rencor = \frac{Otro_{i}}{Uno_{i}} \times \frac{(Otro_{i}+Uno_{i})}{2}\)</span></p>
-<p>AsÃ­: <span class="math inline">\(0 &lt; Rencor &lt; 15\)</span></p>
+<p>Así: <span class="math inline">\(0 &lt; Rencor &lt; 15\)</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p071a y p071b. Este es chevere. Indice de rencor. Se hace una formula para hablar de la &quot;gravedad&quot; del rencor. Un valor alto indica alta culpa, un valor bajo indica rencor. </span>
 
 datos_acdivoca_num<span class="op">$</span>rencor &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
@@ -731,7 +753,7 @@ datos_acdivoca_num<span class="op">$</span>memoria &lt;-<span class="st"> </span
 <p>Este item tiene la misma formula que la del indice de rencor solo que se hace con las preguntas de memoria historica. La formula es la misma.</p>
 <p><span class="math inline">\(Memoria_{Bicchieri} = \frac{Otro_{i}}{Uno_{i}} \times \frac{(Otro_{i}+Uno_{i})}{2}\)</span></p>
 <p>Asi: <span class="math inline">\(0 &lt; Memoria_{Bicchieri} &lt; 15\)</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#indice de memoria histÃ³rica y expectativas cf. Bicchieri.</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#indice de memoria histórica y expectativas cf. Bicchieri.</span>
 
 datos_acdivoca_num<span class="op">$</span>memoria_expectativa &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(p075_<span class="dv">1</span>, p075_<span class="dv">2</span>) <span class="op">%&gt;%</span>
@@ -744,70 +766,22 @@ datos_acdivoca_num<span class="op">$</span>memoria_expectativa &lt;-<span class=
 <div id="estadisticos-de-los-items-creados" class="section level1">
 <h1><span class="header-section-number">4</span> Estadisticos de los items creados</h1>
 <p>Aqui exponemos las estadisticas descriptivas de los items que se acaban de crear</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Otra forma de ver los estadisticos </span>
-datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(memoria, reconciliacion, disculpas, 
          violencia, rencor, memoria_expectativa) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">describe</span>(<span class="dt">fast =</span> T) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">print</span>()</code></pre></div>
-<pre><code>## . 
-## 
-##  6  Variables      11966  Observations
-## ---------------------------------------------------------------------------
-## memoria 
-##        n  missing distinct     Info     Mean      Gmd 
-##    11966        0        5    0.918    3.331    1.187 
-##                                         
-## Value          1     2     3     4     5
-## Frequency    665  2260  2934  4658  1449
-## Proportion 0.056 0.189 0.245 0.389 0.121
-## ---------------------------------------------------------------------------
-## reconciliacion 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##    11966        0       33    0.988    3.407    6.861       -8       -5 
-##      .25      .50      .75      .90      .95 
-##        0        4        8        9       13 
-## 
-## lowest : -16 -15 -14 -13 -12, highest:  12  13  14  15  16
-## ---------------------------------------------------------------------------
-## disculpas 
-##        n  missing distinct     Info     Mean      Gmd 
-##    11966        0        5    0.885   0.8022    1.066 
-##                                         
-## Value         -2    -1     0     1     2
-## Frequency    436   934  2186  5415  2995
-## Proportion 0.036 0.078 0.183 0.453 0.250
-## ---------------------------------------------------------------------------
-## violencia 
-##        n  missing distinct     Info     Mean      Gmd 
-##    11966        0        9    0.956   -1.227    1.628 
-##                                                                 
-## Value         -4    -3    -2    -1     0     1     2     3     4
-## Frequency    554  2107  2679  2316  3246   733   225    76    30
-## Proportion 0.046 0.176 0.224 0.194 0.271 0.061 0.019 0.006 0.003
-## ---------------------------------------------------------------------------
-## rencor 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##    11966        0       23    0.928    3.672    1.105    1.667    2.400 
-##      .25      .50      .75      .90      .95 
-##    3.000    4.000    4.000    5.000    5.000 
-## 
-## lowest :  0.6000000  0.6250000  0.6666667  0.7500000  1.0000000
-## highest:  6.0000000  6.6666667  8.7500000 10.0000000 15.0000000
-## ---------------------------------------------------------------------------
-## memoria_expectativa 
-##        n  missing distinct     Info     Mean      Gmd      .05      .10 
-##    11966        0       23    0.971    3.375    1.303    1.500    2.000 
-##      .25      .50      .75      .90      .95 
-##    2.625    3.000    4.000    5.000    5.000 
-## 
-## lowest :  0.6000000  0.6250000  0.6666667  0.7500000  1.0000000
-## highest:  6.0000000  6.6666667  8.7500000 10.0000000 15.0000000
-## ---------------------------------------------------------------------------</code></pre>
+<pre><code>##                     vars     n  mean   sd   min max range   se
+## memoria                1 11966  3.33 1.08   1.0   5   4.0 0.01
+## reconciliacion         2 11966  3.41 6.22 -16.0  16  32.0 0.06
+## disculpas              3 11966  0.80 1.02  -2.0   2   4.0 0.01
+## violencia              4 11966 -1.23 1.46  -4.0   4   8.0 0.01
+## rencor                 5 11966  3.67 1.06   0.6  15  14.4 0.01
+## memoria_expectativa    6 11966  3.38 1.25   0.6  15  14.4 0.01</code></pre>
 </div>
 <div id="merge-con-base-de-datos-cede-general" class="section level1">
 <h1><span class="header-section-number">5</span> MERGE con base de datos CEDE general</h1>
-<p>Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (aÃ±o, pib, poblacion, etc.)</p>
+<p>Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (ano, pib, poblacion, etc.)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Collapse estadisticos por municipio</span>
 
 reconciliacion_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(reconciliacion <span class="op">~</span><span class="st"> </span>Municipio, 
@@ -831,16 +805,17 @@ cede_general_<span class="dv">44</span> &lt;-<span class="st"> </span>cede_gener
 <span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(Municipio)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#Quitar variable que tienen las otras bases</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">ano_base_general=</span>ano) <span class="co">#Renombrar la variable ano asociada con la base general</span>
 
-
-
-
-
 <span class="co">#Merge con las bases</span>
 cede_conflicto_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_conflicto_<span class="dv">44</span>, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&quot;codmpio&quot;</span>)
+cede_conflicto_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_conflicto_<span class="dv">44</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;Municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
 cede_educacion_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_educacion, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
+cede_educacion_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_educacion_<span class="dv">44</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
 cede_gobierno_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_gobierno, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
+cede_gobierno_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_gobierno_<span class="dv">44</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
 cede_salud_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_salud, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
-cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_tierras, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)</code></pre></div>
+cede_salud_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_salud_<span class="dv">44</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
+cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_tierras, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
+cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_tierras_<span class="dv">44</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)</code></pre></div>
 <p>Por ultimo limpiamos las variables que ya no se vuelven a utilizar</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Limpiar environment</span>
 
@@ -848,8 +823,10 @@ cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span clas
    datos_cede_generales,datos_cede_gobierno,
    datos_cede_salud,datos_cede_tierras, cede_general_<span class="dv">44</span>)</code></pre></div>
 </div>
-<div id="creacion-de-indices-importantes" class="section level1">
-<h1><span class="header-section-number">6</span> Creacion de indices importantes</h1>
+<div id="guardar-environment" class="section level1">
+<h1><span class="header-section-number">6</span> Guardar Environment</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Codigo para guardar el environement (la base de datos), para poder importarla en otros scripts. </span>
+<span class="kw">save.image</span>(<span class="dt">file=</span><span class="st">&#39;MergeBases_Environment.RData&#39;</span>)</code></pre></div>
 </div>
 
 
