@@ -1,0 +1,876 @@
+---
+title: 'Tierras: Graficos y analisis'
+author: "Felipe Gonzalez-Arango"
+date: "06 de junio de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+#Setup
+Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
+
+```{r message=FALSE, warning=FALSE}
+#ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
+
+#Set Working Directory
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+rm(list=ls())
+
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+
+
+#Cargar paquetes
+library(readstata13)
+library(tidyr)
+library(dplyr)
+library(data.table)
+library(readxl)
+library(doBy)
+library(vtable)
+library(plyr)
+library(gridExtra)
+library(grid)
+library(purrr)
+library(psych)
+library(ggplot2)
+library(psych)
+library(Hmisc)
+library(matrixStats)
+library(ggpubr)
+library(vtable)
+library(ggthemes)
+
+```
+
+
+```{r}
+#Cambiarle los nombres a algunos municipios que no estan codificados igual
+
+cede_tierras_44$municipio[cede_tierras_44$municipio=="Bojaya"] <- "Bojayá"
+cede_tierras_44$municipio[cede_tierras_44$municipio=="Bogotá, D.C."] <- "Bogotá, D.c."
+cede_tierras_44$municipio[cede_tierras_44$municipio=="Cartagena"] <- "Cartagena De Indias"
+cede_tierras_44$municipio[cede_tierras_44$municipio=="Bojaya"] <- "Bojayá"
+cede_tierras_44$municipio[cede_tierras_44$municipio=="Cartagena del Chairá"] <- "Cartagena Del Chairá"
+cede_tierras_44$municipio[cede_tierras_44$municipio=="San Vicente del Caguán"] <- "San Vicente Del Caguán"
+```
+
+
+# Graficos variables importantes y algunos descriptivos
+
+Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. 
+***
+La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion. 
+
+
+## Numero de creditos a pequenos, medianos y grandes productores
+Esta variable es la cantidad de creditos que le dan a los pequenos, medianos y grandes productores
+***
+
+###Graficos
+
+Vamos a graficar el numero de creditos por ano por municipio de los pequenos, grandes y medianos productores en un mismo grafico. 
+La linea negra son los pequenos
+La linea azul son los medianos
+La linea roja son los grandes
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_tierras_44 %>% 
+  ggplot(aes(x = ano))+
+  geom_line(aes(y = nuf_peq)) +
+   geom_line(aes(y = nuf_medianos), color="blue") +
+  geom_line(aes(y = nuf_grandes), color="red") +
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='numero de creditos', title='numero de creditos por ano por municipio de los pequenos (negro), medianos(azul) y grandes(rojo) por municipios por ano', x= 'Ano', caption="Fuente: C600-DANE") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2000:2016),
+                  ylim=c(0:700))
+
+```
+
+
+##Pequenos productores
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_nuf_peq <- summaryBy(nuf_peq ~ municipio, cede_tierras_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_nuf_peq %<>% arrange(municipio)
+
+print(descrip_nuf_peq)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_nuf_peq_5antes <- cede_tierras_44 %>% 
+  filter(ano<"2006-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_nuf_peq_5antes <- summaryBy(nuf_peq ~ municipio, descrip_nuf_peq_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_nuf_peq_5despues <- cede_tierras_44 %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_nuf_peq_5despues <- summaryBy(nuf_peq ~ municipio, descrip_nuf_peq_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_nuf_peq_mean <- descrip_nuf_peq_5antes$nuf_peq.mean -descrip_nuf_peq_5despues$nuf_peq.mean
+diff_nuf_peq_sd <- descrip_nuf_peq_5antes$nuf_peq.sd -descrip_nuf_peq_5despues$nuf_peq.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_nuf_peq_mean)
+```
+
+
+##Medianos productores
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_nuf_medianos <- summaryBy(nuf_medianos ~ municipio, cede_tierras_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_nuf_medianos %<>% arrange(municipio)
+
+print(descrip_nuf_medianos)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_nuf_medianos_5antes <- cede_tierras_44 %>% 
+  filter(ano<"2006-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_nuf_medianos_5antes <- summaryBy(nuf_medianos ~ municipio, descrip_nuf_medianos_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_nuf_medianos_5despues <- cede_tierras_44 %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_nuf_medianos_5despues <- summaryBy(nuf_medianos ~ municipio, descrip_nuf_medianos_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_nuf_medianos_mean <- descrip_nuf_medianos_5antes$nuf_medianos.mean -descrip_nuf_medianos_5despues$nuf_medianos.mean
+diff_nuf_medianos_sd <- descrip_nuf_medianos_5antes$nuf_medianos.sd -descrip_nuf_medianos_5despues$nuf_medianos.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_nuf_medianos_mean)
+```
+
+
+##Grandes productores
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_nuf_grandes <- summaryBy(nuf_grandes ~ municipio, cede_tierras_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_nuf_grandes %<>% arrange(municipio)
+
+print(descrip_nuf_grandes)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_nuf_grandes_5antes <- cede_tierras_44 %>% 
+  filter(ano<"2006-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_nuf_grandes_5antes <- summaryBy(nuf_grandes ~ municipio, descrip_nuf_grandes_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_nuf_grandes_5despues <- cede_tierras_44 %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_nuf_grandes_5despues <- summaryBy(nuf_grandes ~ municipio, descrip_nuf_grandes_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_nuf_grandes_mean <- descrip_nuf_grandes_5antes$nuf_grandes.mean -descrip_nuf_grandes_5despues$nuf_grandes.mean
+diff_nuf_grandes_sd <- descrip_nuf_grandes_5antes$nuf_grandes.sd -descrip_nuf_grandes_5despues$nuf_grandes.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_nuf_grandes_mean)
+```
+
+
+## Valor de creditos a pequenos, medianos y grandes productores
+Esta variable es la cantidad de creditos que le dan a los pequenos, medianos y grandes productores
+***
+
+###Graficos
+
+Vamos a graficar el valor del credito por ano por municipio de los pequenos, grandes y medianos productores en un mismo grafico. 
+La linea negra son los pequenos
+La linea azul son los medianos
+La linea roja son los grandes
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_tierras_44 %>% 
+  ggplot(aes(x = ano))+
+  geom_line(aes(y = vrf_peq)) +
+   geom_line(aes(y = vrf_medianos), color="blue") +
+  geom_line(aes(y = vrf_grandes), color="red") +
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Valor de creditos', title='Valor de creditos por ano por municipio de los pequenos (negro), medianos(azul) y grandes(rojo) por municipios por ano', x= 'Ano', caption="Fuente: C600-DANE") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2000:2016),
+                  ylim=c(cede_tierras_44$vrf_peq[which.min(cede_tierras_44$vrf_peq)],
+                         cede_tierras_44$vrf_peq[which.max(cede_tierras_44$vrf_peq)]))
+
+```
+
+
+## Valor credito para Pequenos productores
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_vrf_peq <- summaryBy(vrf_peq ~ municipio, cede_tierras_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_vrf_peq %<>% arrange(municipio)
+
+print(descrip_vrf_peq)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_vrf_peq_5antes <- cede_tierras_44 %>% 
+  filter(ano<"2006-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_vrf_peq_5antes <- summaryBy(vrf_peq ~ municipio, descrip_vrf_peq_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_vrf_peq_5despues <- cede_tierras_44 %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_vrf_peq_5despues <- summaryBy(vrf_peq ~ municipio, descrip_vrf_peq_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_vrf_peq_mean <- descrip_vrf_peq_5antes$vrf_peq.mean -descrip_vrf_peq_5despues$vrf_peq.mean
+diff_vrf_peq_sd <- descrip_vrf_peq_5antes$vrf_peq.sd -descrip_vrf_peq_5despues$vrf_peq.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_vrf_peq_mean)
+```
+
+
+##Valor credito para Medianos productores
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_vrf_medianos <- summaryBy(vrf_medianos ~ municipio, cede_tierras_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_vrf_medianos %<>% arrange(municipio)
+
+print(descrip_vrf_medianos)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_vrf_medianos_5antes <- cede_tierras_44 %>% 
+  filter(ano<"2006-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_vrf_medianos_5antes <- summaryBy(vrf_medianos ~ municipio, descrip_vrf_medianos_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_vrf_medianos_5despues <- cede_tierras_44 %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_vrf_medianos_5despues <- summaryBy(vrf_medianos ~ municipio, descrip_vrf_medianos_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_vrf_medianos_mean <- descrip_vrf_medianos_5antes$vrf_medianos.mean -descrip_vrf_medianos_5despues$vrf_medianos.mean
+diff_vrf_medianos_sd <- descrip_vrf_medianos_5antes$vrf_medianos.sd -descrip_vrf_medianos_5despues$vrf_medianos.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_vrf_medianos_mean)
+```
+
+
+## Valor credito para Grandes productores
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_vrf_grandes <- summaryBy(vrf_grandes ~ municipio, cede_tierras_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_vrf_grandes %<>% arrange(municipio)
+
+print(descrip_vrf_grandes)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_vrf_grandes_5antes <- cede_tierras_44 %>% 
+  filter(ano<"2006-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_vrf_grandes_5antes <- summaryBy(vrf_grandes ~ municipio, descrip_vrf_grandes_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_vrf_grandes_5despues <- cede_tierras_44 %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_vrf_grandes_5despues <- summaryBy(vrf_grandes ~ municipio, descrip_vrf_grandes_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_vrf_grandes_mean <- descrip_vrf_grandes_5antes$vrf_grandes.mean -descrip_vrf_grandes_5despues$vrf_grandes.mean
+diff_vrf_grandes_sd <- descrip_vrf_grandes_5antes$vrf_grandes.sd -descrip_vrf_grandes_5despues$vrf_grandes.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_vrf_grandes_mean)
+```
+
+
+
+
+## Numero de creditos totales
+
+
+###Graficos
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_tierras_44 %>% 
+  ggplot(aes(x = ano, y = ba_tot_nu)) +	
+  geom_line() +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Numero total creditos', title='Numero total creditos por municipios por ano', x= 'Ano', caption="Fuente: C600-DANE") +
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2000:2013),
+                  ylim=c(cede_tierras_44$ba_tot_nu[which.min(cede_tierras_44$ba_tot_nu)],cede_tierras_44$ba_tot_nu[which.max(cede_tierras_44$ba_tot_nu)]))
+
+```
+
+
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_ba_tot_nu <- summaryBy(ba_tot_nu ~ municipio, cede_tierras_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_ba_tot_nu %<>% arrange(municipio)
+
+print(descrip_ba_tot_nu)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_ba_tot_nu_5antes <- cede_tierras_44 %>% 
+  filter(ano<"2006-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_ba_tot_nu_5antes <- summaryBy(ba_tot_nu ~ municipio, descrip_ba_tot_nu_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_ba_tot_nu_5despues <- cede_tierras_44 %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_ba_tot_nu_5despues <- summaryBy(ba_tot_nu ~ municipio, descrip_ba_tot_nu_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_ba_tot_nu_mean <- descrip_ba_tot_nu_5antes$ba_tot_nu.mean -descrip_ba_tot_nu_5despues$ba_tot_nu.mean
+diff_ba_tot_nu_sd <- descrip_ba_tot_nu_5antes$ba_tot_nu.sd -descrip_ba_tot_nu_5despues$ba_tot_nu.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_ba_tot_nu_mean)
+```
+
+## Valor de creditos totales
+
+
+###Graficos
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_tierras_44 %>% 
+  ggplot(aes(x = ano, y = ba_tot_vr)) +	
+  geom_line() +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Numero total creditos', title='Numero total creditos por municipios por ano', x= 'Ano', caption="Fuente: C600-DANE") +
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2000:2013),
+                  ylim=c(cede_tierras_44$ba_tot_vr[which.min(cede_tierras_44$ba_tot_vr)],cede_tierras_44$ba_tot_vr[which.max(cede_tierras_44$ba_tot_vr)]))
+
+```
+
+
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_ba_tot_vr <- summaryBy(ba_tot_vr ~ municipio, cede_tierras_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_ba_tot_vr %<>% arrange(municipio)
+
+print(descrip_ba_tot_vr)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_ba_tot_vr_5antes <- cede_tierras_44 %>% 
+  filter(ano<"2006-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_ba_tot_vr_5antes <- summaryBy(ba_tot_vr ~ municipio, descrip_ba_tot_vr_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_ba_tot_vr_5despues <- cede_tierras_44 %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_ba_tot_vr_5despues <- summaryBy(ba_tot_vr ~ municipio, descrip_ba_tot_vr_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_ba_tot_vr_mean <- descrip_ba_tot_vr_5antes$ba_tot_vr.mean -descrip_ba_tot_vr_5despues$ba_tot_vr.mean
+diff_ba_tot_vr_sd <- descrip_ba_tot_vr_5antes$ba_tot_vr.sd -descrip_ba_tot_vr_5despues$ba_tot_vr.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_ba_tot_vr_mean)
+```
+
+
+# Analisis Estadisticos CON EL ACDIVOCA (Correlaciones y regresiones)
+
+El objetivo de esta seccion es hacer las estadisticas inferenciales de las variables de interes con los items del ACDIVOCA. Si no sabe cuales son las variables ACDI-VOCA dirigirse a la pestana *"Codigo para correr todo"*.
+
+## Variables Agregadas con ACDI-VOCA
+
+En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo collapse en todos los anos. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+Recuerde que las variables del ACDI-VOCA son:
++Reconciliacion
+<br>
++Disculpas
+<br>
++Violencia
+<br>
++Rencor
+<br>
++Memoria (Memoria historica)
+<br>
++Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)
+<br>
+
+### Correlaciones
+
+####Distinguiendo por pequenos, grandes y medianos 
+
+```{r}
+#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. 
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+descrip_nuf_peq$nuf_peq.mean[which(!is.finite(descrip_nuf_peq$nuf_peq.mean))] <- NA 
+descrip_nuf_medianos$nuf_medianos.mean[which(!is.finite(descrip_nuf_medianos$nuf_medianos.mean))] <- NA 
+descrip_nuf_grandes$nuf_grandes.mean[which(!is.finite(descrip_nuf_grandes$nuf_grandes.mean))] <- NA 
+descrip_vrf_peq$vrf_peq.mean[which(!is.finite(descrip_vrf_peq$vrf_peq.mean))] <- NA 
+descrip_vrf_medianos$vrf_medianos.mean[which(!is.finite(descrip_vrf_medianos$vrf_medianos.mean))] <- NA 
+descrip_vrf_grandes$vrf_grandes.mean[which(!is.finite(descrip_vrf_grandes$vrf_grandes.mean))] <- NA 
+
+
+
+correlaciones <- cbind(descrip_nuf_peq$nuf_peq.mean,
+                       descrip_nuf_medianos$nuf_medianos.mean,
+                       descrip_nuf_grandes$nuf_grandes.mean,
+                       descrip_vrf_peq$vrf_peq.mean,
+                       descrip_vrf_medianos$vrf_medianos.mean,
+                       descrip_vrf_grandes$vrf_grandes.mean,
+                       reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+
+nombres <- c("numero_pequenos",
+             "numero_medianos",
+             "numero_grandes",
+             "valor_pequenos",
+             "valor_medianos",
+             "valor_grandes",
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+
+colnames(correlaciones) <- nombres
+
+rcorr(correlaciones, type="spearman") #Aqui hay cosas bien interesantes}
+
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ correlaciones[,1:6], data=dfcorrelaciones)
+summary(regReconcililacion)
+
+regDisculpas <- lm(Disculpas ~ correlaciones[,1:6], data=dfcorrelaciones)
+summary(regDisculpas)
+
+#Numero de personas en el regiem de subsidiado
+regViolencia <- lm(Violencia ~ correlaciones[,1:6], data=dfcorrelaciones)
+summary(regViolencia)
+
+regRencor <- lm(Rencor ~ correlaciones[,1:6], data=dfcorrelaciones)
+summary(regRencor)
+
+regMemoria <- lm(Memoria~ correlaciones[,1:6], data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~correlaciones[,1:6], data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+```
+
+Aqui hay cosas bien interesantes. Revisar numero_medianos, es decir el numero de creditos a productores
+
+## $\Delta$ variables con ACDI-VOCA
+
+En esta seccion se tiene en cuenta el $\Delta$ de la variable de interes. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+### Correlaciones
+
+
+```{r}
+#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. 
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+
+
+diff_nuf_peq_mean[which(!is.finite(diff_nuf_peq_mean))] <- NA 
+diff_nuf_medianos_mean[which(!is.finite(diff_nuf_medianos_mean))] <- NA 
+diff_nuf_grandes_mean[which(!is.finite(diff_nuf_grandes_mean))] <- NA 
+diff_vrf_peq_mean[which(!is.finite(diff_vrf_peq_mean))] <- NA 
+diff_vrf_medianos_mean[which(!is.finite(diff_vrf_medianos_mean))] <- NA 
+diff_vrf_grandes_mean[which(!is.finite(diff_vrf_grandes_mean))] <- NA 
+
+
+correlaciones <- cbind(diff_nuf_peq_mean,
+                       diff_nuf_medianos_mean, 
+                       diff_nuf_grandes_mean,
+                       diff_vrf_peq_mean,
+                       diff_vrf_medianos_mean, 
+                       diff_vrf_grandes_mean, 
+                       reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+
+nombres <- c("numero_pequenos",
+             "numero_medianos",
+             "numero_grandes",
+             "valor_pequenos",
+             "valor_medianos",
+             "valor_grandes",
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+
+colnames(correlaciones) <- nombres
+
+
+rcorr(correlaciones, type="spearman")
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ correlaciones[,1:6], data=dfcorrelaciones)
+summary(regReconcililacion)
+
+regDisculpas <- lm(Disculpas ~ correlaciones[,1:6], data=dfcorrelaciones)
+summary(regDisculpas)
+
+regViolencia <- lm(Violencia ~ correlaciones[,1:6], data=dfcorrelaciones)
+summary(regViolencia)
+
+regRencor <- lm(Rencor ~ correlaciones[,1:6], data=dfcorrelaciones)
+summary(regRencor)
+
+regMemoria <- lm(Memoria~ correlaciones[,1:6], data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~correlaciones[,1:6], data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+```
+
+
+Igualmente, el numero de creditos a productores medianos esta interesante. 
+
+
+#Analisis con Indice PAR (Instrumento de medicion de reconciliacion)
+
+
+Ahora se haran regresiones con el indice de reconciliacion.
+
+
+##Variables con valores absolutos (agregados) con indice PAR
+
+A continuacion se haran las correlaciones con las variables de salud y el indice PAR. Recuerde que estas variables son las **agregadas**. 
+
+##Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.
+names_acdi <- acdi_imr$Municipio_imr
+
+acdi_imr <- acdi_imr %>% arrange(Municipio_imr)
+
+
+par_descrip_nuf_peq <- descrip_nuf_peq[descrip_nuf_peq$municipio %in% names_acdi,]
+par_descrip_nuf_peq <- par_descrip_nuf_peq %>% arrange(municipio)
+par_descrip_nuf_medianos <- descrip_nuf_medianos[descrip_nuf_medianos$municipio %in% names_acdi,]
+par_descrip_nuf_medianos <- par_descrip_nuf_medianos %>% arrange(municipio)
+par_descrip_nuf_grandes <- descrip_nuf_grandes[descrip_nuf_grandes$municipio %in% names_acdi,]
+par_descrip_nuf_grandes <- par_descrip_nuf_grandes %>% arrange(municipio)
+par_descrip_vrf_peq <- descrip_vrf_peq[descrip_vrf_peq$municipio %in% names_acdi,]
+par_descrip_vrf_peq <- par_descrip_vrf_peq %>% arrange(municipio)
+par_descrip_vrf_medianos <- descrip_vrf_medianos[descrip_vrf_medianos$municipio %in% names_acdi,]
+par_descrip_vrf_medianos <- par_descrip_vrf_medianos %>% arrange(municipio)
+par_descrip_vrf_grandes <- descrip_vrf_grandes[descrip_vrf_grandes$municipio %in% names_acdi,]
+par_descrip_vrf_grandes <- par_descrip_vrf_grandes %>% arrange(municipio)
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+par_descrip_nuf_peq$nuf_peq.mean[which(!is.finite(par_descrip_nuf_peq$nuf_peq.mean))] <- NA 
+par_descrip_nuf_medianos$nuf_medianos.mean[which(!is.finite(par_descrip_nuf_medianos$nuf_medianos.mean))] <- NA 
+par_descrip_nuf_grandes$nuf_grandes.mean[which(!is.finite(par_descrip_nuf_grandes$nuf_grandes.mean))] <- NA 
+
+par_descrip_vrf_peq$vrf_peq.mean[which(!is.finite(par_descrip_vrf_peq$vrf_peq.mean))] <- NA 
+par_descrip_vrf_medianos$vrf_medianos.mean[which(!is.finite(par_descrip_vrf_medianos$vrf_medianos.mean))] <- NA 
+par_descrip_vrf_grandes$vrf_grandes.mean[which(!is.finite(par_descrip_vrf_grandes$vrf_grandes.mean))] <- NA 
+
+
+correlaciones <- cbind(par_descrip_nuf_peq$nuf_peq.mean,
+                       par_descrip_nuf_medianos$nuf_medianos.mean,
+                       par_descrip_nuf_grandes$nuf_grandes.mean,
+                       par_descrip_vrf_peq$vrf_peq.mean,
+                       par_descrip_vrf_medianos$vrf_medianos.mean,
+                       par_descrip_vrf_grandes$vrf_grandes.mean,
+                       acdi_imr$indice_de_reconciliacion_imr)
+
+nombres <- c("numero_pequenos",
+             "numero_medianos",
+             "numero_grandes",
+             "valor_pequenos",
+             "valor_medianos",
+             "valor_grandes",
+             "Indice_reconciliacion")
+colnames(correlaciones) <- nombres
+rcorr(correlaciones, type="spearman") 
+```
+
+
+##Regresion lineal
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regtierras_PAR <- lm(Indice_reconciliacion ~., data = dfcorrelaciones)
+summary(regtierras_PAR)
+```
+
+
+##Variables con diferencias (Deltas $\Delta$) con indice PAR
+
+A continuacion se haran las correlaciones con las variables de gobierno y el indice PAR. Recuerde que estas variables son las **diferencias entre los primeros cinco anos a los ultimos 5 anos**. 
+
+##Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.  
+
+par_diff_nuf_peq <- descrip_nuf_peq_5antes[descrip_nuf_peq_5antes$municipio %in% names_acdi,]$nuf_peq.mean -descrip_nuf_peq_5despues[descrip_nuf_peq_5despues$municipio %in% names_acdi,]$nuf_peq.mean
+
+par_diff_nuf_medianos <- descrip_nuf_medianos_5antes[descrip_nuf_medianos_5antes$municipio %in% names_acdi,]$nuf_medianos.mean - descrip_nuf_medianos_5despues[descrip_nuf_medianos_5despues$municipio %in% names_acdi,]$nuf_medianos.mean
+par_diff_nuf_grandes <- descrip_nuf_grandes_5antes[descrip_nuf_grandes_5antes$municipio %in% names_acdi,]$nuf_grandes.mean-descrip_nuf_grandes_5despues[descrip_nuf_grandes_5despues$municipio %in% names_acdi,]$nuf_grandes.mean
+par_diff_vrf_peq <- descrip_vrf_peq_5antes[descrip_vrf_peq_5antes$municipio %in% names_acdi,]$vrf_peq.mean -descrip_vrf_peq_5despues[descrip_vrf_peq_5despues$municipio %in% names_acdi,]$vrf_peq.mean
+
+par_diff_vrf_medianos <- descrip_vrf_medianos_5antes[descrip_vrf_medianos_5antes$municipio %in% names_acdi,]$vrf_medianos.mean - descrip_vrf_medianos_5despues[descrip_vrf_medianos_5despues$municipio %in% names_acdi,]$vrf_medianos.mean
+par_diff_vrf_grandes <- descrip_vrf_grandes_5antes[descrip_vrf_grandes_5antes$municipio %in% names_acdi,]$vrf_grandes.mean-descrip_vrf_grandes_5despues[descrip_vrf_grandes_5despues$municipio %in% names_acdi,]$vrf_grandes.mean
+
+
+
+par_diff_nuf_peq[which(!is.finite(par_diff_nuf_peq))] <- NA 
+par_diff_nuf_medianos[which(!is.finite(par_diff_nuf_medianos))] <- NA
+par_diff_nuf_grandes[which(!is.finite(par_diff_nuf_grandes))] <- NA
+par_diff_vrf_peq[which(!is.finite(par_diff_vrf_peq))] <- NA 
+par_diff_vrf_medianos[which(!is.finite(par_diff_vrf_medianos))] <- NA
+par_diff_vrf_grandes[which(!is.finite(par_diff_vrf_grandes))] <- NA
+
+correlaciones <- cbind(par_diff_nuf_peq, 
+                       par_diff_nuf_medianos, 
+                       par_diff_nuf_grandes, 
+                       par_diff_vrf_peq, 
+                       par_diff_vrf_medianos, 
+                       par_diff_vrf_grandes, 
+                       acdi_imr$indice_de_reconciliacion_imr)
+
+
+nombres <- c("numero_pequenos",
+             "numero_medianos",
+             "numero_grandes",
+             "valor_pequenos",
+             "valor_medianos",
+             "valor_grandes",
+             "Indice_reconciliacion")
+
+
+colnames(correlaciones) <- nombres
+
+rcorr(correlaciones, type="spearman") #Aqui hay cosas bien interesantes}
+
+
+
+
+
+```
+
+Aqui observe la correlacion con el numero de creditos a productores grandes. El indice de reconciliacion tiene un indice de 0.63 y es significativo. 
+
+##Regresion lineal
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regtierras_diff_PAR <- lm(Indice_reconciliacion ~., data=dfcorrelaciones)
+summary(regtierras_diff_PAR)
+```
+
+
+
+
+
+
+

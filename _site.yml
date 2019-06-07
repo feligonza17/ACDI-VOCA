@@ -25,6 +25,9 @@ navbar:
           - text: "Educacion"
             icon: fa-graduation-cap
             href: Educacion_graficos_analisis.html
+          - text: "Tierras"
+            icon: fa-seedling
+            href: Tierras_graficos_analisis.html            
     - text: "ELCA"
       menu:
         - text: "Depuracion y merge"
