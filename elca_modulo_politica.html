@@ -492,7 +492,13 @@ div.tocify {
             Salud
           </a>
         </li>
-        <li class="dropdown-header">Educacion</li>
+        <li>
+          <a href="Educacion_graficos_analisis.html">
+            <span class="fa fa-graduation-cap"></span>
+             
+            Educacion
+          </a>
+        </li>
       </ul>
     </li>
   </ul>
@@ -505,10 +511,18 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="elca_exploracion.html">Depuracion y merge</a>
+      <a href="elca_exploracion.html">
+        <span class="fa fa-object-ungroup"></span>
+         
+        Depuracion y merge
+      </a>
     </li>
     <li>
-      <a href="elca_modulo_politica.html">Modulo Politica</a>
+      <a href="elca_modulo_politica.html">
+        <span class="fa fa-comment"></span>
+         
+        Modulo Politica
+      </a>
     </li>
   </ul>
 </li>
@@ -635,10 +649,10 @@ ensayo &lt;-<span class="st"> </span>elca_politica2016 <span class="op">%&gt;%</
                   <span class="dt">voto_secreto_hogar=</span><span class="kw">getmode</span>(voto_secreto)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">na.omit</span>()
 
-ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;23102&quot;</span>] &lt;-<span class="st"> &quot;MedellÃ­n&quot;</span>
+ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;23102&quot;</span>] &lt;-<span class="st"> &quot;Medellín&quot;</span>
 ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;23010&quot;</span>] &lt;-<span class="st"> &quot;Turbo&quot;</span>
 ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;22015&quot;</span>] &lt;-<span class="st"> &quot;Soledad&quot;</span>
-ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;21102&quot;</span>] &lt;-<span class="st"> &quot;BogotÃ¡, D.c.&quot;</span>
+ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;21102&quot;</span>] &lt;-<span class="st"> &quot;Bogotá, D.c.&quot;</span>
 ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;20102&quot;</span>] &lt;-<span class="st"> &quot;Cartagena De Indias&quot;</span>
 ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;11102&quot;</span>] &lt;-<span class="st"> &quot;Santa Marta&quot;</span>
 ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;02102&quot;</span>] &lt;-<span class="st"> &quot;Cali&quot;</span>
@@ -646,7 +660,7 @@ ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<
 ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;10102&quot;</span>] &lt;-<span class="st"> &quot;Villavicencio&quot;</span>
 ensayo<span class="op">$</span>id_mpioU[ensayo<span class="op">$</span>id_mpioU<span class="op">==</span><span class="st">&quot;05040&quot;</span>] &lt;-<span class="st"> &quot;Piedecuesta&quot;</span>
 
-ensayo <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">filter</span>(id_mpioU<span class="op">==</span><span class="st">&quot;BogotÃ¡, D.c.&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Cali&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Cartagena De Indias&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;MedellÃ­n&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Santa Marta&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Turbo&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Soledad&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Villaciencio&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Vistahermosa&quot;</span>) </code></pre></div>
+ensayo <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">filter</span>(id_mpioU<span class="op">==</span><span class="st">&quot;Bogotá, D.c.&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Cali&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Cartagena De Indias&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Medellín&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Santa Marta&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Turbo&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Soledad&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Villaciencio&quot;</span> <span class="op">|</span><span class="st"> </span>id_mpioU<span class="op">==</span><span class="st">&quot;Vistahermosa&quot;</span>) </code></pre></div>
 </div>
 </div>
 <div id="merge-con-acdiv-voca" class="section level1">
@@ -663,9 +677,9 @@ acdi_imr &lt;-<span class="st"> </span>acdi_imr <span class="op">%&gt;%</span><s
 <span class="kw">colnames</span>(acdi_imr)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;Municipio&quot;</span>
 <span class="kw">colnames</span>(acdi_imr)[<span class="dv">15</span>] &lt;-<span class="st"> &quot;1-agresion&quot;</span>
 <span class="co">#Limpirar nombre de Municipios para hacer el merge. Importante notar que solo se hacen estos 7 municipios porque estos tambien estan en la base de la ELCA.</span>
-acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;MEDELLIN&quot;</span>] &lt;-<span class="st"> &quot;MedellÃ­n&quot;</span>
+acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;MEDELLIN&quot;</span>] &lt;-<span class="st"> &quot;Medellín&quot;</span>
 acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;TURBO&quot;</span>] &lt;-<span class="st"> &quot;Turbo&quot;</span>
-acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;BOGOTA, D.C.&quot;</span>] &lt;-<span class="st"> &quot;BogotÃ¡, D.c.&quot;</span>
+acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;BOGOTA, D.C.&quot;</span>] &lt;-<span class="st"> &quot;Bogotá, D.c.&quot;</span>
 acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;CARTAGENA&quot;</span>] &lt;-<span class="st"> &quot;Cartagena De Indias&quot;</span>
 acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;SANTA MARTA&quot;</span>] &lt;-<span class="st"> &quot;Santa Marta&quot;</span>
 acdi_imr<span class="op">$</span>Municipio[acdi_imr<span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;CALI&quot;</span>] &lt;-<span class="st"> &quot;Cali&quot;</span>
@@ -698,9 +712,9 @@ merge_acdi<span class="op">$</span>firma_paz_hogar_lab &lt;-<span class="st"> </
 <p>Luego de agrupar las variables por hogar y hacer el merge con el indice PAR del acdivoca, vamos a hacer algunos analisis descriptivos y algunas correlaciones.</p>
 <p>A continuacion se hace la descripcion de las varibales que se pueden encontrar:</p>
 <p><strong>firma_paz_hogar</strong>: Cree usted que con la firma del acuerdo de paz con las FARC, su vida puede: <br> 1 Mejorar <br> 2 Permanecer igual <br> 3 Empeorar <br> 4 No sabe</p>
-<p><strong>convence_hogar</strong>: Durante las elecciones, alguna gente trata de convencer a otras para que voten por algun partido o candidato. Â¿Con que frecuencia ha tratado usted de convencer a otros para que voten por un partido o candidato? <br> 1 Frecuentemente <br> 2 De vez en cuando <br> 3 Rara vez <br> 4 Nunca <br> 5 No sabe /No responde</p>
-<p><strong>voto_secreto_hogar</strong>: Â¿… cree que el voto es secreto o no es secreto? <br> 1 Si, el voto es secreto <br> 2 No, el voto no es secreto <br> 3 No sabe/No responde</p>
-<p><strong>tendencia_pol_hogar</strong>:Con frecuencia se habla de tendencias politica de izquierda y de derecha. Segun el sentido que hagan para usted los terminos “izquierda” y “derecha”, Â¿con que tendencia politica simpatiza usted? <br> 1 Izquierda <br> 2 Centro-izquierda <br> 3 Centro <br> 4 Centro-derecha <br> 5 Derecha <br> 6 No sabe</p>
+<p><strong>convence_hogar</strong>: Durante las elecciones, alguna gente trata de convencer a otras para que voten por algun partido o candidato. ¿Con que frecuencia ha tratado usted de convencer a otros para que voten por un partido o candidato? <br> 1 Frecuentemente <br> 2 De vez en cuando <br> 3 Rara vez <br> 4 Nunca <br> 5 No sabe /No responde</p>
+<p><strong>voto_secreto_hogar</strong>: ¿… cree que el voto es secreto o no es secreto? <br> 1 Si, el voto es secreto <br> 2 No, el voto no es secreto <br> 3 No sabe/No responde</p>
+<p><strong>tendencia_pol_hogar</strong>:Con frecuencia se habla de tendencias politica de izquierda y de derecha. Segun el sentido que hagan para usted los terminos “izquierda” y “derecha”, ¿con que tendencia politica simpatiza usted? <br> 1 Izquierda <br> 2 Centro-izquierda <br> 3 Centro <br> 4 Centro-derecha <br> 5 Derecha <br> 6 No sabe</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(merge_acdi)</code></pre></div>
 <pre><code>##    id_mpioU             llave                  firma_paz_hogar
 ##  Length:218         Min.   :11100101   Mejorar         :51    
@@ -779,7 +793,7 @@ merge_acdi<span class="op">$</span>firma_paz_hogar_lab &lt;-<span class="st"> </
 </div>
 <div id="convence_hogar" class="section level3">
 <h3><span class="header-section-number">5.2.2</span> Convence_hogar</h3>
-<p>Durante las elecciones, alguna gente trata de convencer a otras para que voten por algun partido o candidato. Â¿Con que frecuencia ha tratado usted de convencer a otros para que voten por un partido o candidato? <br> 1 Frecuentemente <br> 2 De vez en cuando <br> 3 Rara vez <br> 4 Nunca <br> 5 No sabe /No responde</p>
+<p>Durante las elecciones, alguna gente trata de convencer a otras para que voten por algun partido o candidato. ¿Con que frecuencia ha tratado usted de convencer a otros para que voten por un partido o candidato? <br> 1 Frecuentemente <br> 2 De vez en cuando <br> 3 Rara vez <br> 4 Nunca <br> 5 No sabe /No responde</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">merge_acdi <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span><span class="kw">as.numeric</span>((convence_hogar)))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_histogram</span>()<span class="op">+</span>
@@ -796,7 +810,7 @@ merge_acdi<span class="op">$</span>firma_paz_hogar_lab &lt;-<span class="st"> </
 </div>
 <div id="voto-secreto" class="section level3">
 <h3><span class="header-section-number">5.2.3</span> Voto Secreto</h3>
-<p>Â¿… cree que el voto es secreto o no es secreto? <br> 1 Si, el voto es secreto <br> 2 No, el voto no es secreto <br> 3 No sabe/No responde</p>
+<p>¿… cree que el voto es secreto o no es secreto? <br> 1 Si, el voto es secreto <br> 2 No, el voto no es secreto <br> 3 No sabe/No responde</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">merge_acdi <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span><span class="kw">as.numeric</span>((voto_secreto_hogar)))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_histogram</span>()<span class="op">+</span>
@@ -811,7 +825,7 @@ merge_acdi<span class="op">$</span>firma_paz_hogar_lab &lt;-<span class="st"> </
 </div>
 <div id="tendencia-politica" class="section level3">
 <h3><span class="header-section-number">5.2.4</span> Tendencia Politica</h3>
-<p>Con frecuencia se habla de tendencias politica de izquierda y de derecha. Segun el sentido que hagan para usted los terminos “izquierda” y “derecha”, Â¿con que tendencia politica simpatiza usted? <br> 1 Izquierda <br> 2 Centro-izquierda <br> 3 Centro <br> 4 Centro-derecha <br> 5 Derecha <br> 6 No sabe</p>
+<p>Con frecuencia se habla de tendencias politica de izquierda y de derecha. Segun el sentido que hagan para usted los terminos “izquierda” y “derecha”, ¿con que tendencia politica simpatiza usted? <br> 1 Izquierda <br> 2 Centro-izquierda <br> 3 Centro <br> 4 Centro-derecha <br> 5 Derecha <br> 6 No sabe</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">merge_acdi <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span><span class="kw">as.numeric</span>((tendencia_pol_hogar)))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_histogram</span>()<span class="op">+</span>
@@ -1107,6 +1121,7 @@ regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(indi
 <p><strong><em>confianza_imr</em></strong>: Observe que en la regresion lineal, esta variable es marginalmente significativa con convencer_votar. Esta relacion es positiva, lo que quiere decir que, si aumenta en un punto la variable convencer_votar (es decir que las personas son menos propensas a convencer a los otros de votar) mayor sera la confianza que tienene.</p>
 <p><strong><em>resiliencia_imr</em></strong>: Observe que en la regresion lineal, esta variable es marginalmente significativa con convencer_votar. Esta relacion es negativa y sifgnificativa, lo que quiere decir que, si aumenta en un punto la variable convencer_votar (es decir que las personas son menos propensas a convencer a los otros de votar) la resiliencia de las personas disminuye. Aqui hay una relacion interesante ya que indica que el no querer compartir las ideologias politicas o no sentirse seguro con las convicciones politicas tiene una influenica sobre la resiliencia.</p>
 <p><strong><em>reconocimiento_imr</em></strong>: Observe que en la regresion lineal, esta variable es marginalmente significativa con tendencia politica. Esta relaciona es positivia lo que indica que si aumenta en un punto la tendencia politica (acercarse mas a las ideologias de derecha) el indice de reconocimiento va a aumentar en 0.015 unidades.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Guardar bsae de datos. </span></code></pre></div>
 </div>
 </div>
 
