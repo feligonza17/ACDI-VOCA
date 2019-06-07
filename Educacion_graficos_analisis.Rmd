@@ -1,0 +1,758 @@
+---
+title: 'Educacion: Graficos y analisis'
+author: "Felipe Gonzalez-Arango"
+date: "06 de junio de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+#Setup
+Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
+
+```{r message=FALSE, warning=FALSE}
+#ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
+
+#Set Working Directory
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+rm(list=ls())
+
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+
+
+#Cargar paquetes
+library(readstata13)
+library(tidyr)
+library(dplyr)
+library(data.table)
+library(readxl)
+library(doBy)
+library(vtable)
+library(plyr)
+library(gridExtra)
+library(grid)
+library(purrr)
+library(psych)
+library(ggplot2)
+library(psych)
+library(Hmisc)
+library(matrixStats)
+library(ggpubr)
+library(vtable)
+library(ggthemes)
+
+```
+
+
+```{r}
+#Cambiarle los nombres a algunos municipios que no estan codificados igual
+
+cede_educacion_44$municipio[cede_educacion_44$municipio=="Bojaya"] <- "Bojayá"
+cede_educacion_44$municipio[cede_educacion_44$municipio=="Bogotá, D.C."] <- "Bogotá, D.c."
+cede_educacion_44$municipio[cede_educacion_44$municipio=="Cartagena"] <- "Cartagena De Indias"
+cede_educacion_44$municipio[cede_educacion_44$municipio=="Bojaya"] <- "Bojayá"
+cede_educacion_44$municipio[cede_educacion_44$municipio=="Cartagena del Chairá"] <- "Cartagena Del Chairá"
+cede_educacion_44$municipio[cede_educacion_44$municipio=="San Vicente del Caguán"] <- "San Vicente Del Caguán"
+```
+
+
+# Graficos variables importantes y algunos descriptivos
+
+Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. 
+***
+La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion. 
+
+
+## Alumnos en total
+Esta variable es la cantidad de alumnos de instituciones educativas
+***
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+
+###Graficos
+
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_educacion_44$ano_base_general <- substring(cede_educacion_44$ano_base_general,1,4)
+cede_educacion_44$ano_base_general <- as.numeric(cede_educacion_44$ano_base_general)
+for(i in 1:nrow(cede_educacion_44)){
+  if(cede_educacion_44$ano[i]==cede_educacion_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_educacion_44_eq <- cede_educacion_44[a,]
+
+cede_educacion_44_eq <- cede_educacion_44_eq %>% 
+  dplyr::mutate(alumnos_cienmil=(alumn_total/pobl_tot)*100000)
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_educacion_44_eq %>% 
+  ggplot(aes(x = ano, y = alumnos_cienmil)) +	
+  geom_line() +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Cantidad de alumnos por cienmil habitantes', title='Cantidad de alumnos por cien mil habitantes por municipios por ano', x= 'Ano', caption="Fuente: C600-DANE") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(1996:2013),
+                  ylim=c(cede_educacion_44_eq$alumnos_cienmil[which.min(cede_educacion_44_eq$alumnos_cienmil)],
+                         cede_educacion_44_eq$alumnos_cienmil[which.max(cede_educacion_44_eq$alumnos_cienmil)]))
+
+```
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_alumnos_cienmil <- summaryBy(alumnos_cienmil ~ municipio, cede_educacion_44_eq, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_alumnos_cienmil %<>% arrange(municipio)
+
+print(descrip_alumnos_cienmil)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_alumnos_cienmil_5antes <- cede_educacion_44_eq %>% 
+  filter(ano<"2001-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_alumnos_cienmil_5antes <- summaryBy(alumnos_cienmil ~ municipio, descrip_alumnos_cienmil_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_alumnos_cienmil_5despues <- cede_educacion_44_eq %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_alumnos_cienmil_5despues <- summaryBy(alumnos_cienmil ~ municipio, descrip_alumnos_cienmil_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_alumnos_cienmil_mean <- descrip_alumnos_cienmil_5antes$alumnos_cienmil.mean -descrip_alumnos_cienmil_5despues$alumnos_cienmil.mean
+diff_alumnos_cienmil_sd <- descrip_alumnos_cienmil_5antes$alumnos_cienmil.sd -descrip_alumnos_cienmil_5despues$alumnos_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_alumnos_cienmil_mean)
+```
+
+## Docentes con doctorado en total
+
+###Graficos
+
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_educacion_44$ano_base_general <- substring(cede_educacion_44$ano_base_general,1,4)
+cede_educacion_44$ano_base_general <- as.numeric(cede_educacion_44$ano_base_general)
+for(i in 1:nrow(cede_educacion_44)){
+  if(cede_educacion_44$ano[i]==cede_educacion_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_educacion_44_eq <- cede_educacion_44[a,]
+
+cede_educacion_44_eq <- cede_educacion_44_eq %>% 
+  dplyr::mutate(phds_cienmil=((dies_docto_1+dies_docto_2)/pobl_tot)*100000)
+```
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_educacion_44_eq %>% 
+  ggplot(aes(x = ano, y = phds_cienmil)) +	
+  geom_line() +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Cantidad de docentes con doctorado por cienmil habitantes', title='Cantidad de docentes con doctorado por cien mil habitantes por municipios por ano', x= 'Ano', caption="Fuente: C600-DANE") +	
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(2007:2015),
+                  ylim=c(cede_educacion_44_eq$phds_cienmil[which.min(cede_educacion_44_eq$phds_cienmil)],
+                         cede_educacion_44_eq$phds_cienmil[which.max(cede_educacion_44_eq$phds_cienmil)]))
+
+```
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_phds_cienmil <- summaryBy(phds_cienmil ~ municipio, cede_educacion_44_eq, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_phds_cienmil %<>% arrange(municipio)
+
+print(descrip_phds_cienmil)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_phds_cienmil_5antes <- cede_educacion_44_eq %>% 
+  filter(ano<"2011-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_phds_cienmil_5antes <- summaryBy(phds_cienmil ~ municipio, descrip_phds_cienmil_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_phds_cienmil_5despues <- cede_educacion_44_eq %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_phds_cienmil_5despues <- summaryBy(phds_cienmil ~ municipio, descrip_phds_cienmil_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_phds_cienmil_mean <- descrip_phds_cienmil_5antes$phds_cienmil.mean -descrip_phds_cienmil_5despues$phds_cienmil.mean
+diff_phds_cienmil_sd <- descrip_phds_cienmil_5antes$phds_cienmil.sd -descrip_phds_cienmil_5despues$phds_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_phds_cienmil_mean)
+```
+
+## Porcentaje de la poblacion de mas de 15 anos o mas que sabe leer y escribir (Tasa de alfabetismo) 2005
+
+###Graficos
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_educacion_44 %>% 
+  ggplot(aes(x = ano, y = ind_alfa2005)) +	
+  geom_point() +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='Tasa de alfabetismo', title='Tasa de alfabetismo por municipios por ano', x= 'Ano', caption="Fuente: C600-DANE") +
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(1993:2013),
+                  ylim=c(cede_educacion_44$ind_alfa2005[which.min(cede_educacion_44$ind_alfa2005)],cede_educacion_44$ind_alfa2005[which.max(cede_educacion_44$ind_alfa2005)]))
+
+```
+
+Segun esta encuesta, la tasa de analfabetismo no ha cambiado (cuando se revisa el numero en bruto, igualmente, no hay variacion por municipio por ano.)
+
+Por esta razon se decide culminar el analisis de esta variable aqui
+
+
+## Proyecciones de poblacion en edad de asistir a primaria o secundaria, es decir, poblacion entre 7 a 17 anos.
+
+Esta variable es una proyeccion de cuanta gente puede asistir al colegio. Como es una variable poblacional se va a hacer por cada cienmil habitantes.
+
+
+Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida **por cien mil habitantes**. Asi, la transformacion que se le hace a estas variables es:
+
+
+$T = \frac{N_{t}}{P_{t}} \times 100 000$
+
+En donde: $T=$ La tasa por 100 mil habitantes
+          $N_{t}=$ Numero total de la variable de interes
+          $P_{t}=$ Poblacion total en el periodo $t$
+          
+Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
+
+
+
+###Graficos
+
+
+
+```{r}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_educacion_44$ano_base_general <- substring(cede_educacion_44$ano_base_general,1,4)
+cede_educacion_44$ano_base_general <- as.numeric(cede_educacion_44$ano_base_general)
+for(i in 1:nrow(cede_educacion_44)){
+  if(cede_educacion_44$ano[i]==cede_educacion_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_educacion_44_eq <- cede_educacion_44[a,]
+
+cede_educacion_44_eq <- cede_educacion_44_eq %>% 
+  dplyr::mutate(estudiantes_proy_cienmil=((pobsimple_primaria_p+pobsimple_secundaria_p)/pobl_tot)*100000)
+```
+
+
+
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_educacion_44_eq %>% 
+  ggplot(aes(x = ano, y = estudiantes_proy_cienmil)) +	
+  geom_line() +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='poblacion en edad de asistir a primaria o secundaria', title='poblacion en edad de asistir a primaria o secundaria por municipios por ano', x= 'Ano', caption="Fuente: C600-DANE") +
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(1991:2013),
+                  ylim=c(cede_educacion_44_eq$estudiantes_proy_cienmil[which.min(cede_educacion_44_eq$estudiantes_proy_cienmil)],cede_educacion_44_eq$estudiantes_proy_cienmil[which.max(cede_educacion_44_eq$estudiantes_proy_cienmil)]))
+
+```
+
+
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_estudiantes_proy_cienmil <- summaryBy(estudiantes_proy_cienmil ~ municipio, cede_educacion_44_eq, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_estudiantes_proy_cienmil %<>% arrange(municipio)
+
+print(descrip_estudiantes_proy_cienmil)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_estudiantes_proy_cienmil_5antes <- cede_educacion_44_eq %>% 
+  filter(ano<"1996-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_estudiantes_proy_cienmil_5antes <- summaryBy(estudiantes_proy_cienmil ~ municipio, descrip_estudiantes_proy_cienmil_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_estudiantes_proy_cienmil_5despues <- cede_educacion_44_eq %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_estudiantes_proy_cienmil_5despues <- summaryBy(estudiantes_proy_cienmil ~ municipio, descrip_estudiantes_proy_cienmil_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_estudiantes_proy_cienmil_mean <- descrip_estudiantes_proy_cienmil_5antes$estudiantes_proy_cienmil.mean -descrip_estudiantes_proy_cienmil_5despues$estudiantes_proy_cienmil.mean
+diff_estudiantes_proy_cienmil_sd <- descrip_estudiantes_proy_cienmil_5antes$estudiantes_proy_cienmil.sd -descrip_estudiantes_proy_cienmil_5despues$estudiantes_proy_cienmil.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_estudiantes_proy_cienmil_mean)
+```
+
+## Total establecimientos educativos
+
+###Graficos
+
+En este codigo se crea el grafico que muestra las **tendencias** en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA. 
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+cede_educacion_44 %>% 
+  ggplot(aes(x = ano, y = t_establ)) +	
+  geom_line() +	
+  facet_wrap(~municipio) +	
+  theme_bw()+
+  labs(y='poblacion en edad de asistir a primaria o secundaria', title='poblacion en edad de asistir a primaria o secundaria por municipios por ano', x= 'Ano', caption="Fuente: C600-DANE") +
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))+
+  coord_cartesian(xlim = c(1996:2013),
+                  ylim=c(cede_educacion_44$t_establ[which.min(cede_educacion_44$t_establ)],cede_educacion_44$t_establ[which.max(cede_educacion_44$t_establ)]))
+
+```
+
+
+
+### Descriptivos
+
+####Agregados
+En esta seccion se generan los descriptivos agregados de la variable. 
+
+Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos. 
+
+El nombre de la variable agregada es : **descrip_**
+
+```{r}
+descrip_t_establ <- summaryBy(t_establ ~ municipio, cede_educacion_44, FUN=c(sum,mean,sd), na.rm=T )	#Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_t_establ %<>% arrange(municipio)
+
+print(descrip_t_establ)
+```
+
+####$\Delta$
+
+A continuacion se generan las variables necesarias para hacer el $\Delta$. 
+Para obtener el $\Delta$ se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el $\Delta$ sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible $\Delta$ es: **diff_**
+
+```{r}
+descrip_t_establ_5antes <- cede_educacion_44 %>% 
+  filter(ano<"2000-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_t_establ_5antes <- summaryBy(t_establ ~ municipio, descrip_t_establ_5antes, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+
+
+descrip_t_establ_5despues <- cede_educacion_44 %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_t_establ_5despues <- summaryBy(t_establ ~ municipio, descrip_t_establ_5despues, FUN=c(sum,mean,sd), na.rm=T )	#Descriptivos de esos anos. 
+```
+
+
+Codigo para calcular el $\Delta$
+```{r}
+diff_t_establ_mean <- descrip_t_establ_5antes$t_establ.mean -descrip_t_establ_5despues$t_establ.mean
+diff_t_establ_sd <- descrip_t_establ_5antes$t_establ.sd -descrip_t_establ_5despues$t_establ.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+print(diff_t_establ_mean)
+```
+
+# Analisis Estadisticos CON EL ACDIVOCA (Correlaciones y regresiones)
+
+El objetivo de esta seccion es hacer las estadisticas inferenciales de las variables de interes con los items del ACDIVOCA. Si no sabe cuales son las variables ACDI-VOCA dirigirse a la pestana *"Codigo para correr todo"*.
+
+## Variables Agregadas con ACDI-VOCA
+
+En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo collapse en todos los anos. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+Recuerde que las variables del ACDI-VOCA son:
++Reconciliacion
+<br>
++Disculpas
+<br>
++Violencia
+<br>
++Rencor
+<br>
++Memoria (Memoria historica)
+<br>
++Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)
+<br>
+
+### Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. 
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+descrip_alumnos_cienmil$alumnos_cienmil.mean[which(!is.finite(descrip_alumnos_cienmil$alumnos_cienmil.mean))] <- NA 
+descrip_phds_cienmil$phds_cienmil.mean[which(!is.finite(descrip_phds_cienmil$phds_cienmil.mean))] <- NA
+descrip_estudiantes_proy_cienmil$estudiantes_proy_cienmil.mean[which(!is.finite(descrip_estudiantes_proy_cienmil$estudiantes_proy_cienmil.mean))] <- NA
+descrip_t_establ$t_establ.mean[which(!is.finite(descrip_t_establ$t_establ.mean))] <- NA
+
+
+correlaciones <- cbind(descrip_alumnos_cienmil$alumnos_cienmil.mean, 
+                       descrip_phds_cienmil$phds_cienmil.mean, 
+                       descrip_estudiantes_proy_cienmil$estudiantes_proy_cienmil.mean, 
+                       descrip_t_establ$t_establ.mean, 
+                       reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+
+nombres <- c("alumnos_cienmil",
+             "doctores_cienmil",
+             "estudiantes_edad_estudiar",
+             "total_establecimientos",
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+colnames(correlaciones) <- nombres
+
+rcorr(correlaciones, type="spearman") #Aqui hay cosas bien interesantes}
+
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regReconcililacion)
+
+regDisculpas <- lm(Disculpas ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regDisculpas)
+
+#Numero de personas en el regiem de subsidiado
+regViolencia <- lm(Violencia ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regViolencia)
+
+regRencor <- lm(Rencor ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regRencor)
+
+regMemoria <- lm(Memoria~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~correlaciones[,1:4], data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+```
+
+Observe que en estas regresiones hay un resultado interesante y es que el numero de personas que hayan terminado los estudios de doctorado sirve como predictor del indice de memoria.Es significativo al 5%. 
+
+## $\Delta$ variables con ACDI-VOCA
+
+En esta seccion se tiene en cuenta el $\Delta$ de la variable de interes. Primero se hacen correlaciones y, luego, se hacen regresiones lineales. 
+
+### Correlaciones
+
+
+```{r}
+#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. 
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+diff_alumnos_cienmil_mean[which(!is.finite(diff_alumnos_cienmil_mean))] <- NA 
+diff_phds_cienmil_mean[which(!is.finite(diff_phds_cienmil_mean))] <- NA
+diff_estudiantes_proy_cienmil_mean[which(!is.finite(diff_estudiantes_proy_cienmil_mean))] <- NA
+diff_t_establ_mean[which(!is.finite(diff_t_establ_mean))] <- NA
+
+
+correlaciones <- cbind(diff_alumnos_cienmil_mean, 
+                       diff_phds_cienmil_mean, 
+                       diff_estudiantes_proy_cienmil_mean, 
+                       diff_t_establ_mean, 
+                       reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+nombres <- c("alumnos_cienmil",
+             "doctores_cienmil",
+             "estudiantes_edad_estudiar",
+             "total_establecimientos",
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+colnames(correlaciones) <- nombres
+
+
+
+rcorr(correlaciones, type="spearman") #Aqui hay cosas bien interesantes}
+```
+
+
+### Regresion lineal 
+
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regReconcililacion <- lm(Reconciliacion ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regReconcililacion)
+
+regDisculpas <- lm(Disculpas ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regDisculpas)
+
+regViolencia <- lm(Violencia ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regViolencia)
+
+regRencor <- lm(Rencor ~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regRencor)
+
+regMemoria <- lm(Memoria~ correlaciones[,1:4], data=dfcorrelaciones)
+summary(regMemoria)
+
+regMemoria_Expectativa <- lm(Memoria_Expectativa~correlaciones[,1:4], data=dfcorrelaciones)
+summary(regMemoria_Expectativa)
+```
+
+
+Aqui observe que la regresion indica que a mayor numero de establecimientos hay menor indice de violencia de manera significativa. El indice es negativo. 
+
+
+#Analisis con Indice PAR (Instrumento de medicion de reconciliacion)
+
+
+Ahora se haran regresiones con el indice de reconciliacion.
+
+
+##Variables con valores absolutos (agregados) con indice PAR
+
+A continuacion se haran las correlaciones con las variables de salud y el indice PAR. Recuerde que estas variables son las **agregadas**. 
+
+##Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.
+names_acdi <- acdi_imr$Municipio_imr
+
+acdi_imr <- acdi_imr %>% arrange(Municipio_imr)
+
+
+par_descrip_alumnos_cienmil <- descrip_alumnos_cienmil[descrip_alumnos_cienmil$municipio %in% names_acdi,]
+par_descrip_alumnos_cienmil <- par_descrip_alumnos_cienmil %>% arrange(municipio)
+
+
+par_descrip_phds_cienmil <- descrip_phds_cienmil[descrip_phds_cienmil$municipio %in% names_acdi,]
+par_descrip_phds_cienmil <- par_descrip_phds_cienmil %>% arrange(municipio)
+
+par_descrip_estudiantes_proy_cienmil <- descrip_estudiantes_proy_cienmil[descrip_estudiantes_proy_cienmil$municipio %in% names_acdi,]
+par_descrip_estudiantes_proy_cienmil <- par_descrip_estudiantes_proy_cienmil %>% arrange(municipio)
+
+par_descrip_t_establ <- descrip_t_establ[descrip_t_establ$municipio %in% names_acdi,]
+par_descrip_t_establ <- par_descrip_t_establ %>% arrange(municipio)
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+par_descrip_alumnos_cienmil$alumnos_cienmil.mean[which(!is.finite(par_descrip_alumnos_cienmil$alumnos_cienmil.mean))] <- NA 
+par_descrip_phds_cienmil$phds_cienmil.mean[which(!is.finite(par_descrip_phds_cienmil$phds_cienmil.mean))] <- NA
+par_descrip_estudiantes_proy_cienmil$estudiantes_proy_cienmil.mean[which(!is.finite(par_descrip_estudiantes_proy_cienmil$estudiantes_proy_cienmil.mean))] <- NA
+par_descrip_t_establ$t_establ.mean[which(!is.finite(par_descrip_t_establ$t_establ.mean))] <- NA
+
+
+correlaciones <- cbind(par_descrip_alumnos_cienmil$alumnos_cienmil.mean, 
+                       par_descrip_phds_cienmil$phds_cienmil.mean, 
+                       par_descrip_estudiantes_proy_cienmil$estudiantes_proy_cienmil.mean, 
+                       par_descrip_t_establ$t_establ.mean, 
+                       acdi_imr$indice_de_reconciliacion_imr)
+
+nombres <- c("alumnos_cienmil",
+             "doctores_cienmil",
+             "estudiantes_edad_estudiar",
+             "total_establecimientos",
+             "Indice_reconciliacion")
+colnames(correlaciones) <- nombres
+rcorr(correlaciones, type="spearman") 
+```
+
+
+##Regresion lineal
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regEducacion_PAR <- lm(Indice_reconciliacion ~., data = dfcorrelaciones)
+summary(regEducacion_PAR)
+```
+
+
+##Variables con diferencias (Deltas $\Delta$) con indice PAR
+
+A continuacion se haran las correlaciones con las variables de gobierno y el indice PAR. Recuerde que estas variables son las **diferencias entre los primeros cinco anos a los ultimos 5 anos**. 
+
+##Correlaciones
+
+```{r}
+#Vamos a hacerlo primero con el indice agregado por anos.  
+
+par_diff_alumnos_cienmil <- descrip_alumnos_cienmil_5antes[descrip_alumnos_cienmil_5antes$municipio %in% names_acdi,]$alumnos_cienmil.mean -descrip_alumnos_cienmil_5despues[descrip_alumnos_cienmil_5despues$municipio %in% names_acdi,]$alumnos_cienmil.mean
+
+par_diff_phds_cienmil <- descrip_phds_cienmil_5antes[descrip_phds_cienmil_5antes$municipio %in% names_acdi,]$phds_cienmil.mean - descrip_phds_cienmil_5despues[descrip_phds_cienmil_5despues$municipio %in% names_acdi,]$phds_cienmil.mean
+
+par_diff_estudiantes_proy_cienmil <- descrip_estudiantes_proy_cienmil_5antes[descrip_estudiantes_proy_cienmil_5antes$municipio %in% names_acdi,]$estudiantes_proy_cienmil.mean-descrip_estudiantes_proy_cienmil_5despues[descrip_estudiantes_proy_cienmil_5despues$municipio %in% names_acdi,]$estudiantes_proy_cienmil.mean
+
+
+par_diff_t_establ <- descrip_t_establ_5antes[descrip_t_establ_5antes$municipio %in% names_acdi,]$t_establ.mean-descrip_t_establ_5despues[descrip_t_establ_5despues$municipio %in% names_acdi,]$t_establ.mean
+
+
+par_diff_alumnos_cienmil[which(!is.finite(par_diff_alumnos_cienmil))] <- NA 
+par_diff_phds_cienmil[which(!is.finite(par_diff_phds_cienmil))] <- NA
+par_diff_estudiantes_proy_cienmil[which(!is.finite(par_diff_estudiantes_proy_cienmil))] <- NA
+par_diff_t_establ[which(!is.finite(par_diff_t_establ))] <- NA
+
+
+correlaciones <- cbind(par_diff_alumnos_cienmil, 
+                       par_diff_phds_cienmil, 
+                       par_diff_estudiantes_proy_cienmil, 
+                       par_diff_t_establ,
+                       acdi_imr$indice_de_reconciliacion_imr)
+
+
+nombres <- c("alumnos_cienmil",
+             "doctores_cienmil",
+             "estudiantes_edad_estudiar",
+             "total_establecimientos",
+             "Indice_reconciliacion")
+
+
+colnames(correlaciones) <- nombres
+
+rcorr(correlaciones, type="spearman") #Aqui hay cosas bien interesantes}
+
+
+
+
+
+```
+
+Aqui observe que hay un resultado contraintuitivo. A mayor numero de establecimientos, el indice de reconcialiacion PAR disminuye significativamente. El coeficiente de correlacion es de -0.5
+
+##Regresion lineal
+
+```{r}
+dfcorrelaciones <- as.data.frame(correlaciones)
+regEducacion_diff_PAR <- lm(Indice_reconciliacion ~., data=dfcorrelaciones)
+summary(regEducacion_diff_PAR)
+```
+
+
+
+
+
+
+

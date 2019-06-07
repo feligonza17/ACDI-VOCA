@@ -24,14 +24,14 @@ navbar:
             href: Salud_graficos_analisis.html
           - text: "Educacion"
             icon: fa-graduation-cap
-            href:
+            href: Educacion_graficos_analisis.html
     - text: "ELCA"
       menu:
         - text: "Depuracion y merge"
-          icon:
+          icon: fa-object-ungroup
           href: elca_exploracion.html
         - text: "Modulo Politica"
-          icon: fa-person-booth
+          icon: fa-comment
           href: elca_modulo_politica.html
     - text: "More"
       icon: fa-gear

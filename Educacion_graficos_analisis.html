@@ -1,0 +1,2255 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Felipe Gonzalez-Arango" />
+
+
+<title>Educacion: Graficos y analisis</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="Merge_bases.html">Codigo para iniciar</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel CEDE Municipal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploraciones</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="Violencia_graficos_analisis.html">
+            <span class="fa fa-bomb"></span>
+             
+            Violencia
+          </a>
+        </li>
+        <li>
+          <a href="Gobierno_graficos_analisis.html">
+            <span class="fa fa-university"></span>
+             
+            Gobierno
+          </a>
+        </li>
+        <li>
+          <a href="Salud_graficos_analisis.html">
+            <span class="fa fa-user-md"></span>
+             
+            Salud
+          </a>
+        </li>
+        <li class="dropdown-header">Educacion</li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    ELCA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="elca_exploracion.html">Depuracion y merge</a>
+    </li>
+    <li>
+      <a href="elca_modulo_politica.html">
+        <span class="fa fa-person-booth"></span>
+         
+        Modulo Politica
+      </a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    More
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Exploraciones Viejas</li>
+    <li>
+      <a href="Exploracion_CEDE_Violencia_ACDIVOCA.html">Violencia y graficos</a>
+    </li>
+    <li>
+      <a href="acdivoca_analisis.html">Violencia y estadistica</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Educacion: Graficos y analisis</h1>
+<h4 class="author">Felipe Gonzalez-Arango</h4>
+<h4 class="date">06 de junio de 2019</h4>
+
+</div>
+
+
+<div id="setup" class="section level1">
+<h1><span class="header-section-number">1</span> Setup</h1>
+<p>Con este codigo se importan todas las bases de datos y todos los paquetes necesarios.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ANTES DE CORRER, ¡CORRER LA PESTANA &quot;CODIGO PARA ARRANCAR TODO&quot;!</span>
+
+<span class="co">#Set Working Directory</span>
+<span class="kw">setwd</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo&quot;</span>)
+<span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
+
+<span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
+
+
+<span class="co">#Cargar paquetes</span>
+<span class="kw">library</span>(readstata13)
+<span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(data.table)
+<span class="kw">library</span>(readxl)
+<span class="kw">library</span>(doBy)
+<span class="kw">library</span>(vtable)
+<span class="kw">library</span>(plyr)
+<span class="kw">library</span>(gridExtra)
+<span class="kw">library</span>(grid)
+<span class="kw">library</span>(purrr)
+<span class="kw">library</span>(psych)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(psych)
+<span class="kw">library</span>(Hmisc)
+<span class="kw">library</span>(matrixStats)
+<span class="kw">library</span>(ggpubr)
+<span class="kw">library</span>(vtable)
+<span class="kw">library</span>(ggthemes)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Cambiarle los nombres a algunos municipios que no estan codificados igual</span>
+
+cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio[cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Bojaya&quot;</span>] &lt;-<span class="st"> &quot;Bojayá&quot;</span>
+cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio[cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Bogotá, D.C.&quot;</span>] &lt;-<span class="st"> &quot;Bogotá, D.c.&quot;</span>
+cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio[cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Cartagena&quot;</span>] &lt;-<span class="st"> &quot;Cartagena De Indias&quot;</span>
+cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio[cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Bojaya&quot;</span>] &lt;-<span class="st"> &quot;Bojayá&quot;</span>
+cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio[cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Cartagena del Chairá&quot;</span>] &lt;-<span class="st"> &quot;Cartagena Del Chairá&quot;</span>
+cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio[cede_educacion_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;San Vicente del Caguán&quot;</span>] &lt;-<span class="st"> &quot;San Vicente Del Caguán&quot;</span></code></pre></div>
+</div>
+<div id="graficos-variables-importantes-y-algunos-descriptivos" class="section level1">
+<h1><span class="header-section-number">2</span> Graficos variables importantes y algunos descriptivos</h1>
+<p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
+<div id="alumnos-en-total" class="section level2">
+<h2><span class="header-section-number">2.1</span> Alumnos en total</h2>
+<p>Esta variable es la cantidad de alumnos de instituciones educativas ***</p>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<div id="graficos" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Graficos</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
+a &lt;-<span class="st">  </span><span class="kw">c</span>()
+cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
+cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(cede_educacion_<span class="dv">44</span>)){
+  <span class="cf">if</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano[i]<span class="op">==</span>cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general[i]){
+    a &lt;-<span class="st"> </span><span class="kw">c</span>(a,i)
+  }
+}
+
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
+
+cede_educacion_44_eq &lt;-<span class="st"> </span>cede_educacion_<span class="dv">44</span>[a,]
+
+cede_educacion_44_eq &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">alumnos_cienmil=</span>(alumn_total<span class="op">/</span>pobl_tot)<span class="op">*</span><span class="dv">100000</span>)</code></pre></div>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> alumnos_cienmil)) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Cantidad de alumnos por cienmil habitantes&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Cantidad de alumnos por cien mil habitantes por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Ano&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: C600-DANE&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1996</span><span class="op">:</span><span class="dv">2013</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_educacion_44_eq<span class="op">$</span>alumnos_cienmil[<span class="kw">which.min</span>(cede_educacion_44_eq<span class="op">$</span>alumnos_cienmil)],
+                         cede_educacion_44_eq<span class="op">$</span>alumnos_cienmil[<span class="kw">which.max</span>(cede_educacion_44_eq<span class="op">$</span>alumnos_cienmil)]))</code></pre></div>
+<p><img src="Educacion_graficos_analisis_files/figure-html/unnamed-chunk-4-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Descriptivos</h3>
+<div id="agregados" class="section level4">
+<h4><span class="header-section-number">2.1.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_alumnos_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(alumnos_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_educacion_44_eq, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+
+descrip_alumnos_cienmil <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+<span class="kw">print</span>(descrip_alumnos_cienmil)</code></pre></div>
+<pre><code>##                 municipio alumnos_cienmil.sum alumnos_cienmil.mean
+## 1                   Albán            220882.9             12271.27
+## 2               Algarrobo            363920.7             24261.38
+## 3                Apartadó            352839.4             19602.19
+## 4                  Arauca            426254.3             23680.80
+## 5               Arauquita            442013.9             24556.33
+## 6            Bogotá, D.c.            356718.6             19817.70
+## 7                  Bojayá            467738.5             25985.47
+## 8                 Briceño            373091.5             20727.30
+## 9            Buenaventura            355314.8             19739.71
+## 10                   Cali            331268.1             18403.78
+## 11    Cartagena De Indias            425499.5             23638.86
+## 12   Cartagena Del Chairá            460797.8             25599.88
+## 13              Chaparral            508408.8             28244.93
+## 14                Ciénaga            517625.7             28756.98
+## 15                 Cúcuta            441246.4             24513.69
+## 16               El Tambo            394353.0             21908.50
+## 17               El Tarra            427872.5             23770.69
+## 18              Florencia            440663.0             24481.28
+## 19                Inírida            627210.7             34845.04
+## 20                Ituango            438586.9             24365.94
+## 21                 Maicao            517657.2             28758.73
+## 22               Medellín            356054.4             19780.80
+## 23                Mesetas            434872.3             24159.57
+## 24              Moniquirá            463963.6             25775.76
+## 25            Piedecuesta            409692.0             22760.67
+## 26            Puerto Asís            502733.3             27929.63
+## 27          Puerto Gaitán            507702.1             28205.67
+## 28          Puerto Guzmán            398222.3             22123.46
+## 29            Puerto Rico            259659.0             14425.50
+## 30                 Quibdó            555564.4             30864.69
+## 31              Rioblanco            400282.3             22237.90
+## 32                Sahagún            508708.8             28261.60
+## 33             San Carlos            402387.4             22354.85
+## 34   San Pedro de Cartago            252533.9             14029.66
+## 35 San Vicente Del Caguán            436923.7             24273.54
+## 36            Santa Marta            458015.9             25445.33
+## 37                Soledad            314517.7             17473.20
+## 38                   Tibú            527267.3             29292.63
+## 39                Tocaima            375093.4             20838.52
+## 40                  Turbo            538067.4             29892.63
+## 41                 Uribia            275596.6             15310.92
+## 42          Villavicencio            435988.0             24221.55
+## 43           Vistahermosa            396921.1             22051.17
+## 44                  Yopal            465421.2             25856.73
+##    alumnos_cienmil.sd
+## 1           3631.9659
+## 2          10763.6269
+## 3           3900.4908
+## 4           2104.7372
+## 5           2714.2848
+## 6           1705.8271
+## 7           7207.5391
+## 8           2724.8797
+## 9           3403.8454
+## 10          3089.7692
+## 11          2378.0759
+## 12          3669.1102
+## 13          1376.3778
+## 14          5678.3448
+## 15          1539.8495
+## 16           981.7425
+## 17          8964.4745
+## 18          2114.2628
+## 19          3821.8673
+## 20          2740.0123
+## 21          1945.7878
+## 22          2204.5328
+## 23          4039.3956
+## 24          1942.5762
+## 25          1870.5939
+## 26          3274.3685
+## 27          8347.7577
+## 28          7837.8486
+## 29          3749.4132
+## 30          3540.6537
+## 31          2777.9480
+## 32           960.8454
+## 33          5339.7033
+## 34          5794.7283
+## 35          3386.8657
+## 36          1138.1463
+## 37          2142.6826
+## 38          3976.7851
+## 39          3949.6431
+## 40          1690.3828
+## 41          4556.1200
+## 42          1679.8705
+## 43          2830.4835
+## 44          2706.7700</code></pre>
+</div>
+<div id="delta" class="section level4">
+<h4><span class="header-section-number">2.1.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_alumnos_cienmil_5antes &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2001-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_alumnos_cienmil_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(alumnos_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_alumnos_cienmil_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_alumnos_cienmil_5despues &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2008-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_alumnos_cienmil_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(alumnos_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_alumnos_cienmil_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )  <span class="co">#Descriptivos de esos anos. </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_alumnos_cienmil_mean &lt;-<span class="st"> </span>descrip_alumnos_cienmil_5antes<span class="op">$</span>alumnos_cienmil.mean <span class="op">-</span>descrip_alumnos_cienmil_5despues<span class="op">$</span>alumnos_cienmil.mean
+diff_alumnos_cienmil_sd &lt;-<span class="st"> </span>descrip_alumnos_cienmil_5antes<span class="op">$</span>alumnos_cienmil.sd <span class="op">-</span>descrip_alumnos_cienmil_5despues<span class="op">$</span>alumnos_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_alumnos_cienmil_mean)</code></pre></div>
+<pre><code>##  [1]   6947.92869 -25465.92266   6892.21647   3675.10085   5705.98273
+##  [6]   3802.65819 -14371.20775  -5075.64021   6341.92454   6869.81163
+## [11]   4244.66119  -6234.52519   -618.51567  -5121.87721   2689.39454
+## [16]    141.48838 -13848.10637   -991.51974   -935.20627  -5008.14531
+## [21]   -643.91765   4855.76816   7254.00653   2970.89156   2870.72427
+## [26]   3576.52720 -17150.28235 -14874.55368  -3248.23781     77.81530
+## [31]  -3237.66232   -149.87922   8688.16830  -8276.41170  -1978.14567
+## [36]     66.19836   4661.91665   4873.41108   8603.67899   2298.58363
+## [41]  -5794.83534   2624.01825   4016.88963  -5804.57450</code></pre>
+</div>
+</div>
+</div>
+<div id="docentes-con-doctorado-en-total" class="section level2">
+<h2><span class="header-section-number">2.2</span> Docentes con doctorado en total</h2>
+<div id="graficos-1" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Graficos</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
+a &lt;-<span class="st">  </span><span class="kw">c</span>()
+cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
+cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(cede_educacion_<span class="dv">44</span>)){
+  <span class="cf">if</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano[i]<span class="op">==</span>cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general[i]){
+    a &lt;-<span class="st"> </span><span class="kw">c</span>(a,i)
+  }
+}
+
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
+
+cede_educacion_44_eq &lt;-<span class="st"> </span>cede_educacion_<span class="dv">44</span>[a,]
+
+cede_educacion_44_eq &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">phds_cienmil=</span>((dies_docto_<span class="dv">1</span><span class="op">+</span>dies_docto_<span class="dv">2</span>)<span class="op">/</span>pobl_tot)<span class="op">*</span><span class="dv">100000</span>)</code></pre></div>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> phds_cienmil)) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Cantidad de docentes con doctorado por cienmil habitantes&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Cantidad de docentes con doctorado por cien mil habitantes por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Ano&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: C600-DANE&quot;</span>) <span class="op">+</span><span class="st">   </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2007</span><span class="op">:</span><span class="dv">2015</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_educacion_44_eq<span class="op">$</span>phds_cienmil[<span class="kw">which.min</span>(cede_educacion_44_eq<span class="op">$</span>phds_cienmil)],
+                         cede_educacion_44_eq<span class="op">$</span>phds_cienmil[<span class="kw">which.max</span>(cede_educacion_44_eq<span class="op">$</span>phds_cienmil)]))</code></pre></div>
+<p><img src="Educacion_graficos_analisis_files/figure-html/unnamed-chunk-9-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-1" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Descriptivos</h3>
+<div id="agregados-1" class="section level4">
+<h4><span class="header-section-number">2.2.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_phds_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(phds_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_educacion_44_eq, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T ) <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+
+descrip_phds_cienmil <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+<span class="kw">print</span>(descrip_phds_cienmil)</code></pre></div>
+<pre><code>##                 municipio phds_cienmil.sum phds_cienmil.mean
+## 1                   Albán        0.0000000               NaN
+## 2               Algarrobo        0.0000000               NaN
+## 3                Apartadó        0.7147299         0.1021043
+## 4                  Arauca       37.9679451         4.2186606
+## 5               Arauquita        0.0000000               NaN
+## 6            Bogotá, D.c.      640.4843176        71.1649242
+## 7                  Bojayá        0.0000000               NaN
+## 8                 Briceño        0.0000000               NaN
+## 9            Buenaventura        8.2480955         0.9164551
+## 10                   Cali      391.8298917        43.5366546
+## 11    Cartagena De Indias      179.9960617        19.9995624
+## 12   Cartagena Del Chairá        0.0000000               NaN
+## 13              Chaparral        0.0000000               NaN
+## 14                Ciénaga        5.8442813         0.8348973
+## 15                 Cúcuta       59.4603250         6.6067028
+## 16               El Tambo        0.0000000               NaN
+## 17               El Tarra        0.0000000               NaN
+## 18              Florencia      137.5616148        15.2846239
+## 19                Inírida        0.0000000               NaN
+## 20                Ituango        0.0000000               NaN
+## 21                 Maicao        0.0000000               NaN
+## 22               Medellín      978.0479168       108.6719908
+## 23                Mesetas        0.0000000               NaN
+## 24              Moniquirá        0.0000000               NaN
+## 25            Piedecuesta        0.0000000               NaN
+## 26            Puerto Asís        0.0000000               NaN
+## 27          Puerto Gaitán        0.0000000               NaN
+## 28          Puerto Guzmán        0.0000000               NaN
+## 29            Puerto Rico        0.0000000               NaN
+## 30                 Quibdó      167.9938446        18.6659827
+## 31              Rioblanco        0.0000000               NaN
+## 32                Sahagún        0.0000000               NaN
+## 33             San Carlos        0.0000000               NaN
+## 34   San Pedro de Cartago        0.0000000               NaN
+## 35 San Vicente Del Caguán        0.0000000               NaN
+## 36            Santa Marta      170.9153447        18.9905939
+## 37                Soledad        0.0000000               NaN
+## 38                   Tibú        0.0000000               NaN
+## 39                Tocaima        0.0000000               NaN
+## 40                  Turbo       81.4923145         9.0547016
+## 41                 Uribia        0.0000000               NaN
+## 42          Villavicencio       43.2663736         4.8073748
+## 43           Vistahermosa        0.0000000               NaN
+## 44                  Yopal        3.0654652         0.3831832
+##    phds_cienmil.sd
+## 1               NA
+## 2               NA
+## 3        0.2701425
+## 4        1.8296583
+## 5               NA
+## 6       19.7839690
+## 7               NA
+## 8               NA
+## 9        0.6521503
+## 10       7.9349509
+## 11       4.2722829
+## 12              NA
+## 13              NA
+## 14       0.8774162
+## 15       2.1037430
+## 16              NA
+## 17              NA
+## 18       0.8539474
+## 19              NA
+## 20              NA
+## 21              NA
+## 22      22.9217392
+## 23              NA
+## 24              NA
+## 25              NA
+## 26              NA
+## 27              NA
+## 28              NA
+## 29              NA
+## 30       4.8891756
+## 31              NA
+## 32              NA
+## 33              NA
+## 34              NA
+## 35              NA
+## 36       7.4880469
+## 37              NA
+## 38              NA
+## 39              NA
+## 40       6.6132823
+## 41              NA
+## 42       0.9562913
+## 43              NA
+## 44       0.5673313</code></pre>
+</div>
+<div id="delta-1" class="section level4">
+<h4><span class="header-section-number">2.2.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_phds_cienmil_5antes &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2011-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_phds_cienmil_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(phds_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_phds_cienmil_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_phds_cienmil_5despues &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2010-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_phds_cienmil_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(phds_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_phds_cienmil_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos. </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_phds_cienmil_mean &lt;-<span class="st"> </span>descrip_phds_cienmil_5antes<span class="op">$</span>phds_cienmil.mean <span class="op">-</span>descrip_phds_cienmil_5despues<span class="op">$</span>phds_cienmil.mean
+diff_phds_cienmil_sd &lt;-<span class="st"> </span>descrip_phds_cienmil_5antes<span class="op">$</span>phds_cienmil.sd <span class="op">-</span>descrip_phds_cienmil_5despues<span class="op">$</span>phds_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_phds_cienmil_mean)</code></pre></div>
+<pre><code>##  [1]         NaN         NaN   0.1429460  -1.9408442         NaN
+##  [6] -24.9821258         NaN         NaN  -0.3994399  -7.8038474
+## [11]  -4.6973132         NaN         NaN   1.1688563  -2.7855911
+## [16]         NaN         NaN  -0.1198376         NaN         NaN
+## [21]         NaN -27.6721031         NaN         NaN         NaN
+## [26]         NaN         NaN         NaN         NaN  -6.6192292
+## [31]         NaN         NaN         NaN         NaN         NaN
+## [36] -11.7165840         NaN         NaN         NaN  -3.4071646
+## [41]         NaN  -0.8767696         NaN  -0.2437022</code></pre>
+</div>
+</div>
+</div>
+<div id="porcentaje-de-la-poblacion-de-mas-de-15-anos-o-mas-que-sabe-leer-y-escribir-tasa-de-alfabetismo-2005" class="section level2">
+<h2><span class="header-section-number">2.3</span> Porcentaje de la poblacion de mas de 15 anos o mas que sabe leer y escribir (Tasa de alfabetismo) 2005</h2>
+<div id="graficos-2" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_educacion_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> ind_alfa2005)) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st">    </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Tasa de alfabetismo&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Tasa de alfabetismo por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Ano&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: C600-DANE&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1993</span><span class="op">:</span><span class="dv">2013</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ind_alfa2005[<span class="kw">which.min</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ind_alfa2005)],cede_educacion_<span class="dv">44</span><span class="op">$</span>ind_alfa2005[<span class="kw">which.max</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ind_alfa2005)]))</code></pre></div>
+<p><img src="Educacion_graficos_analisis_files/figure-html/unnamed-chunk-13-1.png" width="1152" /></p>
+<p>Segun esta encuesta, la tasa de analfabetismo no ha cambiado (cuando se revisa el numero en bruto, igualmente, no hay variacion por municipio por ano.)</p>
+<p>Por esta razon se decide culminar el analisis de esta variable aqui</p>
+</div>
+</div>
+<div id="proyecciones-de-poblacion-en-edad-de-asistir-a-primaria-o-secundaria-es-decir-poblacion-entre-7-a-17-anos." class="section level2">
+<h2><span class="header-section-number">2.4</span> Proyecciones de poblacion en edad de asistir a primaria o secundaria, es decir, poblacion entre 7 a 17 anos.</h2>
+<p>Esta variable es una proyeccion de cuanta gente puede asistir al colegio. Como es una variable poblacional se va a hacer por cada cienmil habitantes.</p>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<div id="graficos-3" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> Graficos</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
+a &lt;-<span class="st">  </span><span class="kw">c</span>()
+cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
+cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(cede_educacion_<span class="dv">44</span>)){
+  <span class="cf">if</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano[i]<span class="op">==</span>cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general[i]){
+    a &lt;-<span class="st"> </span><span class="kw">c</span>(a,i)
+  }
+}
+
+<span class="co">#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo</span>
+
+cede_educacion_44_eq &lt;-<span class="st"> </span>cede_educacion_<span class="dv">44</span>[a,]
+
+cede_educacion_44_eq &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">estudiantes_proy_cienmil=</span>((pobsimple_primaria_p<span class="op">+</span>pobsimple_secundaria_p)<span class="op">/</span>pobl_tot)<span class="op">*</span><span class="dv">100000</span>)</code></pre></div>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> estudiantes_proy_cienmil)) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;poblacion en edad de asistir a primaria o secundaria&#39;</span>, <span class="dt">title=</span><span class="st">&#39;poblacion en edad de asistir a primaria o secundaria por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Ano&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: C600-DANE&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1991</span><span class="op">:</span><span class="dv">2013</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_educacion_44_eq<span class="op">$</span>estudiantes_proy_cienmil[<span class="kw">which.min</span>(cede_educacion_44_eq<span class="op">$</span>estudiantes_proy_cienmil)],cede_educacion_44_eq<span class="op">$</span>estudiantes_proy_cienmil[<span class="kw">which.max</span>(cede_educacion_44_eq<span class="op">$</span>estudiantes_proy_cienmil)]))</code></pre></div>
+<p><img src="Educacion_graficos_analisis_files/figure-html/unnamed-chunk-15-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-2" class="section level3">
+<h3><span class="header-section-number">2.4.2</span> Descriptivos</h3>
+<div id="agregados-2" class="section level4">
+<h4><span class="header-section-number">2.4.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_estudiantes_proy_cienmil &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(estudiantes_proy_cienmil <span class="op">~</span><span class="st"> </span>municipio, cede_educacion_44_eq, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T ) <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+
+descrip_estudiantes_proy_cienmil <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+<span class="kw">print</span>(descrip_estudiantes_proy_cienmil)</code></pre></div>
+<pre><code>##                 municipio estudiantes_proy_cienmil.sum
+## 1                   Albán                     500887.0
+## 2               Algarrobo                     396009.7
+## 3                Apartadó                     571088.0
+## 4                  Arauca                     501663.7
+## 5               Arauquita                     563966.6
+## 6            Bogotá, D.c.                     435458.2
+## 7                  Bojayá                     583924.0
+## 8                 Briceño                     553974.6
+## 9            Buenaventura                     544136.8
+## 10                   Cali                     425088.9
+## 11    Cartagena De Indias                     460507.1
+## 12   Cartagena Del Chairá                     554172.5
+## 13              Chaparral                     542531.1
+## 14                Ciénaga                     527810.4
+## 15                 Cúcuta                     474284.9
+## 16               El Tambo                     486558.6
+## 17               El Tarra                     596474.3
+## 18              Florencia                     507784.8
+## 19                Inírida                     599536.2
+## 20                Ituango                     587218.8
+## 21                 Maicao                     502200.9
+## 22               Medellín                     377732.9
+## 23                Mesetas                     525936.0
+## 24              Moniquirá                     480529.7
+## 25            Piedecuesta                     478416.3
+## 26            Puerto Asís                     550123.0
+## 27          Puerto Gaitán                     542259.2
+## 28          Puerto Guzmán                     593907.2
+## 29            Puerto Rico                     531101.6
+## 30                 Quibdó                     601085.2
+## 31              Rioblanco                     541372.0
+## 32                Sahagún                     514317.0
+## 33             San Carlos                     492453.2
+## 34   San Pedro de Cartago                     503983.6
+## 35 San Vicente Del Caguán                     545611.5
+## 36            Santa Marta                     489365.0
+## 37                Soledad                     491391.4
+## 38                   Tibú                     591105.7
+## 39                Tocaima                     439451.8
+## 40                  Turbo                     598902.3
+## 41                 Uribia                     541463.4
+## 42          Villavicencio                     477442.3
+## 43           Vistahermosa                     503618.6
+## 44                  Yopal                     493012.7
+##    estudiantes_proy_cienmil.mean estudiantes_proy_cienmil.sd
+## 1                       23851.76                   2389.5291
+## 2                       26400.65                    182.0097
+## 3                       27194.67                   1175.6709
+## 4                       23888.75                    706.4886
+## 5                       26855.55                    339.0541
+## 6                       20736.11                   1804.9584
+## 7                       27805.90                    947.6958
+## 8                       26379.74                   1608.2871
+## 9                       25911.28                   1684.6592
+## 10                      20242.33                   1060.4962
+## 11                      21928.91                    896.7472
+## 12                      26389.17                    169.6119
+## 13                      25834.82                    892.9510
+## 14                      25133.83                    529.9105
+## 15                      22585.00                    439.2114
+## 16                      23169.46                   2557.2201
+## 17                      28403.54                    441.9898
+## 18                      24180.23                    930.9556
+## 19                      28549.34                   2222.2486
+## 20                      27962.80                    831.9411
+## 21                      23914.33                    756.8853
+## 22                      17987.28                   1629.5620
+## 23                      25044.57                    608.6402
+## 24                      22882.36                   1017.3463
+## 25                      22781.73                   1673.6329
+## 26                      26196.34                    611.3723
+## 27                      25821.87                   1199.7731
+## 28                      28281.29                    468.1712
+## 29                      25290.55                    977.8077
+## 30                      28623.11                   1645.7662
+## 31                      25779.62                   2145.0890
+## 32                      24491.29                   1728.8677
+## 33                      23450.15                   1580.9722
+## 34                      23999.22                   1827.3090
+## 35                      25981.50                    622.1357
+## 36                      23303.09                    485.1625
+## 37                      23399.59                   1399.3441
+## 38                      28147.89                    956.6730
+## 39                      20926.28                   1177.1860
+## 40                      28519.16                   1350.0434
+## 41                      25783.97                   1276.8158
+## 42                      22735.35                   1439.4637
+## 43                      23981.84                    655.4594
+## 44                      23476.79                    547.0553</code></pre>
+</div>
+<div id="delta-2" class="section level4">
+<h4><span class="header-section-number">2.4.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_estudiantes_proy_cienmil_5antes &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;1996-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_estudiantes_proy_cienmil_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(estudiantes_proy_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_estudiantes_proy_cienmil_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_estudiantes_proy_cienmil_5despues &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2008-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_estudiantes_proy_cienmil_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(estudiantes_proy_cienmil <span class="op">~</span><span class="st"> </span>municipio, descrip_estudiantes_proy_cienmil_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos. </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_estudiantes_proy_cienmil_mean &lt;-<span class="st"> </span>descrip_estudiantes_proy_cienmil_5antes<span class="op">$</span>estudiantes_proy_cienmil.mean <span class="op">-</span>descrip_estudiantes_proy_cienmil_5despues<span class="op">$</span>estudiantes_proy_cienmil.mean
+diff_estudiantes_proy_cienmil_sd &lt;-<span class="st"> </span>descrip_estudiantes_proy_cienmil_5antes<span class="op">$</span>estudiantes_proy_cienmil.sd <span class="op">-</span>descrip_estudiantes_proy_cienmil_5despues<span class="op">$</span>estudiantes_proy_cienmil.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_estudiantes_proy_cienmil_mean)</code></pre></div>
+<pre><code>##  [1]  6176.28163         NaN  -579.52921 -1805.26876   491.67415
+##  [6]  4878.08434   479.35627  3786.02354  4233.27746  2601.66063
+## [11]  2402.54198    18.66810   -67.97985  1008.82970   988.82477
+## [16]  6720.16518  -723.39523  2085.16926 -3193.06196  1551.09992
+## [21]  -247.76242  3800.12046   346.29064  1931.28803  4243.54494
+## [26]  1041.04602 -2469.23949  1012.64236  1350.00439  -723.60083
+## [31] -4445.48542  4352.38001  3206.90306  4707.91992  -209.57446
+## [36]   862.97032  3683.70789  2410.84743  2213.99085  3296.96836
+## [41] -2876.23573  2589.67043   559.47648  1098.46940</code></pre>
+</div>
+</div>
+</div>
+<div id="total-establecimientos-educativos" class="section level2">
+<h2><span class="header-section-number">2.5</span> Total establecimientos educativos</h2>
+<div id="graficos-4" class="section level3">
+<h3><span class="header-section-number">2.5.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_educacion_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> t_establ)) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>municipio) <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;poblacion en edad de asistir a primaria o secundaria&#39;</span>, <span class="dt">title=</span><span class="st">&#39;poblacion en edad de asistir a primaria o secundaria por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Ano&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: C600-DANE&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1996</span><span class="op">:</span><span class="dv">2013</span>),
+                  <span class="dt">ylim=</span><span class="kw">c</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>t_establ[<span class="kw">which.min</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>t_establ)],cede_educacion_<span class="dv">44</span><span class="op">$</span>t_establ[<span class="kw">which.max</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>t_establ)]))</code></pre></div>
+<p><img src="Educacion_graficos_analisis_files/figure-html/unnamed-chunk-19-1.png" width="1152" /></p>
+</div>
+<div id="descriptivos-3" class="section level3">
+<h3><span class="header-section-number">2.5.2</span> Descriptivos</h3>
+<div id="agregados-3" class="section level4">
+<h4><span class="header-section-number">2.5.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_t_establ &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(t_establ <span class="op">~</span><span class="st"> </span>municipio, cede_educacion_<span class="dv">44</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )    <span class="co">#Codigo para hacer descriptivos de los homicidios (collapse por anos)</span>
+
+descrip_t_establ <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+<span class="kw">print</span>(descrip_t_establ)</code></pre></div>
+<pre><code>##                 municipio t_establ.sum t_establ.mean t_establ.sd
+## 1                   Albán        10600      23.55556    8.874416
+## 2               Algarrobo         4125      11.00000    5.092723
+## 3                Apartadó        27925      62.05556   13.156892
+## 4                  Arauca        54450     121.00000   14.244133
+## 5               Arauquita        54725     121.61111   12.929218
+## 6            Bogotá, D.c.      1423275    3162.83333  364.466424
+## 7                  Bojayá        16075      35.72222    9.624380
+## 8                 Briceño        17775      39.50000    3.357835
+## 9            Buenaventura       233350     518.55556  177.344688
+## 10                   Cali       696650    1548.11111  188.082248
+## 11    Cartagena De Indias       237850     528.55556   41.815991
+## 12   Cartagena Del Chairá        64925     144.27778   34.537681
+## 13              Chaparral        75575     167.94444   11.299093
+## 14                Ciénaga        75850     168.55556   37.866578
+## 15                 Cúcuta       208400     463.11111   45.535528
+## 16               El Tambo        74000     164.44444   26.544123
+## 17               El Tarra        25625      56.94444   14.597313
+## 18              Florencia        89400     198.66667   35.684525
+## 19                Inírida        21100      46.88889    9.642201
+## 20                Ituango        51650     114.77778   15.742766
+## 21                 Maicao        78400     174.22222   37.827347
+## 22               Medellín       390700     868.22222   60.872055
+## 23                Mesetas        29725      66.05556   14.654416
+## 24              Moniquirá        18400      40.88889    4.463274
+## 25            Piedecuesta        49200     109.33333   13.551025
+## 26            Puerto Asís        86500     192.22222   43.080899
+## 27          Puerto Gaitán        37475      83.27778   18.434878
+## 28          Puerto Guzmán        56700     126.00000   49.344252
+## 29            Puerto Rico        19700      43.77778   10.655339
+## 30                 Quibdó        70375     156.38889   25.589136
+## 31              Rioblanco        45700     101.55556    5.215001
+## 32                Sahagún        54175     120.38889   17.433101
+## 33             San Carlos        30075      66.83333   12.812899
+## 34   San Pedro de Cartago         7250      16.11111    6.435295
+## 35 San Vicente Del Caguán       112300     249.55556   53.348063
+## 36            Santa Marta       176475     392.16667   36.859225
+## 37                Soledad       118200     262.66667   40.339594
+## 38                   Tibú        66575     147.94444   28.115401
+## 39                Tocaima        16850      37.44444    3.307248
+## 40                  Turbo        88600     196.88889   36.474491
+## 41                 Uribia        32775      72.83333   70.872113
+## 42          Villavicencio       138425     307.61111   34.183344
+## 43           Vistahermosa        33025      73.38889   14.178071
+## 44                  Yopal        53700     119.33333   16.547832</code></pre>
+</div>
+<div id="delta-3" class="section level4">
+<h4><span class="header-section-number">2.5.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_t_establ_5antes &lt;-<span class="st"> </span>cede_educacion_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2000-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
+descrip_t_establ_5antes &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(t_establ <span class="op">~</span><span class="st"> </span>municipio, descrip_t_establ_5antes, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos. </span>
+
+
+descrip_t_establ_5despues &lt;-<span class="st"> </span>cede_educacion_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(ano<span class="op">&gt;</span><span class="st">&quot;2008-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.</span>
+descrip_t_establ_5despues &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(t_establ <span class="op">~</span><span class="st"> </span>municipio, descrip_t_establ_5despues, <span class="dt">FUN=</span><span class="kw">c</span>(sum,mean,sd), <span class="dt">na.rm=</span>T )   <span class="co">#Descriptivos de esos anos. </span></code></pre></div>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diff_t_establ_mean &lt;-<span class="st"> </span>descrip_t_establ_5antes<span class="op">$</span>t_establ.mean <span class="op">-</span>descrip_t_establ_5despues<span class="op">$</span>t_establ.mean
+diff_t_establ_sd &lt;-<span class="st"> </span>descrip_t_establ_5antes<span class="op">$</span>t_establ.sd <span class="op">-</span>descrip_t_establ_5despues<span class="op">$</span>t_establ.sd <span class="co">#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.</span>
+
+<span class="kw">print</span>(diff_t_establ_mean)</code></pre></div>
+<pre><code>##  [1]   10.8  -15.6   10.0    1.4   18.0  839.8  -19.0   -2.2 -385.8 -121.4
+## [11]  -25.6  -45.6  -17.0   32.0   76.4   -5.0  -13.6  -32.4    3.0   24.6
+## [21]  -48.6   69.4   11.4   -2.0  -16.2   27.8   -5.2 -104.0   -9.6   36.6
+## [31]   -6.8    5.2   13.4  -10.8  -42.8  -30.8  -54.8   44.4    4.8   11.2
+## [41]  151.0  -54.8  -14.8  -16.8</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="analisis-estadisticos-con-el-acdivoca-correlaciones-y-regresiones" class="section level1">
+<h1><span class="header-section-number">3</span> Analisis Estadisticos CON EL ACDIVOCA (Correlaciones y regresiones)</h1>
+<p>El objetivo de esta seccion es hacer las estadisticas inferenciales de las variables de interes con los items del ACDIVOCA. Si no sabe cuales son las variables ACDI-VOCA dirigirse a la pestana <em>“Codigo para correr todo”</em>.</p>
+<div id="variables-agregadas-con-acdi-voca" class="section level2">
+<h2><span class="header-section-number">3.1</span> Variables Agregadas con ACDI-VOCA</h2>
+<p>En esta seccion se tiene en cuenta la variable de interes a la cual se le hizo collapse en todos los anos. Primero se hacen correlaciones y, luego, se hacen regresiones lineales.</p>
+<p>Recuerde que las variables del ACDI-VOCA son: +Reconciliacion <br> +Disculpas <br> +Violencia <br> +Rencor <br> +Memoria (Memoria historica) <br> +Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta) <br></p>
+<div id="correlaciones" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Correlaciones</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. </span>
+
+
+<span class="co">#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos</span>
+
+
+descrip_alumnos_cienmil<span class="op">$</span>alumnos_cienmil.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(descrip_alumnos_cienmil<span class="op">$</span>alumnos_cienmil.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span> 
+descrip_phds_cienmil<span class="op">$</span>phds_cienmil.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(descrip_phds_cienmil<span class="op">$</span>phds_cienmil.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+descrip_estudiantes_proy_cienmil<span class="op">$</span>estudiantes_proy_cienmil.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(descrip_estudiantes_proy_cienmil<span class="op">$</span>estudiantes_proy_cienmil.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+descrip_t_establ<span class="op">$</span>t_establ.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(descrip_t_establ<span class="op">$</span>t_establ.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(descrip_alumnos_cienmil<span class="op">$</span>alumnos_cienmil.mean, 
+                       descrip_phds_cienmil<span class="op">$</span>phds_cienmil.mean, 
+                       descrip_estudiantes_proy_cienmil<span class="op">$</span>estudiantes_proy_cienmil.mean, 
+                       descrip_t_establ<span class="op">$</span>t_establ.mean, 
+                       reconciliacion_agreg<span class="op">$</span>reconciliacion.mean, 
+                       disculpas_agreg<span class="op">$</span>disculpas.mean, 
+                       violencia_agreg<span class="op">$</span>violencia.mean, 
+                       rencor_agreg<span class="op">$</span>rencor.mean, 
+                       memoria_agreg<span class="op">$</span>memoria.mean, 
+                       memoria_expectativa_agreg<span class="op">$</span>memoria_expectativa.mean)
+
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;alumnos_cienmil&quot;</span>,
+             <span class="st">&quot;doctores_cienmil&quot;</span>,
+             <span class="st">&quot;estudiantes_edad_estudiar&quot;</span>,
+             <span class="st">&quot;total_establecimientos&quot;</span>,
+             <span class="st">&quot;Reconciliacion&quot;</span>,
+             <span class="st">&quot;Disculpas&quot;</span>, 
+             <span class="st">&quot;Violencia&quot;</span>, 
+             <span class="st">&quot;Rencor&quot;</span>,
+             <span class="st">&quot;Memoria&quot;</span>, 
+             <span class="st">&quot;Memoria_Expectativa&quot;</span>)
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+
+<span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) <span class="co">#Aqui hay cosas bien interesantes}</span></code></pre></div>
+<pre><code>##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                      1.00            -0.18
+## doctores_cienmil                    -0.18             1.00
+## estudiantes_edad_estudiar            0.40            -0.62
+## total_establecimientos               0.12             0.78
+## Reconciliacion                       0.08             0.08
+## Disculpas                            0.04             0.29
+## Violencia                            0.14            -0.08
+## Rencor                               0.05             0.07
+## Memoria                             -0.17            -0.02
+## Memoria_Expectativa                 -0.01             0.05
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil                                0.40                   0.12
+## doctores_cienmil                              -0.62                   0.78
+## estudiantes_edad_estudiar                      1.00                  -0.33
+## total_establecimientos                        -0.33                   1.00
+## Reconciliacion                                -0.02                  -0.06
+## Disculpas                                     -0.01                   0.14
+## Violencia                                     -0.18                   0.12
+## Rencor                                         0.22                  -0.04
+## Memoria                                        0.06                   0.02
+## Memoria_Expectativa                           -0.02                   0.09
+##                           Reconciliacion Disculpas Violencia Rencor
+## alumnos_cienmil                     0.08      0.04      0.14   0.05
+## doctores_cienmil                    0.08      0.29     -0.08   0.07
+## estudiantes_edad_estudiar          -0.02     -0.01     -0.18   0.22
+## total_establecimientos             -0.06      0.14      0.12  -0.04
+## Reconciliacion                      1.00      0.09     -0.12   0.17
+## Disculpas                           0.09      1.00     -0.46   0.27
+## Violencia                          -0.12     -0.46      1.00  -0.23
+## Rencor                              0.17      0.27     -0.23   1.00
+## Memoria                             0.18      0.14     -0.34   0.35
+## Memoria_Expectativa                 0.20      0.06     -0.05   0.42
+##                           Memoria Memoria_Expectativa
+## alumnos_cienmil             -0.17               -0.01
+## doctores_cienmil            -0.02                0.05
+## estudiantes_edad_estudiar    0.06               -0.02
+## total_establecimientos       0.02                0.09
+## Reconciliacion               0.18                0.20
+## Disculpas                    0.14                0.06
+## Violencia                   -0.34               -0.05
+## Rencor                       0.35                0.42
+## Memoria                      1.00                0.65
+## Memoria_Expectativa          0.65                1.00
+## 
+## n
+##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                        44               15
+## doctores_cienmil                       15               15
+## estudiantes_edad_estudiar              44               15
+## total_establecimientos                 44               15
+## Reconciliacion                         44               15
+## Disculpas                              44               15
+## Violencia                              44               15
+## Rencor                                 44               15
+## Memoria                                44               15
+## Memoria_Expectativa                    44               15
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil                                  44                     44
+## doctores_cienmil                                 15                     15
+## estudiantes_edad_estudiar                        44                     44
+## total_establecimientos                           44                     44
+## Reconciliacion                                   44                     44
+## Disculpas                                        44                     44
+## Violencia                                        44                     44
+## Rencor                                           44                     44
+## Memoria                                          44                     44
+## Memoria_Expectativa                              44                     44
+##                           Reconciliacion Disculpas Violencia Rencor
+## alumnos_cienmil                       44        44        44     44
+## doctores_cienmil                      15        15        15     15
+## estudiantes_edad_estudiar             44        44        44     44
+## total_establecimientos                44        44        44     44
+## Reconciliacion                        44        44        44     44
+## Disculpas                             44        44        44     44
+## Violencia                             44        44        44     44
+## Rencor                                44        44        44     44
+## Memoria                               44        44        44     44
+## Memoria_Expectativa                   44        44        44     44
+##                           Memoria Memoria_Expectativa
+## alumnos_cienmil                44                  44
+## doctores_cienmil               15                  15
+## estudiantes_edad_estudiar      44                  44
+## total_establecimientos         44                  44
+## Reconciliacion                 44                  44
+## Disculpas                      44                  44
+## Violencia                      44                  44
+## Rencor                         44                  44
+## Memoria                        44                  44
+## Memoria_Expectativa            44                  44
+## 
+## P
+##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                           0.5159          
+## doctores_cienmil          0.5159                          
+## estudiantes_edad_estudiar 0.0065          0.0134          
+## total_establecimientos    0.4241          0.0006          
+## Reconciliacion            0.6221          0.7905          
+## Disculpas                 0.7971          0.2895          
+## Violencia                 0.3644          0.7905          
+## Rencor                    0.7360          0.8003          
+## Memoria                   0.2769          0.9295          
+## Memoria_Expectativa       0.9696          0.8496          
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil           0.0065                    0.4241                
+## doctores_cienmil          0.0134                    0.0006                
+## estudiantes_edad_estudiar                           0.0310                
+## total_establecimientos    0.0310                                          
+## Reconciliacion            0.8931                    0.6839                
+## Disculpas                 0.9566                    0.3812                
+## Violencia                 0.2409                    0.4337                
+## Rencor                    0.1567                    0.8112                
+## Memoria                   0.7176                    0.8823                
+## Memoria_Expectativa       0.8730                    0.5777                
+##                           Reconciliacion Disculpas Violencia Rencor
+## alumnos_cienmil           0.6221         0.7971    0.3644    0.7360
+## doctores_cienmil          0.7905         0.2895    0.7905    0.8003
+## estudiantes_edad_estudiar 0.8931         0.9566    0.2409    0.1567
+## total_establecimientos    0.6839         0.3812    0.4337    0.8112
+## Reconciliacion                           0.5506    0.4251    0.2668
+## Disculpas                 0.5506                   0.0018    0.0769
+## Violencia                 0.4251         0.0018              0.1314
+## Rencor                    0.2668         0.0769    0.1314          
+## Memoria                   0.2499         0.3727    0.0238    0.0212
+## Memoria_Expectativa       0.1821         0.7156    0.7539    0.0043
+##                           Memoria Memoria_Expectativa
+## alumnos_cienmil           0.2769  0.9696             
+## doctores_cienmil          0.9295  0.8496             
+## estudiantes_edad_estudiar 0.7176  0.8730             
+## total_establecimientos    0.8823  0.5777             
+## Reconciliacion            0.2499  0.1821             
+## Disculpas                 0.3727  0.7156             
+## Violencia                 0.0238  0.7539             
+## Rencor                    0.0212  0.0043             
+## Memoria                           0.0000             
+## Memoria_Expectativa       0.0000</code></pre>
+</div>
+<div id="regresion-lineal" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Regresion lineal</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reconciliacion <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regReconcililacion)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Reconciliacion ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.9386 -1.5737 -0.0703  1.1982  5.1830 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                   -4.694e+00  9.610e+00
+## correlaciones[, 1:4]alumnos_cienmil            3.383e-04  2.585e-04
+## correlaciones[, 1:4]doctores_cienmil           3.143e-02  3.948e-02
+## correlaciones[, 1:4]estudiantes_edad_estudiar -2.399e-05  4.053e-04
+## correlaciones[, 1:4]total_establecimientos    -2.020e-04  1.339e-03
+##                                               t value Pr(&gt;|t|)
+## (Intercept)                                    -0.488    0.636
+## correlaciones[, 1:4]alumnos_cienmil             1.309    0.220
+## correlaciones[, 1:4]doctores_cienmil            0.796    0.444
+## correlaciones[, 1:4]estudiantes_edad_estudiar  -0.059    0.954
+## correlaciones[, 1:4]total_establecimientos     -0.151    0.883
+## 
+## Residual standard error: 2.878 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.2092, Adjusted R-squared:  -0.1072 
+## F-statistic: 0.6612 on 4 and 10 DF,  p-value: 0.6329</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regDisculpas &lt;-<span class="st"> </span><span class="kw">lm</span>(Disculpas <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regDisculpas)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Disculpas ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.27010 -0.11355 -0.01397  0.10781  0.38173 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                    3.349e-01  7.267e-01
+## correlaciones[, 1:4]alumnos_cienmil           -9.199e-06  1.955e-05
+## correlaciones[, 1:4]doctores_cienmil           3.541e-03  2.985e-03
+## correlaciones[, 1:4]estudiantes_edad_estudiar  2.872e-05  3.065e-05
+## correlaciones[, 1:4]total_establecimientos    -1.448e-04  1.013e-04
+##                                               t value Pr(&gt;|t|)
+## (Intercept)                                     0.461    0.655
+## correlaciones[, 1:4]alumnos_cienmil            -0.470    0.648
+## correlaciones[, 1:4]doctores_cienmil            1.186    0.263
+## correlaciones[, 1:4]estudiantes_edad_estudiar   0.937    0.371
+## correlaciones[, 1:4]total_establecimientos     -1.430    0.183
+## 
+## Residual standard error: 0.2176 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.2432, Adjusted R-squared:  -0.05947 
+## F-statistic: 0.8035 on 4 and 10 DF,  p-value: 0.5501</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Numero de personas en el regiem de subsidiado</span>
+regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regViolencia)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Violencia ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.72720 -0.17133  0.00966  0.24950  0.60815 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                    1.021e+00  1.532e+00
+## correlaciones[, 1:4]alumnos_cienmil            2.599e-05  4.121e-05
+## correlaciones[, 1:4]doctores_cienmil          -6.372e-03  6.293e-03
+## correlaciones[, 1:4]estudiantes_edad_estudiar -1.135e-04  6.461e-05
+## correlaciones[, 1:4]total_establecimientos     5.636e-05  2.134e-04
+##                                               t value Pr(&gt;|t|)
+## (Intercept)                                     0.666    0.520
+## correlaciones[, 1:4]alumnos_cienmil             0.631    0.542
+## correlaciones[, 1:4]doctores_cienmil           -1.013    0.335
+## correlaciones[, 1:4]estudiantes_edad_estudiar  -1.758    0.109
+## correlaciones[, 1:4]total_establecimientos      0.264    0.797
+## 
+## Residual standard error: 0.4587 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.2474, Adjusted R-squared:  -0.05363 
+## F-statistic: 0.8218 on 4 and 10 DF,  p-value: 0.5401</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regRencor &lt;-<span class="st"> </span><span class="kw">lm</span>(Rencor <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regRencor)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Rencor ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.7703 -0.1179  0.0397  0.1179  0.5537 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                    2.565e+00  1.228e+00
+## correlaciones[, 1:4]alumnos_cienmil           -1.424e-05  3.303e-05
+## correlaciones[, 1:4]doctores_cienmil           1.583e-03  5.043e-03
+## correlaciones[, 1:4]estudiantes_edad_estudiar  5.060e-05  5.178e-05
+## correlaciones[, 1:4]total_establecimientos     1.451e-04  1.711e-04
+##                                               t value Pr(&gt;|t|)  
+## (Intercept)                                     2.090   0.0632 .
+## correlaciones[, 1:4]alumnos_cienmil            -0.431   0.6755  
+## correlaciones[, 1:4]doctores_cienmil            0.314   0.7600  
+## correlaciones[, 1:4]estudiantes_edad_estudiar   0.977   0.3515  
+## correlaciones[, 1:4]total_establecimientos      0.848   0.4161  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3676 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.1629, Adjusted R-squared:  -0.1719 
+## F-statistic: 0.4866 on 4 and 10 DF,  p-value: 0.7458</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria<span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.38768 -0.04433 -0.01131  0.12429  0.21140 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                    2.563e+00  6.446e-01
+## correlaciones[, 1:4]alumnos_cienmil           -1.930e-05  1.734e-05
+## correlaciones[, 1:4]doctores_cienmil           8.844e-03  2.648e-03
+## correlaciones[, 1:4]estudiantes_edad_estudiar  4.635e-05  2.718e-05
+## correlaciones[, 1:4]total_establecimientos    -1.968e-04  8.980e-05
+##                                               t value Pr(&gt;|t|)   
+## (Intercept)                                     3.976  0.00262 **
+## correlaciones[, 1:4]alumnos_cienmil            -1.113  0.29171   
+## correlaciones[, 1:4]doctores_cienmil            3.340  0.00749 **
+## correlaciones[, 1:4]estudiantes_edad_estudiar   1.705  0.11900   
+## correlaciones[, 1:4]total_establecimientos     -2.192  0.05320 . 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.193 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.5477, Adjusted R-squared:  0.3668 
+## F-statistic: 3.027 on 4 and 10 DF,  p-value: 0.07076</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria_Expectativa &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria_Expectativa<span class="op">~</span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria_Expectativa)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria_Expectativa ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.63167 -0.07065  0.03876  0.14163  0.59431 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                    3.165e+00  1.099e+00
+## correlaciones[, 1:4]alumnos_cienmil           -1.418e-05  2.956e-05
+## correlaciones[, 1:4]doctores_cienmil           4.312e-03  4.513e-03
+## correlaciones[, 1:4]estudiantes_edad_estudiar  1.887e-05  4.634e-05
+## correlaciones[, 1:4]total_establecimientos    -8.254e-05  1.531e-04
+##                                               t value Pr(&gt;|t|)  
+## (Intercept)                                     2.881   0.0164 *
+## correlaciones[, 1:4]alumnos_cienmil            -0.480   0.6417  
+## correlaciones[, 1:4]doctores_cienmil            0.955   0.3619  
+## correlaciones[, 1:4]estudiantes_edad_estudiar   0.407   0.6925  
+## correlaciones[, 1:4]total_establecimientos     -0.539   0.6015  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.329 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.1078, Adjusted R-squared:  -0.2491 
+## F-statistic: 0.302 on 4 and 10 DF,  p-value: 0.8701</code></pre>
+<p>Observe que en estas regresiones hay un resultado interesante y es que el numero de personas que hayan terminado los estudios de doctorado sirve como predictor del indice de memoria.Es significativo al 5%.</p>
+</div>
+</div>
+<div id="delta-variables-con-acdi-voca" class="section level2">
+<h2><span class="header-section-number">3.2</span> <span class="math inline">\(\Delta\)</span> variables con ACDI-VOCA</h2>
+<p>En esta seccion se tiene en cuenta el <span class="math inline">\(\Delta\)</span> de la variable de interes. Primero se hacen correlaciones y, luego, se hacen regresiones lineales.</p>
+<div id="correlaciones-1" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Correlaciones</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a hacerlo primero con la diferencia en los indices. En efecto, este capta una diferencia del pasado con hoy. Como el indice es del 2017, nos concentramos en eso. </span>
+
+
+<span class="co">#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos</span>
+
+diff_alumnos_cienmil_mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_alumnos_cienmil_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span> 
+diff_phds_cienmil_mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_phds_cienmil_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+diff_estudiantes_proy_cienmil_mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_estudiantes_proy_cienmil_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+diff_t_establ_mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(diff_t_establ_mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(diff_alumnos_cienmil_mean, 
+                       diff_phds_cienmil_mean, 
+                       diff_estudiantes_proy_cienmil_mean, 
+                       diff_t_establ_mean, 
+                       reconciliacion_agreg<span class="op">$</span>reconciliacion.mean, 
+                       disculpas_agreg<span class="op">$</span>disculpas.mean, 
+                       violencia_agreg<span class="op">$</span>violencia.mean, 
+                       rencor_agreg<span class="op">$</span>rencor.mean, 
+                       memoria_agreg<span class="op">$</span>memoria.mean, 
+                       memoria_expectativa_agreg<span class="op">$</span>memoria_expectativa.mean)
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;alumnos_cienmil&quot;</span>,
+             <span class="st">&quot;doctores_cienmil&quot;</span>,
+             <span class="st">&quot;estudiantes_edad_estudiar&quot;</span>,
+             <span class="st">&quot;total_establecimientos&quot;</span>,
+             <span class="st">&quot;Reconciliacion&quot;</span>,
+             <span class="st">&quot;Disculpas&quot;</span>, 
+             <span class="st">&quot;Violencia&quot;</span>, 
+             <span class="st">&quot;Rencor&quot;</span>,
+             <span class="st">&quot;Memoria&quot;</span>, 
+             <span class="st">&quot;Memoria_Expectativa&quot;</span>)
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+
+
+
+<span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) <span class="co">#Aqui hay cosas bien interesantes}</span></code></pre></div>
+<pre><code>##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                      1.00            -0.28
+## doctores_cienmil                    -0.28             1.00
+## estudiantes_edad_estudiar            0.35            -0.32
+## total_establecimientos               0.24            -0.27
+## Reconciliacion                      -0.05             0.10
+## Disculpas                            0.18            -0.08
+## Violencia                            0.04            -0.10
+## Rencor                              -0.16             0.08
+## Memoria                              0.10            -0.15
+## Memoria_Expectativa                 -0.10             0.10
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil                                0.35                   0.24
+## doctores_cienmil                              -0.32                  -0.27
+## estudiantes_edad_estudiar                      1.00                  -0.01
+## total_establecimientos                        -0.01                   1.00
+## Reconciliacion                                 0.03                   0.16
+## Disculpas                                     -0.06                  -0.20
+## Violencia                                     -0.08                   0.12
+## Rencor                                         0.03                  -0.03
+## Memoria                                        0.26                   0.10
+## Memoria_Expectativa                            0.25                   0.01
+##                           Reconciliacion Disculpas Violencia Rencor
+## alumnos_cienmil                    -0.05      0.18      0.04  -0.16
+## doctores_cienmil                    0.10     -0.08     -0.10   0.08
+## estudiantes_edad_estudiar           0.03     -0.06     -0.08   0.03
+## total_establecimientos              0.16     -0.20      0.12  -0.03
+## Reconciliacion                      1.00      0.09     -0.12   0.17
+## Disculpas                           0.09      1.00     -0.46   0.27
+## Violencia                          -0.12     -0.46      1.00  -0.23
+## Rencor                              0.17      0.27     -0.23   1.00
+## Memoria                             0.18      0.14     -0.34   0.35
+## Memoria_Expectativa                 0.20      0.06     -0.05   0.42
+##                           Memoria Memoria_Expectativa
+## alumnos_cienmil              0.10               -0.10
+## doctores_cienmil            -0.15                0.10
+## estudiantes_edad_estudiar    0.26                0.25
+## total_establecimientos       0.10                0.01
+## Reconciliacion               0.18                0.20
+## Disculpas                    0.14                0.06
+## Violencia                   -0.34               -0.05
+## Rencor                       0.35                0.42
+## Memoria                      1.00                0.65
+## Memoria_Expectativa          0.65                1.00
+## 
+## n
+##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                        44               15
+## doctores_cienmil                       15               15
+## estudiantes_edad_estudiar              43               15
+## total_establecimientos                 44               15
+## Reconciliacion                         44               15
+## Disculpas                              44               15
+## Violencia                              44               15
+## Rencor                                 44               15
+## Memoria                                44               15
+## Memoria_Expectativa                    44               15
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil                                  43                     44
+## doctores_cienmil                                 15                     15
+## estudiantes_edad_estudiar                        43                     43
+## total_establecimientos                           43                     44
+## Reconciliacion                                   43                     44
+## Disculpas                                        43                     44
+## Violencia                                        43                     44
+## Rencor                                           43                     44
+## Memoria                                          43                     44
+## Memoria_Expectativa                              43                     44
+##                           Reconciliacion Disculpas Violencia Rencor
+## alumnos_cienmil                       44        44        44     44
+## doctores_cienmil                      15        15        15     15
+## estudiantes_edad_estudiar             43        43        43     43
+## total_establecimientos                44        44        44     44
+## Reconciliacion                        44        44        44     44
+## Disculpas                             44        44        44     44
+## Violencia                             44        44        44     44
+## Rencor                                44        44        44     44
+## Memoria                               44        44        44     44
+## Memoria_Expectativa                   44        44        44     44
+##                           Memoria Memoria_Expectativa
+## alumnos_cienmil                44                  44
+## doctores_cienmil               15                  15
+## estudiantes_edad_estudiar      43                  43
+## total_establecimientos         44                  44
+## Reconciliacion                 44                  44
+## Disculpas                      44                  44
+## Violencia                      44                  44
+## Rencor                         44                  44
+## Memoria                        44                  44
+## Memoria_Expectativa            44                  44
+## 
+## P
+##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                           0.3147          
+## doctores_cienmil          0.3147                          
+## estudiantes_edad_estudiar 0.0211          0.2427          
+## total_establecimientos    0.1225          0.3278          
+## Reconciliacion            0.7636          0.7134          
+## Disculpas                 0.2450          0.7710          
+## Violencia                 0.7803          0.7325          
+## Rencor                    0.2873          0.7710          
+## Memoria                   0.5175          0.5936          
+## Memoria_Expectativa       0.5045          0.7325          
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil           0.0211                    0.1225                
+## doctores_cienmil          0.2427                    0.3278                
+## estudiantes_edad_estudiar                           0.9701                
+## total_establecimientos    0.9701                                          
+## Reconciliacion            0.8280                    0.2938                
+## Disculpas                 0.7033                    0.1836                
+## Violencia                 0.5951                    0.4278                
+## Rencor                    0.8536                    0.8466                
+## Memoria                   0.0877                    0.5324                
+## Memoria_Expectativa       0.1007                    0.9479                
+##                           Reconciliacion Disculpas Violencia Rencor
+## alumnos_cienmil           0.7636         0.2450    0.7803    0.2873
+## doctores_cienmil          0.7134         0.7710    0.7325    0.7710
+## estudiantes_edad_estudiar 0.8280         0.7033    0.5951    0.8536
+## total_establecimientos    0.2938         0.1836    0.4278    0.8466
+## Reconciliacion                           0.5506    0.4251    0.2668
+## Disculpas                 0.5506                   0.0018    0.0769
+## Violencia                 0.4251         0.0018              0.1314
+## Rencor                    0.2668         0.0769    0.1314          
+## Memoria                   0.2499         0.3727    0.0238    0.0212
+## Memoria_Expectativa       0.1821         0.7156    0.7539    0.0043
+##                           Memoria Memoria_Expectativa
+## alumnos_cienmil           0.5175  0.5045             
+## doctores_cienmil          0.5936  0.7325             
+## estudiantes_edad_estudiar 0.0877  0.1007             
+## total_establecimientos    0.5324  0.9479             
+## Reconciliacion            0.2499  0.1821             
+## Disculpas                 0.3727  0.7156             
+## Violencia                 0.0238  0.7539             
+## Rencor                    0.0212  0.0043             
+## Memoria                           0.0000             
+## Memoria_Expectativa       0.0000</code></pre>
+</div>
+<div id="regresion-lineal-1" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Regresion lineal</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regReconcililacion &lt;-<span class="st"> </span><span class="kw">lm</span>(Reconciliacion <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regReconcililacion)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Reconciliacion ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.5738 -2.0838  0.4407  1.2041  4.7512 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                    3.2939462  1.1328030
+## correlaciones[, 1:4]alumnos_cienmil           -0.0002108  0.0002225
+## correlaciones[, 1:4]doctores_cienmil           0.0156852  0.1325246
+## correlaciones[, 1:4]estudiantes_edad_estudiar  0.0003310  0.0004806
+## correlaciones[, 1:4]total_establecimientos     0.0019768  0.0042117
+##                                               t value Pr(&gt;|t|)  
+## (Intercept)                                     2.908   0.0156 *
+## correlaciones[, 1:4]alumnos_cienmil            -0.948   0.3656  
+## correlaciones[, 1:4]doctores_cienmil            0.118   0.9081  
+## correlaciones[, 1:4]estudiantes_edad_estudiar   0.689   0.5067  
+## correlaciones[, 1:4]total_establecimientos      0.469   0.6489  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.978 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.1533, Adjusted R-squared:  -0.1854 
+## F-statistic: 0.4527 on 4 and 10 DF,  p-value: 0.7687</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regDisculpas &lt;-<span class="st"> </span><span class="kw">lm</span>(Disculpas <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regDisculpas)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Disculpas ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.24914 -0.07555 -0.02578  0.04520  0.34602 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                    7.346e-01  7.022e-02
+## correlaciones[, 1:4]alumnos_cienmil            4.604e-06  1.379e-05
+## correlaciones[, 1:4]doctores_cienmil          -4.086e-03  8.215e-03
+## correlaciones[, 1:4]estudiantes_edad_estudiar  2.032e-05  2.979e-05
+## correlaciones[, 1:4]total_establecimientos    -6.265e-04  2.611e-04
+##                                               t value Pr(&gt;|t|)    
+## (Intercept)                                    10.461 1.05e-06 ***
+## correlaciones[, 1:4]alumnos_cienmil             0.334   0.7454    
+## correlaciones[, 1:4]doctores_cienmil           -0.497   0.6297    
+## correlaciones[, 1:4]estudiantes_edad_estudiar   0.682   0.5107    
+## correlaciones[, 1:4]total_establecimientos     -2.400   0.0373 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1846 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.4556, Adjusted R-squared:  0.2378 
+## F-statistic: 2.092 on 4 and 10 DF,  p-value: 0.1568</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regViolencia &lt;-<span class="st"> </span><span class="kw">lm</span>(Violencia <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regViolencia)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Violencia ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.85915 -0.18047 -0.01072  0.32760  0.62188 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                   -1.097e+00  1.869e-01
+## correlaciones[, 1:4]alumnos_cienmil           -2.005e-05  3.670e-05
+## correlaciones[, 1:4]doctores_cienmil          -1.901e-02  2.186e-02
+## correlaciones[, 1:4]estudiantes_edad_estudiar -7.488e-05  7.928e-05
+## correlaciones[, 1:4]total_establecimientos    -1.024e-04  6.948e-04
+##                                               t value Pr(&gt;|t|)    
+## (Intercept)                                    -5.870 0.000157 ***
+## correlaciones[, 1:4]alumnos_cienmil            -0.546 0.596773    
+## correlaciones[, 1:4]doctores_cienmil           -0.869 0.404994    
+## correlaciones[, 1:4]estudiantes_edad_estudiar  -0.944 0.367215    
+## correlaciones[, 1:4]total_establecimientos     -0.147 0.885802    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4912 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.1369, Adjusted R-squared:  -0.2084 
+## F-statistic: 0.3964 on 4 and 10 DF,  p-value: 0.8069</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regRencor &lt;-<span class="st"> </span><span class="kw">lm</span>(Rencor <span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regRencor)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Rencor ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.64975 -0.11151  0.06068  0.17308  0.44209 
+## 
+## Coefficients:
+##                                                Estimate Std. Error t value
+## (Intercept)                                   3.433e+00  1.340e-01  25.624
+## correlaciones[, 1:4]alumnos_cienmil           3.313e-05  2.631e-05   1.259
+## correlaciones[, 1:4]doctores_cienmil          7.961e-03  1.567e-02   0.508
+## correlaciones[, 1:4]estudiantes_edad_estudiar 4.543e-05  5.684e-05   0.799
+## correlaciones[, 1:4]total_establecimientos    3.591e-04  4.981e-04   0.721
+##                                               Pr(&gt;|t|)    
+## (Intercept)                                   1.88e-10 ***
+## correlaciones[, 1:4]alumnos_cienmil              0.237    
+## correlaciones[, 1:4]doctores_cienmil             0.623    
+## correlaciones[, 1:4]estudiantes_edad_estudiar    0.443    
+## correlaciones[, 1:4]total_establecimientos       0.487    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3521 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.2319, Adjusted R-squared:  -0.07528 
+## F-statistic: 0.755 on 4 and 10 DF,  p-value: 0.5772</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria<span class="op">~</span><span class="st"> </span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.3649 -0.1535 -0.0171  0.1315  0.4298 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                    3.173e+00  9.294e-02
+## correlaciones[, 1:4]alumnos_cienmil            2.152e-06  1.825e-05
+## correlaciones[, 1:4]doctores_cienmil          -1.685e-02  1.087e-02
+## correlaciones[, 1:4]estudiantes_edad_estudiar  4.940e-06  3.943e-05
+## correlaciones[, 1:4]total_establecimientos    -4.282e-04  3.456e-04
+##                                               t value Pr(&gt;|t|)    
+## (Intercept)                                    34.135  1.1e-11 ***
+## correlaciones[, 1:4]alumnos_cienmil             0.118    0.909    
+## correlaciones[, 1:4]doctores_cienmil           -1.549    0.152    
+## correlaciones[, 1:4]estudiantes_edad_estudiar   0.125    0.903    
+## correlaciones[, 1:4]total_establecimientos     -1.239    0.244    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2443 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.2753, Adjusted R-squared:  -0.01453 
+## F-statistic: 0.9499 on 4 and 10 DF,  p-value: 0.475</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regMemoria_Expectativa &lt;-<span class="st"> </span><span class="kw">lm</span>(Memoria_Expectativa<span class="op">~</span>correlaciones[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>], <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regMemoria_Expectativa)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Memoria_Expectativa ~ correlaciones[, 1:4], data = dfcorrelaciones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.50130 -0.16712  0.04401  0.14955  0.53691 
+## 
+## Coefficients:
+##                                                 Estimate Std. Error
+## (Intercept)                                    3.191e+00  1.167e-01
+## correlaciones[, 1:4]alumnos_cienmil            2.356e-05  2.291e-05
+## correlaciones[, 1:4]doctores_cienmil          -3.498e-04  1.365e-02
+## correlaciones[, 1:4]estudiantes_edad_estudiar  4.351e-05  4.949e-05
+## correlaciones[, 1:4]total_establecimientos    -8.330e-05  4.337e-04
+##                                               t value Pr(&gt;|t|)    
+## (Intercept)                                    27.350 9.89e-11 ***
+## correlaciones[, 1:4]alumnos_cienmil             1.028    0.328    
+## correlaciones[, 1:4]doctores_cienmil           -0.026    0.980    
+## correlaciones[, 1:4]estudiantes_edad_estudiar   0.879    0.400    
+## correlaciones[, 1:4]total_establecimientos     -0.192    0.852    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3066 on 10 degrees of freedom
+##   (29 observations deleted due to missingness)
+## Multiple R-squared:  0.2249, Adjusted R-squared:  -0.08509 
+## F-statistic: 0.7255 on 4 and 10 DF,  p-value: 0.5943</code></pre>
+<p>Aqui observe que la regresion indica que a mayor numero de establecimientos hay menor indice de violencia de manera significativa. El indice es negativo.</p>
+</div>
+</div>
+</div>
+<div id="analisis-con-indice-par-instrumento-de-medicion-de-reconciliacion" class="section level1">
+<h1><span class="header-section-number">4</span> Analisis con Indice PAR (Instrumento de medicion de reconciliacion)</h1>
+<p>Ahora se haran regresiones con el indice de reconciliacion.</p>
+<div id="variables-con-valores-absolutos-agregados-con-indice-par" class="section level2">
+<h2><span class="header-section-number">4.1</span> Variables con valores absolutos (agregados) con indice PAR</h2>
+<p>A continuacion se haran las correlaciones con las variables de salud y el indice PAR. Recuerde que estas variables son las <strong>agregadas</strong>.</p>
+</div>
+<div id="correlaciones-2" class="section level2">
+<h2><span class="header-section-number">4.2</span> Correlaciones</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a hacerlo primero con el indice agregado por anos.</span>
+names_acdi &lt;-<span class="st"> </span>acdi_imr<span class="op">$</span>Municipio_imr
+
+acdi_imr &lt;-<span class="st"> </span>acdi_imr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio_imr)
+
+
+par_descrip_alumnos_cienmil &lt;-<span class="st"> </span>descrip_alumnos_cienmil[descrip_alumnos_cienmil<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_alumnos_cienmil &lt;-<span class="st"> </span>par_descrip_alumnos_cienmil <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+
+par_descrip_phds_cienmil &lt;-<span class="st"> </span>descrip_phds_cienmil[descrip_phds_cienmil<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_phds_cienmil &lt;-<span class="st"> </span>par_descrip_phds_cienmil <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+par_descrip_estudiantes_proy_cienmil &lt;-<span class="st"> </span>descrip_estudiantes_proy_cienmil[descrip_estudiantes_proy_cienmil<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_estudiantes_proy_cienmil &lt;-<span class="st"> </span>par_descrip_estudiantes_proy_cienmil <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+par_descrip_t_establ &lt;-<span class="st"> </span>descrip_t_establ[descrip_t_establ<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]
+par_descrip_t_establ &lt;-<span class="st"> </span>par_descrip_t_establ <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(municipio)
+
+
+<span class="co">#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos</span>
+
+
+par_descrip_alumnos_cienmil<span class="op">$</span>alumnos_cienmil.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(par_descrip_alumnos_cienmil<span class="op">$</span>alumnos_cienmil.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span> 
+par_descrip_phds_cienmil<span class="op">$</span>phds_cienmil.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(par_descrip_phds_cienmil<span class="op">$</span>phds_cienmil.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+par_descrip_estudiantes_proy_cienmil<span class="op">$</span>estudiantes_proy_cienmil.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(par_descrip_estudiantes_proy_cienmil<span class="op">$</span>estudiantes_proy_cienmil.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+par_descrip_t_establ<span class="op">$</span>t_establ.mean[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(par_descrip_t_establ<span class="op">$</span>t_establ.mean))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(par_descrip_alumnos_cienmil<span class="op">$</span>alumnos_cienmil.mean, 
+                       par_descrip_phds_cienmil<span class="op">$</span>phds_cienmil.mean, 
+                       par_descrip_estudiantes_proy_cienmil<span class="op">$</span>estudiantes_proy_cienmil.mean, 
+                       par_descrip_t_establ<span class="op">$</span>t_establ.mean, 
+                       acdi_imr<span class="op">$</span>indice_de_reconciliacion_imr)
+
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;alumnos_cienmil&quot;</span>,
+             <span class="st">&quot;doctores_cienmil&quot;</span>,
+             <span class="st">&quot;estudiantes_edad_estudiar&quot;</span>,
+             <span class="st">&quot;total_establecimientos&quot;</span>,
+             <span class="st">&quot;Indice_reconciliacion&quot;</span>)
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+<span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) </code></pre></div>
+<pre><code>##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                      1.00            -0.15
+## doctores_cienmil                    -0.15             1.00
+## estudiantes_edad_estudiar            0.50            -0.76
+## total_establecimientos              -0.05             0.80
+## Indice_reconciliacion                0.18            -0.29
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil                                0.50                  -0.05
+## doctores_cienmil                              -0.76                   0.80
+## estudiantes_edad_estudiar                      1.00                  -0.47
+## total_establecimientos                        -0.47                   1.00
+## Indice_reconciliacion                          0.12                   0.04
+##                           Indice_reconciliacion
+## alumnos_cienmil                            0.18
+## doctores_cienmil                          -0.29
+## estudiantes_edad_estudiar                  0.12
+## total_establecimientos                     0.04
+## Indice_reconciliacion                      1.00
+## 
+## n
+##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                        22               12
+## doctores_cienmil                       12               12
+## estudiantes_edad_estudiar              22               12
+## total_establecimientos                 22               12
+## Indice_reconciliacion                  22               12
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil                                  22                     22
+## doctores_cienmil                                 12                     12
+## estudiantes_edad_estudiar                        22                     22
+## total_establecimientos                           22                     22
+## Indice_reconciliacion                            22                     22
+##                           Indice_reconciliacion
+## alumnos_cienmil                              22
+## doctores_cienmil                             12
+## estudiantes_edad_estudiar                    22
+## total_establecimientos                       22
+## Indice_reconciliacion                        22
+## 
+## P
+##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                           0.6331          
+## doctores_cienmil          0.6331                          
+## estudiantes_edad_estudiar 0.0182          0.0045          
+## total_establecimientos    0.8165          0.0016          
+## Indice_reconciliacion     0.4195          0.3663          
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil           0.0182                    0.8165                
+## doctores_cienmil          0.0045                    0.0016                
+## estudiantes_edad_estudiar                           0.0280                
+## total_establecimientos    0.0280                                          
+## Indice_reconciliacion     0.5939                    0.8437                
+##                           Indice_reconciliacion
+## alumnos_cienmil           0.4195               
+## doctores_cienmil          0.3663               
+## estudiantes_edad_estudiar 0.5939               
+## total_establecimientos    0.8437               
+## Indice_reconciliacion</code></pre>
+</div>
+<div id="regresion-lineal-2" class="section level2">
+<h2><span class="header-section-number">4.3</span> Regresion lineal</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regEducacion_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span>., <span class="dt">data =</span> dfcorrelaciones)
+<span class="kw">summary</span>(regEducacion_PAR)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ ., data = dfcorrelaciones)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.160305 -0.022662  0.001551  0.053044  0.112415 
+## 
+## Coefficients:
+##                             Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)                7.557e-01  3.744e-01   2.019   0.0833 .
+## alumnos_cienmil            4.566e-06  8.926e-06   0.512   0.6247  
+## doctores_cienmil          -1.450e-03  1.537e-03  -0.943   0.3769  
+## estudiantes_edad_estudiar -1.266e-05  1.640e-05  -0.772   0.4653  
+## total_establecimientos    -2.089e-05  4.434e-05  -0.471   0.6519  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.09511 on 7 degrees of freedom
+##   (10 observations deleted due to missingness)
+## Multiple R-squared:  0.2577, Adjusted R-squared:  -0.1665 
+## F-statistic: 0.6075 on 4 and 7 DF,  p-value: 0.6703</code></pre>
+</div>
+<div id="variables-con-diferencias-deltas-delta-con-indice-par" class="section level2">
+<h2><span class="header-section-number">4.4</span> Variables con diferencias (Deltas <span class="math inline">\(\Delta\)</span>) con indice PAR</h2>
+<p>A continuacion se haran las correlaciones con las variables de gobierno y el indice PAR. Recuerde que estas variables son las <strong>diferencias entre los primeros cinco anos a los ultimos 5 anos</strong>.</p>
+</div>
+<div id="correlaciones-3" class="section level2">
+<h2><span class="header-section-number">4.5</span> Correlaciones</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Vamos a hacerlo primero con el indice agregado por anos.  </span>
+
+par_diff_alumnos_cienmil &lt;-<span class="st"> </span>descrip_alumnos_cienmil_5antes[descrip_alumnos_cienmil_5antes<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>alumnos_cienmil.mean <span class="op">-</span>descrip_alumnos_cienmil_5despues[descrip_alumnos_cienmil_5despues<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>alumnos_cienmil.mean
+
+par_diff_phds_cienmil &lt;-<span class="st"> </span>descrip_phds_cienmil_5antes[descrip_phds_cienmil_5antes<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>phds_cienmil.mean <span class="op">-</span><span class="st"> </span>descrip_phds_cienmil_5despues[descrip_phds_cienmil_5despues<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>phds_cienmil.mean
+
+par_diff_estudiantes_proy_cienmil &lt;-<span class="st"> </span>descrip_estudiantes_proy_cienmil_5antes[descrip_estudiantes_proy_cienmil_5antes<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>estudiantes_proy_cienmil.mean<span class="op">-</span>descrip_estudiantes_proy_cienmil_5despues[descrip_estudiantes_proy_cienmil_5despues<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>estudiantes_proy_cienmil.mean
+
+
+par_diff_t_establ &lt;-<span class="st"> </span>descrip_t_establ_5antes[descrip_t_establ_5antes<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>t_establ.mean<span class="op">-</span>descrip_t_establ_5despues[descrip_t_establ_5despues<span class="op">$</span>municipio <span class="op">%in%</span><span class="st"> </span>names_acdi,]<span class="op">$</span>t_establ.mean
+
+
+par_diff_alumnos_cienmil[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(par_diff_alumnos_cienmil))] &lt;-<span class="st"> </span><span class="ot">NA</span> 
+par_diff_phds_cienmil[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(par_diff_phds_cienmil))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+par_diff_estudiantes_proy_cienmil[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(par_diff_estudiantes_proy_cienmil))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+par_diff_t_establ[<span class="kw">which</span>(<span class="op">!</span><span class="kw">is.finite</span>(par_diff_t_establ))] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+
+correlaciones &lt;-<span class="st"> </span><span class="kw">cbind</span>(par_diff_alumnos_cienmil, 
+                       par_diff_phds_cienmil, 
+                       par_diff_estudiantes_proy_cienmil, 
+                       par_diff_t_establ,
+                       acdi_imr<span class="op">$</span>indice_de_reconciliacion_imr)
+
+
+nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;alumnos_cienmil&quot;</span>,
+             <span class="st">&quot;doctores_cienmil&quot;</span>,
+             <span class="st">&quot;estudiantes_edad_estudiar&quot;</span>,
+             <span class="st">&quot;total_establecimientos&quot;</span>,
+             <span class="st">&quot;Indice_reconciliacion&quot;</span>)
+
+
+<span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
+
+<span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) <span class="co">#Aqui hay cosas bien interesantes}</span></code></pre></div>
+<pre><code>##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                      1.00            -0.18
+## doctores_cienmil                    -0.18             1.00
+## estudiantes_edad_estudiar            0.32            -0.38
+## total_establecimientos               0.22            -0.31
+## Indice_reconciliacion               -0.26             0.35
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil                                0.32                   0.22
+## doctores_cienmil                              -0.38                  -0.31
+## estudiantes_edad_estudiar                      1.00                   0.04
+## total_establecimientos                         0.04                   1.00
+## Indice_reconciliacion                         -0.12                  -0.50
+##                           Indice_reconciliacion
+## alumnos_cienmil                           -0.26
+## doctores_cienmil                           0.35
+## estudiantes_edad_estudiar                 -0.12
+## total_establecimientos                    -0.50
+## Indice_reconciliacion                      1.00
+## 
+## n
+##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                        22               12
+## doctores_cienmil                       12               12
+## estudiantes_edad_estudiar              22               12
+## total_establecimientos                 22               12
+## Indice_reconciliacion                  22               12
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil                                  22                     22
+## doctores_cienmil                                 12                     12
+## estudiantes_edad_estudiar                        22                     22
+## total_establecimientos                           22                     22
+## Indice_reconciliacion                            22                     22
+##                           Indice_reconciliacion
+## alumnos_cienmil                              22
+## doctores_cienmil                             12
+## estudiantes_edad_estudiar                    22
+## total_establecimientos                       22
+## Indice_reconciliacion                        22
+## 
+## P
+##                           alumnos_cienmil doctores_cienmil
+## alumnos_cienmil                           0.5717          
+## doctores_cienmil          0.5717                          
+## estudiantes_edad_estudiar 0.1479          0.2262          
+## total_establecimientos    0.3363          0.3306          
+## Indice_reconciliacion     0.2506          0.2652          
+##                           estudiantes_edad_estudiar total_establecimientos
+## alumnos_cienmil           0.1479                    0.3363                
+## doctores_cienmil          0.2262                    0.3306                
+## estudiantes_edad_estudiar                           0.8437                
+## total_establecimientos    0.8437                                          
+## Indice_reconciliacion     0.6045                    0.0182                
+##                           Indice_reconciliacion
+## alumnos_cienmil           0.2506               
+## doctores_cienmil          0.2652               
+## estudiantes_edad_estudiar 0.6045               
+## total_establecimientos    0.0182               
+## Indice_reconciliacion</code></pre>
+<p>Aqui observe que hay un resultado contraintuitivo. A mayor numero de establecimientos, el indice de reconcialiacion PAR disminuye significativamente. El coeficiente de correlacion es de -0.5</p>
+</div>
+<div id="regresion-lineal-3" class="section level2">
+<h2><span class="header-section-number">4.6</span> Regresion lineal</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dfcorrelaciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(correlaciones)
+regEducacion_diff_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span>., <span class="dt">data=</span>dfcorrelaciones)
+<span class="kw">summary</span>(regEducacion_diff_PAR)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ ., data = dfcorrelaciones)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.108320 -0.044653 -0.005034  0.016558  0.138857 
+## 
+## Coefficients:
+##                             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                5.226e-01  3.625e-02  14.419 1.84e-06 ***
+## alumnos_cienmil           -9.798e-06  7.341e-06  -1.335    0.224    
+## doctores_cienmil           2.834e-03  3.812e-03   0.743    0.481    
+## estudiantes_edad_estudiar  2.043e-05  1.362e-05   1.500    0.177    
+## total_establecimientos    -1.055e-04  1.182e-04  -0.893    0.402    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.08193 on 7 degrees of freedom
+##   (10 observations deleted due to missingness)
+## Multiple R-squared:  0.4492, Adjusted R-squared:  0.1345 
+## F-statistic: 1.427 on 4 and 7 DF,  p-value: 0.319</code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
