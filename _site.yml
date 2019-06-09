@@ -36,6 +36,9 @@ navbar:
         - text: "Modulo Politica"
           icon: fa-comment
           href: elca_modulo_politica.html
+    - text: "Analisis PAR"
+      icon: 
+      href: Analisis_indice_PAR.html    
     - text: "More"
       icon: fa-gear
       menu:

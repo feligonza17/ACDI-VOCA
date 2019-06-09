@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Felipe Gonzalez-Arango" />
+
+
+<title>Analisis Indice_PAR</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="Merge_bases.html">Codigo para iniciar</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel CEDE Municipal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploraciones</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="Violencia_graficos_analisis.html">
+            <span class="fa fa-bomb"></span>
+             
+            Violencia
+          </a>
+        </li>
+        <li>
+          <a href="Gobierno_graficos_analisis.html">
+            <span class="fa fa-university"></span>
+             
+            Gobierno
+          </a>
+        </li>
+        <li>
+          <a href="Salud_graficos_analisis.html">
+            <span class="fa fa-user-md"></span>
+             
+            Salud
+          </a>
+        </li>
+        <li>
+          <a href="Educacion_graficos_analisis.html">
+            <span class="fa fa-graduation-cap"></span>
+             
+            Educacion
+          </a>
+        </li>
+        <li>
+          <a href="Tierras_graficos_analisis.html">
+            <span class="fa fa-seedling"></span>
+             
+            Tierras
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    ELCA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="elca_exploracion.html">
+        <span class="fa fa-object-ungroup"></span>
+         
+        Depuracion y merge
+      </a>
+    </li>
+    <li>
+      <a href="elca_modulo_politica.html">
+        <span class="fa fa-comment"></span>
+         
+        Modulo Politica
+      </a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    More
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Exploraciones Viejas</li>
+    <li>
+      <a href="Exploracion_CEDE_Violencia_ACDIVOCA.html">Violencia y graficos</a>
+    </li>
+    <li>
+      <a href="acdivoca_analisis.html">Violencia y estadistica</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Analisis Indice_PAR</h1>
+<h4 class="author">Felipe Gonzalez-Arango</h4>
+<h4 class="date">06 de junio de 2019</h4>
+
+</div>
+
+
+<p>El objetivo de este documento es empezar a cruzar variables de diferentes bases de datos. En efecto, las bases anteriores (y sus analisis) podian estar presentando problemas de multicolinealidad. Las variables de Gobierno, a pesar de ser diferentes eran parecidas. Por lo tanto, aqui se hara alguna estadistica inferencial mezclando bases de datos para poder ver que puede predecir el indice PAR.</p>
+<div id="setup" class="section level1">
+<h1><span class="header-section-number">1</span> Setup</h1>
+<p>Con este codigo se importan todas las bases de datos y todos los paquetes necesarios.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Set Working Directory</span>
+<span class="kw">setwd</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo&quot;</span>)
+<span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
+
+<span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
+
+
+<span class="co">#Cargar paquetes</span>
+<span class="kw">library</span>(readstata13)
+<span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(data.table)
+<span class="kw">library</span>(readxl)
+<span class="kw">library</span>(doBy)
+<span class="kw">library</span>(vtable)
+<span class="kw">library</span>(plyr)
+<span class="kw">library</span>(gridExtra)
+<span class="kw">library</span>(grid)
+<span class="kw">library</span>(purrr)
+<span class="kw">library</span>(psych)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(psych)
+<span class="kw">library</span>(Hmisc)
+<span class="kw">library</span>(matrixStats)
+<span class="kw">library</span>(ggpubr)
+<span class="kw">library</span>(vtable)
+<span class="kw">library</span>(ggthemes)</code></pre></div>
+</div>
+<div id="importar-variables" class="section level1">
+<h1><span class="header-section-number">2</span> Importar variables</h1>
+<p>Vamos a importar(crear) las variables que ya se utilizaron en las otras bases de datos. Se recuerda que se utilizaron 5 bases de datos diferentes (Gobierno, Violencia, Tierras, Educacion y Salud).</p>
+<p>Tenga en cuenta que <strong>ningun codigo de esta seccion se va a mostrar</strong> Esto sencillamente para no sobrecargar el documento. Si usted esta interesado en ver el codigo ir a la siguiente pagina: <a href="https://github.com/feligonza17/ACDI-VOCA">GitHub</a> y buscar el archivo con el nombre: <em>Analisis_indice_PAR.Rmd</em></p>
+<div id="violencia" class="section level2">
+<h2><span class="header-section-number">2.1</span> Violencia</h2>
+<p>Homicidios: <strong>homi_cienmil</strong> <br></p>
+<p>Ataques: <strong>Ataques_Pobl_Civil</strong> <br></p>
+<p>Secuestros: <strong>secuestro_cienmil</strong> <br></p>
+<p>Secuestros Politicos: <strong>secuestrop_cienmil</strong> <br></p>
+<p>Desmovilizados: <strong>desmovilizados_cienmil</strong> <br></p>
+</div>
+<div id="gobierno" class="section level2">
+<h2><span class="header-section-number">2.2</span> Gobierno</h2>
+<p>Desempeno fiscal: <strong>DF_desemp_fisc</strong> <br></p>
+<p>Desempeno Integral: <strong>DI_desemp_int</strong> <br></p>
+<p>Analisis Invesrion total: <strong>inv_total_cienmil</strong> <br></p>
+<p>Inversion en fortalecimiento institucional: <strong>inv_fortinst_cienmil</strong> <br></p>
+<p>Indice de Gobierno Abierto: <strong>IGA_total</strong> <br></p>
+</div>
+<div id="salud" class="section level2">
+<h2><span class="header-section-number">2.3</span> Salud</h2>
+<p>Tasa Mortalidad Infantil (TMI):<strong>TMI</strong> <br></p>
+<p>Necesidades Basicas Insatisfechas (NBI):<strong>NBI</strong> <br></p>
+<p>Prestadoras de servicio: <strong>prestadores_cienmil</strong> <br></p>
+<p>Personas afiliadas al regimen subsidiado: <strong>subsidiado_cienmil</strong> <br></p>
+<p>Personas afilidas al regimen contributivo: <strong>contributivo_cienmil</strong> <br></p>
+</div>
+<div id="educacion" class="section level2">
+<h2><span class="header-section-number">2.4</span> Educacion</h2>
+<p>Alumnos en total: <strong>alumnos_cienmil</strong> <br></p>
+<p>Docentes con doctorado en total:<strong>phds_cienmil</strong> <br></p>
+<p>Proyecciones de poblacion en edad de asistir a primaria o secundaria, es decir, poblacion entre 7 a 17 anos.: <strong>estudiantes_proy_cienmil</strong> <br></p>
+<p>Total establecimientos educativos:<strong>t_establ</strong> <br></p>
+</div>
+<div id="tierras" class="section level2">
+<h2><span class="header-section-number">2.5</span> Tierras</h2>
+<p>Numero de creditos Pequenos productores:<strong>nuf_peq</strong> <br></p>
+<p>Numero de creditos Medianos Productores:<strong>nuf_medianos</strong> <br></p>
+<p>Numero de creditos Grandes Productores:<strong>nuf_grandes</strong> <br></p>
+<p>Valor de creditos Pequenos productores:<strong>vrf_peq</strong> <br></p>
+<p>Valor de creditos Medianos productores:<strong>vrf_medianos</strong> <br></p>
+<p>Valor de creditos Grandes productores:<strong>vrf_medianos</strong> <br></p>
+<p>Numero de creditos totales:<strong>ba_tot_nu</strong> <br></p>
+<p>Valor de creditos totales:<strong>ba_tot_vr</strong> <br></p>
+</div>
+</div>
+<div id="regresiones" class="section level1">
+<h1><span class="header-section-number">3</span> Regresiones</h1>
+<div id="variables-con-valores-absolutos-agregados" class="section level2">
+<h2><span class="header-section-number">3.1</span> Variables con valores absolutos (agregados)</h2>
+<p>A continuacion vamos a hacer las regresiones correspondientes.</p>
+<p>Vamos a hacer un stepwise regression en donde el modelo agregue y saqué variables para ver cuál es la que mejor rendimiento tiene.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Creamos la base de datos:</span>
+
+agregados_regresiones &lt;-<span class="st"> </span><span class="kw">cbind</span>(par_descrip_homi<span class="op">$</span>homi_cienmil.mean,
+                               par_descrip_ataques<span class="op">$</span>Ataques_Pobl_Civil.mean,
+                               par_descrip_desmovilizados<span class="op">$</span>desmovilizados_cienmil.mean,
+                               par_descrip_secuestro<span class="op">$</span>secuestro_cienmil.mean,
+                               par_descrip_secuestrop<span class="op">$</span>secuestrop_cienmil.mean,
+                               par_descrip_desemp_fisc<span class="op">$</span>DF_desemp_fisc.mean, 
+                       par_descrip_desemp_int<span class="op">$</span>DI_desemp_int.mean, 
+                       par_descrip_IGA_total<span class="op">$</span>IGA_total.mean, 
+                       par_descrip_inv_fortinst_cienmil<span class="op">$</span>inv_fortinst_cienmil.mean,
+                       par_descrip_inv_total_cienmil<span class="op">$</span>inv_total_cienmil.mean, 
+                       par_descrip_TMI<span class="op">$</span>TMI.mean, 
+                       par_descrip_nbi<span class="op">$</span>nbi.mean, 
+                       par_descrip_prestadores_cienmil<span class="op">$</span>prestadores_cienmil.mean, 
+                       par_descrip_subsidiado_cienmil<span class="op">$</span>subsidiado_cienmil.mean,
+                       par_descrip_alumnos_cienmil<span class="op">$</span>alumnos_cienmil.mean, 
+                       par_descrip_phds_cienmil<span class="op">$</span>phds_cienmil.mean, 
+                      par_descrip_estudiantes_proy_cienmil<span class="op">$</span>estudiantes_proy_cienmil.mean, 
+                       par_descrip_t_establ<span class="op">$</span>t_establ.mean,
+                       par_descrip_nuf_peq<span class="op">$</span>nuf_peq.mean,
+                       par_descrip_nuf_medianos<span class="op">$</span>nuf_medianos.mean,
+                       par_descrip_nuf_grandes<span class="op">$</span>nuf_grandes.mean,
+                       par_descrip_vrf_peq<span class="op">$</span>vrf_peq.mean,
+                       par_descrip_vrf_medianos<span class="op">$</span>vrf_medianos.mean,
+                       par_descrip_vrf_grandes<span class="op">$</span>vrf_grandes.mean,
+                       acdi_imr<span class="op">$</span>indice_de_reconciliacion_imr)</code></pre></div>
+<pre><code>## Warning in cbind(par_descrip_homi$homi_cienmil.mean,
+## par_descrip_ataques$Ataques_Pobl_Civil.mean, : number of rows of result is
+## not a multiple of vector length (arg 15)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Homicidios&quot;</span>,
+             <span class="st">&quot;Ataques_Pobl_Civil&quot;</span>,
+             <span class="st">&quot;Desmovilizados&quot;</span>,
+             <span class="st">&quot;Secuestros&quot;</span>,
+             <span class="st">&quot;Secuestros_Politicos&quot;</span>,
+             <span class="st">&quot;Desempeno Fiscal&quot;</span>,
+             <span class="st">&quot;Desempeno Integral&quot;</span>,
+             <span class="st">&quot;Gobierno Abierto&quot;</span>,
+             <span class="st">&quot;Inv Fort Inst&quot;</span>,
+             <span class="st">&quot;Inv Total&quot;</span>, 
+             <span class="st">&quot;TMI&quot;</span>,
+             <span class="st">&quot;NBI&quot;</span>,
+             <span class="st">&quot;Numero Prestadores_cienmil&quot;</span>,
+             <span class="st">&quot;Afiliados regimen subsidiado&quot;</span>,
+             <span class="st">&quot;alumnos_cienmil&quot;</span>,
+             <span class="st">&quot;doctores_cienmil&quot;</span>,
+             <span class="st">&quot;estudiantes_edad_estudiar&quot;</span>,
+             <span class="st">&quot;total_establecimientos&quot;</span>,
+             <span class="st">&quot;numero_pequenos&quot;</span>,
+             <span class="st">&quot;numero_medianos&quot;</span>,
+             <span class="st">&quot;numero_grandes&quot;</span>,
+             <span class="st">&quot;valor_pequenos&quot;</span>,
+             <span class="st">&quot;valor_medianos&quot;</span>,
+             <span class="st">&quot;valor_grandes&quot;</span>,
+             <span class="st">&quot;Indice_reconciliacion&quot;</span>)
+                               
+<span class="kw">colnames</span>(agregados_regresiones) &lt;-<span class="st"> </span>nombres
+
+agregados_regresiones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(agregados_regresiones)
+<span class="co">#Importamos paquete para hacer el stepwise</span>
+
+<span class="kw">library</span>(MASS)</code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;MASS&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     select</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(leaps)
+
+
+models &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(Indice_reconciliacion <span class="op">~</span>., <span class="dt">data=</span>agregados_regresiones, <span class="dt">nvmax =</span> <span class="dv">3</span>,
+                     <span class="dt">method =</span> <span class="st">&quot;seqrep&quot;</span>)</code></pre></div>
+<pre><code>## Warning in leaps.setup(x, y, wt = wt, nbest = nbest, nvmax = nvmax,
+## force.in = force.in, : 15 linear dependencies found</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(models)</code></pre></div>
+<pre><code>## Subset selection object
+## Call: regsubsets.formula(Indice_reconciliacion ~ ., data = agregados_regresiones, 
+##     nvmax = 3, method = &quot;seqrep&quot;)
+## 24 Variables  (and intercept)
+##                                Forced in Forced out
+## Homicidios                         FALSE      FALSE
+## Ataques_Pobl_Civil                 FALSE      FALSE
+## Desmovilizados                     FALSE      FALSE
+## Secuestros                         FALSE      FALSE
+## Secuestros_Politicos               FALSE      FALSE
+## `Desempeno Fiscal`                 FALSE      FALSE
+## `Desempeno Integral`               FALSE      FALSE
+## `Gobierno Abierto`                 FALSE      FALSE
+## `Inv Fort Inst`                    FALSE      FALSE
+## `Inv Total`                        FALSE      FALSE
+## TMI                                FALSE      FALSE
+## NBI                                FALSE      FALSE
+## `Numero Prestadores_cienmil`       FALSE      FALSE
+## `Afiliados regimen subsidiado`     FALSE      FALSE
+## alumnos_cienmil                    FALSE      FALSE
+## doctores_cienmil                   FALSE      FALSE
+## estudiantes_edad_estudiar          FALSE      FALSE
+## total_establecimientos             FALSE      FALSE
+## numero_pequenos                    FALSE      FALSE
+## numero_medianos                    FALSE      FALSE
+## numero_grandes                     FALSE      FALSE
+## valor_pequenos                     FALSE      FALSE
+## valor_medianos                     FALSE      FALSE
+## valor_grandes                      FALSE      FALSE
+## 1 subsets of each size up to 3
+## Selection Algorithm: &#39;sequential replacement&#39;
+##          Homicidios Ataques_Pobl_Civil Desmovilizados Secuestros
+## 1  ( 1 ) &quot; &quot;        &quot;*&quot;                &quot; &quot;            &quot; &quot;       
+## 2  ( 1 ) &quot; &quot;        &quot; &quot;                &quot; &quot;            &quot; &quot;       
+## 3  ( 1 ) &quot; &quot;        &quot; &quot;                &quot; &quot;            &quot; &quot;       
+##          Secuestros_Politicos `Desempeno Fiscal` `Desempeno Integral`
+## 1  ( 1 ) &quot; &quot;                  &quot; &quot;                &quot; &quot;                 
+## 2  ( 1 ) &quot; &quot;                  &quot; &quot;                &quot; &quot;                 
+## 3  ( 1 ) &quot; &quot;                  &quot; &quot;                &quot; &quot;                 
+##          `Gobierno Abierto` `Inv Fort Inst` `Inv Total` TMI NBI
+## 1  ( 1 ) &quot; &quot;                &quot; &quot;             &quot; &quot;         &quot; &quot; &quot; &quot;
+## 2  ( 1 ) &quot;*&quot;                &quot; &quot;             &quot; &quot;         &quot; &quot; &quot; &quot;
+## 3  ( 1 ) &quot;*&quot;                &quot; &quot;             &quot;*&quot;         &quot; &quot; &quot; &quot;
+##          `Numero Prestadores_cienmil` `Afiliados regimen subsidiado`
+## 1  ( 1 ) &quot; &quot;                          &quot; &quot;                           
+## 2  ( 1 ) &quot; &quot;                          &quot; &quot;                           
+## 3  ( 1 ) &quot; &quot;                          &quot; &quot;                           
+##          alumnos_cienmil doctores_cienmil estudiantes_edad_estudiar
+## 1  ( 1 ) &quot; &quot;             &quot; &quot;              &quot; &quot;                      
+## 2  ( 1 ) &quot; &quot;             &quot;*&quot;              &quot; &quot;                      
+## 3  ( 1 ) &quot; &quot;             &quot;*&quot;              &quot; &quot;                      
+##          total_establecimientos numero_pequenos numero_medianos
+## 1  ( 1 ) &quot; &quot;                    &quot; &quot;             &quot; &quot;            
+## 2  ( 1 ) &quot; &quot;                    &quot; &quot;             &quot; &quot;            
+## 3  ( 1 ) &quot; &quot;                    &quot; &quot;             &quot; &quot;            
+##          numero_grandes valor_pequenos valor_medianos valor_grandes
+## 1  ( 1 ) &quot; &quot;            &quot; &quot;            &quot; &quot;            &quot; &quot;          
+## 2  ( 1 ) &quot; &quot;            &quot; &quot;            &quot; &quot;            &quot; &quot;          
+## 3  ( 1 ) &quot; &quot;            &quot; &quot;            &quot; &quot;            &quot; &quot;</code></pre>
+<p>Hacemos la regresion final</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> </span>total_establecimientos <span class="op">+</span><span class="st"> </span>doctores_cienmil <span class="op">+</span><span class="st"> `</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil <span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> agregados_regresiones)
+<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ total_establecimientos + 
+##     doctores_cienmil + `Inv Total` + `Gobierno Abierto` + Ataques_Pobl_Civil + 
+##     Homicidios, data = agregados_regresiones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.07067 -0.04133 -0.01660  0.02280  0.15707 
+## 
+## Coefficients:
+##                          Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)             1.664e+00  1.192e+00   1.395    0.206
+## total_establecimientos -4.190e-05  6.244e-05  -0.671    0.524
+## doctores_cienmil        1.043e-04  1.254e-03   0.083    0.936
+## `Inv Total`            -5.335e-02  6.371e-02  -0.837    0.430
+## `Gobierno Abierto`     -2.608e-03  7.153e-03  -0.365    0.726
+## Ataques_Pobl_Civil     -1.286e-02  8.448e-03  -1.522    0.172
+## Homicidios              9.636e-04  5.991e-03   0.161    0.877
+## 
+## Residual standard error: 0.08423 on 7 degrees of freedom
+##   (8 observations deleted due to missingness)
+## Multiple R-squared:  0.4706, Adjusted R-squared:  0.01682 
+## F-statistic: 1.037 on 6 and 7 DF,  p-value: 0.4741</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> `</span><span class="dt">Numero Prestadores_cienmil</span><span class="st">`</span><span class="op">+</span><span class="st">`</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>valor_medianos<span class="op">+</span>Secuestros_Politicos   , <span class="dt">data =</span> agregados_regresiones)
+<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ `Numero Prestadores_cienmil` + 
+##     `Inv Total` + `Gobierno Abierto` + Ataques_Pobl_Civil + estudiantes_edad_estudiar + 
+##     valor_medianos + Secuestros_Politicos, data = agregados_regresiones)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.104843 -0.048831  0.005438  0.043366  0.085727 
+## 
+## Coefficients:
+##                                Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                   1.272e+00  1.387e+00   0.917    0.383
+## `Numero Prestadores_cienmil` -1.939e-02  1.782e-02  -1.088    0.305
+## `Inv Total`                  -1.769e-02  7.255e-02  -0.244    0.813
+## `Gobierno Abierto`           -2.358e-03  4.673e-03  -0.505    0.626
+## Ataques_Pobl_Civil           -3.956e-03  5.324e-03  -0.743    0.476
+## estudiantes_edad_estudiar    -8.103e-06  1.416e-05  -0.572    0.581
+## valor_medianos               -3.574e-06  3.146e-06  -1.136    0.285
+## Secuestros_Politicos          1.723e-01  3.801e-01   0.453    0.661
+## 
+## Residual standard error: 0.0827 on 9 degrees of freedom
+##   (5 observations deleted due to missingness)
+## Multiple R-squared:  0.4633, Adjusted R-squared:  0.04579 
+## F-statistic:  1.11 on 7 and 9 DF,  p-value: 0.4317</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> `</span><span class="dt">Numero Prestadores_cienmil</span><span class="st">`</span><span class="op">+</span><span class="st">`</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>valor_medianos<span class="op">+</span>Secuestros_Politicos <span class="op">+</span><span class="st"> </span>Homicidios  , <span class="dt">data =</span> agregados_regresiones)
+<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ `Numero Prestadores_cienmil` + 
+##     `Inv Total` + `Gobierno Abierto` + Ataques_Pobl_Civil + estudiantes_edad_estudiar + 
+##     valor_medianos + Secuestros_Politicos + Homicidios, data = agregados_regresiones)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.108221 -0.050973  0.004148  0.043192  0.087444 
+## 
+## Coefficients:
+##                                Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                   1.404e+00  1.762e+00   0.797    0.448
+## `Numero Prestadores_cienmil` -1.751e-02  2.340e-02  -0.748    0.476
+## `Inv Total`                  -2.322e-02  8.695e-02  -0.267    0.796
+## `Gobierno Abierto`           -2.773e-03  5.811e-03  -0.477    0.646
+## Ataques_Pobl_Civil           -3.529e-03  6.455e-03  -0.547    0.599
+## estudiantes_edad_estudiar    -8.379e-06  1.513e-05  -0.554    0.595
+## valor_medianos               -3.503e-06  3.374e-06  -1.038    0.329
+## Secuestros_Politicos          1.756e-01  4.035e-01   0.435    0.675
+## Homicidios                   -1.734e-03  1.274e-02  -0.136    0.895
+## 
+## Residual standard error: 0.08762 on 8 degrees of freedom
+##   (5 observations deleted due to missingness)
+## Multiple R-squared:  0.4645, Adjusted R-squared:  -0.071 
+## F-statistic: 0.8674 on 8 and 8 DF,  p-value: 0.5773</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> </span>numero_pequenos<span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios  , <span class="dt">data =</span>agregados_regresiones)
+<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ numero_pequenos + total_establecimientos + 
+##     NBI + Ataques_Pobl_Civil + estudiantes_edad_estudiar + Secuestros + 
+##     Homicidios, data = agregados_regresiones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.13016 -0.04686 -0.00325  0.03725  0.12101 
+## 
+## Coefficients:
+##                             Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)                7.938e-01  3.212e-01   2.471   0.0269 *
+## numero_pequenos            5.637e-06  1.366e-04   0.041   0.9677  
+## total_establecimientos    -7.090e-05  6.348e-05  -1.117   0.2828  
+## NBI                        3.034e-04  1.212e-03   0.250   0.8059  
+## Ataques_Pobl_Civil        -5.148e-03  4.376e-03  -1.176   0.2591  
+## estudiantes_edad_estudiar -9.679e-06  1.105e-05  -0.876   0.3958  
+## Secuestros                -2.105e-02  7.646e-02  -0.275   0.7871  
+## Homicidios                 1.379e-03  6.917e-03   0.199   0.8448  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.08441 on 14 degrees of freedom
+## Multiple R-squared:  0.2544, Adjusted R-squared:  -0.1185 
+## F-statistic: 0.6822 on 7 and 14 DF,  p-value: 0.6854</code></pre>
+</div>
+<div id="variables-con-valores-diferenciasdeltas-delta" class="section level2">
+<h2><span class="header-section-number">3.2</span> Variables con valores diferencias(Deltas $Delta$ )</h2>
+<p>A continuacion vamos a hacer las regresiones correspondientes.</p>
+<p>Vamos a hacer un stepwise regression en donde el modelo agregue y saqué variables para ver cuál es la que mejor rendimiento tiene.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Creamos la base de datos:</span>
+
+deltas_regresiones &lt;-<span class="st"> </span><span class="kw">cbind</span>(par_diff_homi,
+                               par_diff_ataques,
+                               par_diff_desmovilizados,
+                               par_diff_secuestro,
+                               par_diff_secuestrop,
+                               par_diff_desemp_fisc, 
+                       par_diff_desemp_int, 
+                       par_diff_IGA_total, 
+                       par_diff_inv_fortinst_cienmil,
+                       par_diff_inv_total_cienmil, 
+                       par_diff_TMI, 
+                       par_diff_nbi, 
+                       par_diff_prestadores_cienmil, 
+                       par_diff_subsidiado_cienmil,
+                       par_diff_alumnos_cienmil, 
+                       par_diff_phds_cienmil, 
+                      par_diff_estudiantes_proy_cienmil, 
+                       par_diff_t_establ,
+                       par_diff_nuf_peq,
+                       par_diff_nuf_medianos,
+                       par_diff_nuf_grandes,
+                       par_diff_vrf_peq,
+                       par_diff_vrf_medianos,
+                       par_diff_vrf_grandes,
+                       acdi_imr<span class="op">$</span>indice_de_reconciliacion_imr)</code></pre></div>
+<pre><code>## Warning in cbind(par_diff_homi, par_diff_ataques,
+## par_diff_desmovilizados, : number of rows of result is not a multiple of
+## vector length (arg 15)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Homicidios&quot;</span>,
+             <span class="st">&quot;Ataques_Pobl_Civil&quot;</span>,
+             <span class="st">&quot;Desmovilizados&quot;</span>,
+             <span class="st">&quot;Secuestros&quot;</span>,
+             <span class="st">&quot;Secuestros_Politicos&quot;</span>,
+             <span class="st">&quot;Desempeno Fiscal&quot;</span>,
+             <span class="st">&quot;Desempeno Integral&quot;</span>,
+             <span class="st">&quot;Gobierno Abierto&quot;</span>,
+             <span class="st">&quot;Inv Fort Inst&quot;</span>,
+             <span class="st">&quot;Inv Total&quot;</span>, 
+             <span class="st">&quot;TMI&quot;</span>,
+             <span class="st">&quot;NBI&quot;</span>,
+             <span class="st">&quot;Numero Prestadores_cienmil&quot;</span>,
+             <span class="st">&quot;Afiliados regimen subsidiado&quot;</span>,
+             <span class="st">&quot;alumnos_cienmil&quot;</span>,
+             <span class="st">&quot;doctores_cienmil&quot;</span>,
+             <span class="st">&quot;estudiantes_edad_estudiar&quot;</span>,
+             <span class="st">&quot;total_establecimientos&quot;</span>,
+             <span class="st">&quot;numero_pequenos&quot;</span>,
+             <span class="st">&quot;numero_medianos&quot;</span>,
+             <span class="st">&quot;numero_grandes&quot;</span>,
+             <span class="st">&quot;valor_pequenos&quot;</span>,
+             <span class="st">&quot;valor_medianos&quot;</span>,
+             <span class="st">&quot;valor_grandes&quot;</span>,
+             <span class="st">&quot;Indice_reconciliacion&quot;</span>)
+                               
+<span class="kw">colnames</span>(deltas_regresiones) &lt;-<span class="st"> </span>nombres
+
+deltas_regresiones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(deltas_regresiones)
+<span class="co">#Importamos paquete para hacer el stepwise</span>
+
+<span class="kw">library</span>(MASS)
+<span class="kw">library</span>(leaps)
+
+
+models &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(Indice_reconciliacion <span class="op">~</span>., <span class="dt">data=</span>deltas_regresiones, <span class="dt">nvmax =</span> <span class="dv">3</span>,
+                     <span class="dt">method =</span> <span class="st">&quot;seqrep&quot;</span>)</code></pre></div>
+<pre><code>## Warning in leaps.setup(x, y, wt = wt, nbest = nbest, nvmax = nvmax,
+## force.in = force.in, : 17 linear dependencies found</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(models)</code></pre></div>
+<pre><code>## Subset selection object
+## Call: regsubsets.formula(Indice_reconciliacion ~ ., data = deltas_regresiones, 
+##     nvmax = 3, method = &quot;seqrep&quot;)
+## 24 Variables  (and intercept)
+##                                Forced in Forced out
+## Homicidios                         FALSE      FALSE
+## Ataques_Pobl_Civil                 FALSE      FALSE
+## Desmovilizados                     FALSE      FALSE
+## Secuestros                         FALSE      FALSE
+## Secuestros_Politicos               FALSE      FALSE
+## `Desempeno Fiscal`                 FALSE      FALSE
+## `Desempeno Integral`               FALSE      FALSE
+## `Gobierno Abierto`                 FALSE      FALSE
+## `Inv Fort Inst`                    FALSE      FALSE
+## `Inv Total`                        FALSE      FALSE
+## TMI                                FALSE      FALSE
+## NBI                                FALSE      FALSE
+## `Numero Prestadores_cienmil`       FALSE      FALSE
+## `Afiliados regimen subsidiado`     FALSE      FALSE
+## alumnos_cienmil                    FALSE      FALSE
+## doctores_cienmil                   FALSE      FALSE
+## estudiantes_edad_estudiar          FALSE      FALSE
+## total_establecimientos             FALSE      FALSE
+## numero_pequenos                    FALSE      FALSE
+## numero_medianos                    FALSE      FALSE
+## numero_grandes                     FALSE      FALSE
+## valor_pequenos                     FALSE      FALSE
+## valor_medianos                     FALSE      FALSE
+## valor_grandes                      FALSE      FALSE
+## 1 subsets of each size up to 3
+## Selection Algorithm: &#39;sequential replacement&#39;
+##          Homicidios Ataques_Pobl_Civil Desmovilizados Secuestros
+## 1  ( 1 ) &quot; &quot;        &quot; &quot;                &quot; &quot;            &quot; &quot;       
+## 2  ( 1 ) &quot; &quot;        &quot; &quot;                &quot; &quot;            &quot; &quot;       
+## 3  ( 1 ) &quot; &quot;        &quot; &quot;                &quot; &quot;            &quot; &quot;       
+##          Secuestros_Politicos `Desempeno Fiscal` `Desempeno Integral`
+## 1  ( 1 ) &quot; &quot;                  &quot; &quot;                &quot; &quot;                 
+## 2  ( 1 ) &quot; &quot;                  &quot;*&quot;                &quot; &quot;                 
+## 3  ( 1 ) &quot; &quot;                  &quot;*&quot;                &quot; &quot;                 
+##          `Gobierno Abierto` `Inv Fort Inst` `Inv Total` TMI NBI
+## 1  ( 1 ) &quot; &quot;                &quot; &quot;             &quot; &quot;         &quot; &quot; &quot; &quot;
+## 2  ( 1 ) &quot; &quot;                &quot; &quot;             &quot; &quot;         &quot; &quot; &quot; &quot;
+## 3  ( 1 ) &quot; &quot;                &quot; &quot;             &quot;*&quot;         &quot; &quot; &quot; &quot;
+##          `Numero Prestadores_cienmil` `Afiliados regimen subsidiado`
+## 1  ( 1 ) &quot; &quot;                          &quot;*&quot;                           
+## 2  ( 1 ) &quot; &quot;                          &quot;*&quot;                           
+## 3  ( 1 ) &quot; &quot;                          &quot;*&quot;                           
+##          alumnos_cienmil doctores_cienmil estudiantes_edad_estudiar
+## 1  ( 1 ) &quot; &quot;             &quot; &quot;              &quot; &quot;                      
+## 2  ( 1 ) &quot; &quot;             &quot; &quot;              &quot; &quot;                      
+## 3  ( 1 ) &quot; &quot;             &quot; &quot;              &quot; &quot;                      
+##          total_establecimientos numero_pequenos numero_medianos
+## 1  ( 1 ) &quot; &quot;                    &quot; &quot;             &quot; &quot;            
+## 2  ( 1 ) &quot; &quot;                    &quot; &quot;             &quot; &quot;            
+## 3  ( 1 ) &quot; &quot;                    &quot; &quot;             &quot; &quot;            
+##          numero_grandes valor_pequenos valor_medianos valor_grandes
+## 1  ( 1 ) &quot; &quot;            &quot; &quot;            &quot; &quot;            &quot; &quot;          
+## 2  ( 1 ) &quot; &quot;            &quot; &quot;            &quot; &quot;            &quot; &quot;          
+## 3  ( 1 ) &quot; &quot;            &quot; &quot;            &quot; &quot;            &quot; &quot;</code></pre>
+<p>Hacemos la regresion final</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> </span>total_establecimientos <span class="op">+</span><span class="st"> </span>doctores_cienmil <span class="op">+</span><span class="st"> `</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil <span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> deltas_regresiones)
+<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ total_establecimientos + 
+##     doctores_cienmil + `Inv Total` + `Gobierno Abierto` + Ataques_Pobl_Civil + 
+##     Homicidios, data = deltas_regresiones)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.113376 -0.027112 -0.003473  0.011859  0.149361 
+## 
+## Coefficients:
+##                          Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)             4.339e-01  1.128e-01   3.848  0.00631 **
+## total_establecimientos  7.746e-05  3.293e-04   0.235  0.82074   
+## doctores_cienmil       -3.861e-03  4.662e-03  -0.828  0.43482   
+## `Inv Total`            -6.973e-02  1.021e-01  -0.683  0.51651   
+## `Gobierno Abierto`     -2.226e-03  7.988e-03  -0.279  0.78858   
+## Ataques_Pobl_Civil     -1.893e-03  1.261e-02  -0.150  0.88496   
+## Homicidios             -1.098e-03  7.337e-03  -0.150  0.88522   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1041 on 7 degrees of freedom
+##   (8 observations deleted due to missingness)
+## Multiple R-squared:  0.1914, Adjusted R-squared:  -0.5016 
+## F-statistic: 0.2762 on 6 and 7 DF,  p-value: 0.931</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> `</span><span class="dt">Numero Prestadores_cienmil</span><span class="st">`</span><span class="op">+</span><span class="st">`</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>valor_medianos<span class="op">+</span>Secuestros_Politicos   , <span class="dt">data =</span> deltas_regresiones)
+<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ `Numero Prestadores_cienmil` + 
+##     `Inv Total` + `Gobierno Abierto` + Ataques_Pobl_Civil + estudiantes_edad_estudiar + 
+##     valor_medianos + Secuestros_Politicos, data = deltas_regresiones)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.11169 -0.01449  0.00259  0.01448  0.10694 
+## 
+## Coefficients:
+##                                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                   4.516e-01  5.979e-02   7.553 3.49e-05 ***
+## `Numero Prestadores_cienmil` -1.659e-01  6.625e-02  -2.504   0.0336 *  
+## `Inv Total`                  -9.403e-02  5.147e-02  -1.827   0.1010    
+## `Gobierno Abierto`           -4.882e-04  3.994e-03  -0.122   0.9054    
+## Ataques_Pobl_Civil           -1.047e-02  3.626e-03  -2.889   0.0179 *  
+## estudiantes_edad_estudiar    -1.334e-05  1.246e-05  -1.071   0.3123    
+## valor_medianos               -7.178e-06  5.384e-06  -1.333   0.2152    
+## Secuestros_Politicos          8.510e-02  2.531e-01   0.336   0.7444    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.06429 on 9 degrees of freedom
+##   (5 observations deleted due to missingness)
+## Multiple R-squared:  0.6756, Adjusted R-squared:  0.4234 
+## F-statistic: 2.678 on 7 and 9 DF,  p-value: 0.0852</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> `</span><span class="dt">Numero Prestadores_cienmil</span><span class="st">`</span><span class="op">+</span><span class="st">`</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>valor_medianos<span class="op">+</span>Secuestros_Politicos <span class="op">+</span><span class="st"> </span>Homicidios  , <span class="dt">data =</span> deltas_regresiones)
+<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ `Numero Prestadores_cienmil` + 
+##     `Inv Total` + `Gobierno Abierto` + Ataques_Pobl_Civil + estudiantes_edad_estudiar + 
+##     valor_medianos + Secuestros_Politicos + Homicidios, data = deltas_regresiones)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.116451 -0.007728  0.002459  0.009341  0.096640 
+## 
+## Coefficients:
+##                                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                   4.825e-01  6.434e-02   7.500 6.93e-05 ***
+## `Numero Prestadores_cienmil` -1.760e-01  6.554e-02  -2.686   0.0277 *  
+## `Inv Total`                  -8.464e-02  5.111e-02  -1.656   0.1363    
+## `Gobierno Abierto`            1.587e-03  4.301e-03   0.369   0.7218    
+## Ataques_Pobl_Civil           -1.067e-02  3.559e-03  -2.998   0.0171 *  
+## estudiantes_edad_estudiar    -1.322e-05  1.222e-05  -1.082   0.3107    
+## valor_medianos               -8.271e-06  5.361e-06  -1.543   0.1615    
+## Secuestros_Politicos          2.650e-02  2.532e-01   0.105   0.9192    
+## Homicidios                   -5.885e-03  5.044e-03  -1.167   0.2770    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.06304 on 8 degrees of freedom
+##   (5 observations deleted due to missingness)
+## Multiple R-squared:  0.7228, Adjusted R-squared:  0.4456 
+## F-statistic: 2.607 on 8 and 8 DF,  p-value: 0.09842</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> </span>numero_pequenos<span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> deltas_regresiones)
+<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ numero_pequenos + total_establecimientos + 
+##     NBI + Ataques_Pobl_Civil + estudiantes_edad_estudiar + Secuestros + 
+##     Homicidios, data = deltas_regresiones)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.106493 -0.049601  0.009785  0.042901  0.142899 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                4.990e-01  2.683e-02  18.595 9.04e-12 ***
+## numero_pequenos           -5.937e-05  7.127e-05  -0.833    0.418    
+## total_establecimientos     4.779e-05  2.097e-04   0.228    0.823    
+## NBI                               NA         NA      NA       NA    
+## Ataques_Pobl_Civil        -2.800e-03  4.176e-03  -0.671    0.513    
+## estudiantes_edad_estudiar  1.168e-06  1.232e-05   0.095    0.926    
+## Secuestros                 4.297e-02  3.873e-02   1.109    0.285    
+## Homicidios                 4.319e-04  3.964e-03   0.109    0.915    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.08109 on 15 degrees of freedom
+## Multiple R-squared:  0.2627, Adjusted R-squared:  -0.03226 
+## F-statistic: 0.8906 on 6 and 15 DF,  p-value: 0.5259</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reconciliacion <span class="op">~</span><span class="st"> `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span><span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>numero_medianos<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios<span class="op">+</span>doctores_cienmil, <span class="dt">data =</span> deltas_regresiones)
+<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Indice_reconciliacion ~ `Gobierno Abierto` + total_establecimientos + 
+##     NBI + Ataques_Pobl_Civil + numero_medianos + Secuestros + 
+##     Homicidios + doctores_cienmil, data = deltas_regresiones)
+## 
+## Residuals:
+##         1         2         4         7         8         9        12 
+##  0.037905 -0.107432 -0.057790 -0.115036  0.154480  0.009247  0.046749 
+##        15        16        18        19        21        22 
+## -0.031423 -0.070800  0.005061  0.092147  0.045637 -0.008746 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                          Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)             0.4853820  0.0800199   6.066  0.00176 **
+## `Gobierno Abierto`      0.0024755  0.0112946   0.219  0.83518   
+## total_establecimientos -0.0001083  0.0004661  -0.232  0.82540   
+## NBI                            NA         NA      NA       NA   
+## Ataques_Pobl_Civil     -0.0073752  0.0172231  -0.428  0.68631   
+## numero_medianos        -0.0002482  0.0004886  -0.508  0.63312   
+## Secuestros              0.0277895  0.0916293   0.303  0.77389   
+## Homicidios             -0.0034105  0.0092383  -0.369  0.72712   
+## doctores_cienmil       -0.0029839  0.0062787  -0.475  0.65465   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1203 on 5 degrees of freedom
+##   (9 observations deleted due to missingness)
+## Multiple R-squared:  0.2285, Adjusted R-squared:  -0.8515 
+## F-statistic: 0.2116 on 7 and 5 DF,  p-value: 0.967</code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
