@@ -492,7 +492,20 @@ div.tocify {
             Salud
           </a>
         </li>
-        <li class="dropdown-header">Educacion</li>
+        <li>
+          <a href="Educacion_graficos_analisis.html">
+            <span class="fa fa-graduation-cap"></span>
+             
+            Educacion
+          </a>
+        </li>
+        <li>
+          <a href="Tierras_graficos_analisis.html">
+            <span class="fa fa-seedling"></span>
+             
+            Tierras
+          </a>
+        </li>
       </ul>
     </li>
   </ul>
@@ -505,10 +518,23 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="elca_exploracion.html">Depuracion y merge</a>
+      <a href="elca_exploracion.html">
+        <span class="fa fa-object-ungroup"></span>
+         
+        Depuracion y merge
+      </a>
     </li>
-    <li class="dropdown-header">Modulo Politica</li>
+    <li>
+      <a href="elca_modulo_politica.html">
+        <span class="fa fa-comment"></span>
+         
+        Modulo Politica
+      </a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="Analisis_indice_PAR.html">Analisis PAR</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -655,8 +681,8 @@ dtp053 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(p053 <spa
 dtp058 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(p058_tot <span class="op">~</span><span class="st"> </span>Municipio, datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
 dtp071 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(p071_tot <span class="op">~</span><span class="st"> </span>Municipio, datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
 dtp075 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(p075_<span class="dv">1</span> <span class="op">~</span><span class="st"> </span>Municipio, datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )</code></pre></div>
-<div id="datos-agregados-cede_violencia-por-municipio-colapsando-los-aaos" class="section level2">
-<h2><span class="header-section-number">4.1</span> Datos Agregados CEDE_Violencia: por municipio colapsando los aÃ±os</h2>
+<div id="datos-agregados-cede_violencia-por-municipio-colapsando-los-anos" class="section level2">
+<h2><span class="header-section-number">4.1</span> Datos Agregados CEDE_Violencia: por municipio colapsando los años</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Homicidios</span>
 homi_GA &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&#39;homi_{1}&#39;</span>, <span class="kw">names</span>(conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">grep</span>(<span class="st">&#39;_pn&#39;</span>,.,<span class="dt">value =</span> T, <span class="dt">invert =</span> T)
 conflicto_44_tidy &lt;-<span class="st"> </span><span class="kw">gather</span>(conflicto_<span class="dv">44</span>, <span class="st">&#39;Grupo_Armado&#39;</span>, <span class="st">&#39;Numero_Homicidios&#39;</span>, homi_GA)
@@ -1223,7 +1249,7 @@ regRecon_direct &lt;-<span class="st"> </span><span class="kw">lm</span>(<span c
 conflicto_44_tidy<span class="op">$</span>ano_num &lt;-<span class="st"> </span><span class="kw">substring</span>(conflicto_44_tidy<span class="op">$</span>ano,<span class="dv">1</span>,<span class="dv">4</span>)
 conflicto_44_tidy<span class="op">$</span>ano_num &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(conflicto_44_tidy<span class="op">$</span>ano_num)
 
-<span class="co">#Loop para hacer la correlacion por aÃ±o.</span>
+<span class="co">#Loop para hacer la correlacion por año.</span>
 
 homicidios &lt;-<span class="st"> </span><span class="kw">c</span>()
 x &lt;-<span class="st"> </span><span class="kw">c</span>()
@@ -1240,7 +1266,7 @@ conflicto_44_tidy<span class="op">$</span>valores_corr[i] &lt;-<span class="st">
 x[i] &lt;-<span class="st"> </span><span class="dv">2002</span><span class="op">+</span>i
 y[i] &lt;-<span class="st"> </span><span class="kw">cor</span>(homicidios, dfcorrelaciones<span class="op">$</span><span class="st">`</span><span class="dt">Rencor-Culpa</span><span class="st">`</span>,<span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)
 }</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(x,y, <span class="dt">type=</span><span class="st">&quot;b&quot;</span>, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">main=</span> <span class="st">&quot;Correlacion Rencor-Culpa con Homicidios en el tiempo&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;AÃ±os&quot;</span>, <span class="dt">ylab=</span> <span class="st">&quot;Correlacion&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(x,y, <span class="dt">type=</span><span class="st">&quot;b&quot;</span>, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">main=</span> <span class="st">&quot;Correlacion Rencor-Culpa con Homicidios en el tiempo&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;Años&quot;</span>, <span class="dt">ylab=</span> <span class="st">&quot;Correlacion&quot;</span>)</code></pre></div>
 <p><img src="acdivoca_analisis_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 
