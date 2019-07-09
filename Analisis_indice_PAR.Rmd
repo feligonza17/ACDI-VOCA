@@ -25,6 +25,8 @@ knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
 
 El objetivo de este documento es empezar a cruzar variables de diferentes bases de datos. En efecto, las bases anteriores (y sus analisis) podian estar presentando problemas de multicolinealidad. Las variables de Gobierno, a pesar de ser diferentes eran parecidas. Por lo tanto, aqui se hara alguna estadistica inferencial mezclando bases de datos para poder ver que puede predecir el indice PAR. 
 
+Adicionalmente se busca ver estas mismas estadisticas pero con el resto de variables con las que se ha venido trabajando antes. Es decir: +Reconciliacion +Disculpas +Violencia +Rencor +Memoria (Memoria historica) +Memoria_expectativa (Item creado a partir de la memoria y de la expectativa de esta)
+
 #Setup
 Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
 
@@ -955,7 +957,8 @@ descrip_nuf_grandes_5antes <- summaryBy(nuf_grandes ~ municipio, descrip_nuf_gra
 
 descrip_nuf_grandes_5despues <- cede_tierras_44 %>% 
   filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
-descrip_nuf_grandes_5despues <- summaryBy(nuf_grandes ~ municipio, descrip_nuf_grandes_5despues, FUN=c(sum,mean,sd), na.rm=T )  #Descriptivos de esos anos. diff_nuf_grandes_mean <- descrip_nuf_grandes_5antes$nuf_grandes.mean -descrip_nuf_grandes_5despues$nuf_grandes.mean
+descrip_nuf_grandes_5despues <- summaryBy(nuf_grandes ~ municipio, descrip_nuf_grandes_5despues, FUN=c(sum,mean,sd), na.rm=T )  #Descriptivos de esos anos. 
+diff_nuf_grandes_mean <- descrip_nuf_grandes_5antes$nuf_grandes.mean -descrip_nuf_grandes_5despues$nuf_grandes.mean
 diff_nuf_grandes_sd <- descrip_nuf_grandes_5antes$nuf_grandes.sd -descrip_nuf_grandes_5despues$nuf_grandes.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
 ```
 
@@ -1008,7 +1011,8 @@ descrip_vrf_grandes_5antes <- summaryBy(vrf_grandes ~ municipio, descrip_vrf_gra
 
 descrip_vrf_grandes_5despues <- cede_tierras_44 %>% 
   filter(ano>'2010-04-27') #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
-descrip_vrf_grandes_5despues <- summaryBy(vrf_grandes ~ municipio, descrip_vrf_grandes_5despues, FUN=c(sum,mean,sd), na.rm=T )  #Descriptivos de esos anos. diff_vrf_grandes_mean <- descrip_vrf_grandes_5antes$vrf_grandes.mean -descrip_vrf_grandes_5despues$vrf_grandes.mean
+descrip_vrf_grandes_5despues <- summaryBy(vrf_grandes ~ municipio, descrip_vrf_grandes_5despues, FUN=c(sum,mean,sd), na.rm=T )  #Descriptivos de esos anos.
+diff_vrf_grandes_mean <- descrip_vrf_grandes_5antes$vrf_grandes.mean -descrip_vrf_grandes_5despues$vrf_grandes.mean
 diff_vrf_grandes_sd <- descrip_vrf_grandes_5antes$vrf_grandes.sd -descrip_vrf_grandes_5despues$vrf_grandes.sd #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
 
 ```
@@ -1109,15 +1113,17 @@ par_diff_vrf_medianos[which(!is.finite(par_diff_vrf_medianos))] <- NA
 par_diff_vrf_grandes[which(!is.finite(par_diff_vrf_grandes))] <- NA
 ```
 
-#Regresiones
 
-##Variables con valores absolutos (agregados) 
+#Indice de Reconciliacion
+
+##Regresiones 
+
+###Variables con valores absolutos (agregados) 
 
 A continuacion vamos a hacer las regresiones correspondientes.
 
-Vamos a hacer un stepwise regression en donde el modelo agregue y saqué variables para ver cuál es la que mejor rendimiento tiene. 
 
-```{r}
+```{r message=FALSE, warning=FALSE, include=FALSE}
 #Creamos la base de datos:
 
 agregados_regresiones <- cbind(par_descrip_homi$homi_cienmil.mean,
@@ -1206,14 +1212,13 @@ summary(regFinalAgregados_PAR)
 ```
 
 
-
-##Variables con valores diferencias(Deltas \$Delta$ ) 
+###Variables con valores diferencias(Deltas \$Delta$ ) 
 
 A continuacion vamos a hacer las regresiones correspondientes.
 
-Vamos a hacer un stepwise regression en donde el modelo agregue y saqué variables para ver cuál es la que mejor rendimiento tiene. 
 
-```{r}
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
 #Creamos la base de datos:
 
 deltas_regresiones <- cbind(par_diff_homi,
@@ -1302,6 +1307,431 @@ summary(regFinaldeltas_PAR)
 
 
 regFinaldeltas_PAR <- lm(Indice_reconciliacion ~ `Gobierno Abierto`+total_establecimientos +  NBI + Ataques_Pobl_Civil+numero_medianos+Secuestros+ Homicidios+doctores_cienmil, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+```
+
+
+#Reconciliacion 
+
+Recuerde que este indice de reconciliacion corresponde a una pregunta especifica del cuestionario del ACDIVOCA. 
+
+##Regresiones 
+
+###Variables con valores absolutos (agregados) 
+
+A continuacion vamos a hacer las regresiones correspondientes.
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+#Vamos a reemplazar los valores que son infinitos en la varibales "inversion total" para poder correr las regresiones
+
+descrip_inv_total_cienmil$inv_total_cienmil.mean[which(!is.finite(descrip_inv_total_cienmil$inv_total_cienmil.mean))] <- NA
+diff_inv_total_cienmil_mean[which(!is.finite(diff_inv_total_cienmil_mean))] <- NA
+
+
+#Creamos la base de datos:
+
+agregados_regresiones <- cbind(descrip_homi$homi_cienmil.mean,
+                               descrip_ataques$Ataques_Pobl_Civil.mean,
+                               descrip_desmovilizados$desmovilizados_cienmil.mean,
+                               descrip_secuestro$secuestro_cienmil.mean,
+                               descrip_secuestrop$secuestrop_cienmil.mean,
+                               descrip_desemp_fisc$DF_desemp_fisc.mean, 
+                       descrip_desemp_int$DI_desemp_int.mean, 
+                       descrip_IGA_total$IGA_total.mean, 
+                       descrip_inv_fortinst_cienmil$inv_fortinst_cienmil.mean,
+                       descrip_inv_total_cienmil$inv_total_cienmil.mean, 
+                       descrip_TMI$TMI.mean, 
+                       descrip_nbi$nbi.mean, 
+                       descrip_prestadores_cienmil$prestadores_cienmil.mean, 
+                       descrip_subsidiado_cienmil$subsidiado_cienmil.mean,
+                       descrip_alumnos_cienmil$alumnos_cienmil.mean, 
+                       descrip_phds_cienmil$phds_cienmil.mean, 
+                      descrip_estudiantes_proy_cienmil$estudiantes_proy_cienmil.mean, 
+                       descrip_t_establ$t_establ.mean,
+                       descrip_nuf_peq$nuf_peq.mean,
+                       descrip_nuf_medianos$nuf_medianos.mean,
+                       descrip_nuf_grandes$nuf_grandes.mean,
+                       descrip_vrf_peq$vrf_peq.mean,
+                       descrip_vrf_medianos$vrf_medianos.mean,
+                       descrip_vrf_grandes$vrf_grandes.mean,
+                       acdi_imr$indice_de_reconciliacion_imr,
+                      reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+                       
+                               
+
+                               
+nombres <- c("Homicidios",
+             "Ataques_Pobl_Civil",
+             "Desmovilizados",
+             "Secuestros",
+             "Secuestros_Politicos",
+             "Desempeno Fiscal",
+             "Desempeno Integral",
+             "Gobierno Abierto",
+             "Inv Fort Inst",
+             "Inv Total", 
+             "TMI",
+             "NBI",
+             "Numero Prestadores_cienmil",
+             "Afiliados regimen subsidiado",
+             "alumnos_cienmil",
+             "doctores_cienmil",
+             "estudiantes_edad_estudiar",
+             "total_establecimientos",
+             "numero_pequenos",
+             "numero_medianos",
+             "numero_grandes",
+             "valor_pequenos",
+             "valor_medianos",
+             "valor_grandes",
+             "Indice_reconciliacion",
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+                               
+colnames(agregados_regresiones) <- nombres
+
+agregados_regresiones <- as.data.frame(agregados_regresiones)
+
+
+
+
+```
+
+
+Hacemos la regresion final 
+```{r}
+regFinalAgregados_PAR <- lm(`Reconciliacion` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+regFinalAgregados_PAR <- lm(`Reconciliacion` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Reconciliacion` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Reconciliacion` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios  , data =agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+```
+
+Observe que en estas regresiones hay un resultado interesante que se repite en dos de ellas y es que, si hay un aumento en una unidad de los secuestros politicos, el indice de reconciliacion va a disminuir. Estos resultados son significativos estadisticamente.
+
+
+###Variables con valores diferencias(Deltas \$Delta$ ) 
+
+A continuacion vamos a hacer las regresiones correspondientes.
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Creamos la base de datos:
+
+deltas_regresiones <- cbind(diff_homi_mean,
+                               diff_ataques_mean,
+                               diff_desmovilizados_mean,
+                               diff_secuestro_mean,
+                               diff_secuestrop_mean,
+                               diff_desemp_fisc_mean, 
+                       diff_desemp_int_mean, 
+                       diff_IGA_total_mean, 
+                       diff_inv_fortinst_cienmil_mean,
+                       diff_inv_total_cienmil_mean, 
+                       diff_TMI_mean, 
+                       diff_nbi_mean, 
+                       diff_prestadores_cienmil_mean, 
+                       diff_subsidiado_cienmil_mean,
+                       diff_alumnos_cienmil_mean, 
+                       diff_phds_cienmil_mean, 
+                      diff_estudiantes_proy_cienmil_mean, 
+                       diff_t_establ_mean,
+                       diff_nuf_peq_mean,
+                       diff_nuf_medianos_mean,
+                       diff_nuf_grandes_mean,
+                       diff_vrf_peq_mean,
+                       diff_vrf_medianos_mean,
+                       diff_vrf_grandes_mean,
+                       acdi_imr$indice_de_reconciliacion_imr,
+                      reconciliacion_agreg$reconciliacion.mean, 
+                       disculpas_agreg$disculpas.mean, 
+                       violencia_agreg$violencia.mean, 
+                       rencor_agreg$rencor.mean, 
+                       memoria_agreg$memoria.mean, 
+                       memoria_expectativa_agreg$memoria_expectativa.mean)
+                       
+                               
+
+                               
+nombres <- c("Homicidios",
+             "Ataques_Pobl_Civil",
+             "Desmovilizados",
+             "Secuestros",
+             "Secuestros_Politicos",
+             "Desempeno Fiscal",
+             "Desempeno Integral",
+             "Gobierno Abierto",
+             "Inv Fort Inst",
+             "Inv Total", 
+             "TMI",
+             "NBI",
+             "Numero Prestadores_cienmil",
+             "Afiliados regimen subsidiado",
+             "alumnos_cienmil",
+             "doctores_cienmil",
+             "estudiantes_edad_estudiar",
+             "total_establecimientos",
+             "numero_pequenos",
+             "numero_medianos",
+             "numero_grandes",
+             "valor_pequenos",
+             "valor_medianos",
+             "valor_grandes",
+             "Indice_reconciliacion",
+             "Reconciliacion",
+             "Disculpas", 
+             "Violencia", 
+             "Rencor",
+             "Memoria", 
+             "Memoria_Expectativa")
+                               
+colnames(deltas_regresiones) <- nombres
+
+deltas_regresiones <- as.data.frame(deltas_regresiones)
+
+
+```
+
+
+Hacemos la regresion final 
+```{r}
+regFinaldeltas_PAR <- lm(`Reconciliacion` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+regFinaldeltas_PAR <- lm(`Reconciliacion` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos   , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Reconciliacion` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Reconciliacion` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+
+regFinaldeltas_PAR <- lm(`Reconciliacion` ~ `Gobierno Abierto`+total_establecimientos +  NBI + Ataques_Pobl_Civil+numero_medianos+Secuestros+ Homicidios+doctores_cienmil, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+```
+
+Aqui observamos un resultado interesantes y es que, si hay un aumento de una unidad en la diferencia entre la inversion total del gobierno entre los primeros 5 anos y los ultimos 5 anos, el indice de reconciliacion va a disminuir. Esto quiere decir que una diferencia en inversion gubernamental parece afectar la reconciliacion de la comunidad.
+
+
+#Disculpas
+
+##Regresiones 
+
+###Variables con valores absolutos (agregados) 
+
+A continuacion vamos a hacer las regresiones correspondientes.
+
+```{r}
+regFinalAgregados_PAR <- lm(`Disculpas` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+regFinalAgregados_PAR <- lm(`Disculpas` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Disculpas` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Disculpas` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios  , data =agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+```
+
+
+###Variables con valores diferencias(Deltas \$Delta$ ) 
+
+```{r}
+regFinaldeltas_PAR <- lm(`Disculpas` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+regFinaldeltas_PAR <- lm(`Disculpas` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos   , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Disculpas` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Disculpas` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+
+regFinaldeltas_PAR <- lm(`Disculpas` ~ `Gobierno Abierto`+total_establecimientos +  NBI + Ataques_Pobl_Civil+numero_medianos+Secuestros+ Homicidios+doctores_cienmil, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+```
+
+#Violencia
+
+##Regresiones 
+
+###Variables con valores absolutos (agregados) 
+
+A continuacion vamos a hacer las regresiones correspondientes.
+
+```{r}
+regFinalAgregados_PAR <- lm(`Violencia` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+regFinalAgregados_PAR <- lm(`Violencia` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Violencia` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Violencia` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios  , data =agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+```
+
+
+###Variables con valores diferencias(Deltas \$Delta$ ) 
+
+```{r}
+regFinaldeltas_PAR <- lm(`Violencia` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+regFinaldeltas_PAR <- lm(`Violencia` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos   , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Violencia` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Violencia` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+
+regFinaldeltas_PAR <- lm(`Violencia` ~ `Gobierno Abierto`+total_establecimientos +  NBI + Ataques_Pobl_Civil+numero_medianos+Secuestros+ Homicidios+doctores_cienmil, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+```
+
+#Rencor
+
+##Regresiones 
+
+###Variables con valores absolutos (agregados) 
+
+A continuacion vamos a hacer las regresiones correspondientes.
+
+```{r}
+regFinalAgregados_PAR <- lm(`Rencor` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+regFinalAgregados_PAR <- lm(`Rencor` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Rencor` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Rencor` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios  , data =agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+```
+
+
+###Variables con valores diferencias(Deltas \$Delta$ ) 
+
+```{r}
+regFinaldeltas_PAR <- lm(`Rencor` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+regFinaldeltas_PAR <- lm(`Rencor` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos   , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Rencor` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Rencor` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+
+regFinaldeltas_PAR <- lm(`Rencor` ~ `Gobierno Abierto`+total_establecimientos +  NBI + Ataques_Pobl_Civil+numero_medianos+Secuestros+ Homicidios+doctores_cienmil, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+```
+
+#Memoria
+
+##Regresiones 
+
+###Variables con valores absolutos (agregados) 
+
+A continuacion vamos a hacer las regresiones correspondientes.
+
+```{r}
+regFinalAgregados_PAR <- lm(`Memoria` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+regFinalAgregados_PAR <- lm(`Memoria` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Memoria` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Memoria` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios  , data =agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+```
+
+
+###Variables con valores diferencias(Deltas \$Delta$ ) 
+
+```{r}
+regFinaldeltas_PAR <- lm(`Memoria` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+regFinaldeltas_PAR <- lm(`Memoria` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos   , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Memoria` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Memoria` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+
+regFinaldeltas_PAR <- lm(`Memoria` ~ `Gobierno Abierto`+total_establecimientos +  NBI + Ataques_Pobl_Civil+numero_medianos+Secuestros+ Homicidios+doctores_cienmil, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+```
+
+#Memoria_expectativa
+
+##Regresiones 
+
+###Variables con valores absolutos (agregados) 
+
+A continuacion vamos a hacer las regresiones correspondientes.
+
+```{r}
+regFinalAgregados_PAR <- lm(`Memoria_Expectativa` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+regFinalAgregados_PAR <- lm(`Memoria_Expectativa` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos, data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Memoria_Expectativa` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+
+regFinalAgregados_PAR <- lm(`Memoria_Expectativa` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios  , data =agregados_regresiones)
+summary(regFinalAgregados_PAR)  
+```
+
+
+###Variables con valores diferencias(Deltas \$Delta$ ) 
+
+```{r}
+regFinaldeltas_PAR <- lm(`Memoria_Expectativa` ~ total_establecimientos + doctores_cienmil + `Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil + Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+regFinaldeltas_PAR <- lm(`Memoria_Expectativa` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos   , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Memoria_Expectativa` ~ `Numero Prestadores_cienmil`+`Inv Total` +  `Gobierno Abierto` + Ataques_Pobl_Civil+estudiantes_edad_estudiar+valor_medianos+Secuestros_Politicos + Homicidios  , data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+regFinaldeltas_PAR <- lm(`Memoria_Expectativa` ~ numero_pequenos+total_establecimientos +  NBI + Ataques_Pobl_Civil+estudiantes_edad_estudiar+Secuestros+ Homicidios, data = deltas_regresiones)
+summary(regFinaldeltas_PAR)  
+
+
+regFinaldeltas_PAR <- lm(`Memoria_Expectativa` ~ `Gobierno Abierto`+total_establecimientos +  NBI + Ataques_Pobl_Civil+numero_medianos+Secuestros+ Homicidios+doctores_cienmil, data = deltas_regresiones)
 summary(regFinaldeltas_PAR)  
 ```
 
