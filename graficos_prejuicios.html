@@ -2038,6 +2038,138 @@ x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span cla
 ##                   2.906743                   2.793079</code></pre>
 </div>
 </div>
+<div id="educacion-cantidad-de-establecimientos-educativos-y-disculpas" class="section level1">
+<h1><span class="header-section-number">13</span> Educacion (cantidad de establecimientos educativos) y Disculpas</h1>
+<p>El item de disculpas es el siguiente:</p>
+<p>¿Usted cuando siente que ha agredido a alguien pide disculpas a la persona que ofendio?</p>
+<p>Donde 1 es Nunca y donde 5 es Siempre</p>
+<div id="graficos-11" class="section level2">
+<h2><span class="header-section-number">13.1</span> Graficos</h2>
+<div id="separandolos-por-media-11" class="section level3">
+<h3><span class="header-section-number">13.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;disculpas_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_establ=</span>(<span class="kw">ifelse</span>(t_establ_mean<span class="op">&gt;</span><span class="kw">mean</span>(t_establ_mean),
+                             <span class="st">&quot;Alta presencia Establecimientos Educativos&quot;</span>,<span class="st">&quot;No Violentados&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_establ)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-57-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-11" class="section level3">
+<h3><span class="header-section-number">13.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;disculpas_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_establ=</span><span class="kw">as.factor</span>((ifelse
+                       (t_establ_mean<span class="op">&gt;</span><span class="kw">quantile</span>(t_establ_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta presencia Establecimientos Educativos&quot;</span>,
+                         <span class="kw">ifelse</span>(t_establ_mean<span class="op">&lt;</span><span class="kw">quantile</span>(t_establ_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_establ<span class="op">!=</span><span class="kw">is.na</span>(mun_establ)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_establ)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-11" class="section level3">
+<h3><span class="header-section-number">13.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;disculpas_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_establ=</span><span class="kw">as.factor</span>((ifelse
+                       (t_establ_mean<span class="op">==</span><span class="kw">max</span>(t_establ_mean),
+                         <span class="st">&quot;Alta presencia Establecimientos Educativos&quot;</span>,
+                         <span class="kw">ifelse</span>(t_establ_mean<span class="op">==</span><span class="kw">min</span>(t_establ_mean),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_establ<span class="op">!=</span><span class="kw">is.na</span>(mun_establ)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_establ)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-59-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-11" class="section level2">
+<h2><span class="header-section-number">13.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_establ=</span>(<span class="kw">ifelse</span>(t_establ_mean<span class="op">&gt;</span><span class="kw">mean</span>(t_establ_mean),
+                             <span class="st">&quot;Alta presencia Establecimientos Educativos&quot;</span>,<span class="st">&quot;No Violentados&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_establ<span class="op">!=</span><span class="kw">is.na</span>(mun_establ)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(disculpas_mean <span class="op">~</span><span class="st"> </span>mun_establ, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  disculpas_mean by mun_establ
+## t = 0.1914, df = 11.759, p-value = 0.8515
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.1866601  0.2225247
+## sample estimates:
+## mean in group Alta presencia Establecimientos Educativos 
+##                                                0.8127069 
+##                             mean in group No Violentados 
+##                                                0.7947746</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-11" class="section level2">
+<h2><span class="header-section-number">13.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_establ=</span><span class="kw">as.factor</span>((ifelse
+                       (t_establ_mean<span class="op">&gt;</span><span class="kw">quantile</span>(t_establ_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta presencia Establecimientos Educativos&quot;</span>,
+                         <span class="kw">ifelse</span>(t_establ_mean<span class="op">&lt;</span><span class="kw">quantile</span>(t_establ_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_establ<span class="op">!=</span><span class="kw">is.na</span>(mun_establ)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(disculpas_mean <span class="op">~</span><span class="st"> </span>mun_establ, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  disculpas_mean by mun_establ
+## t = 1.5489, df = 18.405, p-value = 0.1384
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.05617853  0.37335317
+## sample estimates:
+## mean in group Alta presencia Establecimientos Educativos 
+##                                                0.8426110 
+##                             mean in group No Violentados 
+##                                                0.6840237</code></pre>
+</div>
+</div>
 
 
 

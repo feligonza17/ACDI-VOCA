@@ -38,12 +38,12 @@ navbar:
           href: elca_modulo_politica.html
     - text: "Evento ACDIVOCA"
       menu:
-        - text: "Exploracion Diferencias Municipales"
-          icon: 
-          href: encuesta_diferencias_municipal.html
         - text: "Graficos prejuicios"
-          icon:
+          icon: fa-dizzy
           href: graficos_prejuicios.html
+        - text: "Exploracion Diferencias Municipales"
+          icon: fa-chart-bar
+          href: encuesta_diferencias_municipal.html
     - text: "Analisis PAR"
       icon: 
       href: Analisis_indice_PAR.html    

@@ -15,7 +15,7 @@ output:
       smooth_scroll: no
   pdf_document:
     toc: yes
-    toc_depth: '2'
+    toc_depth: '3'
 ---
 
 Buenos dias. 
@@ -1444,6 +1444,134 @@ for(i in which(colnames(x)=="armonia_col_mean")){
 
 
 
+
+
+
+
+
+
+# Educacion (cantidad de establecimientos educativos) y Disculpas
+
+El item de disculpas es el siguiente:
+
+¿Usted cuando siente que ha agredido a alguien pide disculpas a la persona que ofendio?
+
+Donde 1 es Nunca
+y donde 5 es Siempre
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="disculpas_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_establ=(ifelse(t_establ_mean>mean(t_establ_mean),
+                             "Alta presencia Establecimientos Educativos","No Violentados"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_establ)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="disculpas_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_establ=as.factor((ifelse
+                       (t_establ_mean>quantile(t_establ_mean, 0.75),
+                         "Alta presencia Establecimientos Educativos",
+                         ifelse(t_establ_mean<quantile(t_establ_mean, 0.25),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_establ!=is.na(mun_establ)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_establ)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="disculpas_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_establ=as.factor((ifelse
+                       (t_establ_mean==max(t_establ_mean),
+                         "Alta presencia Establecimientos Educativos",
+                         ifelse(t_establ_mean==min(t_establ_mean),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_establ!=is.na(mun_establ)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_establ)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_establ=(ifelse(t_establ_mean>mean(t_establ_mean),
+                             "Alta presencia Establecimientos Educativos","No Violentados"))) %>% 
+    filter(mun_establ!=is.na(mun_establ)) %>% 
+  t.test(disculpas_mean ~ mun_establ, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_establ=as.factor((ifelse
+                       (t_establ_mean>quantile(t_establ_mean, 0.75),
+                         "Alta presencia Establecimientos Educativos",
+                         ifelse(t_establ_mean<quantile(t_establ_mean, 0.25),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_establ!=is.na(mun_establ)) %>% 
+  t.test(disculpas_mean ~ mun_establ, .)
+```
 
 
 
