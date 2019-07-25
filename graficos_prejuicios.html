@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Felipe Gonzalez-Arango" />
+
+
+<title>Graficos prejuicios</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="Merge_bases.html">Codigo para iniciar</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel CEDE Municipal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploraciones</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="Violencia_graficos_analisis.html">
+            <span class="fa fa-bomb"></span>
+             
+            Violencia
+          </a>
+        </li>
+        <li>
+          <a href="Gobierno_graficos_analisis.html">
+            <span class="fa fa-university"></span>
+             
+            Gobierno
+          </a>
+        </li>
+        <li>
+          <a href="Salud_graficos_analisis.html">
+            <span class="fa fa-user-md"></span>
+             
+            Salud
+          </a>
+        </li>
+        <li>
+          <a href="Educacion_graficos_analisis.html">
+            <span class="fa fa-graduation-cap"></span>
+             
+            Educacion
+          </a>
+        </li>
+        <li>
+          <a href="Tierras_graficos_analisis.html">
+            <span class="fa fa-seedling"></span>
+             
+            Tierras
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    ELCA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="elca_exploracion.html">
+        <span class="fa fa-object-ungroup"></span>
+         
+        Depuracion y merge
+      </a>
+    </li>
+    <li>
+      <a href="elca_modulo_politica.html">
+        <span class="fa fa-comment"></span>
+         
+        Modulo Politica
+      </a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Evento ACDIVOCA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="encuesta_diferencias_municipal.html">Exploracion Diferencias Municipales</a>
+    </li>
+    <li>
+      <a href="graficos_prejuicios.html">Graficos prejuicios</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Analisis_indice_PAR.html">Analisis PAR</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-gear"></span>
+     
+    More
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Exploraciones Viejas</li>
+    <li>
+      <a href="Exploracion_CEDE_Violencia_ACDIVOCA.html">Violencia y graficos</a>
+    </li>
+    <li>
+      <a href="acdivoca_analisis.html">Violencia y estadistica</a>
+    </li>
+    <li>
+      <a href="base_stata.html">Creacion BBDD para Stata</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Graficos prejuicios</h1>
+<h4 class="author">Felipe Gonzalez-Arango</h4>
+<h4 class="date">22 de julio de 2019</h4>
+
+</div>
+
+
+<p>Buenos dias. Este documento pretende ser una primera aproximacion al posible uso de la encuesta de ACDIVOCA y del Panel Municipal para el evento del 22 de agosto.</p>
+<p>Este documento presenta unicamente algunos de los hallazgos que, a nuestro juicio, son los mas relevantes.</p>
+<div id="setup" class="section level1">
+<h1><span class="header-section-number">1</span> Setup</h1>
+<p>Con este codigo se importan todas las bases de datos y todos los paquetes necesarios.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#ANTES DE CORRER, ¡CORRER LA PESTANA &quot;CODIGO PARA ARRANCAR TODO&quot;!</span>
+
+
+<span class="co">#Set Working Directory</span>
+<span class="kw">setwd</span>(<span class="st">&quot;C:/Users/felig/ACDI-VOCA/&quot;</span>)
+<span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
+
+<span class="co">#Importar base de datos donde esta todo</span>
+<span class="kw">library</span>(haven)
+<span class="kw">library</span>(readstata13)
+<span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(plyr)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(gridExtra)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(forcats)
+<span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
+base_stata &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata.dta&quot;</span>, <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)</code></pre></div>
+<p>En esta presentacion se van a presentar los hallazgos mas relevantes para el evento ACDIVOCA. A continuacion se presentan los graficos que podrian romper algunos prejuicios o actitudes negativas. Esto dependiendo de como lo definamos.</p>
+</div>
+<div id="homicidios-haber-sufrido-homicidios-y-reconciliacion" class="section level1">
+<h1><span class="header-section-number">2</span> Homicidios (haber sufrido homicidios) y Reconciliacion</h1>
+<p>El item de reconciliacion es el siguiente:</p>
+<center>
+<img src="Reconciliacion.JPG" alt="Items Reconciliacion" />
+</center>
+<p>Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 8 a 40 y, a mayor indice de reconciliacion, mas dispuesta esta el municipio a buscar la reconciliacion</p>
+<div id="graficos" class="section level2">
+<h2><span class="header-section-number">2.1</span> Graficos</h2>
+<div id="separandolos-por-media" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta homicidios y baja homicidios por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span>(<span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&gt;</span><span class="kw">mean</span>(homi_cienmil_mean),
+                             <span class="st">&quot;Alta homicidios&quot;</span>,<span class="st">&quot;Baja homicidios&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo" class="section level3">
+<h3><span class="header-section-number">2.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">==</span><span class="kw">max</span>(homi_cienmil_mean),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">==</span><span class="kw">min</span>(homi_cienmil_mean),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media" class="section level2">
+<h2><span class="header-section-number">2.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span>(<span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&gt;</span><span class="kw">mean</span>(homi_cienmil_mean),
+                             <span class="st">&quot;Alta homicidios&quot;</span>,<span class="st">&quot;Baja homicidios&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(reconciliacion_mean <span class="op">~</span><span class="st"> </span>mun_homicidio, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  reconciliacion_mean by mun_homicidio
+## t = -1.8739, df = 33.056, p-value = 0.06981
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -2.9219145  0.1199933
+## sample estimates:
+## mean in group Alta homicidios mean in group Baja homicidios 
+##                      2.881360                      4.282321</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles" class="section level2">
+<h2><span class="header-section-number">2.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(reconciliacion_mean <span class="op">~</span><span class="st"> </span>mun_homicidio, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  reconciliacion_mean by mun_homicidio
+## t = -0.53529, df = 19.541, p-value = 0.5985
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -2.841300  1.682237
+## sample estimates:
+## mean in group Alta homicidios mean in group Baja homicidios 
+##                      3.510522                      4.090054</code></pre>
+</div>
+</div>
+<div id="homicidios-haber-sufrido-homicidios-y-disculpas" class="section level1">
+<h1><span class="header-section-number">3</span> Homicidios (haber sufrido homicidios) y Disculpas</h1>
+<p>El item de disculpas es el siguiente:</p>
+<p>¿Usted cuando siente que ha agredido a alguien pide disculpas a la persona que ofendio?</p>
+<p>Donde 1 es Nunca y donde 5 es Siempre</p>
+<div id="graficos-1" class="section level2">
+<h2><span class="header-section-number">3.1</span> Graficos</h2>
+<div id="separandolos-por-media-1" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta homicidios y baja homicidios por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;disculpas_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span>(<span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&gt;</span><span class="kw">mean</span>(homi_cienmil_mean),
+                             <span class="st">&quot;Alta homicidios&quot;</span>,<span class="st">&quot;Baja homicidios&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-1" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;disculpas_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-1" class="section level3">
+<h3><span class="header-section-number">3.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;disculpas_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">==</span><span class="kw">max</span>(homi_cienmil_mean),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">==</span><span class="kw">min</span>(homi_cienmil_mean),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-1" class="section level2">
+<h2><span class="header-section-number">3.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span>(<span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&gt;</span><span class="kw">mean</span>(homi_cienmil_mean),
+                             <span class="st">&quot;Alta homicidios&quot;</span>,<span class="st">&quot;Baja homicidios&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(disculpas_mean <span class="op">~</span><span class="st"> </span>mun_homicidio, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  disculpas_mean by mun_homicidio
+## t = -0.58635, df = 28.396, p-value = 0.5623
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.2281750  0.1265671
+## sample estimates:
+## mean in group Alta homicidios mean in group Baja homicidios 
+##                     0.7680145                     0.8188185</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-1" class="section level2">
+<h2><span class="header-section-number">3.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(disculpas_mean <span class="op">~</span><span class="st"> </span>mun_homicidio, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  disculpas_mean by mun_homicidio
+## t = 0.47478, df = 19.227, p-value = 0.6403
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.2141873  0.3399984
+## sample estimates:
+## mean in group Alta homicidios mean in group Baja homicidios 
+##                     0.8381515                     0.7752460</code></pre>
+</div>
+</div>
+<div id="homicidios-haber-sufrido-homicidios-y-confianza-en-colombianos" class="section level1">
+<h1><span class="header-section-number">4</span> Homicidios (haber sufrido homicidios) y Confianza en Colombianos</h1>
+<p>Este item pregunta: ¿Usted en cuantos colombianos confia? Y responden de 1 a 5 en donde 1 es “En ninguno” y 5 es “En todos”</p>
+<div id="graficos-2" class="section level2">
+<h2><span class="header-section-number">4.1</span> Graficos</h2>
+<div id="separandolos-por-media-2" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta homicidios y baja homicidios por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;confianza_col_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span>(<span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&gt;</span><span class="kw">mean</span>(homi_cienmil_mean),
+                             <span class="st">&quot;Alta homicidios&quot;</span>,<span class="st">&quot;Baja homicidios&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-2" class="section level3">
+<h3><span class="header-section-number">4.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;confianza_col_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-2" class="section level3">
+<h3><span class="header-section-number">4.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;confianza_col_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">==</span><span class="kw">max</span>(homi_cienmil_mean),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">==</span><span class="kw">min</span>(homi_cienmil_mean),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-2" class="section level2">
+<h2><span class="header-section-number">4.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span>(<span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&gt;</span><span class="kw">mean</span>(homi_cienmil_mean),
+                             <span class="st">&quot;Alta homicidios&quot;</span>,<span class="st">&quot;Baja homicidios&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(confianza_col_mean <span class="op">~</span><span class="st"> </span>mun_homicidio, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  confianza_col_mean by mun_homicidio
+## t = -1.9483, df = 41.602, p-value = 0.05815
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.433844295  0.007699402
+## sample estimates:
+## mean in group Alta homicidios mean in group Baja homicidios 
+##                      2.300766                      2.513838</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-2" class="section level2">
+<h2><span class="header-section-number">4.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(confianza_col_mean <span class="op">~</span><span class="st"> </span>mun_homicidio, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  confianza_col_mean by mun_homicidio
+## t = -1.3729, df = 13.499, p-value = 0.1922
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.6433994  0.1422549
+## sample estimates:
+## mean in group Alta homicidios mean in group Baja homicidios 
+##                      2.336231                      2.586803</code></pre>
+</div>
+</div>
+<div id="violentados-haber-sufrido-ataques-a-la-poblacion-civil-y-reconciliacion" class="section level1">
+<h1><span class="header-section-number">5</span> Violentados (haber sufrido ataques a la poblacion civil) y Reconciliacion</h1>
+<p>El item de reconciliacion es el siguiente:</p>
+<center>
+<img src="Reconciliacion.JPG" alt="Items Reconciliacion" />
+</center>
+<p>Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 8 a 40 y, a mayor indice de reconciliacion, mas dispuesta esta el municipio a buscar la reconciliacion</p>
+<div id="graficos-3" class="section level2">
+<h2><span class="header-section-number">5.1</span> Graficos</h2>
+<div id="separandolos-por-media-3" class="section level3">
+<h3><span class="header-section-number">5.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span>(<span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">mean</span>(Ataques_Pobl_Civil_mean),
+                             <span class="st">&quot;Violentados&quot;</span>,<span class="st">&quot;No Violentados&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_violento)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-3" class="section level3">
+<h3><span class="header-section-number">5.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span><span class="kw">as.factor</span>((ifelse
+                       (Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Violentados&quot;</span>,
+                         <span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_violento)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-3" class="section level3">
+<h3><span class="header-section-number">5.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span><span class="kw">as.factor</span>((ifelse
+                       (Ataques_Pobl_Civil_mean<span class="op">==</span><span class="kw">max</span>(Ataques_Pobl_Civil_mean),
+                         <span class="st">&quot;Violentados&quot;</span>,
+                         <span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">==</span><span class="kw">min</span>(Ataques_Pobl_Civil_mean),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_violento)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-3" class="section level2">
+<h2><span class="header-section-number">5.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span>(<span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">mean</span>(Ataques_Pobl_Civil_mean),
+                             <span class="st">&quot;Violentados&quot;</span>,<span class="st">&quot;No Violentados&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(reconciliacion_mean <span class="op">~</span><span class="st"> </span>mun_violento, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  reconciliacion_mean by mun_violento
+## t = 1.408, df = 19.192, p-value = 0.1751
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.5896562  3.0184212
+## sample estimates:
+## mean in group No Violentados    mean in group Violentados 
+##                     4.067996                     2.853613</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-3" class="section level2">
+<h2><span class="header-section-number">5.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span><span class="kw">as.factor</span>((ifelse
+                       (Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Violentados&quot;</span>,
+                         <span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(reconciliacion_mean <span class="op">~</span><span class="st"> </span>mun_violento, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  reconciliacion_mean by mun_violento
+## t = 0.81762, df = 19.961, p-value = 0.4232
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -1.343869  3.076137
+## sample estimates:
+## mean in group No Violentados    mean in group Violentados 
+##                     4.060837                     3.194702</code></pre>
+</div>
+</div>
+<div id="violentados-haber-sufrido-ataques-a-la-poblacion-civil-y-disculpas" class="section level1">
+<h1><span class="header-section-number">6</span> Violentados (haber sufrido ataques a la poblacion civil) y Disculpas</h1>
+<p>El item de disculpas es el siguiente:</p>
+<p>¿Usted cuando siente que ha agredido a alguien pide disculpas a la persona que ofendio?</p>
+<p>Donde 1 es Nunca y donde 5 es Siempre</p>
+<div id="graficos-4" class="section level2">
+<h2><span class="header-section-number">6.1</span> Graficos</h2>
+<div id="separandolos-por-media-4" class="section level3">
+<h3><span class="header-section-number">6.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;disculpas_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span>(<span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">mean</span>(Ataques_Pobl_Civil_mean),
+                             <span class="st">&quot;Violentados&quot;</span>,<span class="st">&quot;No Violentados&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_violento)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-4" class="section level3">
+<h3><span class="header-section-number">6.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;disculpas_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span><span class="kw">as.factor</span>((ifelse
+                       (Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Violentados&quot;</span>,
+                         <span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_violento)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-4" class="section level3">
+<h3><span class="header-section-number">6.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;disculpas_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span><span class="kw">as.factor</span>((ifelse
+                       (Ataques_Pobl_Civil_mean<span class="op">==</span><span class="kw">max</span>(Ataques_Pobl_Civil_mean),
+                         <span class="st">&quot;Violentados&quot;</span>,
+                         <span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">==</span><span class="kw">min</span>(Ataques_Pobl_Civil_mean),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_violento)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-4" class="section level2">
+<h2><span class="header-section-number">6.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span>(<span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">mean</span>(Ataques_Pobl_Civil_mean),
+                             <span class="st">&quot;Violentados&quot;</span>,<span class="st">&quot;No Violentados&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(disculpas_mean <span class="op">~</span><span class="st"> </span>mun_violento, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  disculpas_mean by mun_violento
+## t = 0.84843, df = 22.91, p-value = 0.405
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.1059336  0.2531931
+## sample estimates:
+## mean in group No Violentados    mean in group Violentados 
+##                    0.8197893                    0.7461595</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-4" class="section level2">
+<h2><span class="header-section-number">6.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span><span class="kw">as.factor</span>((ifelse
+                       (Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Violentados&quot;</span>,
+                         <span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(disculpas_mean <span class="op">~</span><span class="st"> </span>mun_violento, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  disculpas_mean by mun_violento
+## t = 0.21842, df = 19.934, p-value = 0.8293
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.1877255  0.2316258
+## sample estimates:
+## mean in group No Violentados    mean in group Violentados 
+##                    0.7038157                    0.6818655</code></pre>
+</div>
+</div>
+<div id="violentados-haber-sufrido-ataques-a-la-poblacion-civil-y-medicion-de-metodos-de-dialogo-de-violencia" class="section level1">
+<h1><span class="header-section-number">7</span> Violentados (haber sufrido ataques a la poblacion civil) y medicion de metodos de dialogo de violencia</h1>
+<p>El item de violencia es el siguiente:</p>
+<center>
+<img src="Violencia.JPG" alt="Items Violencia" />
+</center>
+<p>Es la suma de esos items. El segundo tiene la escala invertida. Asi, el indice va de 2 a 10 y, a mayor indice de violencia, mas metodos de dialogo violentos tiene el municipio a buscar la reconciliacion</p>
+<div id="graficos-5" class="section level2">
+<h2><span class="header-section-number">7.1</span> Graficos</h2>
+<div id="separandolos-por-media-5" class="section level3">
+<h3><span class="header-section-number">7.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;violencia_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span>(<span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">mean</span>(Ataques_Pobl_Civil_mean),
+                             <span class="st">&quot;Violentados&quot;</span>,<span class="st">&quot;No Violentados&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_violento)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-5" class="section level3">
+<h3><span class="header-section-number">7.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;violencia_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span><span class="kw">as.factor</span>((ifelse
+                       (Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Violentados&quot;</span>,
+                         <span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_violento)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-5" class="section level3">
+<h3><span class="header-section-number">7.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;violencia_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span><span class="kw">as.factor</span>((ifelse
+                       (Ataques_Pobl_Civil_mean<span class="op">==</span><span class="kw">max</span>(Ataques_Pobl_Civil_mean),
+                         <span class="st">&quot;Violentados&quot;</span>,
+                         <span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">==</span><span class="kw">min</span>(Ataques_Pobl_Civil_mean),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_violento)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-5" class="section level2">
+<h2><span class="header-section-number">7.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span>(<span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">mean</span>(Ataques_Pobl_Civil_mean),
+                             <span class="st">&quot;Violentados&quot;</span>,<span class="st">&quot;No Violentados&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(violencia_mean <span class="op">~</span><span class="st"> </span>mun_violento, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  violencia_mean by mun_violento
+## t = -2.7088, df = 21.328, p-value = 0.01304
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.72665064 -0.09581105
+## sample estimates:
+## mean in group No Violentados    mean in group Violentados 
+##                   -1.3993252                   -0.9880944</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-5" class="section level2">
+<h2><span class="header-section-number">7.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violento=</span><span class="kw">as.factor</span>((ifelse
+                       (Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Violentados&quot;</span>,
+                         <span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;No Violentados&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_violento<span class="op">!=</span><span class="kw">is.na</span>(mun_violento)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(violencia_mean <span class="op">~</span><span class="st"> </span>mun_violento, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  violencia_mean by mun_violento
+## t = -2.5843, df = 19.927, p-value = 0.01775
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.8914723 -0.0950164
+## sample estimates:
+## mean in group No Violentados    mean in group Violentados 
+##                   -1.3978178                   -0.9045734</code></pre>
+</div>
+</div>
+<div id="desmovilizados-presencia-de-desmovilizados-y-reconciliacion" class="section level1">
+<h1><span class="header-section-number">8</span> Desmovilizados (presencia de desmovilizados) y Reconciliacion</h1>
+<p>El item de reconciliacion es el siguiente:</p>
+<center>
+<img src="Reconciliacion.JPG" alt="Items Reconciliacion" />
+</center>
+<p>Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 8 a 40 y, a mayor indice de reconciliacion, mas dispuesta esta el municipio a buscar la reconciliacion</p>
+<div id="graficos-6" class="section level2">
+<h2><span class="header-section-number">8.1</span> Graficos</h2>
+<div id="separandolos-por-media-6" class="section level3">
+<h3><span class="header-section-number">8.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_desmovilizado=</span>(<span class="kw">ifelse</span>(desmovilizados_cienmil_mean<span class="op">&gt;</span><span class="kw">mean</span>(desmovilizados_cienmil_mean),
+                             <span class="st">&quot;Alta Desmovilizacion&quot;</span>,<span class="st">&quot;Baja Desmovilizacion&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_desmovilizado)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-6" class="section level3">
+<h3><span class="header-section-number">8.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_desmovilizado=</span><span class="kw">as.factor</span>((ifelse
+                       (desmovilizados_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(desmovilizados_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta Desmovilizacion&quot;</span>,
+                         <span class="kw">ifelse</span>(desmovilizados_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(desmovilizados_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja Desmovilizacion&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_desmovilizado<span class="op">!=</span><span class="kw">is.na</span>(mun_desmovilizado)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_desmovilizado)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-6" class="section level3">
+<h3><span class="header-section-number">8.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_desmovilizado=</span><span class="kw">as.factor</span>((ifelse
+                       (desmovilizados_cienmil_mean<span class="op">==</span><span class="kw">max</span>(desmovilizados_cienmil_mean),
+                         <span class="st">&quot;Alta Desmovilizacion&quot;</span>,
+                         <span class="kw">ifelse</span>(desmovilizados_cienmil_mean<span class="op">==</span><span class="kw">min</span>(desmovilizados_cienmil_mean),
+                         <span class="st">&quot;Baja Desmovilizacion&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_desmovilizado<span class="op">!=</span><span class="kw">is.na</span>(mun_desmovilizado)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_desmovilizado)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-6" class="section level2">
+<h2><span class="header-section-number">8.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_desmovilizado=</span>(<span class="kw">ifelse</span>(desmovilizados_cienmil_mean<span class="op">&gt;</span><span class="kw">mean</span>(desmovilizados_cienmil_mean),
+                             <span class="st">&quot;Alta Desmovilizacion&quot;</span>,<span class="st">&quot;Baja Desmovilizacion&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_desmovilizado<span class="op">!=</span><span class="kw">is.na</span>(mun_desmovilizado)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(reconciliacion_mean <span class="op">~</span><span class="st"> </span>mun_desmovilizado, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  reconciliacion_mean by mun_desmovilizado
+## t = -0.27925, df = 29.113, p-value = 0.782
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -1.863749  1.415876
+## sample estimates:
+## mean in group Alta Desmovilizacion mean in group Baja Desmovilizacion 
+##                           3.571785                           3.795722</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-6" class="section level2">
+<h2><span class="header-section-number">8.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_desmovilizado=</span><span class="kw">as.factor</span>((ifelse
+                       (desmovilizados_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(desmovilizados_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta Desmovilizacion&quot;</span>,
+                         <span class="kw">ifelse</span>(desmovilizados_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(desmovilizados_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja Desmovilizacion&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_desmovilizado<span class="op">!=</span><span class="kw">is.na</span>(mun_desmovilizado)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(reconciliacion_mean <span class="op">~</span><span class="st"> </span>mun_desmovilizado, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  reconciliacion_mean by mun_desmovilizado
+## t = -0.11111, df = 19.329, p-value = 0.9127
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -2.378948  2.138841
+## sample estimates:
+## mean in group Alta Desmovilizacion mean in group Baja Desmovilizacion 
+##                           3.705421                           3.825475</code></pre>
+</div>
+</div>
+<div id="pobres-nbi-bajo-o-alto-y-reconciliacion" class="section level1">
+<h1><span class="header-section-number">9</span> Pobres (NBI bajo o alto) y Reconciliacion</h1>
+<p>El item de reconciliacion es el siguiente:</p>
+<center>
+<img src="Reconciliacion.JPG" alt="Items Reconciliacion" />
+</center>
+<p>Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 8 a 40 y, a mayor indice de reconciliacion, mas dispuesta esta el municipio a buscar la reconciliacion</p>
+<div id="graficos-7" class="section level2">
+<h2><span class="header-section-number">9.1</span> Graficos</h2>
+<div id="separandolos-por-media-7" class="section level3">
+<h3><span class="header-section-number">9.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span>(<span class="kw">ifelse</span>(nbi_mean<span class="op">&gt;</span><span class="kw">mean</span>(nbi_mean),
+                             <span class="st">&quot;Alta Pobreza&quot;</span>,<span class="st">&quot;Baja Pobreza&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-7" class="section level3">
+<h3><span class="header-section-number">9.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">&gt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">&lt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-7" class="section level3">
+<h3><span class="header-section-number">9.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">==</span><span class="kw">max</span>(nbi_mean),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">==</span><span class="kw">min</span>(nbi_mean),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-7" class="section level2">
+<h2><span class="header-section-number">9.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span>(<span class="kw">ifelse</span>(nbi_mean<span class="op">&gt;</span><span class="kw">mean</span>(nbi_mean),
+                             <span class="st">&quot;Alta Pobreza&quot;</span>,<span class="st">&quot;Baja Pobreza&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(reconciliacion_mean <span class="op">~</span><span class="st"> </span>mun_pobre, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  reconciliacion_mean by mun_pobre
+## t = 0.17623, df = 39.196, p-value = 0.861
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -1.393374  1.659396
+## sample estimates:
+## mean in group Alta Pobreza mean in group Baja Pobreza 
+##                   3.769660                   3.636649</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-7" class="section level2">
+<h2><span class="header-section-number">9.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">&gt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">&lt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(reconciliacion_mean <span class="op">~</span><span class="st"> </span>mun_pobre, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  reconciliacion_mean by mun_pobre
+## t = -0.19788, df = 19.666, p-value = 0.8452
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -2.483033  2.053189
+## sample estimates:
+## mean in group Alta Pobreza mean in group Baja Pobreza 
+##                   3.765934                   3.980857</code></pre>
+</div>
+</div>
+<div id="pobres-nbi-bajo-o-alto-y-medicion-de-metidos-de-dialogo-de-violencia" class="section level1">
+<h1><span class="header-section-number">10</span> Pobres (NBI bajo o alto) y medicion de metidos de dialogo de violencia</h1>
+<p>El item de violencia es el siguiente:</p>
+<center>
+<img src="Violencia.JPG" alt="Items Violencia" />
+</center>
+<p>Es la suma de esos items. El segundo tiene la escala invertida. Asi, el indice va de 2 a 10 y, a mayor indice de violencia, mas metodos de dialogo violentos tiene el municipio a buscar la reconciliacion</p>
+<div id="graficos-8" class="section level2">
+<h2><span class="header-section-number">10.1</span> Graficos</h2>
+<div id="separandolos-por-media-8" class="section level3">
+<h3><span class="header-section-number">10.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;violencia_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span>(<span class="kw">ifelse</span>(nbi_mean<span class="op">&gt;</span><span class="kw">mean</span>(nbi_mean),
+                             <span class="st">&quot;Alta Pobreza&quot;</span>,<span class="st">&quot;Baja Pobreza&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-8" class="section level3">
+<h3><span class="header-section-number">10.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;violencia_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">&gt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">&lt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-8" class="section level3">
+<h3><span class="header-section-number">10.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;violencia_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">==</span><span class="kw">max</span>(nbi_mean),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">==</span><span class="kw">min</span>(nbi_mean),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-8" class="section level2">
+<h2><span class="header-section-number">10.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span>(<span class="kw">ifelse</span>(nbi_mean<span class="op">&gt;</span><span class="kw">mean</span>(nbi_mean),
+                             <span class="st">&quot;Alta Pobreza&quot;</span>,<span class="st">&quot;Baja Pobreza&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(violencia_mean <span class="op">~</span><span class="st"> </span>mun_pobre, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  violencia_mean by mun_pobre
+## t = -1.9848, df = 41.039, p-value = 0.05388
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.548586132  0.004755126
+## sample estimates:
+## mean in group Alta Pobreza mean in group Baja Pobreza 
+##                  -1.401423                  -1.129508</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-8" class="section level2">
+<h2><span class="header-section-number">10.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">&gt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">&lt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(violencia_mean <span class="op">~</span><span class="st"> </span>mun_pobre, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  violencia_mean by mun_pobre
+## t = -1.8799, df = 19.788, p-value = 0.07493
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.74112370  0.03876134
+## sample estimates:
+## mean in group Alta Pobreza mean in group Baja Pobreza 
+##                  -1.531131                  -1.179950</code></pre>
+</div>
+</div>
+<div id="pobres-nbi-bajo-o-alto-y-confianza-en-colombianos" class="section level1">
+<h1><span class="header-section-number">11</span> Pobres (NBI bajo o alto) y Confianza en Colombianos</h1>
+<p>Este item pregunta: ¿Usted en cuantos colombianos confia? Y responden de 1 a 5 en donde 1 es “En ninguno” y 5 es “En todos”</p>
+<div id="graficos-9" class="section level2">
+<h2><span class="header-section-number">11.1</span> Graficos</h2>
+<div id="separandolos-por-media-9" class="section level3">
+<h3><span class="header-section-number">11.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta confianza_col y baja confianza_col por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;confianza_col_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span>(<span class="kw">ifelse</span>(nbi_mean<span class="op">&gt;</span><span class="kw">mean</span>(nbi_mean),
+                             <span class="st">&quot;Alta Pobreza&quot;</span>,<span class="st">&quot;Baja Pobreza&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-9" class="section level3">
+<h3><span class="header-section-number">11.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;confianza_col_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">&gt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">&lt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-9" class="section level3">
+<h3><span class="header-section-number">11.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;confianza_col_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">==</span><span class="kw">max</span>(nbi_mean),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">==</span><span class="kw">min</span>(nbi_mean),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-9" class="section level2">
+<h2><span class="header-section-number">11.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span>(<span class="kw">ifelse</span>(nbi_mean<span class="op">&gt;</span><span class="kw">mean</span>(nbi_mean),
+                             <span class="st">&quot;Alta Pobreza&quot;</span>,<span class="st">&quot;Baja Pobreza&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(confianza_col_mean <span class="op">~</span><span class="st"> </span>mun_pobre, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  confianza_col_mean by mun_pobre
+## t = 0.38812, df = 41.707, p-value = 0.6999
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.1932991  0.2853320
+## sample estimates:
+## mean in group Alta Pobreza mean in group Baja Pobreza 
+##                   2.447589                   2.401573</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-9" class="section level2">
+<h2><span class="header-section-number">11.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">&gt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">&lt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(confianza_col_mean <span class="op">~</span><span class="st"> </span>mun_pobre, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  confianza_col_mean by mun_pobre
+## t = -0.53073, df = 19.972, p-value = 0.6015
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.3446313  0.2048420
+## sample estimates:
+## mean in group Alta Pobreza mean in group Baja Pobreza 
+##                   2.296810                   2.366705</code></pre>
+</div>
+</div>
+<div id="pobres-nbi-bajo-o-alto-y-armonia" class="section level1">
+<h1><span class="header-section-number">12</span> Pobres (NBI bajo o alto) y Armonia</h1>
+<p>Este item pregunta: ¿Usted piensa que en Colombia hay armonia o entendimiento entre las personas? Y responden de 1 a 5 en donde 1 es “Totalmente en desacuerdo” y 5 es “Totalmente de acuerdo”</p>
+<div id="graficos-10" class="section level2">
+<h2><span class="header-section-number">12.1</span> Graficos</h2>
+<div id="separandolos-por-media-10" class="section level3">
+<h3><span class="header-section-number">12.1.1</span> Separandolos por media</h3>
+<p>Aqui se separan los municipios en aquellos que tienen alta armonia_col y baja armonia_col por la media. Los que estan por encima de la media y los que estan por debajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;armonia_col_mean&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span>(<span class="kw">ifelse</span>(nbi_mean<span class="op">&gt;</span><span class="kw">mean</span>(nbi_mean),
+                             <span class="st">&quot;Alta Pobreza&quot;</span>,<span class="st">&quot;Baja Pobreza&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-52-1.png" width="672" /></p>
+</div>
+<div id="separandolos-en-q1-y-q3-10" class="section level3">
+<h3><span class="header-section-number">12.1.2</span> Separandolos en Q1 y Q3</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;armonia_col_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">&gt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">&lt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-53-1.png" width="672" /></p>
+</div>
+<div id="separandolos-entre-el-maximo-y-el-minimo-10" class="section level3">
+<h3><span class="header-section-number">12.1.3</span> Separandolos entre el maximo y el minimo</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span class="op">:</span><span class="dv">207</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;armonia_col_mean&quot;</span>)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">==</span><span class="kw">max</span>(nbi_mean),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">==</span><span class="kw">min</span>(nbi_mean),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_pobre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
+</div>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-media-10" class="section level2">
+<h2><span class="header-section-number">12.2</span> Prueba t para medir significancia separando por media</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span>(<span class="kw">ifelse</span>(nbi_mean<span class="op">&gt;</span><span class="kw">mean</span>(nbi_mean),
+                             <span class="st">&quot;Alta Pobreza&quot;</span>,<span class="st">&quot;Baja Pobreza&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(armonia_col_mean <span class="op">~</span><span class="st"> </span>mun_pobre, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  armonia_col_mean by mun_pobre
+## t = 1.6375, df = 41.376, p-value = 0.1091
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.03745675  0.35902424
+## sample estimates:
+## mean in group Alta Pobreza mean in group Baja Pobreza 
+##                   3.004609                   2.843825</code></pre>
+</div>
+<div id="prueba-t-para-medir-significancia-separando-por-cuartiles-10" class="section level2">
+<h2><span class="header-section-number">12.3</span> Prueba t para medir significancia separando por cuartiles</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  base_stata <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">&gt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta Pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">&lt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja Pobreza&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">t.test</span>(armonia_col_mean <span class="op">~</span><span class="st"> </span>mun_pobre, .)</code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  armonia_col_mean by mun_pobre
+## t = 0.74917, df = 19.872, p-value = 0.4625
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.2029472  0.4302749
+## sample estimates:
+## mean in group Alta Pobreza mean in group Baja Pobreza 
+##                   2.906743                   2.793079</code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

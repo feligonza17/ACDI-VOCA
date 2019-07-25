@@ -535,6 +535,24 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Evento ACDIVOCA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="encuesta_diferencias_municipal.html">Exploracion Diferencias Municipales</a>
+    </li>
+    <li>
+      <a href="graficos_prejuicios.html">Graficos prejuicios</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Analisis_indice_PAR.html">Analisis PAR</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fa fa-gear"></span>
      
     More
@@ -588,6 +606,7 @@ div.tocify {
 <h2><span class="header-section-number">1.1</span> Cargar paquetes</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readstata13)
 <span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(janitor)
 <span class="kw">library</span>(dplyr)
 <span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(data.table)
@@ -598,8 +617,7 @@ div.tocify {
 <span class="kw">library</span>(gridExtra)
 <span class="kw">library</span>(grid)
 <span class="kw">library</span>(purrr)
-<span class="kw">library</span>(psych)
-<span class="kw">library</span>(janitor)</code></pre></div>
+<span class="kw">library</span>(psych)</code></pre></div>
 </div>
 <div id="importar-bases-de-datos" class="section level2">
 <h2><span class="header-section-number">1.2</span> Importar bases de datos</h2>
@@ -783,13 +801,45 @@ datos_acdivoca_num<span class="op">$</span>memoria_expectativa &lt;-<span class=
 <span class="st">  </span><span class="kw">as.matrix</span>(<span class="kw">sapply</span>(., as.numeric)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">as.numeric</span>()</code></pre></div>
 </div>
+<div id="confianza-en-vecinos" class="section level2">
+<h2><span class="header-section-number">3.7</span> Confianza en Vecinos</h2>
+<p>Este item pregunta: ¿Usted en cuantos vecinos confia? Y responden de 1 a 5 en donde 1 es “En ninguno” y 5 es “En todos”</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p053 -- Pregunta sobre las disculpas. Solo es una entonces good</span>
+datos_acdivoca_num<span class="op">$</span>confianza_vec &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p065</code></pre></div>
+</div>
+<div id="confianza-en-colombianos" class="section level2">
+<h2><span class="header-section-number">3.8</span> Confianza en Colombianos</h2>
+<p>Este item pregunta: ¿Usted en cuantos colombianos confia? Y responden de 1 a 5 en donde 1 es “En ninguno” y 5 es “En todos”</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p053 -- Pregunta sobre las disculpas. Solo es una entonces good</span>
+datos_acdivoca_num<span class="op">$</span>confianza_col &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p066</code></pre></div>
+</div>
+<div id="armonia-en-colombianos" class="section level2">
+<h2><span class="header-section-number">3.9</span> Armonia en Colombianos</h2>
+<p>Este item pregunta: ¿Usted piensa que en Colombia hay armonia o entendimiento entre las personas? Y responden de 1 a 5 en donde 1 es “Totalmente en desacuerdo” y 5 es “Totalmente de acuerdo”</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p051 -- </span>
+datos_acdivoca_num<span class="op">$</span>armonia_col &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p051</code></pre></div>
+</div>
+<div id="buena-voluntad" class="section level2">
+<h2><span class="header-section-number">3.10</span> Buena Voluntad</h2>
+<p>Este item pregunta: ¿Con que frecuencia usted tiene pensamientos en los que les desea el bien a los demas? Y responden de 1 a 5 en donde 1 es “Nunca” y 5 es “Siempre”</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p074 -- </span>
+datos_acdivoca_num<span class="op">$</span>buena_voluntad &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p074</code></pre></div>
+</div>
+<div id="sentido-de-pertenencia" class="section level2">
+<h2><span class="header-section-number">3.11</span> Sentido de Pertenencia</h2>
+<p>Este item pregunta: ¿Como es su sentido de pertenencia a comunidades y grupos? Y responden de 1 a 5 en donde 1 es “No hay sentido de pertenencia” y 5 es “Totalmente”. El 3 representa: “ni fuerte, ni debil”</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p046 -- </span>
+datos_acdivoca_num<span class="op">$</span>pertenencia &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p046</code></pre></div>
+</div>
 </div>
 <div id="estadisticos-de-los-items-creados" class="section level1">
 <h1><span class="header-section-number">4</span> Estadisticos de los items creados</h1>
 <p>Aqui exponemos las estadisticas descriptivas de los items que se acaban de crear</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Otra forma de ver los estadisticos </span>
+datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(memoria, reconciliacion, disculpas, 
-         violencia, rencor, memoria_expectativa) <span class="op">%&gt;%</span><span class="st"> </span>
+         violencia, rencor, memoria_expectativa, confianza_vec, 
+         confianza_col, armonia_col, buena_voluntad, pertenencia) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">describe</span>(<span class="dt">fast =</span> T) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">print</span>()</code></pre></div>
 <pre><code>##                     vars     n  mean   sd   min max range   se
@@ -798,11 +848,16 @@ datos_acdivoca_num<span class="op">$</span>memoria_expectativa &lt;-<span class=
 ## disculpas              3 11966  0.80 1.02  -2.0   2   4.0 0.01
 ## violencia              4 11966 -1.23 1.46  -4.0   4   8.0 0.01
 ## rencor                 5 11966  3.67 1.06   0.6  15  14.4 0.01
-## memoria_expectativa    6 11966  3.38 1.25   0.6  15  14.4 0.01</code></pre>
+## memoria_expectativa    6 11966  3.38 1.25   0.6  15  14.4 0.01
+## confianza_vec          7 11966  2.49 1.09   1.0   5   4.0 0.01
+## confianza_col          8 11966  2.44 0.96   1.0   5   4.0 0.01
+## armonia_col            9 11966  2.94 0.93   1.0   5   4.0 0.01
+## buena_voluntad        10 11966  3.82 0.95   1.0   5   4.0 0.01
+## pertenencia           11 11966  3.22 0.95   1.0   5   4.0 0.01</code></pre>
 </div>
 <div id="merge-con-base-de-datos-cede-general" class="section level1">
 <h1><span class="header-section-number">5</span> MERGE con base de datos CEDE general</h1>
-<p>Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (ano, pib, poblacion, etc.)</p>
+<p>Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (año, pib, poblacion, etc.)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Collapse estadisticos por municipio</span>
 
 reconciliacion_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(reconciliacion <span class="op">~</span><span class="st"> </span>Municipio, 
@@ -817,7 +872,16 @@ memoria_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(me
                            datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
 memoria_expectativa_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(memoria_expectativa <span class="op">~</span><span class="st"> </span>Municipio, 
                                        datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-
+confianza_vec_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_vec <span class="op">~</span><span class="st"> </span>Municipio, 
+                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+confianza_col_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_col <span class="op">~</span><span class="st"> </span>Municipio, 
+                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+armonia_col_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(armonia_col <span class="op">~</span><span class="st"> </span>Municipio, 
+                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+buena_voluntad_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(buena_voluntad <span class="op">~</span><span class="st"> </span>Municipio, 
+                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+pertenencia_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(pertenencia <span class="op">~</span><span class="st"> </span>Municipio, 
+                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
 
 
 <span class="co"># Merge con base de datos general -----------------------------------------</span>

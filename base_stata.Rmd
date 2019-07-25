@@ -1,0 +1,1298 @@
+---
+title: 'Creacion BBDD para Stata'
+author: "Felipe Gonzalez-Arango"
+date: "19 de julio de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+El objetivo de este documento es hacer la base de datos para Stata para poder hacer analisis de datos en ella tambien.
+
+#Setup
+Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
+
+```{r message=FALSE, warning=FALSE}
+
+#Set Working Directory
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+rm(list=ls())
+
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+
+
+#Cargar paquetes
+library(readstata13)
+library(tidyr)
+library(dplyr)
+library(data.table)
+library(readxl)
+library(doBy)
+library(vtable)
+library(plyr)
+library(gridExtra)
+library(grid)
+library(purrr)
+library(psych)
+library(ggplot2)
+library(psych)
+library(Hmisc)
+library(matrixStats)
+library(ggpubr)
+library(vtable)
+library(ggthemes)
+
+```
+
+#Importar variables
+
+Vamos a importar(crear) las variables que ya se utilizaron en las otras bases de datos. Se recuerda que se utilizaron 5 bases de datos diferentes (Gobierno, Violencia, Tierras, Educacion y Salud).
+
+Tenga en cuenta que **ningun codigo de esta seccion se va a mostrar** Esto sencillamente para no sobrecargar el documento. Si usted esta interesado en ver el codigo ir a la siguiente pagina:  [GitHub](https://github.com/feligonza17/ACDI-VOCA) y buscar el archivo con el nombre: *Analisis_indice_PAR.Rmd*
+
+
+##Violencia 
+
+Homicidios: **homi_cienmil**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+homi_GA <- grep('homi_{1}', names(cede_conflicto_44), value = T) %>% grep('_pn',.,value = T, invert = T)    
+# Tidy data table - homicidios de transito  
+conflicto_44_tidy <- gather(cede_conflicto_44, 'Grupo_Armado', 'Numero_Homicidios', homi_GA)    
+conflicto_44_tidy$ano_base_general <- as.Date(conflicto_44_tidy$ano_base_general, '%Y', na.rm=T)
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+for(i in 1:nrow(conflicto_44_tidy)){
+  if(conflicto_44_tidy$ano[i]==conflicto_44_tidy$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+conflicto_44_tidy <- conflicto_44_tidy[a,]
+
+conflicto_44_tidy <- conflicto_44_tidy %>% 
+  dplyr::mutate(homi_cienmil=(Numero_Homicidios/pobl_tot)*100000)
+
+descrip_homi <- summaryBy(homi_cienmil ~ Municipio, conflicto_44_tidy, FUN=c(mean,sd,median), na.rm=T )    #Codigo para hacer descriptivos de los homicidios (collapse por años)
+
+descrip_homi %<>% arrange(Municipio) 
+descrip_homi_5antes <- conflicto_44_tidy %>% 
+  filter(ano<"2008-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_homi_5antes <- summaryBy(homi_cienmil ~ Municipio, descrip_homi_5antes, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+
+descrip_homi_5despues <- conflicto_44_tidy %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_homi_5despues <- summaryBy(homi_cienmil ~ Municipio, descrip_homi_5despues, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+diff_homi_mean <- descrip_homi_5antes$homi_cienmil.mean -descrip_homi_5despues$homi_cienmil.mean
+diff_homi_sd <- descrip_homi_5antes$homi_cienmil.sd -descrip_homi_5despues$homi_cienmil.sd
+diff_homi_median <- descrip_homi_5antes$homi_cienmil.median -descrip_homi_5despues$homi_cienmil.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos. 
+
+```
+
+
+Ataques: **Ataques_Pobl_Civil**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+ataque_GA <- grep("tpobc_{1}", names(cede_conflicto_44), value = T) 
+conflicto_44_ataque <- gather(cede_conflicto_44, key= "Grupo_Armado", value= "Ataques_Pobl_Civil", ataque_GA)
+
+descrip_ataques <- summaryBy(Ataques_Pobl_Civil ~ Municipio, conflicto_44_ataque, FUN=c(mean,sd,median), na.rm=T )     #Codigo para hacer descriptivos de los ataques (collapse por anos)
+
+descrip_ataques %<>% arrange(Municipio) 
+
+descrip_ataques_5antes <- conflicto_44_ataque %>% 
+  filter(ano<"1997-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_ataques_5antes <- summaryBy(Ataques_Pobl_Civil ~ Municipio, 
+                                    descrip_ataques_5antes, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+
+descrip_ataques_5despues <- conflicto_44_ataque %>% 
+  filter(ano>"2004-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_ataques_5despues <- summaryBy(Ataques_Pobl_Civil ~ Municipio,
+                                      descrip_ataques_5despues, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+diff_ataques_mean <- 
+  descrip_ataques_5antes$Ataques_Pobl_Civil.mean - 
+  descrip_ataques_5despues$Ataques_Pobl_Civil.mean
+diff_ataques_sd <- 
+  descrip_ataques_5antes$Ataques_Pobl_Civil.sd -
+  descrip_ataques_5despues$Ataques_Pobl_Civil.sd
+diff_ataques_median <- 
+  descrip_ataques_5antes$Ataques_Pobl_Civil.median -
+  descrip_ataques_5despues$Ataques_Pobl_Civil.median
+#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos. 
+
+```
+
+Secuestros: **secuestro_cienmil**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+secuestro_GA <- grep("secu_{1}", names(cede_conflicto_44), value = T)
+conflicto_44_secuestro <- gather(cede_conflicto_44, key= "Grupo_Armado", value= "Secuestros", secuestro_GA)
+
+conflicto_44_secuestro$ano_base_general <- as.Date(conflicto_44_secuestro$ano_base_general, '%Y', na.rm=T)
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+for(i in 1:nrow(conflicto_44_secuestro)){
+  if(conflicto_44_secuestro$ano[i]==conflicto_44_secuestro$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+conflicto_44_secuestro <- conflicto_44_secuestro[a,]
+
+conflicto_44_secuestro <- conflicto_44_secuestro %>% 
+  dplyr::mutate(secuestro_cienmil=(Secuestros/pobl_tot)*100000)
+descrip_secuestro <- summaryBy(secuestro_cienmil ~ Municipio, conflicto_44_secuestro, FUN=c(mean,sd,median), na.rm=T )
+
+descrip_secuestro %<>% arrange(Municipio) 
+
+descrip_secuestro_5antes <- conflicto_44_secuestro %>% 
+  filter(ano<"2008-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_secuestro_5antes <- summaryBy(secuestro_cienmil ~ Municipio, 
+                                    descrip_secuestro_5antes, FUN=c(mean,sd,median), na.rm=T ) #Descriptivos de esos anos. 
+
+
+descrip_secuestro_5despues <- conflicto_44_secuestro %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_secuestro_5despues <- summaryBy(secuestro_cienmil ~ Municipio,
+                                      descrip_secuestro_5despues, FUN=c(mean,sd,median), na.rm=T ) #Descriptivos de esos anos. 
+
+diff_secuestro_mean <- 
+  descrip_secuestro_5antes$secuestro_cienmil.mean - 
+  descrip_secuestro_5despues$secuestro_cienmil.mean
+diff_secuestro_sd <- 
+  descrip_secuestro_5antes$secuestro_cienmil.sd -
+  descrip_secuestro_5despues$secuestro_cienmil.sd
+diff_secuestro_median <- 
+  descrip_secuestro_5antes$secuestro_cienmil.median -
+  descrip_secuestro_5despues$secuestro_cienmil.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas secuestro en los ultimos 5 anos. 
+```
+
+Secuestros Politicos: **secuestrop_cienmil**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+secuestrop_GA <- grep("secpo_{1}", names(cede_conflicto_44), value = T) 
+conflicto_44_secuestrop <- gather(cede_conflicto_44, key= "Grupo_Armado", value= "Secuestros_Politicos", secuestrop_GA) 
+
+conflicto_44_secuestrop$ano_base_general <- as.Date(conflicto_44_secuestrop$ano_base_general, '%Y', na.rm=T)
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+for(i in 1:nrow(conflicto_44_secuestrop)){
+  if(conflicto_44_secuestrop$ano[i]==conflicto_44_secuestrop$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+conflicto_44_secuestrop <- conflicto_44_secuestrop[a,]
+
+conflicto_44_secuestrop <- conflicto_44_secuestrop %>% 
+  dplyr::mutate(secuestrop_cienmil=(Secuestros_Politicos/pobl_tot)*100000)
+
+descrip_secuestrop <- summaryBy(secuestrop_cienmil ~ Municipio, conflicto_44_secuestrop, FUN=c(mean,sd,median), na.rm=T )
+
+descrip_secuestrop %<>% arrange(Municipio) 
+descrip_secuestrop_5antes <- conflicto_44_secuestrop %>% 
+  filter(ano<"1997-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_secuestrop_5antes <- summaryBy(secuestrop_cienmil ~ Municipio, 
+                                      descrip_secuestrop_5antes, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+
+descrip_secuestrop_5despues <- conflicto_44_secuestrop %>% 
+  filter(ano>"2004-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_secuestrop_5despues <- summaryBy(secuestrop_cienmil ~ Municipio,
+                                        descrip_secuestrop_5despues, FUN=c(sum,mean,sd,median), na.rm=T )  #Descriptivos de esos anos.
+
+diff_secuestrop_mean <- 
+  descrip_secuestrop_5antes$secuestrop_cienmil.mean - 
+  descrip_secuestrop_5despues$secuestrop_cienmil.mean
+diff_secuestrop_sd <- 
+  descrip_secuestrop_5antes$secuestrop_cienmil.sd -
+  descrip_secuestrop_5despues$secuestrop_cienmil.sd 
+diff_secuestrop_median <- 
+  descrip_secuestrop_5antes$secuestrop_cienmil.median -
+  descrip_secuestrop_5despues$secuestrop_cienmil.median #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas secuestrop en los ultimos 5 anos. 
+```
+
+Desmovilizados: **desmovilizados_cienmil**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+desmovilizados <- grep("desmov_{1}", names(cede_conflicto_44), value = T) #Seleccionar variables que empiecen con desmov_                                                
+desmovilizados <- desmovilizados[-c(2,4,7)]#Limpiar los nombres para poder hacer el gather  
+conflicto_44_desmovilizados <- gather(cede_conflicto_44, 
+                                      key="Grupo_Armado",   
+                                      value="Desmovilizados", 
+                                      c("desmov_OTRO","desmov_FARC","desmov_ELN",   
+                                                                "desmov_AUC"))  
+
+
+
+conflicto_44_desmovilizados$ano_base_general <- as.Date(conflicto_44_desmovilizados$ano_base_general, '%Y', na.rm=T)
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+for(i in 1:nrow(conflicto_44_desmovilizados)){
+  if(conflicto_44_desmovilizados$ano[i]==conflicto_44_desmovilizados$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+conflicto_44_desmovilizados <- conflicto_44_desmovilizados[a,]
+
+conflicto_44_desmovilizados <- conflicto_44_desmovilizados %>% 
+  dplyr::mutate(desmovilizados_cienmil=(Desmovilizados/pobl_tot)*100000)
+
+descrip_desmovilizados <- summaryBy(desmovilizados_cienmil ~ Municipio, conflicto_44_desmovilizados, FUN=c(median,mean,sd), na.rm=T )
+
+
+descrip_desmovilizados %<>% arrange(Municipio) 
+descrip_desmovilizados_5antes <- conflicto_44_desmovilizados %>% 
+  filter(ano<"1997-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_desmovilizados_5antes <- summaryBy(desmovilizados_cienmil ~ Municipio, 
+                                       descrip_desmovilizados_5antes, FUN=c(mean,sd,median), na.rm=T ) #Descriptivos de esos anos. 
+
+
+descrip_desmovilizados_5despues <- conflicto_44_desmovilizados %>% 
+  filter(ano>"2004-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_desmovilizados_5despues <- summaryBy(desmovilizados_cienmil ~ Municipio,
+                                         descrip_desmovilizados_5despues, FUN=c(mean,sd,median), na.rm=T ) #Descriptivos de esos anos.
+
+diff_desmovilizados_mean <- 
+  descrip_desmovilizados_5antes$desmovilizados_cienmil.mean - 
+  descrip_desmovilizados_5despues$desmovilizados_cienmil.mean
+diff_desmovilizados_sd <- 
+  descrip_desmovilizados_5antes$desmovilizados_cienmil.sd -
+  descrip_desmovilizados_5despues$desmovilizados_cienmil.sd
+diff_desmovilizados_median <- 
+  descrip_desmovilizados_5antes$desmovilizados_cienmil.median -
+  descrip_desmovilizados_5despues$desmovilizados_cienmil.median
+#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas desmovilizados en los ultimos 5 anos. 
+```
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Base de datos con los indice PAR
+
+names_acdi <- acdi_imr$Municipio_imr
+
+acdi_imr <- acdi_imr %>% arrange(Municipio_imr)
+par_descrip_homi <- descrip_homi[descrip_homi$Municipio %in% names_acdi,]
+par_descrip_homi <- par_descrip_homi %>% arrange(Municipio)
+par_descrip_ataques <- descrip_ataques[descrip_ataques$Municipio %in% names_acdi,]
+par_descrip_ataques <- par_descrip_ataques %>% arrange(Municipio)
+par_descrip_desmovilizados <- descrip_desmovilizados[descrip_desmovilizados$Municipio %in% names_acdi,]
+par_descrip_desmovilizados <- par_descrip_desmovilizados %>% arrange(Municipio)
+par_descrip_secuestro <- descrip_secuestro[descrip_secuestro$Municipio %in% names_acdi,]
+par_descrip_secuestro <- par_descrip_secuestro %>% arrange(Municipio)
+par_descrip_secuestrop <- descrip_secuestrop[descrip_secuestrop$Municipio %in% names_acdi,]
+par_descrip_secuestrop <- par_descrip_secuestrop %>% arrange(Municipio)
+par_diff_homi <- descrip_homi_5antes[descrip_homi_5antes$Municipio %in% names_acdi,]$homi_cienmil.mean -descrip_homi_5despues[descrip_homi_5despues$Municipio %in% names_acdi,]$homi_cienmil.mean
+
+par_diff_ataques <- descrip_ataques_5antes[descrip_ataques_5antes$Municipio %in% names_acdi,]$Ataques_Pobl_Civil.mean -descrip_ataques_5despues[descrip_ataques_5despues$Municipio %in% names_acdi,]$Ataques_Pobl_Civil.mean
+
+par_diff_desmovilizados <- descrip_desmovilizados_5antes[descrip_desmovilizados_5antes$Municipio %in% names_acdi,]$desmovilizados_cienmil.mean -descrip_desmovilizados_5despues[descrip_desmovilizados_5despues$Municipio %in% names_acdi,]$desmovilizados_cienmil.mean
+
+
+par_diff_secuestro <- descrip_secuestro_5antes[descrip_secuestro_5antes$Municipio %in% names_acdi,]$secuestro_cienmil.mean -descrip_secuestro_5despues[descrip_secuestro_5despues$Municipio %in% names_acdi,]$secuestro_cienmil.mean
+
+par_diff_secuestrop <- descrip_secuestrop_5antes[descrip_secuestrop_5antes$Municipio %in% names_acdi,]$secuestrop_cienmil.mean -descrip_secuestrop_5despues[descrip_secuestrop_5despues$Municipio %in% names_acdi,]$secuestrop_cienmil.mean
+```
+
+
+##Gobierno
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="Bojaya"] <- "Bojayá"
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="Bogotá, D.C."] <- "Bogotá, D.c."
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="Cartagena"] <- "Cartagena De Indias"
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="Bojaya"] <- "Bojayá"
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="Cartagena del Chairá"] <- "Cartagena Del Chairá"
+cede_gobierno_44$municipio[cede_gobierno_44$municipio=="San Vicente del Caguán"] <- "San Vicente Del Caguán"
+```
+
+
+Desempeno fiscal: **DF_desemp_fisc**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+
+descrip_desemp_fisc <- summaryBy(DF_desemp_fisc ~ municipio, cede_gobierno_44, FUN=c(mean,sd,median), na.rm=T )    #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_desemp_fisc %<>% arrange(municipio) 
+
+descrip_desemp_fisc_5antes <- cede_gobierno_44 %>% 
+  filter(ano<"2005-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_desemp_fisc_5antes <- summaryBy(DF_desemp_fisc ~ municipio, descrip_desemp_fisc_5antes, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+
+descrip_desemp_fisc_5despues <- cede_gobierno_44 %>% 
+  filter(ano>"2012-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_desemp_fisc_5despues <- summaryBy(DF_desemp_fisc ~ municipio, descrip_desemp_fisc_5despues, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos.
+
+diff_desemp_fisc_mean <- descrip_desemp_fisc_5antes$DF_desemp_fisc.mean -descrip_desemp_fisc_5despues$DF_desemp_fisc.mean
+diff_desemp_fisc_sd <- descrip_desemp_fisc_5antes$DF_desemp_fisc.sd -descrip_desemp_fisc_5despues$DF_desemp_fisc.sd
+diff_desemp_fisc_median <- descrip_desemp_fisc_5antes$DF_desemp_fisc.median -descrip_desemp_fisc_5despues$DF_desemp_fisc.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+```
+
+
+Desempeno Integral: **DI_desemp_int**
+<br>
+
+Analisis Invesrion total: **inv_total_cienmil**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_gobierno_44$ano_base_general <- substring(cede_gobierno_44$ano_base_general,1,4)
+cede_gobierno_44$ano_base_general <- as.numeric(cede_gobierno_44$ano_base_general)
+for(i in 1:nrow(cede_gobierno_44)){
+  if(cede_gobierno_44$ano[i]==cede_gobierno_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_gobierno_44_inv <- cede_gobierno_44[a,]
+
+cede_gobierno_44_inv <- cede_gobierno_44_inv %>% 
+  dplyr::mutate(inv_total_cienmil=log((inv_total/pobl_tot)*100000)) #Se saca el logaritmo para reducir la magnitud
+descrip_inv_total_cienmil <- summaryBy(inv_total_cienmil ~ municipio, cede_gobierno_44_inv, FUN=c(mean,sd,median), na.rm=T )   #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_inv_total_cienmil %<>% arrange(municipio) 
+descrip_inv_total_cienmil_5antes <- cede_gobierno_44_inv %>% 
+  filter(ano<2005) #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_inv_total_cienmil_5antes <- summaryBy(inv_total_cienmil ~ municipio, descrip_inv_total_cienmil_5antes, FUN=c(mean,sd,median), na.rm=T )    #Descriptivos de esos anos. 
+
+
+descrip_inv_total_cienmil_5despues <- cede_gobierno_44_inv %>% 
+  filter(ano>2005) #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_inv_total_cienmil_5despues <- summaryBy(inv_total_cienmil ~ municipio, descrip_inv_total_cienmil_5despues, FUN=c(mean,sd,median), na.rm=T )    #Descriptivos de esos anos. 
+diff_inv_total_cienmil_mean <- descrip_inv_total_cienmil_5antes$inv_total_cienmil.mean -descrip_inv_total_cienmil_5despues$inv_total_cienmil.mean
+diff_inv_total_cienmil_sd <- descrip_inv_total_cienmil_5antes$inv_total_cienmil.sd -descrip_inv_total_cienmil_5despues$inv_total_cienmil.sd
+diff_inv_total_cienmil_median <- descrip_inv_total_cienmil_5antes$inv_total_cienmil.median -descrip_inv_total_cienmil_5despues$inv_total_cienmil.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+descrip_desemp_int <- summaryBy(DI_desemp_int ~ municipio, cede_gobierno_44, FUN=c(mean,sd,median), na.rm=T )  #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_desemp_int %<>% arrange(municipio) 
+
+descrip_desemp_int_5antes <- cede_gobierno_44 %>% 
+  filter(ano<"2005-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_desemp_int_5antes <- summaryBy(DI_desemp_int ~ municipio, descrip_desemp_int_5antes, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+
+descrip_desemp_int_5despues <- cede_gobierno_44 %>% 
+  filter(ano>"2012-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_desemp_int_5despues <- summaryBy(DI_desemp_int ~ municipio, descrip_desemp_int_5despues, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos.
+diff_desemp_int_mean <- descrip_desemp_int_5antes$DI_desemp_int.mean -descrip_desemp_int_5despues$DI_desemp_int.mean
+diff_desemp_int_sd <- descrip_desemp_int_5antes$DI_desemp_int.sd -descrip_desemp_int_5despues$DI_desemp_int.sd 
+diff_desemp_int_median <- descrip_desemp_int_5antes$DI_desemp_int.median -descrip_desemp_int_5despues$DI_desemp_int.median #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+```
+
+
+Inversion en fortalecimiento institucional: **inv_fortinst_cienmil**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+
+a <-  c()
+cede_gobierno_44$ano_base_general <- substring(cede_gobierno_44$ano_base_general,1,4)
+cede_gobierno_44$ano_base_general <- as.numeric(cede_gobierno_44$ano_base_general)
+for(i in 1:nrow(cede_gobierno_44)){
+  if(cede_gobierno_44$ano[i]==cede_gobierno_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_gobierno_44_inv <- cede_gobierno_44[a,]
+
+cede_gobierno_44_inv <- cede_gobierno_44_inv %>% 
+  dplyr::mutate(inv_fortinst_cienmil=log((inv_fortinst/pobl_tot)*100000)) #Se saca el logaritmo para reducir la magnitud
+descrip_inv_fortinst_cienmil <- summaryBy(inv_fortinst_cienmil ~ municipio, cede_gobierno_44_inv, FUN=c(mean,sd,median), na.rm=T ) #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_inv_fortinst_cienmil %<>% arrange(municipio)
+descrip_inv_fortinst_cienmil_5antes <- cede_gobierno_44_inv %>% 
+  filter(ano<2006) #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_inv_fortinst_cienmil_5antes <- summaryBy(inv_fortinst_cienmil ~ municipio, descrip_inv_fortinst_cienmil_5antes, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+
+descrip_inv_fortinst_cienmil_5despues <- cede_gobierno_44_inv %>% 
+  filter(ano>2005) #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_inv_fortinst_cienmil_5despues <- summaryBy(inv_fortinst_cienmil ~ municipio, descrip_inv_fortinst_cienmil_5despues, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+diff_inv_fortinst_cienmil_mean <- descrip_inv_fortinst_cienmil_5antes$inv_fortinst_cienmil.mean -descrip_inv_fortinst_cienmil_5despues$inv_fortinst_cienmil.mean
+diff_inv_fortinst_cienmil_sd <- descrip_inv_fortinst_cienmil_5antes$inv_fortinst_cienmil.sd -descrip_inv_fortinst_cienmil_5despues$inv_fortinst_cienmil.sd
+diff_inv_fortinst_cienmil_median <-
+descrip_inv_fortinst_cienmil_5antes$inv_fortinst_cienmil.median -descrip_inv_fortinst_cienmil_5despues$inv_fortinst_cienmil.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+Indice de Gobierno Abierto: **IGA_total**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+descrip_IGA_total <- summaryBy(IGA_total ~ municipio, cede_gobierno_44, FUN=c(mean,sd,median), na.rm=T )   #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_IGA_total %<>% arrange(municipio)
+descrip_IGA_total_5antes <- cede_gobierno_44 %>% 
+  filter(ano<"2014-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_IGA_total_5antes <- summaryBy(IGA_total ~ municipio, descrip_IGA_total_5antes, FUN=c(mean,sd,median), na.rm=T )    #Descriptivos de esos anos. 
+
+
+descrip_IGA_total_5despues <- cede_gobierno_44 %>% 
+  filter(ano>"2012-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_IGA_total_5despues <- summaryBy(IGA_total ~ municipio, descrip_IGA_total_5despues, FUN=c(mean,sd,median), na.rm=T )    #Descriptivos de esos anos.
+diff_IGA_total_mean <- descrip_IGA_total_5antes$IGA_total.mean -descrip_IGA_total_5despues$IGA_total.mean
+diff_IGA_total_sd <- descrip_IGA_total_5antes$IGA_total.sd -descrip_IGA_total_5despues$IGA_total.sd
+diff_IGA_total_median <- descrip_IGA_total_5antes$IGA_total.median -descrip_IGA_total_5despues$IGA_total.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+names_acdi <- acdi_imr$Municipio_imr
+
+acdi_imr <- acdi_imr %>% arrange(Municipio_imr)
+
+
+par_descrip_desemp_fisc <- descrip_desemp_fisc[descrip_desemp_fisc$municipio %in% names_acdi,]
+par_descrip_desemp_fisc <- par_descrip_desemp_fisc %>% arrange(municipio)
+
+
+par_descrip_desemp_int <- descrip_desemp_int[descrip_desemp_int$municipio %in% names_acdi,]
+par_descrip_desemp_int <- par_descrip_desemp_int %>% arrange(municipio)
+
+par_descrip_IGA_total <- descrip_IGA_total[descrip_IGA_total$municipio %in% names_acdi,]
+par_descrip_IGA_total <- par_descrip_IGA_total %>% arrange(municipio)
+
+par_descrip_inv_fortinst_cienmil <- descrip_inv_fortinst_cienmil[descrip_inv_fortinst_cienmil$municipio %in% names_acdi,]
+par_descrip_inv_fortinst_cienmil <- par_descrip_inv_fortinst_cienmil %>% arrange(municipio)
+
+par_descrip_inv_total_cienmil <- descrip_inv_total_cienmil[descrip_inv_total_cienmil$municipio %in% names_acdi,]
+par_descrip_inv_total_cienmil <- par_descrip_inv_total_cienmil %>% arrange(municipio)
+
+
+par_diff_desemp_fisc <- descrip_desemp_fisc_5antes[descrip_desemp_fisc_5antes$municipio %in% names_acdi,]$DF_desemp_fisc.mean -descrip_desemp_fisc_5despues[descrip_desemp_fisc_5despues$municipio %in% names_acdi,]$DF_desemp_fisc.mean
+
+par_diff_desemp_int <- descrip_desemp_int_5antes[descrip_desemp_int_5antes$municipio %in% names_acdi,]$DI_desemp_int.mean -descrip_desemp_int_5despues[descrip_desemp_int_5despues$municipio %in% names_acdi,]$DI_desemp_int.mean
+
+par_diff_IGA_total <- descrip_IGA_total_5antes[descrip_IGA_total_5antes$municipio %in% names_acdi,]$IGA_total.mean-descrip_IGA_total_5despues[descrip_IGA_total_5despues$municipio %in% names_acdi,]$IGA_total.mean
+
+
+par_diff_inv_fortinst_cienmil <- descrip_inv_fortinst_cienmil_5antes[descrip_inv_fortinst_cienmil_5antes$municipio %in% names_acdi,]$inv_fortinst_cienmil.mean  -descrip_inv_fortinst_cienmil_5despues[descrip_inv_fortinst_cienmil_5despues$municipio %in% names_acdi,]$inv_fortinst_cienmil.mean
+
+par_diff_inv_total_cienmil <- descrip_inv_total_cienmil_5antes[descrip_inv_total_cienmil_5antes$municipio %in% names_acdi,]$inv_total_cienmil.mean -descrip_inv_total_cienmil_5despues[descrip_inv_total_cienmil_5despues$municipio %in% names_acdi,]$inv_total_cienmil.mean
+
+
+par_diff_inv_fortinst_cienmil[which(!is.finite(par_diff_inv_fortinst_cienmil))] <- NA 
+
+par_diff_inv_total_cienmil[which(!is.finite(par_diff_inv_total_cienmil))] <- NA
+```
+
+
+##Salud
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+cede_salud_44$municipio[cede_salud_44$municipio=="Bojaya"] <- "Bojayá"
+cede_salud_44$municipio[cede_salud_44$municipio=="Bogotá, D.C."] <- "Bogotá, D.c."
+cede_salud_44$municipio[cede_salud_44$municipio=="Cartagena"] <- "Cartagena De Indias"
+cede_salud_44$municipio[cede_salud_44$municipio=="Bojaya"] <- "Bojayá"
+cede_salud_44$municipio[cede_salud_44$municipio=="Cartagena del Chairá"] <- "Cartagena Del Chairá"
+cede_salud_44$municipio[cede_salud_44$municipio=="San Vicente del Caguán"] <- "San Vicente Del Caguán"
+```
+
+
+Tasa Mortalidad Infantil (TMI):**TMI**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+descrip_TMI <- summaryBy(TMI ~ municipio, cede_salud_44, FUN=c(mean,sd,median), na.rm=T )  #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_TMI %<>% arrange(municipio)
+descrip_TMI_5antes <- cede_salud_44 %>% 
+  filter(ano<"2005-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_TMI_5antes <- summaryBy(TMI ~ municipio, descrip_TMI_5antes, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+
+descrip_TMI_5despues <- cede_salud_44 %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_TMI_5despues <- summaryBy(TMI ~ municipio, descrip_TMI_5despues, FUN=c(sum,mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+diff_TMI_mean <- descrip_TMI_5antes$TMI.mean -descrip_TMI_5despues$TMI.mean
+diff_TMI_sd <- descrip_TMI_5antes$TMI.sd -descrip_TMI_5despues$TMI.sd 
+diff_TMI_median <- descrip_TMI_5antes$TMI.median -descrip_TMI_5despues$TMI.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+```
+
+Necesidades Basicas Insatisfechas (NBI):**NBI**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+descrip_nbi <- summaryBy(nbi ~ municipio, cede_salud_44, FUN=c(mean,sd,median), na.rm=T )  #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_nbi %<>% arrange(municipio)
+descrip_nbi_5antes <- cede_salud_44 %>% 
+  filter(ano<"2001-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_nbi_5antes <- summaryBy(nbi ~ municipio, descrip_nbi_5antes, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+
+descrip_nbi_5despues <- cede_salud_44 %>% 
+  filter(ano>"2011-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_nbi_5despues <- summaryBy(nbi ~ municipio, descrip_nbi_5despues, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+diff_nbi_mean <- descrip_nbi_5antes$nbi.mean -descrip_nbi_5despues$nbi.mean
+#OBSERVE QUE DIO VALORES DE 0 PORQUE NO HAY DIFERENCIA PORQUE SOLO HAY 4 ANOS DE DATOS. OJO SOLO UTILIZAR VALORES EN BRUTO. 
+
+diff_nbi_sd <- descrip_nbi_5antes$nbi.sd -descrip_nbi_5despues$nbi.sd
+diff_nbi_median <- descrip_nbi_5antes$nbi.median -descrip_nbi_5despues$nbi.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+Prestadoras de servicio: **prestadores_cienmil**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_salud_44$ano_base_general <- substring(cede_salud_44$ano_base_general,1,4)
+cede_salud_44$ano_base_general <- as.numeric(cede_salud_44$ano_base_general)
+for(i in 1:nrow(cede_salud_44)){
+  if(cede_salud_44$ano[i]==cede_salud_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_salud_44_eq <- cede_salud_44[a,]
+
+cede_salud_44_eq <- cede_salud_44_eq %>% 
+  dplyr::mutate(prestadores_cienmil=(prestadores/pobl_tot)*100000)
+
+descrip_prestadores_cienmil <- summaryBy(prestadores_cienmil ~ municipio, cede_salud_44_eq, FUN=c(mean,sd,median), na.rm=T )   #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+descrip_prestadores_cienmil %<>% arrange(municipio)
+descrip_prestadores_cienmil_5antes <- cede_salud_44_eq %>% 
+  filter(ano<"2014-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_prestadores_cienmil_5antes <- summaryBy(prestadores_cienmil ~ municipio, descrip_prestadores_cienmil_5antes, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+
+descrip_prestadores_cienmil_5despues <- cede_salud_44_eq %>% 
+  filter(ano>"2011-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_prestadores_cienmil_5despues <- summaryBy(prestadores_cienmil ~ municipio, descrip_prestadores_cienmil_5despues, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+diff_prestadores_cienmil_mean <- descrip_prestadores_cienmil_5antes$prestadores_cienmil.mean -descrip_prestadores_cienmil_5despues$prestadores_cienmil.mean
+diff_prestadores_cienmil_sd <- descrip_prestadores_cienmil_5antes$prestadores_cienmil.sd -descrip_prestadores_cienmil_5despues$prestadores_cienmil.sd 
+diff_prestadores_cienmil_median <- descrip_prestadores_cienmil_5antes$prestadores_cienmil.median -descrip_prestadores_cienmil_5despues$prestadores_cienmil.median #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+Personas afiliadas al regimen subsidiado: **subsidiado_cienmil**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_salud_44$ano_base_general <- substring(cede_salud_44$ano_base_general,1,4)
+cede_salud_44$ano_base_general <- as.numeric(cede_salud_44$ano_base_general)
+for(i in 1:nrow(cede_salud_44)){
+  if(cede_salud_44$ano[i]==cede_salud_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_salud_44_eq <- cede_salud_44_eq %>% 
+  dplyr::mutate(subsidiado_cienmil=log((subsidiado/pobl_tot)*100000)) #Se saca el logaritmo para reducir la magnitud
+descrip_subsidiado_cienmil <- summaryBy(subsidiado_cienmil ~ municipio, cede_salud_44_eq, FUN=c(mean,sd,median), na.rm=T ) #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_subsidiado_cienmil %<>% arrange(municipio)
+descrip_subsidiado_cienmil_5antes <- cede_salud_44_eq %>% 
+  filter(ano<"2013-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_subsidiado_cienmil_5antes <- summaryBy(subsidiado_cienmil ~ municipio, descrip_subsidiado_cienmil_5antes, FUN=c(mean,sd,median), na.rm=T ) #Descriptivos de esos anos. 
+
+
+descrip_subsidiado_cienmil_5despues <- cede_salud_44_eq %>% 
+  filter(ano>"2012-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_subsidiado_cienmil_5despues <- summaryBy(subsidiado_cienmil ~ municipio, descrip_subsidiado_cienmil_5despues, FUN=c(mean,sd,median), na.rm=T ) #Descriptivos de esos anos.  
+diff_subsidiado_cienmil_mean <- descrip_subsidiado_cienmil_5antes$subsidiado_cienmil.mean -descrip_subsidiado_cienmil_5despues$subsidiado_cienmil.mean
+diff_subsidiado_cienmil_sd <- descrip_subsidiado_cienmil_5antes$subsidiado_cienmil.sd -descrip_subsidiado_cienmil_5despues$subsidiado_cienmil.sd
+diff_subsidiado_cienmil_median <- descrip_subsidiado_cienmil_5antes$subsidiado_cienmil.median -descrip_subsidiado_cienmil_5despues$subsidiado_cienmil.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+Personas afilidas al regimen contributivo: **contributivo_cienmil**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_salud_44$ano_base_general <- substring(cede_salud_44$ano_base_general,1,4)
+cede_salud_44$ano_base_general <- as.numeric(cede_salud_44$ano_base_general)
+for(i in 1:nrow(cede_salud_44)){
+  if(cede_salud_44$ano[i]==cede_salud_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_salud_44_eq <- cede_salud_44[a,]
+
+cede_salud_44_eq <- cede_salud_44_eq %>% 
+  dplyr::mutate(contributivo_cienmil=log((contributivo/pobl_tot)*100000)) #Se saca el logaritmo para reducir la magnitud
+descrip_contributivo_cienmil <- summaryBy(contributivo_cienmil ~ municipio, cede_salud_44_eq, FUN=c(mean,sd,median), na.rm=T ) #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_contributivo_cienmil %<>% arrange(municipio)
+descrip_contributivo_cienmil_5antes <- cede_salud_44_eq %>% 
+  filter(ano<"2013-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_contributivo_cienmil_5antes <- summaryBy(contributivo_cienmil ~ municipio, descrip_contributivo_cienmil_5antes, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+
+descrip_contributivo_cienmil_5despues <- cede_salud_44_eq %>% 
+  filter(ano>"2012-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_contributivo_cienmil_5despues <- summaryBy(contributivo_cienmil ~ municipio, descrip_contributivo_cienmil_5despues, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+diff_contributivo_cienmil_mean <- descrip_contributivo_cienmil_5antes$contributivo_cienmil.mean -descrip_contributivo_cienmil_5despues$contributivo_cienmil.mean
+diff_contributivo_cienmil_sd <- descrip_contributivo_cienmil_5antes$contributivo_cienmil.sd -descrip_contributivo_cienmil_5despues$contributivo_cienmil.sd 
+diff_contributivo_cienmil_median <- descrip_contributivo_cienmil_5antes$contributivo_cienmil.median -descrip_contributivo_cienmil_5despues$contributivo_cienmil.median #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+names_acdi <- acdi_imr$Municipio_imr
+
+acdi_imr <- acdi_imr %>% arrange(Municipio_imr)
+
+
+par_descrip_TMI <- descrip_TMI[descrip_TMI$municipio %in% names_acdi,]
+par_descrip_TMI <- par_descrip_TMI %>% arrange(municipio)
+
+
+par_descrip_nbi <- descrip_nbi[descrip_nbi$municipio %in% names_acdi,]
+par_descrip_nbi <- par_descrip_nbi %>% arrange(municipio)
+
+par_descrip_prestadores_cienmil <- descrip_prestadores_cienmil[descrip_prestadores_cienmil$municipio %in% names_acdi,]
+par_descrip_prestadores_cienmil <- par_descrip_prestadores_cienmil %>% arrange(municipio)
+
+par_descrip_subsidiado_cienmil <- descrip_subsidiado_cienmil[descrip_subsidiado_cienmil$municipio %in% names_acdi,]
+par_descrip_subsidiado_cienmil <- par_descrip_subsidiado_cienmil %>% arrange(municipio)
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+par_descrip_TMI$TMI.mean[which(!is.finite(par_descrip_TMI$TMI.mean))] <- NA 
+par_descrip_nbi$nbi.mean[which(!is.finite(par_descrip_nbi$nbi.mean))] <- NA
+par_descrip_prestadores_cienmil$prestadores_cienmil.mean[which(!is.finite(par_descrip_prestadores_cienmil$prestadores_cienmil.mean))] <- NA
+par_descrip_subsidiado_cienmil$subsidiado_cienmil.mean[which(!is.finite(par_descrip_subsidiado_cienmil$subsidiado_cienmil.mean))] <- NA
+
+
+par_diff_TMI <- descrip_TMI_5antes[descrip_TMI_5antes$municipio %in% names_acdi,]$TMI.mean -descrip_TMI_5despues[descrip_TMI_5despues$municipio %in% names_acdi,]$TMI.mean
+
+par_diff_nbi <- descrip_nbi_5antes[descrip_nbi_5antes$municipio %in% names_acdi,]$nbi.mean - descrip_nbi_5despues[descrip_nbi_5despues$municipio %in% names_acdi,]$nbi.mean
+
+par_diff_prestadores_cienmil <- descrip_prestadores_cienmil_5antes[descrip_prestadores_cienmil_5antes$municipio %in% names_acdi,]$prestadores_cienmil.mean-descrip_prestadores_cienmil_5despues[descrip_prestadores_cienmil_5despues$municipio %in% names_acdi,]$prestadores_cienmil.mean
+
+
+par_diff_subsidiado_cienmil <- descrip_subsidiado_cienmil_5antes[descrip_subsidiado_cienmil_5antes$municipio %in% names_acdi,]$subsidiado_cienmil.mean-descrip_subsidiado_cienmil_5despues[descrip_subsidiado_cienmil_5despues$municipio %in% names_acdi,]$subsidiado_cienmil.mean
+
+
+par_diff_TMI[which(!is.finite(par_diff_TMI))] <- NA 
+par_diff_nbi[which(!is.finite(par_diff_nbi))] <- NA
+par_diff_prestadores_cienmil[which(!is.finite(par_diff_prestadores_cienmil))] <- NA
+par_diff_subsidiado_cienmil[which(!is.finite(par_diff_subsidiado_cienmil))] <- NA
+```
+
+
+##Educacion
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Recodificar los valores de los municipio
+cede_educacion_44$municipio[cede_educacion_44$municipio=="Bojaya"] <- "Bojayá"
+cede_educacion_44$municipio[cede_educacion_44$municipio=="Bogotá, D.C."] <- "Bogotá, D.c."
+cede_educacion_44$municipio[cede_educacion_44$municipio=="Cartagena"] <- "Cartagena De Indias"
+cede_educacion_44$municipio[cede_educacion_44$municipio=="Bojaya"] <- "Bojayá"
+cede_educacion_44$municipio[cede_educacion_44$municipio=="Cartagena del Chairá"] <- "Cartagena Del Chairá"
+cede_educacion_44$municipio[cede_educacion_44$municipio=="San Vicente del Caguán"] <- "San Vicente Del Caguán"
+```
+
+
+Alumnos en total: **alumnos_cienmil**
+<br>
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_educacion_44$ano_base_general <- substring(cede_educacion_44$ano_base_general,1,4)
+cede_educacion_44$ano_base_general <- as.numeric(cede_educacion_44$ano_base_general)
+for(i in 1:nrow(cede_educacion_44)){
+  if(cede_educacion_44$ano[i]==cede_educacion_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_educacion_44_eq <- cede_educacion_44[a,]
+
+cede_educacion_44_eq <- cede_educacion_44_eq %>% 
+  dplyr::mutate(alumnos_cienmil=(alumn_total/pobl_tot)*100000)
+descrip_alumnos_cienmil <- summaryBy(alumnos_cienmil ~ municipio, cede_educacion_44_eq, FUN=c(mean,sd, median), na.rm=T )   #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_alumnos_cienmil %<>% arrange(municipio)
+descrip_alumnos_cienmil_5antes <- cede_educacion_44_eq %>% 
+  filter(ano<"2001-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_alumnos_cienmil_5antes <- summaryBy(alumnos_cienmil ~ municipio, descrip_alumnos_cienmil_5antes, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+
+descrip_alumnos_cienmil_5despues <- cede_educacion_44_eq %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_alumnos_cienmil_5despues <- summaryBy(alumnos_cienmil ~ municipio, descrip_alumnos_cienmil_5despues, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+diff_alumnos_cienmil_mean <- descrip_alumnos_cienmil_5antes$alumnos_cienmil.mean -descrip_alumnos_cienmil_5despues$alumnos_cienmil.mean
+diff_alumnos_cienmil_sd <- descrip_alumnos_cienmil_5antes$alumnos_cienmil.sd -descrip_alumnos_cienmil_5despues$alumnos_cienmil.sd
+diff_alumnos_cienmil_median <- descrip_alumnos_cienmil_5antes$alumnos_cienmil.median -descrip_alumnos_cienmil_5despues$alumnos_cienmil.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+```
+
+Docentes con doctorado en total:**phds_cienmil**
+<br>
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_educacion_44$ano_base_general <- substring(cede_educacion_44$ano_base_general,1,4)
+cede_educacion_44$ano_base_general <- as.numeric(cede_educacion_44$ano_base_general)
+for(i in 1:nrow(cede_educacion_44)){
+  if(cede_educacion_44$ano[i]==cede_educacion_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_educacion_44_eq <- cede_educacion_44[a,]
+
+cede_educacion_44_eq <- cede_educacion_44_eq %>% 
+  dplyr::mutate(phds_cienmil=((dies_docto_1+dies_docto_2)/pobl_tot)*100000)
+descrip_phds_cienmil <- summaryBy(phds_cienmil ~ municipio, cede_educacion_44_eq, FUN=c(mean,sd,median), na.rm=T ) #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_phds_cienmil %<>% arrange(municipio)
+descrip_phds_cienmil_5antes <- cede_educacion_44_eq %>% 
+  filter(ano<"2011-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_phds_cienmil_5antes <- summaryBy(phds_cienmil ~ municipio, descrip_phds_cienmil_5antes, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+
+descrip_phds_cienmil_5despues <- cede_educacion_44_eq %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_phds_cienmil_5despues <- summaryBy(phds_cienmil ~ municipio, descrip_phds_cienmil_5despues, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+diff_phds_cienmil_mean <- descrip_phds_cienmil_5antes$phds_cienmil.mean -descrip_phds_cienmil_5despues$phds_cienmil.mean
+diff_phds_cienmil_sd <- descrip_phds_cienmil_5antes$phds_cienmil.sd -descrip_phds_cienmil_5despues$phds_cienmil.sd
+diff_phds_cienmil_median <- descrip_phds_cienmil_5antes$phds_cienmil.median -descrip_phds_cienmil_5despues$phds_cienmil.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+Proyecciones de poblacion en edad de asistir a primaria o secundaria, es decir, poblacion entre 7 a 17 anos.: **estudiantes_proy_cienmil**
+<br>
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. 
+a <-  c()
+cede_educacion_44$ano_base_general <- substring(cede_educacion_44$ano_base_general,1,4)
+cede_educacion_44$ano_base_general <- as.numeric(cede_educacion_44$ano_base_general)
+for(i in 1:nrow(cede_educacion_44)){
+  if(cede_educacion_44$ano[i]==cede_educacion_44$ano_base_general[i]){
+    a <- c(a,i)
+  }
+}
+
+#Limpiamos base de datos para que queden solamente las observaciones que concuerden en año de conflicto y en año del censo
+
+cede_educacion_44_eq <- cede_educacion_44[a,]
+
+cede_educacion_44_eq <- cede_educacion_44_eq %>% 
+  dplyr::mutate(estudiantes_proy_cienmil=((pobsimple_primaria_p+pobsimple_secundaria_p)/pobl_tot)*100000)
+descrip_estudiantes_proy_cienmil <- summaryBy(estudiantes_proy_cienmil ~ municipio, cede_educacion_44_eq, FUN=c(mean,sd,median), na.rm=T ) #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_estudiantes_proy_cienmil %<>% arrange(municipio)
+descrip_estudiantes_proy_cienmil_5antes <- cede_educacion_44_eq %>% 
+  filter(ano<"1996-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_estudiantes_proy_cienmil_5antes <- summaryBy(estudiantes_proy_cienmil ~ municipio, descrip_estudiantes_proy_cienmil_5antes, FUN=c(mean,sd, median), na.rm=T )   #Descriptivos de esos anos. 
+
+
+descrip_estudiantes_proy_cienmil_5despues <- cede_educacion_44_eq %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_estudiantes_proy_cienmil_5despues <- summaryBy(estudiantes_proy_cienmil ~ municipio, descrip_estudiantes_proy_cienmil_5despues, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+diff_estudiantes_proy_cienmil_mean <- descrip_estudiantes_proy_cienmil_5antes$estudiantes_proy_cienmil.mean -descrip_estudiantes_proy_cienmil_5despues$estudiantes_proy_cienmil.mean
+diff_estudiantes_proy_cienmil_sd <- descrip_estudiantes_proy_cienmil_5antes$estudiantes_proy_cienmil.sd -descrip_estudiantes_proy_cienmil_5despues$estudiantes_proy_cienmil.sd
+diff_estudiantes_proy_cienmil_median <-
+descrip_estudiantes_proy_cienmil_5antes$estudiantes_proy_cienmil.median -descrip_estudiantes_proy_cienmil_5despues$estudiantes_proy_cienmil.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+```
+
+Total establecimientos educativos:**t_establ**
+<br>
+```{r message=FALSE, warning=FALSE, include=FALSE}
+descrip_t_establ <- summaryBy(t_establ ~ municipio, cede_educacion_44, FUN=c(mean,sd,median), na.rm=T )    #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_t_establ %<>% arrange(municipio)
+descrip_t_establ_5antes <- cede_educacion_44 %>% 
+  filter(ano<"2000-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_t_establ_5antes <- summaryBy(t_establ ~ municipio, descrip_t_establ_5antes, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+
+descrip_t_establ_5despues <- cede_educacion_44 %>% 
+  filter(ano>"2008-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_t_establ_5despues <- summaryBy(t_establ ~ municipio, descrip_t_establ_5despues, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+diff_t_establ_mean <- descrip_t_establ_5antes$t_establ.mean -descrip_t_establ_5despues$t_establ.mean
+diff_t_establ_sd <- descrip_t_establ_5antes$t_establ.sd -descrip_t_establ_5despues$t_establ.sd
+diff_t_establ_median <- descrip_t_establ_5antes$t_establ.median -descrip_t_establ_5despues$t_establ.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+names_acdi <- acdi_imr$Municipio_imr
+
+acdi_imr <- acdi_imr %>% arrange(Municipio_imr)
+
+
+par_descrip_alumnos_cienmil <- descrip_alumnos_cienmil[descrip_alumnos_cienmil$municipio %in% names_acdi,]
+par_descrip_alumnos_cienmil <- par_descrip_alumnos_cienmil %>% arrange(municipio)
+
+
+par_descrip_phds_cienmil <- descrip_phds_cienmil[descrip_phds_cienmil$municipio %in% names_acdi,]
+par_descrip_phds_cienmil <- par_descrip_phds_cienmil %>% arrange(municipio)
+
+par_descrip_estudiantes_proy_cienmil <- descrip_estudiantes_proy_cienmil[descrip_estudiantes_proy_cienmil$municipio %in% names_acdi,]
+par_descrip_estudiantes_proy_cienmil <- par_descrip_estudiantes_proy_cienmil %>% arrange(municipio)
+
+par_descrip_t_establ <- descrip_t_establ[descrip_t_establ$municipio %in% names_acdi,]
+par_descrip_t_establ <- par_descrip_t_establ %>% arrange(municipio)
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+par_descrip_alumnos_cienmil$alumnos_cienmil.mean[which(!is.finite(par_descrip_alumnos_cienmil$alumnos_cienmil.mean))] <- NA 
+par_descrip_phds_cienmil$phds_cienmil.mean[which(!is.finite(par_descrip_phds_cienmil$phds_cienmil.mean))] <- NA
+par_descrip_estudiantes_proy_cienmil$estudiantes_proy_cienmil.mean[which(!is.finite(par_descrip_estudiantes_proy_cienmil$estudiantes_proy_cienmil.mean))] <- NA
+par_descrip_t_establ$t_establ.mean[which(!is.finite(par_descrip_t_establ$t_establ.mean))] <- NA
+par_diff_alumnos_cienmil <- descrip_alumnos_cienmil_5antes[descrip_alumnos_cienmil_5antes$municipio %in% names_acdi,]$alumnos_cienmil.mean -descrip_alumnos_cienmil_5despues[descrip_alumnos_cienmil_5despues$municipio %in% names_acdi,]$alumnos_cienmil.mean
+
+par_diff_phds_cienmil <- descrip_phds_cienmil_5antes[descrip_phds_cienmil_5antes$municipio %in% names_acdi,]$phds_cienmil.mean - descrip_phds_cienmil_5despues[descrip_phds_cienmil_5despues$municipio %in% names_acdi,]$phds_cienmil.mean
+
+par_diff_estudiantes_proy_cienmil <- descrip_estudiantes_proy_cienmil_5antes[descrip_estudiantes_proy_cienmil_5antes$municipio %in% names_acdi,]$estudiantes_proy_cienmil.mean-descrip_estudiantes_proy_cienmil_5despues[descrip_estudiantes_proy_cienmil_5despues$municipio %in% names_acdi,]$estudiantes_proy_cienmil.mean
+
+
+par_diff_t_establ <- descrip_t_establ_5antes[descrip_t_establ_5antes$municipio %in% names_acdi,]$t_establ.mean-descrip_t_establ_5despues[descrip_t_establ_5despues$municipio %in% names_acdi,]$t_establ.mean
+
+
+par_diff_alumnos_cienmil[which(!is.finite(par_diff_alumnos_cienmil))] <- NA 
+par_diff_phds_cienmil[which(!is.finite(par_diff_phds_cienmil))] <- NA
+par_diff_estudiantes_proy_cienmil[which(!is.finite(par_diff_estudiantes_proy_cienmil))] <- NA
+par_diff_t_establ[which(!is.finite(par_diff_t_establ))] <- NA
+
+```
+
+##Tierras 
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+cede_tierras_44$municipio[cede_tierras_44$municipio=="Bojaya"] <- "Bojayá"
+cede_tierras_44$municipio[cede_tierras_44$municipio=="Bogotá, D.C."] <- "Bogotá, D.c."
+cede_tierras_44$municipio[cede_tierras_44$municipio=="Cartagena"] <- "Cartagena De Indias"
+cede_tierras_44$municipio[cede_tierras_44$municipio=="Bojaya"] <- "Bojayá"
+cede_tierras_44$municipio[cede_tierras_44$municipio=="Cartagena del Chairá"] <- "Cartagena Del Chairá"
+cede_tierras_44$municipio[cede_tierras_44$municipio=="San Vicente del Caguán"] <- "San Vicente Del Caguán"
+```
+
+
+Numero de creditos Pequenos productores:**nuf_peq**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+descrip_nuf_peq <- summaryBy(nuf_peq ~ municipio, cede_tierras_44, FUN=c(mean,sd,median), na.rm=T )    #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_nuf_peq %<>% arrange(municipio)
+descrip_nuf_peq_5antes <- cede_tierras_44 %>% 
+  filter(ano<'2006-04-27')#Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_nuf_peq_5antes <- summaryBy(nuf_peq ~ municipio, descrip_nuf_peq_5antes, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+
+descrip_nuf_peq_5despues <- cede_tierras_44 %>% 
+  filter(ano>'2010-04-27')#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_nuf_peq_5despues <- summaryBy(nuf_peq ~ municipio, descrip_nuf_peq_5despues, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+diff_nuf_peq_mean <- descrip_nuf_peq_5antes$nuf_peq.mean -descrip_nuf_peq_5despues$nuf_peq.mean
+diff_nuf_peq_sd <- descrip_nuf_peq_5antes$nuf_peq.sd -descrip_nuf_peq_5despues$nuf_peq.sd
+diff_nuf_peq_median <- descrip_nuf_peq_5antes$nuf_peq.median -descrip_nuf_peq_5despues$nuf_peq.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+
+Numero de creditos Medianos Productores:**nuf_medianos**
+<br>
+```{r message=FALSE, warning=FALSE, include=FALSE}
+descrip_nuf_medianos <- summaryBy(nuf_medianos ~ municipio, cede_tierras_44, FUN=c(mean,sd,median), na.rm=T )  #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_nuf_medianos %<>% arrange(municipio)
+
+descrip_nuf_medianos_5antes <- cede_tierras_44 %>% 
+  filter(ano<'2006-04-27') #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_nuf_medianos_5antes <- summaryBy(nuf_medianos ~ municipio, descrip_nuf_medianos_5antes, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+
+descrip_nuf_medianos_5despues <- cede_tierras_44 %>% 
+  filter(ano>'2010-04-27') #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_nuf_medianos_5despues <- summaryBy(nuf_medianos ~ municipio, descrip_nuf_medianos_5despues, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+diff_nuf_medianos_mean <- descrip_nuf_medianos_5antes$nuf_medianos.mean -descrip_nuf_medianos_5despues$nuf_medianos.mean
+diff_nuf_medianos_sd <- descrip_nuf_medianos_5antes$nuf_medianos.sd -descrip_nuf_medianos_5despues$nuf_medianos.sd 
+diff_nuf_medianos_median <- descrip_nuf_medianos_5antes$nuf_medianos.median -descrip_nuf_medianos_5despues$nuf_medianos.median #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+```
+
+Numero de creditos Grandes Productores:**nuf_grandes**
+<br>
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+descrip_nuf_grandes <- summaryBy(nuf_grandes ~ municipio, cede_tierras_44, FUN=c(mean,sd,median), na.rm=T )    #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_nuf_grandes %<>% arrange(municipio)
+descrip_nuf_grandes_5antes <- cede_tierras_44 %>% 
+  filter(ano<"2006-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_nuf_grandes_5antes <- summaryBy(nuf_grandes ~ municipio, descrip_nuf_grandes_5antes, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+
+descrip_nuf_grandes_5despues <- cede_tierras_44 %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_nuf_grandes_5despues <- summaryBy(nuf_grandes ~ municipio, descrip_nuf_grandes_5despues, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+diff_nuf_grandes_mean <- descrip_nuf_grandes_5antes$nuf_grandes.mean -descrip_nuf_grandes_5despues$nuf_grandes.mean
+diff_nuf_grandes_sd <- descrip_nuf_grandes_5antes$nuf_grandes.sd -descrip_nuf_grandes_5despues$nuf_grandes.sd 
+diff_nuf_grandes_median <- descrip_nuf_grandes_5antes$nuf_grandes.median -descrip_nuf_grandes_5despues$nuf_grandes.median #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+Valor de creditos Pequenos productores:**vrf_peq**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+descrip_vrf_peq <- summaryBy(vrf_peq ~ municipio, cede_tierras_44, FUN=c(mean,sd,median), na.rm=T )    #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_vrf_peq %<>% arrange(municipio)
+descrip_vrf_peq_5antes <- cede_tierras_44 %>% 
+  filter(ano<'2006-04-27')#Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_vrf_peq_5antes <- summaryBy(vrf_peq ~ municipio, descrip_vrf_peq_5antes, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+
+descrip_vrf_peq_5despues <- cede_tierras_44 %>% 
+  filter(ano>'2010-04-27')#Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_vrf_peq_5despues <- summaryBy(vrf_peq ~ municipio, descrip_vrf_peq_5despues, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+diff_vrf_peq_mean <- descrip_vrf_peq_5antes$vrf_peq.mean -descrip_vrf_peq_5despues$vrf_peq.mean
+diff_vrf_peq_sd <- descrip_vrf_peq_5antes$vrf_peq.sd -descrip_vrf_peq_5despues$vrf_peq.sd
+diff_vrf_peq_median <- descrip_vrf_peq_5antes$vrf_peq.median -descrip_vrf_peq_5despues$vrf_peq.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+
+Valor de creditos Medianos Productores:**vrf_medianos**
+<br>
+```{r message=FALSE, warning=FALSE, include=FALSE}
+descrip_vrf_medianos <- summaryBy(vrf_medianos ~ municipio, cede_tierras_44, FUN=c(mean,sd,median), na.rm=T )  #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_vrf_medianos %<>% arrange(municipio)
+
+descrip_vrf_medianos_5antes <- cede_tierras_44 %>% 
+  filter(ano<'2006-04-27') #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_vrf_medianos_5antes <- summaryBy(vrf_medianos ~ municipio, descrip_vrf_medianos_5antes, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+
+descrip_vrf_medianos_5despues <- cede_tierras_44 %>% 
+  filter(ano>'2010-04-27') #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_vrf_medianos_5despues <- summaryBy(vrf_medianos ~ municipio, descrip_vrf_medianos_5despues, FUN=c(mean,sd,median), na.rm=T )   #Descriptivos de esos anos. 
+
+diff_vrf_medianos_mean <- descrip_vrf_medianos_5antes$vrf_medianos.mean -descrip_vrf_medianos_5despues$vrf_medianos.mean
+diff_vrf_medianos_sd <- descrip_vrf_medianos_5antes$vrf_medianos.sd -descrip_vrf_medianos_5despues$vrf_medianos.sd 
+diff_vrf_medianos_median <- descrip_vrf_medianos_5antes$vrf_medianos.median -descrip_vrf_medianos_5despues$vrf_medianos.median #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+```
+
+Valor de creditos Grandes Productores:**vrf_grandes**
+<br>
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+descrip_vrf_grandes <- summaryBy(vrf_grandes ~ municipio, cede_tierras_44, FUN=c(mean,sd,median), na.rm=T )    #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_vrf_grandes %<>% arrange(municipio)
+descrip_vrf_grandes_5antes <- cede_tierras_44 %>% 
+  filter(ano<"2006-04-27") #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_vrf_grandes_5antes <- summaryBy(vrf_grandes ~ municipio, descrip_vrf_grandes_5antes, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+
+
+descrip_vrf_grandes_5despues <- cede_tierras_44 %>% 
+  filter(ano>"2010-04-27") #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_vrf_grandes_5despues <- summaryBy(vrf_grandes ~ municipio, descrip_vrf_grandes_5despues, FUN=c(mean,sd,median), na.rm=T )  #Descriptivos de esos anos. 
+diff_vrf_grandes_mean <- descrip_vrf_grandes_5antes$vrf_grandes.mean -descrip_vrf_grandes_5despues$vrf_grandes.mean
+diff_vrf_grandes_sd <- descrip_vrf_grandes_5antes$vrf_grandes.sd -descrip_vrf_grandes_5despues$vrf_grandes.sd 
+diff_vrf_grandes_median <- descrip_vrf_grandes_5antes$vrf_grandes.median -descrip_vrf_grandes_5despues$vrf_grandes.median #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+Numero de creditos totales:**ba_tot_nu**
+<br>
+```{r message=FALSE, warning=FALSE, include=FALSE}
+descrip_ba_tot_nu <- summaryBy(ba_tot_nu ~ municipio, cede_tierras_44, FUN=c(mean,sd,median), na.rm=T )    #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_ba_tot_nu %<>% arrange(municipio)
+descrip_ba_tot_nu_5antes <- cede_tierras_44 %>% 
+  filter(ano<'2006-04-27') #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_ba_tot_nu_5antes <- summaryBy(ba_tot_nu ~ municipio, descrip_ba_tot_nu_5antes, FUN=c(mean,sd,median), na.rm=T )    #Descriptivos de esos anos. 
+
+
+descrip_ba_tot_nu_5despues <- cede_tierras_44 %>% 
+  filter(ano>'2008-04-27') #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_ba_tot_nu_5despues <- summaryBy(ba_tot_nu ~ municipio, descrip_ba_tot_nu_5despues, FUN=c(mean,sd,median), na.rm=T )    #Descriptivos de esos anos.
+diff_ba_tot_nu_mean <- descrip_ba_tot_nu_5antes$ba_tot_nu.mean -descrip_ba_tot_nu_5despues$ba_tot_nu.mean
+diff_ba_tot_nu_sd <- descrip_ba_tot_nu_5antes$ba_tot_nu.sd -descrip_ba_tot_nu_5despues$ba_tot_nu.sd
+diff_ba_tot_nu_median <- descrip_ba_tot_nu_5antes$ba_tot_nu.median -descrip_ba_tot_nu_5despues$ba_tot_nu.median#Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+```
+
+
+Valor de creditos totales:**ba_tot_vr**
+<br>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+
+descrip_ba_tot_vr <- summaryBy(ba_tot_vr ~ municipio, cede_tierras_44, FUN=c(mean,sd,median), na.rm=T )    #Codigo para hacer descriptivos de los homicidios (collapse por anos)
+
+descrip_ba_tot_vr %<>% arrange(municipio)
+
+descrip_ba_tot_vr_5antes <- cede_tierras_44 %>% 
+  filter(ano<'2006-04-27') #Codigo para seleccionar solamente las variables que sean menores al ano 2008
+descrip_ba_tot_vr_5antes <- summaryBy(ba_tot_vr ~ municipio, descrip_ba_tot_vr_5antes, FUN=c(mean,sd,median), na.rm=T )    #Descriptivos de esos anos. 
+
+
+descrip_ba_tot_vr_5despues <- cede_tierras_44 %>% 
+  filter(ano>'2008-04-27') #Codigo para seleccionar solamente las variables que sean mayores al ano 2008.
+descrip_ba_tot_vr_5despues <- summaryBy(ba_tot_vr ~ municipio, descrip_ba_tot_vr_5despues, FUN=c(mean,sd,median), na.rm=T )    #Descriptivos de esos anos. 
+
+diff_ba_tot_vr_mean <- descrip_ba_tot_vr_5antes$ba_tot_vr.mean -descrip_ba_tot_vr_5despues$ba_tot_vr.mean
+diff_ba_tot_vr_sd <- descrip_ba_tot_vr_5antes$ba_tot_vr.sd -descrip_ba_tot_vr_5despues$ba_tot_vr.sd 
+diff_ba_tot_vr_median <- descrip_ba_tot_vr_5antes$ba_tot_vr.median -descrip_ba_tot_vr_5despues$ba_tot_vr.median #Sacar diferencias entre esos estadisticos. Un valor negativo es que hay mas ataques en los ultimos 5 anos.
+
+
+
+```
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Vamos a hacerlo primero con el indice agregado por anos.
+names_acdi <- acdi_imr$Municipio_imr
+
+acdi_imr <- acdi_imr %>% arrange(Municipio_imr)
+
+
+par_descrip_nuf_peq <- descrip_nuf_peq[descrip_nuf_peq$municipio %in% names_acdi,]
+par_descrip_nuf_peq <- par_descrip_nuf_peq %>% arrange(municipio)
+par_descrip_nuf_medianos <- descrip_nuf_medianos[descrip_nuf_medianos$municipio %in% names_acdi,]
+par_descrip_nuf_medianos <- par_descrip_nuf_medianos %>% arrange(municipio)
+par_descrip_nuf_grandes <- descrip_nuf_grandes[descrip_nuf_grandes$municipio %in% names_acdi,]
+par_descrip_nuf_grandes <- par_descrip_nuf_grandes %>% arrange(municipio)
+par_descrip_vrf_peq <- descrip_vrf_peq[descrip_vrf_peq$municipio %in% names_acdi,]
+par_descrip_vrf_peq <- par_descrip_vrf_peq %>% arrange(municipio)
+par_descrip_vrf_medianos <- descrip_vrf_medianos[descrip_vrf_medianos$municipio %in% names_acdi,]
+par_descrip_vrf_medianos <- par_descrip_vrf_medianos %>% arrange(municipio)
+par_descrip_vrf_grandes <- descrip_vrf_grandes[descrip_vrf_grandes$municipio %in% names_acdi,]
+par_descrip_vrf_grandes <- par_descrip_vrf_grandes %>% arrange(municipio)
+
+
+#Hay algunas variables que tienen valores de infinito. Vamos a reemplazarlos por valores perdidos
+
+
+par_descrip_nuf_peq$nuf_peq.mean[which(!is.finite(par_descrip_nuf_peq$nuf_peq.mean))] <- NA 
+par_descrip_nuf_medianos$nuf_medianos.mean[which(!is.finite(par_descrip_nuf_medianos$nuf_medianos.mean))] <- NA 
+par_descrip_nuf_grandes$nuf_grandes.mean[which(!is.finite(par_descrip_nuf_grandes$nuf_grandes.mean))] <- NA 
+
+par_descrip_vrf_peq$vrf_peq.mean[which(!is.finite(par_descrip_vrf_peq$vrf_peq.mean))] <- NA 
+par_descrip_vrf_medianos$vrf_medianos.mean[which(!is.finite(par_descrip_vrf_medianos$vrf_medianos.mean))] <- NA 
+par_descrip_vrf_grandes$vrf_grandes.mean[which(!is.finite(par_descrip_vrf_grandes$vrf_grandes.mean))] <- NA 
+#Vamos a hacerlo primero con el indice agregado por anos.  
+
+par_diff_nuf_peq <- descrip_nuf_peq_5antes[descrip_nuf_peq_5antes$municipio %in% names_acdi,]$nuf_peq.mean -descrip_nuf_peq_5despues[descrip_nuf_peq_5despues$municipio %in% names_acdi,]$nuf_peq.mean
+
+par_diff_nuf_medianos <- descrip_nuf_medianos_5antes[descrip_nuf_medianos_5antes$municipio %in% names_acdi,]$nuf_medianos.mean - descrip_nuf_medianos_5despues[descrip_nuf_medianos_5despues$municipio %in% names_acdi,]$nuf_medianos.mean
+par_diff_nuf_grandes <- descrip_nuf_grandes_5antes[descrip_nuf_grandes_5antes$municipio %in% names_acdi,]$nuf_grandes.mean-descrip_nuf_grandes_5despues[descrip_nuf_grandes_5despues$municipio %in% names_acdi,]$nuf_grandes.mean
+par_diff_vrf_peq <- descrip_vrf_peq_5antes[descrip_vrf_peq_5antes$municipio %in% names_acdi,]$vrf_peq.mean -descrip_vrf_peq_5despues[descrip_vrf_peq_5despues$municipio %in% names_acdi,]$vrf_peq.mean
+
+par_diff_vrf_medianos <- descrip_vrf_medianos_5antes[descrip_vrf_medianos_5antes$municipio %in% names_acdi,]$vrf_medianos.mean - descrip_vrf_medianos_5despues[descrip_vrf_medianos_5despues$municipio %in% names_acdi,]$vrf_medianos.mean
+par_diff_vrf_grandes <- descrip_vrf_grandes_5antes[descrip_vrf_grandes_5antes$municipio %in% names_acdi,]$vrf_grandes.mean-descrip_vrf_grandes_5despues[descrip_vrf_grandes_5despues$municipio %in% names_acdi,]$vrf_grandes.mean
+
+
+
+par_diff_nuf_peq[which(!is.finite(par_diff_nuf_peq))] <- NA 
+par_diff_nuf_medianos[which(!is.finite(par_diff_nuf_medianos))] <- NA
+par_diff_nuf_grandes[which(!is.finite(par_diff_nuf_grandes))] <- NA
+par_diff_vrf_peq[which(!is.finite(par_diff_vrf_peq))] <- NA 
+par_diff_vrf_medianos[which(!is.finite(par_diff_vrf_medianos))] <- NA
+par_diff_vrf_grandes[which(!is.finite(par_diff_vrf_grandes))] <- NA
+```
+
+
+
+#Crear base de datos para Stata
+
+```{r}
+base_stata <- as.data.frame(cbind(descrip_homi,
+                                  diff_homi_mean,
+                                  diff_homi_median,
+                                  diff_homi_sd,
+                                  descrip_ataques[-1],
+                                  diff_ataques_mean,
+                                  diff_ataques_median,
+                                  diff_ataques_sd,
+                                  descrip_secuestro[-1],
+                                  diff_secuestro_mean,
+                                  diff_secuestro_median,
+                                  diff_secuestro_sd,
+                                  descrip_secuestrop[-1],
+                                  diff_secuestrop_mean,
+                                  diff_secuestrop_median,
+                                  diff_secuestrop_sd,
+                                  descrip_desmovilizados[-1],
+                                  diff_desmovilizados_mean,
+                                  diff_desmovilizados_median,
+                                  diff_desmovilizados_sd,
+                                  descrip_desemp_fisc[-1],
+                                  diff_desemp_fisc_mean,
+                                  diff_desemp_fisc_median,
+                                  diff_desemp_fisc_sd,
+                                  descrip_inv_total_cienmil[-1],
+                                  diff_inv_total_cienmil_mean,
+                                  diff_inv_total_cienmil_median,
+                                  diff_inv_total_cienmil_sd,
+                                  descrip_desemp_int[-1],
+                                  diff_desemp_int_mean,
+                                  diff_desemp_int_median,
+                                  diff_desemp_int_sd,
+                                  descrip_inv_fortinst_cienmil[-1],
+                                  diff_inv_fortinst_cienmil_mean,
+                                  diff_inv_fortinst_cienmil_median,
+                                  diff_inv_fortinst_cienmil_sd,
+                                  descrip_IGA_total[-1],
+                                  diff_IGA_total_mean,
+                                  diff_IGA_total_median,
+                                  diff_IGA_total_sd,
+                                  descrip_TMI[-1],
+                                  diff_TMI_mean,
+                                  diff_TMI_median,
+                                  diff_TMI_sd,
+                                  descrip_nbi[-1],
+                                  diff_nbi_mean,
+                                  diff_nbi_median,
+                                  diff_nbi_sd,
+                                  descrip_prestadores_cienmil[-1],
+                                  diff_prestadores_cienmil_mean,
+                                  diff_prestadores_cienmil_median,
+                                  diff_prestadores_cienmil_sd,
+                                  descrip_subsidiado_cienmil[-1],
+                                  diff_subsidiado_cienmil_mean,
+                                  diff_subsidiado_cienmil_median,
+                                  diff_subsidiado_cienmil_sd,
+                                  descrip_contributivo_cienmil[-1],
+                                  diff_contributivo_cienmil_mean,
+                                  diff_contributivo_cienmil_median,
+                                  diff_contributivo_cienmil_sd,
+                                  descrip_alumnos_cienmil[-1],
+                                  diff_alumnos_cienmil_mean,
+                                  diff_alumnos_cienmil_median,
+                                  diff_alumnos_cienmil_sd,
+                                  descrip_estudiantes_proy_cienmil[-1],
+                                  diff_estudiantes_proy_cienmil_mean,
+                                  diff_estudiantes_proy_cienmil_median,
+                                  diff_estudiantes_proy_cienmil_sd,
+                                  descrip_phds_cienmil[-1],
+                                  diff_phds_cienmil_mean,
+                                  diff_phds_cienmil_median,
+                                  diff_phds_cienmil_sd,
+                                  descrip_t_establ[-1],
+                                  diff_t_establ_mean,
+                                  diff_t_establ_median,
+                                  diff_t_establ_sd,
+                                  descrip_nuf_peq[-1],
+                                  diff_nuf_peq_mean,
+                                  diff_nuf_peq_median,
+                                  diff_nuf_peq_sd,
+                                  descrip_nuf_medianos[-1],
+                                  diff_nuf_medianos_mean,
+                                  diff_nuf_medianos_median,
+                                  diff_nuf_medianos_sd,
+                                  descrip_nuf_grandes[-1],
+                                  diff_nuf_grandes_mean,
+                                  diff_nuf_grandes_median,
+                                  diff_nuf_grandes_sd,
+                                  descrip_vrf_peq[-1],
+                                  diff_vrf_peq_mean,
+                                  diff_vrf_peq_median,
+                                  diff_vrf_peq_sd,
+                                  descrip_vrf_medianos[-1],
+                                  diff_vrf_medianos_mean,
+                                  diff_vrf_medianos_median,
+                                  diff_vrf_medianos_sd,
+                                  descrip_vrf_grandes[-1],
+                                  diff_vrf_grandes_mean,
+                                  diff_vrf_grandes_median,
+                                  diff_vrf_grandes_sd,
+                                  descrip_ba_tot_nu[-1],
+                                  diff_ba_tot_nu_mean,
+                                  diff_ba_tot_nu_median,
+                                  diff_ba_tot_nu_sd,
+                                  descrip_ba_tot_vr[-1],
+                                  diff_ba_tot_vr_mean,
+                                  diff_ba_tot_vr_median,
+                                  diff_ba_tot_vr_sd,
+                                  reconciliacion_agreg[-1],
+                                  disculpas_agreg[-1],
+                                  violencia_agreg[-1],
+                                  rencor_agreg[-1],
+                                  memoria_agreg[-1],
+                                  memoria_expectativa_agreg[-1],
+                                  confianza_vec_agreg[-1],
+                                  confianza_col_agreg[-1],
+                                  armonia_col_agreg[-1],
+                                  buena_voluntad_agreg[-1],
+                                  pertenencia_agreg[-1]
+                                  ))
+
+#Exportar base de datos
+
+library(foreign)
+write.dta(base_stata, "C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata.dta")
+
+```
+
+
+
+
+
+

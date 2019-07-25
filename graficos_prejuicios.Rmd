@@ -1,0 +1,1450 @@
+---
+title: 'Graficos prejuicios'
+author: "Felipe Gonzalez-Arango"
+date: "22 de julio de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+Buenos dias. 
+Este documento pretende ser una primera aproximacion al posible uso de la encuesta de ACDIVOCA y del Panel Municipal para el evento del 22 de agosto. 
+
+Este documento presenta unicamente algunos de los hallazgos que, a nuestro juicio, son los mas relevantes. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/ACDI-VOCA/")
+```
+
+#Setup
+Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
+
+```{r message=FALSE, warning=FALSE}
+#ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
+
+
+#Set Working Directory
+setwd("C:/Users/felig/ACDI-VOCA/")
+rm(list=ls())
+
+#Importar base de datos donde esta todo
+library(haven)
+library(readstata13)
+library(tidyr)
+library(plyr)
+library(dplyr)
+library(gridExtra)
+library(ggplot2)
+library(forcats)
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+base_stata <- read_dta("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata.dta", encoding="UTF-8")
+
+```
+
+
+En esta presentacion se van a presentar los hallazgos mas relevantes para el evento ACDIVOCA. A continuacion se presentan los graficos que podrian romper algunos prejuicios o actitudes negativas. Esto dependiendo de como lo definamos.
+
+
+# Homicidios (haber sufrido homicidios) y Reconciliacion
+
+El item de reconciliacion es el siguiente:
+
+<center>
+![Items Reconciliacion](C:/Users/felig/ACDI-VOCA/Reconciliacion.JPG)
+</center>
+
+Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 8 a 40 y, a mayor indice de reconciliacion, mas dispuesta esta el municipio a buscar la reconciliacion
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta homicidios y baja homicidios por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="reconciliacion_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
+                             "Alta homicidios","Baja homicidios"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="reconciliacion_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="reconciliacion_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean==max(homi_cienmil_mean),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean==min(homi_cienmil_mean),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
+                             "Alta homicidios","Baja homicidios"))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  t.test(reconciliacion_mean ~ mun_homicidio, .)
+```
+
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  t.test(reconciliacion_mean ~ mun_homicidio, .)
+```
+
+
+
+
+
+# Homicidios (haber sufrido homicidios) y Disculpas
+
+El item de disculpas es el siguiente:
+
+¿Usted cuando siente que ha agredido a alguien pide disculpas a la persona que ofendio?
+
+Donde 1 es Nunca
+y donde 5 es Siempre
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta homicidios y baja homicidios por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="disculpas_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
+                             "Alta homicidios","Baja homicidios"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="disculpas_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="disculpas_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean==max(homi_cienmil_mean),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean==min(homi_cienmil_mean),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
+                             "Alta homicidios","Baja homicidios"))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  t.test(disculpas_mean ~ mun_homicidio, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  t.test(disculpas_mean ~ mun_homicidio, .)
+```
+
+
+
+
+
+# Homicidios (haber sufrido homicidios) y Confianza en Colombianos
+
+Este item pregunta: ¿Usted en cuantos colombianos confia? Y responden de 1 a 5 en donde 1 es "En ninguno" y 5 es "En todos" 
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta homicidios y baja homicidios por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="confianza_col_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
+                             "Alta homicidios","Baja homicidios"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="confianza_col_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="confianza_col_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean==max(homi_cienmil_mean),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean==min(homi_cienmil_mean),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
+                             "Alta homicidios","Baja homicidios"))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  t.test(confianza_col_mean ~ mun_homicidio, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  t.test(confianza_col_mean ~ mun_homicidio, .)
+```
+
+
+
+
+
+
+
+# Violentados (haber sufrido ataques a la poblacion civil) y Reconciliacion
+
+El item de reconciliacion es el siguiente:
+
+<center>
+![Items Reconciliacion](C:/Users/felig/ACDI-VOCA/Reconciliacion.JPG)
+</center>
+
+Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 8 a 40 y, a mayor indice de reconciliacion, mas dispuesta esta el municipio a buscar la reconciliacion
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="reconciliacion_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_violento=(ifelse(Ataques_Pobl_Civil_mean>mean(Ataques_Pobl_Civil_mean),
+                             "Violentados","No Violentados"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_violento)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="reconciliacion_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_violento=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean>quantile(Ataques_Pobl_Civil_mean, 0.75),
+                         "Violentados",
+                         ifelse(Ataques_Pobl_Civil_mean<quantile(Ataques_Pobl_Civil_mean, 0.25),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_violento)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="reconciliacion_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_violento=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean==max(Ataques_Pobl_Civil_mean),
+                         "Violentados",
+                         ifelse(Ataques_Pobl_Civil_mean==min(Ataques_Pobl_Civil_mean),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_violento)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_violento=(ifelse(Ataques_Pobl_Civil_mean>mean(Ataques_Pobl_Civil_mean),
+                             "Violentados","No Violentados"))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  t.test(reconciliacion_mean ~ mun_violento, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_violento=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean>quantile(Ataques_Pobl_Civil_mean, 0.75),
+                         "Violentados",
+                         ifelse(Ataques_Pobl_Civil_mean<quantile(Ataques_Pobl_Civil_mean, 0.25),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  t.test(reconciliacion_mean ~ mun_violento, .)
+```
+
+
+
+
+
+# Violentados (haber sufrido ataques a la poblacion civil) y Disculpas
+
+El item de disculpas es el siguiente:
+
+¿Usted cuando siente que ha agredido a alguien pide disculpas a la persona que ofendio?
+
+Donde 1 es Nunca
+y donde 5 es Siempre
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="disculpas_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_violento=(ifelse(Ataques_Pobl_Civil_mean>mean(Ataques_Pobl_Civil_mean),
+                             "Violentados","No Violentados"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_violento)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="disculpas_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_violento=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean>quantile(Ataques_Pobl_Civil_mean, 0.75),
+                         "Violentados",
+                         ifelse(Ataques_Pobl_Civil_mean<quantile(Ataques_Pobl_Civil_mean, 0.25),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_violento)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="disculpas_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_violento=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean==max(Ataques_Pobl_Civil_mean),
+                         "Violentados",
+                         ifelse(Ataques_Pobl_Civil_mean==min(Ataques_Pobl_Civil_mean),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_violento)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_violento=(ifelse(Ataques_Pobl_Civil_mean>mean(Ataques_Pobl_Civil_mean),
+                             "Violentados","No Violentados"))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  t.test(disculpas_mean ~ mun_violento, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_violento=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean>quantile(Ataques_Pobl_Civil_mean, 0.75),
+                         "Violentados",
+                         ifelse(Ataques_Pobl_Civil_mean<quantile(Ataques_Pobl_Civil_mean, 0.25),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  t.test(disculpas_mean ~ mun_violento, .)
+```
+
+
+
+
+
+# Violentados (haber sufrido ataques a la poblacion civil) y medicion de metodos de dialogo de violencia
+
+El item de violencia es el siguiente:
+
+<center>
+![Items Violencia](C:/Users/felig/ACDI-VOCA/Violencia.JPG)
+</center>
+
+Es la suma de esos items. El segundo tiene la escala invertida. Asi, el indice va de 2 a 10 y, a mayor indice de violencia, mas metodos de dialogo violentos tiene el municipio a buscar la reconciliacion
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="violencia_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_violento=(ifelse(Ataques_Pobl_Civil_mean>mean(Ataques_Pobl_Civil_mean),
+                             "Violentados","No Violentados"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_violento)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="violencia_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_violento=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean>quantile(Ataques_Pobl_Civil_mean, 0.75),
+                         "Violentados",
+                         ifelse(Ataques_Pobl_Civil_mean<quantile(Ataques_Pobl_Civil_mean, 0.25),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_violento)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="violencia_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_violento=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean==max(Ataques_Pobl_Civil_mean),
+                         "Violentados",
+                         ifelse(Ataques_Pobl_Civil_mean==min(Ataques_Pobl_Civil_mean),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_violento)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_violento=(ifelse(Ataques_Pobl_Civil_mean>mean(Ataques_Pobl_Civil_mean),
+                             "Violentados","No Violentados"))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  t.test(violencia_mean ~ mun_violento, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_violento=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean>quantile(Ataques_Pobl_Civil_mean, 0.75),
+                         "Violentados",
+                         ifelse(Ataques_Pobl_Civil_mean<quantile(Ataques_Pobl_Civil_mean, 0.25),
+                         "No Violentados",
+                         NA))))) %>% 
+    filter(mun_violento!=is.na(mun_violento)) %>% 
+  t.test(violencia_mean ~ mun_violento, .)
+```
+
+
+
+
+
+
+#Desmovilizados (presencia de desmovilizados) y Reconciliacion
+
+El item de reconciliacion es el siguiente:
+
+<center>
+![Items Reconciliacion](C:/Users/felig/ACDI-VOCA/Reconciliacion.JPG)
+</center>
+
+Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 8 a 40 y, a mayor indice de reconciliacion, mas dispuesta esta el municipio a buscar la reconciliacion
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="reconciliacion_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_desmovilizado=(ifelse(desmovilizados_cienmil_mean>mean(desmovilizados_cienmil_mean),
+                             "Alta Desmovilizacion","Baja Desmovilizacion"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_desmovilizado)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="reconciliacion_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_desmovilizado=as.factor((ifelse
+                       (desmovilizados_cienmil_mean>quantile(desmovilizados_cienmil_mean, 0.75),
+                         "Alta Desmovilizacion",
+                         ifelse(desmovilizados_cienmil_mean<quantile(desmovilizados_cienmil_mean, 0.25),
+                         "Baja Desmovilizacion",
+                         NA))))) %>% 
+    filter(mun_desmovilizado!=is.na(mun_desmovilizado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_desmovilizado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="reconciliacion_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_desmovilizado=as.factor((ifelse
+                       (desmovilizados_cienmil_mean==max(desmovilizados_cienmil_mean),
+                         "Alta Desmovilizacion",
+                         ifelse(desmovilizados_cienmil_mean==min(desmovilizados_cienmil_mean),
+                         "Baja Desmovilizacion",
+                         NA))))) %>% 
+    filter(mun_desmovilizado!=is.na(mun_desmovilizado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_desmovilizado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_desmovilizado=(ifelse(desmovilizados_cienmil_mean>mean(desmovilizados_cienmil_mean),
+                             "Alta Desmovilizacion","Baja Desmovilizacion"))) %>% 
+    filter(mun_desmovilizado!=is.na(mun_desmovilizado)) %>% 
+  t.test(reconciliacion_mean ~ mun_desmovilizado, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_desmovilizado=as.factor((ifelse
+                       (desmovilizados_cienmil_mean>quantile(desmovilizados_cienmil_mean, 0.75),
+                         "Alta Desmovilizacion",
+                         ifelse(desmovilizados_cienmil_mean<quantile(desmovilizados_cienmil_mean, 0.25),
+                         "Baja Desmovilizacion",
+                         NA))))) %>% 
+    filter(mun_desmovilizado!=is.na(mun_desmovilizado)) %>% 
+  t.test(reconciliacion_mean ~ mun_desmovilizado, .)
+```
+
+
+
+
+
+
+#Pobres (NBI bajo o alto) y Reconciliacion
+
+El item de reconciliacion es el siguiente:
+
+<center>
+![Items Reconciliacion](C:/Users/felig/ACDI-VOCA/Reconciliacion.JPG)
+</center>
+
+Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 8 a 40 y, a mayor indice de reconciliacion, mas dispuesta esta el municipio a buscar la reconciliacion
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="reconciliacion_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=(ifelse(nbi_mean>mean(nbi_mean),
+                             "Alta Pobreza","Baja Pobreza"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="reconciliacion_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="reconciliacion_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean==max(nbi_mean),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean==min(nbi_mean),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_pobre=(ifelse(nbi_mean>mean(nbi_mean),
+                             "Alta Pobreza","Baja Pobreza"))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  t.test(reconciliacion_mean ~ mun_pobre, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  t.test(reconciliacion_mean ~ mun_pobre, .)
+```
+
+
+
+
+
+#Pobres (NBI bajo o alto) y medicion de metidos de dialogo de violencia
+
+El item de violencia es el siguiente:
+
+<center>
+![Items Violencia](C:/Users/felig/ACDI-VOCA/Violencia.JPG)
+</center>
+
+Es la suma de esos items. El segundo tiene la escala invertida. Asi, el indice va de 2 a 10 y, a mayor indice de violencia, mas metodos de dialogo violentos tiene el municipio a buscar la reconciliacion
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta violencia y baja violencia por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="violencia_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=(ifelse(nbi_mean>mean(nbi_mean),
+                             "Alta Pobreza","Baja Pobreza"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="violencia_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="violencia_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean==max(nbi_mean),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean==min(nbi_mean),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_pobre=(ifelse(nbi_mean>mean(nbi_mean),
+                             "Alta Pobreza","Baja Pobreza"))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  t.test(violencia_mean ~ mun_pobre, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  t.test(violencia_mean ~ mun_pobre, .)
+```
+
+
+#Pobres (NBI bajo o alto) y Confianza en Colombianos
+
+Este item pregunta: ¿Usted en cuantos colombianos confia? Y responden de 1 a 5 en donde 1 es "En ninguno" y 5 es "En todos" 
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta confianza_col y baja confianza_col por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="confianza_col_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=(ifelse(nbi_mean>mean(nbi_mean),
+                             "Alta Pobreza","Baja Pobreza"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="confianza_col_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="confianza_col_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean==max(nbi_mean),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean==min(nbi_mean),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_pobre=(ifelse(nbi_mean>mean(nbi_mean),
+                             "Alta Pobreza","Baja Pobreza"))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  t.test(confianza_col_mean ~ mun_pobre, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  t.test(confianza_col_mean ~ mun_pobre, .)
+```
+
+
+
+#Pobres (NBI bajo o alto) y Armonia
+
+
+Este item pregunta: ¿Usted piensa que en Colombia hay armonia o entendimiento entre las personas? Y responden de 1 a 5 en donde 1 es "Totalmente en desacuerdo" y 5 es "Totalmente de acuerdo" 
+
+##Graficos
+
+###Separandolos por media
+
+Aqui se separan los municipios en aquellos que tienen alta armonia_col y baja armonia_col por la media. Los que estan por encima de la media y los que estan por debajo. 
+```{r}
+
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="armonia_col_mean")){
+   
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=(ifelse(nbi_mean>mean(nbi_mean),
+                             "Alta Pobreza","Baja Pobreza"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+###Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="armonia_col_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+###Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in which(colnames(x)=="armonia_col_mean")){
+
+  plot <- 
+    
+    base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean==max(nbi_mean),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean==min(nbi_mean),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+##Prueba t para medir significancia separando por media
+
+```{r}
+ base_stata %>% 
+  mutate(mun_pobre=(ifelse(nbi_mean>mean(nbi_mean),
+                             "Alta Pobreza","Baja Pobreza"))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  t.test(armonia_col_mean ~ mun_pobre, .)
+```
+
+##Prueba t para medir significancia separando por cuartiles
+
+```{r}
+  base_stata %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta Pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja Pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  t.test(armonia_col_mean ~ mun_pobre, .)
+```
+
+
+
+
+
+
+

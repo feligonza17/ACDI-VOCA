@@ -2329,51 +2329,51 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 <span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>)</code></pre></div>
 <pre><code>##                       Homicidios Ataques_Pobl_Civil Desmovilizados
-## Homicidios                  1.00              -0.27           0.54
-## Ataques_Pobl_Civil         -0.27               1.00          -0.56
-## Desmovilizados              0.54              -0.56           1.00
-## Secuestros                  0.66              -0.15           0.67
-## Secuestros_Politicos        0.34              -0.11           0.52
-## Indice_reconciliacion       0.16              -0.37           0.28
+## Homicidios                     1                NaN            NaN
+## Ataques_Pobl_Civil           NaN                  1            NaN
+## Desmovilizados               NaN                NaN              1
+## Secuestros                   NaN                NaN            NaN
+## Secuestros_Politicos         NaN                NaN            NaN
+## Indice_reconciliacion        NaN                NaN            NaN
 ##                       Secuestros Secuestros_Politicos
-## Homicidios                  0.66                 0.34
-## Ataques_Pobl_Civil         -0.15                -0.11
-## Desmovilizados              0.67                 0.52
-## Secuestros                  1.00                 0.44
-## Secuestros_Politicos        0.44                 1.00
-## Indice_reconciliacion       0.13                 0.17
+## Homicidios                   NaN                  NaN
+## Ataques_Pobl_Civil           NaN                  NaN
+## Desmovilizados               NaN                  NaN
+## Secuestros                     1                  NaN
+## Secuestros_Politicos         NaN                    1
+## Indice_reconciliacion        NaN                  NaN
 ##                       Indice_reconciliacion
-## Homicidios                             0.16
-## Ataques_Pobl_Civil                    -0.37
-## Desmovilizados                         0.28
-## Secuestros                             0.13
-## Secuestros_Politicos                   0.17
-## Indice_reconciliacion                  1.00
+## Homicidios                              NaN
+## Ataques_Pobl_Civil                      NaN
+## Desmovilizados                          NaN
+## Secuestros                              NaN
+## Secuestros_Politicos                    NaN
+## Indice_reconciliacion                     1
 ## 
 ## n= 22 
 ## 
 ## 
 ## P
 ##                       Homicidios Ataques_Pobl_Civil Desmovilizados
-## Homicidios                       0.2195             0.0100        
-## Ataques_Pobl_Civil    0.2195                        0.0073        
-## Desmovilizados        0.0100     0.0073                           
-## Secuestros            0.0009     0.5161             0.0006        
-## Secuestros_Politicos  0.1188     0.6381             0.0139        
-## Indice_reconciliacion 0.4650     0.0871             0.2078        
+## Homicidios                                                        
+## Ataques_Pobl_Civil                                                
+## Desmovilizados                                                    
+## Secuestros                                                        
+## Secuestros_Politicos                                              
+## Indice_reconciliacion                                             
 ##                       Secuestros Secuestros_Politicos
-## Homicidios            0.0009     0.1188              
-## Ataques_Pobl_Civil    0.5161     0.6381              
-## Desmovilizados        0.0006     0.0139              
-## Secuestros                       0.0404              
-## Secuestros_Politicos  0.0404                         
-## Indice_reconciliacion 0.5663     0.4593              
+## Homicidios                                           
+## Ataques_Pobl_Civil                                   
+## Desmovilizados                                       
+## Secuestros                                           
+## Secuestros_Politicos                                 
+## Indice_reconciliacion                                
 ##                       Indice_reconciliacion
-## Homicidios            0.4650               
-## Ataques_Pobl_Civil    0.0871               
-## Desmovilizados        0.2078               
-## Secuestros            0.5663               
-## Secuestros_Politicos  0.4593               
+## Homicidios                                 
+## Ataques_Pobl_Civil                         
+## Desmovilizados                             
+## Secuestros                                 
+## Secuestros_Politicos                       
 ## Indice_reconciliacion</code></pre>
 </div>
 <div id="regresion-lineal-2" class="section level2">
@@ -2388,22 +2388,20 @@ regViol_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice_reco
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.125599 -0.044079  0.004347  0.033802  0.141386 
+## -0.132155 -0.068432 -0.000343  0.062618  0.135366 
 ## 
-## Coefficients:
-##                        Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)           0.5343093  0.0373021  14.324 1.52e-10 ***
-## Homicidios            0.0000921  0.0058682   0.016    0.988    
-## Ataques_Pobl_Civil   -0.0045384  0.0033096  -1.371    0.189    
-## Desmovilizados        0.0084457  0.0099950   0.845    0.411    
-## Secuestros           -0.0465157  0.0620595  -0.750    0.464    
-## Secuestros_Politicos  0.1682399  0.1790557   0.940    0.361    
+## Coefficients: (5 not defined because of singularities)
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           0.52299    0.01702   30.73   &lt;2e-16 ***
+## Homicidios                 NA         NA      NA       NA    
+## Ataques_Pobl_Civil         NA         NA      NA       NA    
+## Desmovilizados             NA         NA      NA       NA    
+## Secuestros                 NA         NA      NA       NA    
+## Secuestros_Politicos       NA         NA      NA       NA    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.07828 on 16 degrees of freedom
-## Multiple R-squared:  0.2671, Adjusted R-squared:  0.038 
-## F-statistic: 1.166 on 5 and 16 DF,  p-value: 0.368</code></pre>
+## Residual standard error: 0.07981 on 21 degrees of freedom</code></pre>
 </div>
 <div id="variables-con-diferencias-deltas-delta-con-indice-par" class="section level2">
 <h2><span class="header-section-number">4.4</span> Variables con diferencias (Deltas <span class="math inline">\(\Delta\)</span>) con indice PAR</h2>
@@ -2442,51 +2440,51 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 <span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>)</code></pre></div>
 <pre><code>##                       Homicidios Ataques_Pobl_Civil Desmovilizados
-## Homicidios                  1.00              -0.06          -0.44
-## Ataques_Pobl_Civil         -0.06               1.00           0.20
-## Desmovilizados             -0.44               0.20           1.00
-## Secuestros                  0.38              -0.34          -0.52
-## Secuestros_Politicos        0.05               0.44           0.11
-## Indice_reconciliacion       0.28              -0.36          -0.30
+## Homicidios                     1                NaN            NaN
+## Ataques_Pobl_Civil           NaN                  1            NaN
+## Desmovilizados               NaN                NaN              1
+## Secuestros                   NaN                NaN            NaN
+## Secuestros_Politicos         NaN                NaN            NaN
+## Indice_reconciliacion        NaN                NaN            NaN
 ##                       Secuestros Secuestros_Politicos
-## Homicidios                  0.38                 0.05
-## Ataques_Pobl_Civil         -0.34                 0.44
-## Desmovilizados             -0.52                 0.11
-## Secuestros                  1.00                -0.13
-## Secuestros_Politicos       -0.13                 1.00
-## Indice_reconciliacion       0.46                 0.10
+## Homicidios                   NaN                  NaN
+## Ataques_Pobl_Civil           NaN                  NaN
+## Desmovilizados               NaN                  NaN
+## Secuestros                     1                  NaN
+## Secuestros_Politicos         NaN                    1
+## Indice_reconciliacion        NaN                  NaN
 ##                       Indice_reconciliacion
-## Homicidios                             0.28
-## Ataques_Pobl_Civil                    -0.36
-## Desmovilizados                        -0.30
-## Secuestros                             0.46
-## Secuestros_Politicos                   0.10
-## Indice_reconciliacion                  1.00
+## Homicidios                              NaN
+## Ataques_Pobl_Civil                      NaN
+## Desmovilizados                          NaN
+## Secuestros                              NaN
+## Secuestros_Politicos                    NaN
+## Indice_reconciliacion                     1
 ## 
 ## n= 22 
 ## 
 ## 
 ## P
 ##                       Homicidios Ataques_Pobl_Civil Desmovilizados
-## Homicidios                       0.7933             0.0399        
-## Ataques_Pobl_Civil    0.7933                        0.3822        
-## Desmovilizados        0.0399     0.3822                           
-## Secuestros            0.0772     0.1197             0.0129        
-## Secuestros_Politicos  0.8211     0.0400             0.6190        
-## Indice_reconciliacion 0.2002     0.1036             0.1769        
+## Homicidios                                                        
+## Ataques_Pobl_Civil                                                
+## Desmovilizados                                                    
+## Secuestros                                                        
+## Secuestros_Politicos                                              
+## Indice_reconciliacion                                             
 ##                       Secuestros Secuestros_Politicos
-## Homicidios            0.0772     0.8211              
-## Ataques_Pobl_Civil    0.1197     0.0400              
-## Desmovilizados        0.0129     0.6190              
-## Secuestros                       0.5751              
-## Secuestros_Politicos  0.5751                         
-## Indice_reconciliacion 0.0321     0.6523              
+## Homicidios                                           
+## Ataques_Pobl_Civil                                   
+## Desmovilizados                                       
+## Secuestros                                           
+## Secuestros_Politicos                                 
+## Indice_reconciliacion                                
 ##                       Indice_reconciliacion
-## Homicidios            0.2002               
-## Ataques_Pobl_Civil    0.1036               
-## Desmovilizados        0.1769               
-## Secuestros            0.0321               
-## Secuestros_Politicos  0.6523               
+## Homicidios                                 
+## Ataques_Pobl_Civil                         
+## Desmovilizados                             
+## Secuestros                                 
+## Secuestros_Politicos                       
 ## Indice_reconciliacion</code></pre>
 <p>Aqui hay un resultado significativo. El indice de reconciliacion tiene un coeficiente de 0.46 (p&lt;0.05) con el numero de secuestros por cien mil habitantes.</p>
 </div>
@@ -2501,23 +2499,21 @@ regViol_diff_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice
 ##     Desmovilizados + Secuestros + Secuestros_Politicos, data = dfcorrelaciones)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.13699 -0.03990  0.00517  0.03550  0.14049 
+##       Min        1Q    Median        3Q       Max 
+## -0.132155 -0.068432 -0.000343  0.062618  0.135366 
 ## 
-## Coefficients:
-##                        Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)           4.988e-01  2.310e-02  21.590 2.93e-13 ***
-## Homicidios           -5.909e-05  3.638e-03  -0.016    0.987    
-## Ataques_Pobl_Civil   -3.797e-03  2.932e-03  -1.295    0.214    
-## Desmovilizados       -2.005e-03  4.157e-03  -0.482    0.636    
-## Secuestros            4.099e-02  3.649e-02   1.123    0.278    
-## Secuestros_Politicos  3.265e-01  1.910e-01   1.709    0.107    
+## Coefficients: (5 not defined because of singularities)
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           0.52299    0.01702   30.73   &lt;2e-16 ***
+## Homicidios                 NA         NA      NA       NA    
+## Ataques_Pobl_Civil         NA         NA      NA       NA    
+## Desmovilizados             NA         NA      NA       NA    
+## Secuestros                 NA         NA      NA       NA    
+## Secuestros_Politicos       NA         NA      NA       NA    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.07313 on 16 degrees of freedom
-## Multiple R-squared:  0.3604, Adjusted R-squared:  0.1605 
-## F-statistic: 1.803 on 5 and 16 DF,  p-value: 0.1692</code></pre>
+## Residual standard error: 0.07981 on 21 degrees of freedom</code></pre>
 </div>
 </div>
 

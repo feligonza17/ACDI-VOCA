@@ -42,6 +42,7 @@ Script para organizar las bases de datos con las que vamos a trabajar en el proy
 ```{r message=FALSE, warning=FALSE}
 library(readstata13)
 library(tidyr)
+library(janitor)
 library(dplyr)
 library(ggplot2)
 library(data.table)
@@ -53,7 +54,6 @@ library(gridExtra)
 library(grid)
 library(purrr)
 library(psych)
-library(janitor)
 ```
 
 
@@ -118,36 +118,6 @@ colnames(acdi_imr) <- paste(colnames(acdi_imr), "imr", sep = "_")
 acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="MEDELLIN"] <- "Medellín"
 
 ```
-
-```{r message=FALSE, warning=FALSE, include=FALSE}
-
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="TURBO"] <- "Turbo"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="BOGOTA, D.C."] <- "Bogotá, D.c."
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="CARTAGENA"] <- "Cartagena De Indias"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="SANTA MARTA"] <- "Santa Marta"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="CALI"] <- "Cali"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="VISTAHERMOSA"] <- "Vistahermosa"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="ARAUCA"] <- "Arauca"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="ARAUQUITA"] <- "Arauquita"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="SAN CARLOS"] <- "San Carlos"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="QUIBDO"] <- "Quibdó"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="APARTADO"] <- "Apartadó"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="BOJAYA"] <- "Bojayá"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="PUERTO RICO"] <- "Puerto Rico"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="CIENAGA"] <- "Ciénaga"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="CHAPARRAL"] <- "Chaparral"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="CARTAGENA DEL CHAIRA"] <- "Cartagena Del Chairá"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="RIOBLANCO"] <- "Rioblanco"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="FLORENCIA"] <- "Florencia"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="BUENAVENTURA"] <- "Buenaventura"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="MESETAS"] <- "Mesetas"
-acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="SAN VICENTE DEL CAGUAN"] <- "San Vicente Del Caguán"
-
-
-
-
-```
-
 
 Aqui revisamos, por encima, el numero de municipios que tiene cada base de datos 
 ```{r message=FALSE, warning=FALSE}
@@ -292,16 +262,64 @@ datos_acdivoca_num$memoria_expectativa <- datos_acdivoca_num %>%
   as.numeric()
 ```
 
+
+##Confianza en Vecinos
+
+Este item pregunta: ¿Usted en cuantos vecinos confia? Y responden de 1 a 5 en donde 1 es "En ninguno" y 5 es "En todos" 
+
+```{r}
+#Pregunta p053 -- Pregunta sobre las disculpas. Solo es una entonces good
+datos_acdivoca_num$confianza_vec <- datos_acdivoca_num$p065
+```
+
+##Confianza en Colombianos
+
+Este item pregunta: ¿Usted en cuantos colombianos confia? Y responden de 1 a 5 en donde 1 es "En ninguno" y 5 es "En todos" 
+
+```{r}
+#Pregunta p053 -- Pregunta sobre las disculpas. Solo es una entonces good
+datos_acdivoca_num$confianza_col <- datos_acdivoca_num$p066
+```
+
+##Armonia en Colombianos
+
+Este item pregunta: ¿Usted piensa que en Colombia hay armonia o entendimiento entre las personas? Y responden de 1 a 5 en donde 1 es "Totalmente en desacuerdo" y 5 es "Totalmente de acuerdo" 
+
+```{r}
+#Pregunta p051 -- 
+datos_acdivoca_num$armonia_col <- datos_acdivoca_num$p051
+```
+
+##Buena Voluntad
+
+Este item pregunta: ¿Con que frecuencia usted tiene pensamientos en los que les desea el bien a los demas? Y responden de 1 a 5 en donde 1 es "Nunca" y 5 es "Siempre" 
+
+```{r}
+#Pregunta p074 -- 
+datos_acdivoca_num$buena_voluntad <- datos_acdivoca_num$p074
+```
+
+##Sentido de Pertenencia
+
+Este item pregunta: ¿Como es su sentido de pertenencia a comunidades y grupos? Y responden de 1 a 5 en donde 1 es "No hay sentido de pertenencia" y 5 es "Totalmente". El 3 representa: "ni fuerte, ni debil" 
+
+```{r}
+#Pregunta p046 -- 
+datos_acdivoca_num$pertenencia <- datos_acdivoca_num$p046
+```
+
+
 #Estadisticos de los items creados
 
 Aqui exponemos las estadisticas descriptivas de los items que se acaban de crear
 
 ```{r}
 
- 
+#Otra forma de ver los estadisticos 
 datos_acdivoca_num %>% 
   select(memoria, reconciliacion, disculpas, 
-         violencia, rencor, memoria_expectativa) %>% 
+         violencia, rencor, memoria_expectativa, confianza_vec, 
+         confianza_col, armonia_col, buena_voluntad, pertenencia) %>% 
   describe(fast = T) %>% 
   print()
   
@@ -311,10 +329,9 @@ datos_acdivoca_num %>%
 
 #MERGE con base de datos CEDE general
 
-Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (ano, pib, poblacion, etc.)
+Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (año, pib, poblacion, etc.)
 
 ```{r}
-
 #Collapse estadisticos por municipio
 
 reconciliacion_agreg <- summaryBy(reconciliacion ~ Municipio, 
@@ -329,7 +346,16 @@ memoria_agreg <- summaryBy(memoria ~ Municipio,
                            datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
 memoria_expectativa_agreg <- summaryBy(memoria_expectativa ~ Municipio, 
                                        datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
-
+confianza_vec_agreg <- summaryBy(confianza_vec ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+confianza_col_agreg <- summaryBy(confianza_col ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+armonia_col_agreg <- summaryBy(armonia_col ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+buena_voluntad_agreg <- summaryBy(buena_voluntad ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+pertenencia_agreg <- summaryBy(pertenencia ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
 
 
 # Merge con base de datos general -----------------------------------------
@@ -364,10 +390,8 @@ rm(datos_cede_conflicto,datos_cede_educacion,
 ```
 
 #Guardar Environment
-
 ```{r}
 #Codigo para guardar el environement (la base de datos), para poder importarla en otros scripts. 
 save.image(file='MergeBases_Environment.RData')
 ```
-
 

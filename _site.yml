@@ -36,6 +36,14 @@ navbar:
         - text: "Modulo Politica"
           icon: fa-comment
           href: elca_modulo_politica.html
+    - text: "Evento ACDIVOCA"
+      menu:
+        - text: "Exploracion Diferencias Municipales"
+          icon: 
+          href: encuesta_diferencias_municipal.html
+        - text: "Graficos prejuicios"
+          icon:
+          href: graficos_prejuicios.html
     - text: "Analisis PAR"
       icon: 
       href: Analisis_indice_PAR.html    
@@ -48,6 +56,8 @@ navbar:
           href: Exploracion_CEDE_Violencia_ACDIVOCA.html
         - text: "Violencia y estadistica"
           href: acdivoca_analisis.html
+        - text: "Creacion BBDD para Stata"
+          href: base_stata.html
 output:
   html_document:
     theme: lumen
