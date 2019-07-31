@@ -68,6 +68,12 @@ rm(list=ls())
 #Importar datos ACDIVOCA
 datos_acdivoca <- read_excel('ACDI-VOCA - Base de Datos y Tabulados_F.xlsx')
 
+
+#Importar columna para dummy que indica cuál es PAR. 
+
+columna_PAR <- read_excel("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MunicipiosPAR.xlsx")
+
+
 #Ojo siempre abrir desde el dropbox de Felipe González porque se hizo el cambio de variables chaacter a numerica desde Excel.
 datos_acdivoca_num <- as.data.table(
   read_excel('ACDI-VOCA - Base de Datos y Tabulados_F.xlsx',sheet=2))
@@ -142,8 +148,14 @@ datos_acdivoca$MPIO_IK <- ifelse(startsWith(datos_acdivoca$MPIO_IK,"0"),
 datos_acdivoca_num$MPIO_IK <- ifelse(startsWith(as.character(datos_acdivoca_num$MPIO_IK),"0"),
                                      sub("0{1}","",datos_acdivoca_num$MPIO_IK, ignore.case=TRUE),
                                      datos_acdivoca_num$MPIO_IK)
+columna_PAR$Divipola <- ifelse(startsWith(as.character(columna_PAR$Divipola),"0"),
+                                     sub("0{1}","",columna_PAR$Divipola,
+                                         ignore.case=TRUE),columna_PAR$Divipola)
+
+
 setnames(datos_acdivoca, 'MPIO_IK', 'codmpio') #Para que el merge sea más fácil	
 setnames(datos_acdivoca_num, 'MPIO_IK', 'codmpio')
+setnames(columna_PAR, 'Divipola', 'codmpio')
 # Meter municipio en codigo	
 Nombre_cod_municipio <- datos_acdivoca[,c('Municipio','codmpio')]	
 Nombre_cod_municipio <- datos_acdivoca_num[,c('Municipio','codmpio')]
@@ -177,6 +189,7 @@ cede_general_44$ano <- as.Date(cede_general_44$ano, '%Y', na.rm=T)
 
 # Items ACDI/VOCA
 
+
 Primero recodificamos los valores para que la respuesta "Totalmente en desacuerdo" tome el valor -2, la respuesta "En desacuerdo" tome el valor -1 y asi sucesivamente hasta que la respuesta "Totalmente de acuerdo" tome el valor 2.
 
 ```{r}
@@ -193,6 +206,13 @@ datos_acdivoca_num <- datos_acdivoca_num %>%
 
 ## Reconciliacion
 
+El item de reconciliacion es el siguiente:
+
+<center>
+![Items Reconciliacion nuestro](C:/Users/felig/ACDI-VOCA/Reconciliacion_nuestro.JPG)
+</center>
+
+
 ```{r}
 # Pregunta p024 -- Preguntas de Reconciliacion. Todos son Directos, se suman para sacar un indice más global.
 datos_acdivoca_num$reconciliacion <- datos_acdivoca_num %>%
@@ -208,6 +228,15 @@ datos_acdivoca_num$disculpas <- datos_acdivoca_num$p053
 ```
 
 ##Violencia
+
+
+El item de violencia es el siguiente:
+
+<center>
+![Items Violencia](C:/Users/felig/ACDI-VOCA/Violencia.JPG)
+</center>
+
+Es la suma de esos items. El segundo tiene la escala invertida. Asi, el indice va de 2 a 10 y, a mayor indice de violencia, mas metodos de dialogo violentos tiene el municipio a buscar la reconciliacion
 ```{r}
 #Pregunta p058 y p059. Ambas de Violencia. La segunda tiene escala invertida. La Primera no. Se hacen los arreglos necesarios para poder sumarlas.
 
@@ -216,7 +245,13 @@ datos_acdivoca_num$violencia <- datos_acdivoca_num %>%
   rowSums()
 ```
 
-##Rencor
+##Rencor 
+
+El item de rencor es el siguiente:
+
+<center>
+![Items Rencor](C:/Users/felig/ACDI-VOCA/rencor.JPG)
+</center>
 
 Este indice es interesante. Se hace una formula para sacar un indice entre 0 y 15. Un valor bajito representa una persona con mucho rencor mientras que un valor alto representa a una persona con culpa. La formula es la siguiente:
 
@@ -245,6 +280,14 @@ datos_acdivoca_num$memoria <- datos_acdivoca_num$p075_1
 
 ## Item de memoria historica con expectativas (Bicchieri)
 
+
+El item de memoria historica es el siguiente:
+
+<center>
+![Items memoria historica](C:/Users/felig/ACDI-VOCA/memoria_historica.JPG)
+</center>
+
+
 Este item tiene la misma formula que la del indice de rencor solo que se hace con las preguntas de memoria historica. La formula es la misma. 
 
 $Memoria_{Bicchieri} = \frac{Otro_{i}}{Uno_{i}} \times  \frac{(Otro_{i}+Uno_{i})}{2}$
@@ -268,7 +311,7 @@ datos_acdivoca_num$memoria_expectativa <- datos_acdivoca_num %>%
 Este item pregunta: ¿Usted en cuantos vecinos confia? Y responden de 1 a 5 en donde 1 es "En ninguno" y 5 es "En todos" 
 
 ```{r}
-#Pregunta p053 -- Pregunta sobre las disculpas. Solo es una entonces good
+#Pregunta p065 -- Pregunta sobre las disculpas. Solo es una entonces good
 datos_acdivoca_num$confianza_vec <- datos_acdivoca_num$p065
 ```
 
@@ -277,7 +320,7 @@ datos_acdivoca_num$confianza_vec <- datos_acdivoca_num$p065
 Este item pregunta: ¿Usted en cuantos colombianos confia? Y responden de 1 a 5 en donde 1 es "En ninguno" y 5 es "En todos" 
 
 ```{r}
-#Pregunta p053 -- Pregunta sobre las disculpas. Solo es una entonces good
+#Pregunta p066 -- Pregunta sobre las disculpas. Solo es una entonces good
 datos_acdivoca_num$confianza_col <- datos_acdivoca_num$p066
 ```
 
@@ -308,6 +351,45 @@ Este item pregunta: ¿Como es su sentido de pertenencia a comunidades y grupos? 
 datos_acdivoca_num$pertenencia <- datos_acdivoca_num$p046
 ```
 
+##Confianza en Instituciones
+
+El item de confianza en las instituciones es el siguiente:
+
+<center>
+![Items Confianza Instituciones](C:/Users/felig/ACDI-VOCA/confianza_instituciones.JPG)
+</center>
+
+Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 0 a 85 y, a mayor indice de reconciliacion, mas confia en las instituciones
+
+```{r}
+#Pregunta p067 -- 
+
+#Ojo aqui porque todos los valores de NS/NR/no conoce se tomaron como valores perdidos. 
+datos_acdivoca_num$confianza_instituciones <- datos_acdivoca_num %>%
+  select(starts_with("p067")) %>%
+  mutate_all(~na_if(., '99'))%>%
+  rowSums()
+```
+##Confianza en Medios de comunicacion
+
+El item de confianza en medios es el siguiente:
+
+<center>
+![Items Confianza medios](C:/Users/felig/ACDI-VOCA/confianza_medios.JPG)
+</center>
+
+Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 0 a 35 y, a mayor indice de reconciliacion, mas confia en los medios de comunciacion
+
+```{r}
+#Pregunta p083 -- 
+
+#Ojo aqui porque todos los valores de NS/NR/no conoce se tomaron como valores perdidos. 
+datos_acdivoca_num$confianza_medios <- datos_acdivoca_num %>%
+  select(starts_with("p083")) %>%
+  mutate_all(~na_if(., '99'))%>%
+  rowSums()
+```
+
 
 #Estadisticos de los items creados
 
@@ -319,7 +401,7 @@ Aqui exponemos las estadisticas descriptivas de los items que se acaban de crear
 datos_acdivoca_num %>% 
   select(memoria, reconciliacion, disculpas, 
          violencia, rencor, memoria_expectativa, confianza_vec, 
-         confianza_col, armonia_col, buena_voluntad, pertenencia) %>% 
+         confianza_col, armonia_col, buena_voluntad, pertenencia, confianza_instituciones, confianza_medios) %>% 
   describe(fast = T) %>% 
   print()
   
@@ -327,9 +409,8 @@ datos_acdivoca_num %>%
 ```
 
 
-#MERGE con base de datos CEDE general
 
-Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (año, pib, poblacion, etc.)
+#Creacion variables generales (el collapse por municipio)
 
 ```{r}
 #Collapse estadisticos por municipio
@@ -356,6 +437,18 @@ buena_voluntad_agreg <- summaryBy(buena_voluntad ~ Municipio,
                                        datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
 pertenencia_agreg <- summaryBy(pertenencia ~ Municipio, 
                                        datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+confianza_instituciones_agreg <- summaryBy(confianza_instituciones ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+confianza_medios_agreg <- summaryBy(confianza_medios ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+```
+
+
+#MERGE con base de datos CEDE general
+
+Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (año, pib, poblacion, etc.)
+
+```{r}
 
 
 # Merge con base de datos general -----------------------------------------

@@ -458,16 +458,29 @@ div.tocify {
     Home
   </a>
 </li>
-<li>
-  <a href="Merge_bases.html">Codigo para iniciar</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Panel CEDE Municipal
+    Codigo para iniciar
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Merge_bases.html">Indice IMR 2017 y PANEL CEDE</a>
+    </li>
+    <li>
+      <a href="Merge_bases_2019.html">Indice IMR 2019</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analisis con 44 mpios
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Panel CEDE Municipal</li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploraciones</a>
       <ul class="dropdown-menu" role="menu">
@@ -508,29 +521,39 @@ div.tocify {
         </li>
       </ul>
     </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ELCA</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="elca_exploracion.html">
+            <span class="fa fa-object-ungroup"></span>
+             
+            Depuracion y merge
+          </a>
+        </li>
+        <li>
+          <a href="elca_modulo_politica.html">
+            <span class="fa fa-comment"></span>
+             
+            Modulo Politica
+          </a>
+        </li>
+      </ul>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    ELCA
+    Analisis con 27 mpios (PAR)
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="elca_exploracion.html">
-        <span class="fa fa-object-ungroup"></span>
-         
-        Depuracion y merge
-      </a>
+      <a href="Analisis_indice_PAR.html">Analisis PAR. Primera ola 2017</a>
     </li>
-    <li>
-      <a href="elca_modulo_politica.html">
-        <span class="fa fa-comment"></span>
-         
-        Modulo Politica
-      </a>
-    </li>
+    <li class="dropdown-header">Analisis PAR. Segunda ola 2019</li>
+    <li class="dropdown-header">Analisis PAR. Diferencias</li>
   </ul>
 </li>
 <li class="dropdown">
@@ -541,15 +564,20 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="encuesta_diferencias_municipal.html">Exploracion Diferencias Municipales</a>
+      <a href="graficos_prejuicios.html">
+        <span class="fa fa-dizzy"></span>
+         
+        Graficos prejuicios
+      </a>
     </li>
     <li>
-      <a href="graficos_prejuicios.html">Graficos prejuicios</a>
+      <a href="encuesta_diferencias_municipal.html">
+        <span class="fa fa-chart-bar"></span>
+         
+        Exploracion Diferencias Municipales
+      </a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="Analisis_indice_PAR.html">Analisis PAR</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -620,7 +648,11 @@ div.tocify {
 <span class="kw">library</span>(forcats)
 <span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
 base_stata &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;Para Stata/base_acdi_stata.dta&quot;</span>,
-                                   <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)</code></pre></div>
+                                   <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)
+base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta&quot;</span>, <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)
+
+
+names_par &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span><span class="op">$</span>Municipio</code></pre></div>
 </div>
 <div id="donde-la-categoria-son-municipios-homicidios" class="section level1">
 <h1><span class="header-section-number">2</span> Donde la categoria son municipios homicidios</h1>
@@ -643,6 +675,24 @@ base_stata &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span 
   <span class="kw">print</span>(plot)
 }</code></pre></div>
 <p><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-1.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-2.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-3.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-4.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-5.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-6.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-7.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-8.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-9.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-10.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-11.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean2019&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span>(<span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&gt;</span><span class="kw">mean</span>(homi_cienmil_mean),
+                             <span class="st">&quot;Alta homicidios&quot;</span>,<span class="st">&quot;Baja homicidios&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Mpios PAR para el 2019&quot;</span>, <span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-12.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-13.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-14.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-15.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-2-16.png" width="672" /></p>
 </div>
 <div id="separandolos-en-q1-y-q3" class="section level2">
 <h2><span class="header-section-number">2.2</span> Separandolos en Q1 y Q3</h2>
@@ -671,6 +721,31 @@ x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span cla
   <span class="kw">print</span>(plot)
 }</code></pre></div>
 <p><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-1.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-2.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-3.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-4.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-5.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-6.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-7.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-8.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-9.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-10.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-11.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))
+x &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean2019&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Mpios PAR para el 2019&quot;</span>, <span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-12.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-13.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-14.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-15.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-3-16.png" width="672" /></p>
 </div>
 <div id="separandolos-entre-el-maximo-y-el-minimo" class="section level2">
 <h2><span class="header-section-number">2.3</span> Separandolos entre el maximo y el minimo</h2>
@@ -699,6 +774,30 @@ x &lt;-<span class="st"> </span>base_stata[,<span class="dv">165</span><span cla
   <span class="kw">print</span>(plot)
 }</code></pre></div>
 <p><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-1.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-2.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-3.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-4.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-5.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-6.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-7.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-8.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-9.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-10.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-11.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean2019&quot;</span>))
+
+
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){
+
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">==</span><span class="kw">max</span>(homi_cienmil_mean),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">==</span><span class="kw">min</span>(homi_cienmil_mean),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">na.rm=</span><span class="ot">TRUE</span>, <span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Mpios PAR para el 2019&quot;</span>, <span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-12.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-13.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-14.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-15.png" width="672" /><img src="encuesta_diferencias_municipal_files/figure-html/unnamed-chunk-4-16.png" width="672" /></p>
 </div>
 </div>
 <div id="donde-la-categoria-son-municipios-violentados" class="section level1">

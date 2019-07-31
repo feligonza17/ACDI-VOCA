@@ -3,9 +3,6 @@ title: 'Diferencias Encuesta ACDIVOCA a nivel Municipal'
 author: "Felipe Gonzalez-Arango"
 date: "22 de julio de 2019"
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
   html_document:
     code_folding: show
     highlight: tango
@@ -16,6 +13,9 @@ output:
     toc_float:
       collapsed: yes
       smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 ---
 
 ```{r setup, include=FALSE}
@@ -46,8 +46,10 @@ library(forcats)
 load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
 base_stata <- read_dta("Para Stata/base_acdi_stata.dta",
                                    encoding="UTF-8")
+base_stata_2019 <- read_dta("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta", encoding="UTF-8")
 
 
+names_par <- base_stata_2019$Municipio
 
 
 ```
@@ -71,6 +73,25 @@ for(i in 1:length(x)){
   geom_bar(stat="identity", fill = "white")+
   theme_minimal()+
   labs(y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+x <- base_stata_2019 %>% select(ends_with("mean2019"))
+par(mar=c(4,2,0.1,0.1))
+
+for(i in 1:length(x)){
+   
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
+                             "Alta homicidios","Baja homicidios"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2019", y=names(x[i]))+
   theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
   print(plot)
 }
@@ -107,6 +128,33 @@ for(i in 1:length(x)){
   print(plot)
 }
 
+
+ par(mfrow=c(2,4))
+x <- base_stata_2019 %>% select(ends_with("mean2019"))
+
+
+for(i in 1:length(x)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019", y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+
 ```
 
 ##Separandolos entre el maximo y el minimo
@@ -137,6 +185,31 @@ for(i in 1:length(x)){
   
   print(plot)
 }
+
+x <- base_stata_2019 %>% select(ends_with("mean2019"))
+
+
+for(i in 1:length(x)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean==max(homi_cienmil_mean),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean==min(homi_cienmil_mean),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019", y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
 
 ```
 

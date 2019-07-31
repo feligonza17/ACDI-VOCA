@@ -1,0 +1,469 @@
+---
+title: "Creacion base IMR 2019"
+author: "Felipe Gonzalez Arango"
+date: "23 de abril de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+Objetivo de este documento
+
+Aqui se importa y se organiza la base de datos del IMR del 2019. Si quiere ver la del 2017 dirijirse a la pestana "Indice IMR 2017 y PANEL CEDE".
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+
+
+#Preparar environment para el analisis
+
+Script para organizar las bases de datos con las que vamos a trabajar en el proyecto 
+
+
+
+##Cargar paquetes
+```{r message=FALSE, warning=FALSE}
+library(readstata13)
+library(tidyr)
+library(janitor)
+library(dplyr)
+library(ggplot2)
+library(data.table)
+library(readxl)
+library(doBy)
+library(vtable)
+library(plyr)
+library(gridExtra)
+library(grid)
+library(purrr)
+library(psych)
+```
+
+
+##Importar bases de datos
+```{r message=FALSE, warning=FALSE}
+#Set Working Directory
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+rm(list=ls())
+
+
+
+#Importar datos ACDIVOCA
+
+#OJO ANTES DE HACER ESTO HICE DESDE EXCEL la funcion PROPER para limpiar los nombres de las variables de los municipios porque estaban en mayuscula
+datos_acdivoca_2019 <- as.data.table(read_excel("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Documentos ACDIVOCA/IMR segunda ola/BD IMR cod v3.1 27062019.xlsx", sheet=2))
+
+columna_PAR <- read_excel("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MunicipiosPAR.xlsx")
+
+#Importar datos CEDE
+datos_cede_generales <- read.dta13("PANEL_CARACTERISTICAS_GENERALES.dta",
+                                   encoding="latin1", fromEncoding="UTF-8",
+                                   convert.factors = TRUE,
+                                   nonint.factors=TRUE, generate.factors = TRUE)
+datos_cede_conflicto <-  read.dta13("PANEL_CONFLICTO_Y_VIOLENCIA.dta",
+                                    encoding="latin1", fromEncoding="UTF-8",
+                                    convert.factors = TRUE, generate.factors = TRUE,
+                                    nonint.factors=TRUE)
+datos_cede_salud <-  read.dta13("PANEL_SALUD_Y_SERVICIOS.dta",
+                                encoding="latin1", fromEncoding="UTF-8",
+                                convert.factors = TRUE, generate.factors = TRUE,
+                                nonint.factors=TRUE)
+datos_cede_educacion <-  read.dta13("PANEL_DE_EDUCACION.dta",
+                                    encoding="latin1", fromEncoding="UTF-8",
+                                    convert.factors = TRUE, generate.factors = TRUE,
+                                    nonint.factors=TRUE)
+datos_cede_gobierno <-  read.dta13("PANEL_BUEN_GOBIERNO.dta",
+                                   encoding="latin1", fromEncoding="UTF-8",
+                                   convert.factors = TRUE, generate.factors = TRUE,
+                                   nonint.factors=TRUE)
+datos_cede_tierras <-  read.dta13("PANEL_AGRICULTURA_Y_TIERRA.dta",
+                                  encoding="latin1", fromEncoding="UTF-8",
+                                  convert.factors = TRUE, generate.factors = TRUE,
+                                  nonint.factors=TRUE)
+
+#Indice PAR - ACDIVOCA
+
+acdi_imr <- as.data.table(
+  read_excel("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Documentos ACDIVOCA/7.IndiceReconciliacion_31oct2017.xlsx",sheet=2))
+#Limpiar tildes y mayusculas de los nombres de las variables del indice IMR
+acdi_imr <- acdi_imr %>% clean_names()
+#Limpiar los otros nombres
+acdi_imr <- acdi_imr %>% select(-c(20:21))
+colnames(acdi_imr)[1] <- "Municipio"
+colnames(acdi_imr)[15] <- "1-agresion"
+
+acdi_imr <- acdi_imr %>% slice(.,1:22) 
+
+#Le agregamos el sufijo distintivo
+
+colnames(acdi_imr) <- paste(colnames(acdi_imr), "imr", sep = "_")
+
+#Limpieza de nombres de Municipios (solo se muestra una limpieza)
+acdi_imr$Municipio_imr[acdi_imr$Municipio_imr=="MEDELLIN"] <- "Medellín"
+
+```
+
+
+## Limpiar y organizar bases de datos
+```{r}
+
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Medellin"] <- "Medellín"
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Bogota, D.C."] <- "Bogotá, D.c."
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Cartage"] <- "Cartagena De Indias"
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Bueventura"] <- "Buenaventura"
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Apartado"] <- "Apartadó"
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Cartage Del Chaira"] <- "Cartagena Del Chairá"
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Ciega"] <- "Ciénaga"
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Cucuta"] <- "Cúcuta"
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Moniquira"] <- "Moniquirá"
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Quibdo"] <- "Quibdó"
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="San Vicente Del Caguan"] <- "San Vicente Del Caguán"
+datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio=="Bojaya"] <- "Bojayá"
+
+
+#Limpiar el código ID de la base acdivoca. Hay ciertos municipios que empiezan con un '0' y hay que quitarlo.	
+
+datos_acdivoca_2019$MPIO_IK <- ifelse(startsWith(as.character(datos_acdivoca_2019$MPIO_IK),"0"),
+                                     sub("0{1}","",datos_acdivoca_2019$MPIO_IK, ignore.case=TRUE),
+                                     datos_acdivoca_2019$MPIO_IK)
+
+columna_PAR$Divipola <- ifelse(startsWith(as.character(columna_PAR$Divipola),"0"),
+                                     sub("0{1}","",columna_PAR$Divipola,
+                                         ignore.case=TRUE),columna_PAR$Divipola)
+
+setnames(datos_acdivoca_2019, 'MPIO_IK', 'codmpio')
+setnames(columna_PAR, 'Divipola', 'codmpio')
+# Meter municipio en codigo	
+Nombre_cod_municipio <- datos_acdivoca_2019[,c('Municipio','codmpio')]
+Nombre_cod_municipio$codmpio <- as.character(Nombre_cod_municipio$codmpio)
+#Eliminar las filas repetidas	
+Nombre_cod_municipio <- Nombre_cod_municipio[!duplicated(Nombre_cod_municipio),]
+
+```
+
+Aqui revisamos, por encima, el numero de municipios que tiene cada base de datos 
+```{r message=FALSE, warning=FALSE}
+#Contar municipios dentro de las bases
+length(unique(datos_cede_generales$codmpio)) # --> 1122 municipios
+length(unique(datos_cede_conflicto$codmpio)) # --> 1123 municipios
+length(unique(datos_cede_educacion$codmpio)) # --> 1122 municipios
+length(unique(datos_cede_gobierno$codmpio)) # ---> 1123 municipios
+length(unique(datos_cede_salud$codmpio)) # ---> 1258 municipios
+length(unique(datos_cede_tierras$codmpio)) # ---> 1126 municipios
+length(unique(datos_acdivoca_2019$codmpio))       # --> 44 municipios
+```
+
+
+
+#Merge
+
+Aqui hacemos el merge de las bases de datos. Mas especificamente, vamos a reducir las bases de datos del CEDE para que solo tengan los 44 municipios que tienen los datos del ACDIVOCA. El resto de municipios los podemos obviar. 
+```{r}
+#Merge CONFLICTO con 44 municipuos (Asi queda con los mismos municipios del acdivoca)	
+cede_conflicto_44_2019 <- merge(datos_cede_conflicto, Nombre_cod_municipio, by='codmpio', all.y=T)
+#Merge EDUCACIOON con 44 municipuos (Asi queda con los mismos municipios del acdivoca)
+cede_educacion_44_2019 <- merge(datos_cede_educacion, Nombre_cod_municipio, by='codmpio', all.y=T)
+#Merge GENERAL con 44 municipuos (Asi queda con los mismos municipios del acdivoca)
+cede_general_44_2019 <- merge(datos_cede_generales, Nombre_cod_municipio, by='codmpio', all.y=T)
+#Merge GOBIERNO con 44 municipuos (Asi queda con los mismos municipios del acdivoca)
+cede_gobierno_44_2019 <- merge(datos_cede_gobierno, Nombre_cod_municipio, by='codmpio', all.y=T)
+#Merge SALUD con 44 municipuos (Asi queda con los mismos municipios del acdivoca)
+cede_salud_44_2019 <- merge(datos_cede_salud, Nombre_cod_municipio, by='codmpio', all.y=T)
+#Merge TIERRAS con 44 municipuos (Asi queda con los mismos municipios del acdivoca)
+cede_tierras_44_2019 <- merge(datos_cede_tierras, Nombre_cod_municipio, by='codmpio', all.y=T)
+
+# Convertir ano en numero
+cede_conflicto_44_2019$ano <- as.Date(cede_conflicto_44_2019$ano, '%Y', na.rm=T)
+cede_general_44_2019$ano <- as.Date(cede_general_44_2019$ano, '%Y', na.rm=T)
+```
+
+
+# Items ACDI/VOCA
+
+
+
+
+SOLO CON LOS INDICES DE RECONCILIACION Y VIOLENCIA
+Primero recodificamos los valores para que la respuesta "Totalmente en desacuerdo" tome el valor -2, la respuesta "En desacuerdo" tome el valor -1 y asi sucesivamente hasta que la respuesta "Totalmente de acuerdo" tome el valor 2.
+
+
+
+
+```{r}
+#Recodificar valores de los ítems para que sean más interpretables (código para los no invertidos y los invertidos) (el 1 es -2; el 2 es 1; el 3 es 0; el 4 es 1 y el 5 es 2)
+datos_acdivoca_2019 <- datos_acdivoca_2019 %>% 
+  mutate_at(c("Pe10_1","Pe10_2","Pe10_3","Pe10_4","Pe10_5", "Pe39", "Pe35"), 
+            recode, "1"=-2, "2"=-1,"3"=1,"4"=2)
+```
+
+## Reconciliacion
+
+
+El item de reconciliacion es el siguiente:
+
+<center>
+![Items Reconciliacion nuestro](C:/Users/felig/ACDI-VOCA/Reconciliacion_nuestro.JPG)
+</center>
+
+
+CAMBIOS DEL 2017 AL 2019:
+<br>
+Solo hay 4 opciones en la escala Likert.
+<br>
+Se quitaron 3 opciones en las preguntas (la p024_3, p024_5 y la p024_8) y, dos de las que mantuvieron fueron reformuladas(p024_6 y la p024_7).
+<br>
+
+
+```{r}
+# Pregunta Pe10 -- Preguntas de Reconciliacion. Todos son Directos, se suman para sacar un indice más global.
+datos_acdivoca_2019$reconciliacion <- datos_acdivoca_2019 %>%
+  select("Pe10_1","Pe10_2","Pe10_3","Pe10_4","Pe10_5") %>%
+  rowSums()
+```
+
+##Disculpas
+
+
+CAMBIOS DEL 2017 AL 2019:
+<br>
+Solo hay 4 opciones en la escala Likert.
+<br>
+Se cambio la formulacion. La nueva pregunta es:  "…cuando agreden a alguien le piden disculpas?" 1-Nunca, 2-Casi Nunca, 3-Casi Siempre, 4-Siempre.
+<br>
+
+
+```{r}
+#Pregunta Pe39 -- Pregunta sobre las disculpas. Solo es una entonces good
+datos_acdivoca_2019$disculpas <- datos_acdivoca_2019$Pe39
+```
+
+##Violencia
+
+El item de violencia es el siguiente:
+
+<center>
+![Items Violencia](C:/Users/felig/ACDI-VOCA/Violencia.JPG)
+</center>
+
+Es la suma de esos items. El segundo tiene la escala invertida. Asi, el indice va de -4 a 4 y, a mayor indice de violencia, mas metodos de dialogo violentos tiene el municipio a buscar la reconciliacion
+<br>
+<br>
+
+CAMBIOS DEL 2017 AL 2019:
+<br>
+Solo hay 4 opciones en la escala Likert.
+<br>
+Se cambio la formulacion de p058. La nueva pregunta es:  "…creen que la agresión física o verbal es necesaria para solucionar problemas de la cotidianidad?" 1-Nunca, 2-Casi Nunca, 3-Casi Siempre, 4-Siempre.
+Se cambio la formulacion de p059. Se volvio una dicotomica en la que se pregunta:  ¿Conoce y tiene la posibilidad de participar en acciones que mejoren la seguridad ciudadana en su barrio? 
+<br>
+
+```{r}
+#Pregunta Pe35. 
+
+datos_acdivoca_2019$violencia <- datos_acdivoca_2019$Pe35
+
+
+```
+##Rencor NO SE PUEDE PORQUE SE QUITO UN ITEM
+
+Quitaron el item en el que se preguntaba por la percepcion propia y por eso no se puede construir el item. 
+
+
+## Memoria Historica NO SE PUEDE PORQUE SE QUITO EL ITEM
+
+
+## Item de memoria historica con expectativas (Bicchieri) NO SE PUEDE SE QUITO UN ITEM
+
+Solo dejaron un item y es en el que preguntan: En una escala donde 1 es totalmente en desacuerdo y 4 es totalmente de acuerdo, ¿Que tan de acuerdo esta con la siguiente frase?:
+<br>
+
+Las personas de su barrio o vereda piensan que reconstruir la memoria del conflicto armado del país abre heridas del pasado. 
+
+##Confianza en Vecinos
+
+Este item pregunta: ¿Usted en cuantos vecinos confia? Y responden de 1 a 5 en donde 1 es "En ninguno" y 5 es "En todos" 
+<br>
+CAMBIOS DEL 2017 AL 2019:
+<br>
+Solo hay 4 opciones en la escala Likert.
+<br>
+En una escala donde 1 es En ninguno y 4 es En todos ¿Usted en cuántos vecinos confía? 1-Nunca, 2-Casi Nunca, 3-Casi Siempre, 4-Siempre.
+
+```{r}
+#Pregunta Pe40 -- Pregunta sobre las disculpas. Solo es una entonces good
+datos_acdivoca_2019$confianza_vec <- datos_acdivoca_2019$Pe40
+```
+
+##Confianza en Colombianos NO SE PUEDE SE QUITO EL ITEM
+
+##Armonia en Colombianos NO SE PUEDE SE QUITO EL ITEM
+
+##Buena Voluntad NO SE PUEDE SE QUITO EL ITEM
+
+##Sentido de Pertenencia NO SE PUEDE SE QUITO EL ITEM
+
+  
+##Confianza en Instituciones
+
+El item de reconciliacion es el siguiente:
+
+<center>
+![Items Confianza Instituciones](C:/Users/felig/ACDI-VOCA/confianza_instituciones.JPG)
+</center>
+
+Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 0 a 85 y, a mayor indice de reconciliacion, mas confia en las instituciones
+
+
+CAMBIOS DEL 2017 AL 2019:
+<br>
+Solo hay 4 opciones en la escala Likert.
+<br>
+Se quitaron 3 opciones en las preguntas y, dos de las que mantuvieron fueron y se agrego una opcion: ¿Qué tanta confianza tiene por… n. ...organizaciones que ayudan a los venezolanos?
+<br>
+
+
+
+```{r}
+#Pregunta Pe41 -- 
+
+#Ojo aqui porque todos los valores de NS/NR/no conoce se tomaron como valores perdidos. 
+datos_acdivoca_2019$confianza_instituciones <- datos_acdivoca_2019 %>%
+  select(starts_with("Pe41")) %>%
+  mutate_all(~na_if(., '99'))%>%
+  rowSums()
+```
+##Confianza en Medios de comunicacion
+
+El item de reconciliacion es el siguiente:
+
+<center>
+![Items Confianza medios](C:/Users/felig/ACDI-VOCA/confianza_medios.JPG)
+</center>
+
+Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 0 a 35 y, a mayor indice de reconciliacion, mas confia en los medios de comunciacion
+
+CAMBIOS DEL 2017 AL 2019:
+<br>
+Solo hay 4 opciones en la escala Likert: En una escala donde 1 es nada y 4 es totalmente, ¿Qué tanto confía en las siguientes fuentes de información?  y se quito la opcion de no sabe no responde. 
+<br>
+
+```{r}
+#Pregunta Pe42 -- 
+
+#Ojo aqui porque todos los valores de NS/NR/no conoce se tomaron como valores perdidos. 
+datos_acdivoca_2019$confianza_medios <- datos_acdivoca_2019 %>%
+  select(starts_with("Pe42")) %>%
+  mutate_all(~na_if(., '99'))%>%
+  rowSums()
+```
+
+
+#Estadisticos de los items creados
+
+Aqui exponemos las estadisticas descriptivas de los items que se acaban de crear
+
+```{r}
+
+#Otra forma de ver los estadisticos 
+datos_acdivoca_2019 %>% 
+  select(reconciliacion, disculpas, 
+         violencia, confianza_vec, confianza_instituciones, confianza_medios) %>% 
+  describe(fast = T) %>% 
+  print()
+  
+ 
+```
+
+
+#Creacion variables generales (el collapse por municipio)
+
+Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (año, pib, poblacion, etc.)
+
+```{r}
+#Collapse estadisticos por municipio
+
+reconciliacion_agreg2019 <- summaryBy(reconciliacion ~ Municipio, 
+                                  datos_acdivoca_2019, FUN=c(sum, median, mean, sd), na.rm=F)
+
+disculpas_agreg2019 <- summaryBy(disculpas ~ Municipio, 
+                             datos_acdivoca_2019, FUN=c(sum, median, mean, sd), na.rm=F )
+violencia_agreg2019 <- summaryBy(violencia ~ Municipio, 
+                             datos_acdivoca_2019, FUN=c(sum, median, mean, sd), na.rm=F )
+confianza_vec_agreg2019 <- summaryBy(confianza_vec ~ Municipio, 
+                                       datos_acdivoca_2019, FUN=c(sum, median, mean, sd), na.rm=F )
+confianza_instituciones_agreg2019 <- summaryBy(confianza_instituciones ~ Municipio, 
+                                       datos_acdivoca_2019, FUN=c(sum, median, mean, sd), na.rm=F )
+confianza_medios_agreg2019 <- summaryBy(confianza_medios ~ Municipio, 
+                                       datos_acdivoca_2019, FUN=c(sum, median, mean, sd), na.rm=F )
+
+
+items_acdi_agregados_2019 <- cbind(reconciliacion_agreg2019,
+                                   disculpas_agreg2019[-1],
+                                   violencia_agreg2019[-1],
+                                   confianza_vec_agreg2019[-1],
+                                   confianza_instituciones_agreg2019[-1],
+                                   confianza_medios_agreg2019[-1])
+
+```
+
+
+
+#MERGE con base de datos CEDE general
+
+Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (año, pib, poblacion, etc.)
+
+```{r}
+
+
+# Merge con base de datos general -----------------------------------------
+#Vamos a limpiar un poco la base general para que el merge sea mas facil de entender
+cede_general_44_2019 <- cede_general_44_2019 %>% 
+  select(-c(Municipio)) %>% #Quitar variable que tienen las otras bases
+  dplyr::rename(ano_base_general=ano) #Renombrar la variable ano asociada con la base general
+
+#Merge con las bases
+cede_conflicto_44_2019 <- merge(cede_conflicto_44_2019, cede_general_44_2019, by="codmpio")
+cede_conflicto_44_2019 <- merge(cede_conflicto_44_2019, acdi_imr, by.x="Municipio", by.y="Municipio_imr", all.x = T)
+cede_educacion_44_2019 <- merge(datos_cede_educacion, cede_general_44_2019, by='codmpio')
+cede_educacion_44_2019 <- merge(cede_educacion_44_2019, acdi_imr, by.x="municipio", by.y="Municipio_imr", all.x = T)
+cede_gobierno_44_2019 <- merge(datos_cede_gobierno, cede_general_44_2019, by='codmpio')
+cede_gobierno_44_2019 <- merge(cede_gobierno_44_2019, acdi_imr, by.x="municipio", by.y="Municipio_imr", all.x = T)
+cede_salud_44_2019 <- merge(datos_cede_salud, cede_general_44_2019, by='codmpio')
+cede_salud_44_2019 <- merge(cede_salud_44_2019, acdi_imr, by.x="municipio", by.y="Municipio_imr", all.x = T)
+cede_tierras_44_2019 <- merge(datos_cede_tierras, cede_general_44_2019, by='codmpio')
+cede_tierras_44_2019 <- merge(cede_tierras_44_2019, acdi_imr, by.x="municipio", by.y="Municipio_imr", all.x = T)
+
+```
+
+Por ultimo limpiamos las variables que ya no se vuelven a utilizar
+
+```{r}
+
+#Limpiar environment
+
+rm(datos_cede_conflicto,datos_cede_educacion,
+   datos_cede_generales,datos_cede_gobierno,
+   datos_cede_salud,datos_cede_tierras, cede_general_44_2019)
+```
+
+
+#Guardar Environment
+```{r}
+#Codigo para guardar el environement (la base de datos), para poder importarla en otros scripts. 
+save.image(file='MergeBases2019_Environment.RData')
+```
+

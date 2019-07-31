@@ -51,6 +51,8 @@ library(forcats)
 load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
 base_stata <- read_dta("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata.dta", encoding="UTF-8")
 
+base_stata_2019 <- read_dta("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta", encoding="UTF-8")
+
 ```
 
 
@@ -91,6 +93,22 @@ for(i in which(colnames(x)=="reconciliacion_mean")){
   print(plot)
 }
 
+x <- base_stata_2019 %>% select(ends_with("mean2019"))
+par(mar=c(4,2,0.1,0.1))
+for(i in which(colnames(x)=="reconciliacion_mean2019")){
+   
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
+                             "Alta homicidios","Baja homicidios"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2019", y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
 
 ```
 

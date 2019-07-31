@@ -458,16 +458,29 @@ div.tocify {
     Home
   </a>
 </li>
-<li>
-  <a href="Merge_bases.html">Codigo para iniciar</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Panel CEDE Municipal
+    Codigo para iniciar
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Merge_bases.html">Indice IMR 2017 y PANEL CEDE</a>
+    </li>
+    <li>
+      <a href="Merge_bases_2019.html">Indice IMR 2019</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analisis con 44 mpios
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Panel CEDE Municipal</li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploraciones</a>
       <ul class="dropdown-menu" role="menu">
@@ -508,28 +521,24 @@ div.tocify {
         </li>
       </ul>
     </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    ELCA
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="elca_exploracion.html">
-        <span class="fa fa-object-ungroup"></span>
-         
-        Depuracion y merge
-      </a>
-    </li>
-    <li>
-      <a href="elca_modulo_politica.html">
-        <span class="fa fa-comment"></span>
-         
-        Modulo Politica
-      </a>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ELCA</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="elca_exploracion.html">
+            <span class="fa fa-object-ungroup"></span>
+             
+            Depuracion y merge
+          </a>
+        </li>
+        <li>
+          <a href="elca_modulo_politica.html">
+            <span class="fa fa-comment"></span>
+             
+            Modulo Politica
+          </a>
+        </li>
+      </ul>
     </li>
   </ul>
 </li>
@@ -541,15 +550,32 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="encuesta_diferencias_municipal.html">Exploracion Diferencias Municipales</a>
+      <a href="graficos_prejuicios.html">
+        <span class="fa fa-dizzy"></span>
+         
+        Graficos prejuicios
+      </a>
     </li>
     <li>
-      <a href="graficos_prejuicios.html">Graficos prejuicios</a>
+      <a href="encuesta_diferencias_municipal.html">
+        <span class="fa fa-chart-bar"></span>
+         
+        Exploracion Diferencias Municipales
+      </a>
     </li>
   </ul>
 </li>
-<li>
-  <a href="Analisis_indice_PAR.html">Analisis PAR</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analisis con 27 mpios (PAR)
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Analisis_indice_PAR.html">Analisis PAR</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -608,6 +634,7 @@ div.tocify {
 <span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 
 <span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
+<span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases2019_Environment.RData&quot;</span>)
 
 
 <span class="co">#Cargar paquetes</span>
@@ -798,15 +825,27 @@ div.tocify {
                                   confianza_col_agreg[<span class="op">-</span><span class="dv">1</span>],
                                   armonia_col_agreg[<span class="op">-</span><span class="dv">1</span>],
                                   buena_voluntad_agreg[<span class="op">-</span><span class="dv">1</span>],
-                                  pertenencia_agreg[<span class="op">-</span><span class="dv">1</span>]
+                                  pertenencia_agreg[<span class="op">-</span><span class="dv">1</span>], 
+                                  confianza_instituciones_agreg[<span class="op">-</span><span class="dv">1</span>],
+                                  confianza_medios_agreg[<span class="op">-</span><span class="dv">1</span>]
                                   ))
+
+base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(base_stata, columna_PAR, <span class="dt">by=</span><span class="st">&quot;Municipio&quot;</span>, <span class="dt">all.x=</span><span class="ot">TRUE</span>)
+base_stata_<span class="dv">2019</span><span class="op">$</span>dummyPAR &lt;-<span class="st"> </span><span class="kw">ifelse</span>(base_stata_<span class="dv">2019</span><span class="op">$</span>codmpio<span class="op">==</span><span class="st">&quot;NA&quot;</span>,<span class="dv">0</span>,<span class="dv">1</span>)
+base_stata_<span class="dv">2019</span><span class="op">$</span>dummyPAR[<span class="kw">is.na</span>(base_stata_<span class="dv">2019</span><span class="op">$</span>dummyPAR)] &lt;-<span class="st"> </span><span class="dv">0</span>
+base_stata_<span class="dv">2019</span> <span class="op">%&lt;&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dummyPAR<span class="op">==</span><span class="st">&quot;1&quot;</span>)
+base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(base_stata_<span class="dv">2019</span>, items_acdi_agregados_<span class="dv">2019</span>, <span class="dt">by=</span><span class="st">&quot;Municipio&quot;</span>, <span class="dt">suffixes =</span> <span class="kw">c</span>(<span class="st">&quot;2017&quot;</span>,<span class="st">&quot;2019&quot;</span>))
+
+base_stata &lt;-<span class="st"> </span><span class="kw">merge</span>(base_stata, columna_PAR, <span class="dt">by=</span><span class="st">&quot;Municipio&quot;</span>, <span class="dt">all.x=</span><span class="ot">TRUE</span>)
+base_stata<span class="op">$</span>dummyPAR &lt;-<span class="st"> </span><span class="kw">ifelse</span>(base_stata<span class="op">$</span>codmpio<span class="op">==</span><span class="st">&quot;NA&quot;</span>,<span class="dv">0</span>,<span class="dv">1</span>)
+base_stata<span class="op">$</span>dummyPAR[<span class="kw">is.na</span>(base_stata<span class="op">$</span>dummyPAR)] &lt;-<span class="st"> </span><span class="dv">0</span>
+
 
 <span class="co">#Exportar base de datos</span>
 
 <span class="kw">library</span>(foreign)
-<span class="kw">write.dta</span>(base_stata, <span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata.dta&quot;</span>)</code></pre></div>
-<pre><code>## Warning in write.dta(base_stata, &quot;C:/Users/felig/Dropbox/Proyecto Juan
-## Camilo/Para Stata/base_acdi_stata.dta&quot;): abbreviating variable names</code></pre>
+<span class="kw">write.dta</span>(base_stata, <span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata.dta&quot;</span>)
+<span class="kw">write.dta</span>(base_stata_<span class="dv">2019</span>, <span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta&quot;</span>)</code></pre></div>
 </div>
 
 

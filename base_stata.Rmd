@@ -35,6 +35,7 @@ setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
 rm(list=ls())
 
 load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases2019_Environment.RData")
 
 
 #Cargar paquetes
@@ -1162,7 +1163,9 @@ par_diff_vrf_grandes[which(!is.finite(par_diff_vrf_grandes))] <- NA
 
 #Crear base de datos para Stata
 
-```{r}
+```{r message=FALSE, warning=FALSE}
+
+
 base_stata <- as.data.frame(cbind(descrip_homi,
                                   diff_homi_mean,
                                   diff_homi_median,
@@ -1281,13 +1284,27 @@ base_stata <- as.data.frame(cbind(descrip_homi,
                                   confianza_col_agreg[-1],
                                   armonia_col_agreg[-1],
                                   buena_voluntad_agreg[-1],
-                                  pertenencia_agreg[-1]
+                                  pertenencia_agreg[-1], 
+                                  confianza_instituciones_agreg[-1],
+                                  confianza_medios_agreg[-1]
                                   ))
+
+base_stata_2019 <- merge(base_stata, columna_PAR, by="Municipio", all.x=TRUE)
+base_stata_2019$dummyPAR <- ifelse(base_stata_2019$codmpio=="NA",0,1)
+base_stata_2019$dummyPAR[is.na(base_stata_2019$dummyPAR)] <- 0
+base_stata_2019 %<>% filter(dummyPAR=="1")
+base_stata_2019 <- merge(base_stata_2019, items_acdi_agregados_2019, by="Municipio", suffixes = c("2017","2019"))
+
+base_stata <- merge(base_stata, columna_PAR, by="Municipio", all.x=TRUE)
+base_stata$dummyPAR <- ifelse(base_stata$codmpio=="NA",0,1)
+base_stata$dummyPAR[is.na(base_stata$dummyPAR)] <- 0
+
 
 #Exportar base de datos
 
 library(foreign)
 write.dta(base_stata, "C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata.dta")
+write.dta(base_stata_2019, "C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta")
 
 ```
 

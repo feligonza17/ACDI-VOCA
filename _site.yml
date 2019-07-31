@@ -6,11 +6,20 @@ navbar:
     - text: "Home"
       icon: fa-home
       href: index.html
-    - text: "Codigo para iniciar"
-      icon: 
-      href: Merge_bases.html
-    - text: "Panel CEDE Municipal"
+    - text: "Cod. para iniciar"
+      icon:
       menu:
+        - text: "Indice IMR 2017 y PANEL CEDE"
+          icon:
+          href: Merge_bases.html
+        - text: "Indice IMR 2019"
+          icon:
+          href: Merge_bases_2019.html
+    - text: "Analisis 44 mpios"
+      icon: 
+      menu:
+        - text: "Panel CEDE Municipal"
+          menu:
         - text: "Exploraciones"
           menu:
           - text: "Violencia"
@@ -28,14 +37,25 @@ navbar:
           - text: "Tierras"
             icon: fa-seedling
             href: Tierras_graficos_analisis.html            
-    - text: "ELCA"
-      menu:
-        - text: "Depuracion y merge"
-          icon: fa-object-ungroup
-          href: elca_exploracion.html
-        - text: "Modulo Politica"
-          icon: fa-comment
-          href: elca_modulo_politica.html
+        - text: "ELCA"
+          menu:
+          - text: "Depuracion y merge"
+            icon: fa-object-ungroup
+            href: elca_exploracion.html
+          - text: "Modulo Politica"
+            icon: fa-comment
+            href: elca_modulo_politica.html
+    - text: "Analisis 27 mpios (PAR)"
+      menu: 
+        - text: "Analisis PAR. Primera ola 2017"
+          icon: 
+          href: Analisis_indice_PAR.html   
+        - text: "Analisis PAR. Segunda ola 2019"
+          icon: 
+          href:
+        - text: "Analisis PAR. Diferencias"
+          icon: 
+          href:
     - text: "Evento ACDIVOCA"
       menu:
         - text: "Graficos prejuicios"
@@ -44,9 +64,6 @@ navbar:
         - text: "Exploracion Diferencias Municipales"
           icon: fa-chart-bar
           href: encuesta_diferencias_municipal.html
-    - text: "Analisis PAR"
-      icon: 
-      href: Analisis_indice_PAR.html    
     - text: "More"
       icon: fa-gear
       menu:

@@ -12,7 +12,7 @@
 <meta name="author" content="Felipe Gonzalez Arango" />
 
 
-<title>Merge Bases</title>
+<title>Creacion base IMR 2019</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -618,7 +618,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Merge Bases</h1>
+<h1 class="title toc-ignore">Creacion base IMR 2019</h1>
 <h4 class="author">Felipe Gonzalez Arango</h4>
 <h4 class="date">23 de abril de 2019</h4>
 
@@ -626,11 +626,10 @@ div.tocify {
 
 
 <p>Objetivo de este documento</p>
-<p>Esta pagina tiene dos objetivos. El primero de ellos es importar las bases de datos y hacer los merge necesarios para sus analisis.</p>
-<p>El segundo es crear los items importantes del cuestionario de reconcialiacion del ACDIVOCA.</p>
+<p>Aqui se importa y se organiza la base de datos del IMR del 2019. Si quiere ver la del 2017 dirijirse a la pestana “Indice IMR 2017 y PANEL CEDE”.</p>
 <div id="preparar-environment-para-el-analisis" class="section level1">
 <h1><span class="header-section-number">1</span> Preparar environment para el analisis</h1>
-<p>Script para organizar las bases de datos con las que vamos a trabajar en el proyecto (aqui se hace merge de las bases CEDE con el acdivoca y se definen las variables importantes)</p>
+<p>Script para organizar las bases de datos con las que vamos a trabajar en el proyecto</p>
 <div id="cargar-paquetes" class="section level2">
 <h2><span class="header-section-number">1.1</span> Cargar paquetes</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readstata13)
@@ -657,17 +656,12 @@ div.tocify {
 
 
 <span class="co">#Importar datos ACDIVOCA</span>
-datos_acdivoca &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&#39;ACDI-VOCA - Base de Datos y Tabulados_F.xlsx&#39;</span>)
 
-
-<span class="co">#Importar columna para dummy que indica cuál es PAR. </span>
+<span class="co">#OJO ANTES DE HACER ESTO HICE DESDE EXCEL la funcion PROPER para limpiar los nombres de las variables de los municipios porque estaban en mayuscula</span>
+datos_acdivoca_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(<span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Documentos ACDIVOCA/IMR segunda ola/BD IMR cod v3.1 27062019.xlsx&quot;</span>, <span class="dt">sheet=</span><span class="dv">2</span>))
 
 columna_PAR &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MunicipiosPAR.xlsx&quot;</span>)
 
-
-<span class="co">#Ojo siempre abrir desde el dropbox de Felipe González porque se hizo el cambio de variables chaacter a numerica desde Excel.</span>
-datos_acdivoca_num &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(
-  <span class="kw">read_excel</span>(<span class="st">&#39;ACDI-VOCA - Base de Datos y Tabulados_F.xlsx&#39;</span>,<span class="dt">sheet=</span><span class="dv">2</span>))
 <span class="co">#Importar datos CEDE</span>
 datos_cede_generales &lt;-<span class="st"> </span><span class="kw">read.dta13</span>(<span class="st">&quot;PANEL_CARACTERISTICAS_GENERALES.dta&quot;</span>,
                                    <span class="dt">encoding=</span><span class="st">&quot;latin1&quot;</span>, <span class="dt">fromEncoding=</span><span class="st">&quot;UTF-8&quot;</span>,
@@ -713,6 +707,40 @@ acdi_imr &lt;-<span class="st"> </span>acdi_imr <span class="op">%&gt;%</span><s
 
 <span class="co">#Limpieza de nombres de Municipios (solo se muestra una limpieza)</span>
 acdi_imr<span class="op">$</span>Municipio_imr[acdi_imr<span class="op">$</span>Municipio_imr<span class="op">==</span><span class="st">&quot;MEDELLIN&quot;</span>] &lt;-<span class="st"> &quot;Medellín&quot;</span></code></pre></div>
+</div>
+<div id="limpiar-y-organizar-bases-de-datos" class="section level2">
+<h2><span class="header-section-number">1.3</span> Limpiar y organizar bases de datos</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio[datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;Medellin&quot;</span>] &lt;-<span class="st"> &quot;Medellín&quot;</span>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio[datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;Bogota, D.C.&quot;</span>] &lt;-<span class="st"> &quot;Bogotá, D.c.&quot;</span>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio[datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;Cartage&quot;</span>] &lt;-<span class="st"> &quot;Cartagena De Indias&quot;</span>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio[datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;Bueventura&quot;</span>] &lt;-<span class="st"> &quot;Buenaventura&quot;</span>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio[datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;Apartado&quot;</span>] &lt;-<span class="st"> &quot;Apartadó&quot;</span>
+<span class="st">datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio==&quot;</span>Cartage Del Chaira<span class="st">&quot;] &lt;- &quot;</span>Cartagena Del Chairá<span class="st">&quot;</span>
+<span class="st">datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio==&quot;</span>Ciega<span class="st">&quot;] &lt;- &quot;</span>Ciénaga<span class="st">&quot;</span>
+<span class="st">datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio==&quot;</span>Cucuta<span class="st">&quot;] &lt;- &quot;</span>Cúcuta&quot;
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio[datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;Moniquira&quot;</span>] &lt;-<span class="st"> &quot;Moniquirá&quot;</span>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio[datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Municipio<span class="op">==</span><span class="st">&quot;Quibdo&quot;</span>] &lt;-<span class="st"> &quot;Quibdó&quot;</span>
+<span class="st">datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio==&quot;</span>San Vicente Del Caguan<span class="st">&quot;] &lt;- &quot;</span>San Vicente Del Caguán<span class="st">&quot;</span>
+<span class="st">datos_acdivoca_2019$Municipio[datos_acdivoca_2019$Municipio==&quot;</span>Bojaya<span class="st">&quot;] &lt;- &quot;</span>Bojayá<span class="st">&quot;</span>
+
+
+<span class="st">#Limpiar el código ID de la base acdivoca. Hay ciertos municipios que empiezan con un &#39;0&#39; y hay que quitarlo.   </span>
+
+<span class="st">datos_acdivoca_2019$MPIO_IK &lt;- ifelse(startsWith(as.character(datos_acdivoca_2019$MPIO_IK),&quot;</span><span class="dv">0</span><span class="st">&quot;),</span>
+<span class="st">                                     sub(&quot;</span><span class="dv">0</span>{<span class="dv">1</span>}<span class="st">&quot;,&quot;&quot;,datos_acdivoca_2019$MPIO_IK, ignore.case=TRUE),</span>
+<span class="st">                                     datos_acdivoca_2019$MPIO_IK)</span>
+
+<span class="st">columna_PAR$Divipola &lt;- ifelse(startsWith(as.character(columna_PAR$Divipola),&quot;</span><span class="dv">0</span><span class="st">&quot;),</span>
+<span class="st">                                     sub(&quot;</span><span class="dv">0</span>{<span class="dv">1</span>}<span class="st">&quot;,&quot;&quot;,columna_PAR$Divipola,</span>
+<span class="st">                                         ignore.case=TRUE),columna_PAR$Divipola)</span>
+
+<span class="st">setnames(datos_acdivoca_2019, &#39;MPIO_IK&#39;, &#39;codmpio&#39;)</span>
+<span class="st">setnames(columna_PAR, &#39;Divipola&#39;, &#39;codmpio&#39;)</span>
+<span class="st"># Meter municipio en codigo </span>
+<span class="st">Nombre_cod_municipio &lt;- datos_acdivoca_2019[,c(&#39;Municipio&#39;,&#39;codmpio&#39;)]</span>
+<span class="st">Nombre_cod_municipio$codmpio &lt;- as.character(Nombre_cod_municipio$codmpio)</span>
+<span class="st">#Eliminar las filas repetidas   </span>
+<span class="st">Nombre_cod_municipio &lt;- Nombre_cod_municipio[!duplicated(Nombre_cod_municipio),]</span></code></pre></div>
 <p>Aqui revisamos, por encima, el numero de municipios que tiene cada base de datos</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Contar municipios dentro de las bases</span>
 <span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_generales<span class="op">$</span>codmpio)) <span class="co"># --&gt; 1122 municipios</span></code></pre></div>
@@ -727,82 +755,54 @@ acdi_imr<span class="op">$</span>Municipio_imr[acdi_imr<span class="op">$</span>
 <pre><code>## [1] 1258</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_cede_tierras<span class="op">$</span>codmpio)) <span class="co"># ---&gt; 1126 municipios</span></code></pre></div>
 <pre><code>## [1] 1126</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_acdivoca<span class="op">$</span>MPIO_IK))       <span class="co"># --&gt; 44 municipios</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(<span class="kw">unique</span>(datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>codmpio))       <span class="co"># --&gt; 44 municipios</span></code></pre></div>
 <pre><code>## [1] 44</code></pre>
-</div>
-<div id="limpiar-y-organizar-bases-de-datos" class="section level2">
-<h2><span class="header-section-number">1.3</span> Limpiar y organizar bases de datos</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Limpiar el código ID de la base acdivoca. Hay ciertos municipios que empiezan con un &#39;0&#39; y hay que quitarlo.   </span>
-datos_acdivoca<span class="op">$</span>MPIO_IK &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">startsWith</span>(datos_acdivoca<span class="op">$</span>MPIO_IK,<span class="st">&quot;0&quot;</span>),    
-                                 <span class="kw">sub</span>(<span class="st">&quot;0{1}&quot;</span>,<span class="st">&quot;&quot;</span>,datos_acdivoca<span class="op">$</span>MPIO_IK, 
-                                     <span class="dt">ignore.case=</span><span class="ot">TRUE</span>), 
-                                 datos_acdivoca<span class="op">$</span>MPIO_IK)    
-datos_acdivoca_num<span class="op">$</span>MPIO_IK &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">startsWith</span>(<span class="kw">as.character</span>(datos_acdivoca_num<span class="op">$</span>MPIO_IK),<span class="st">&quot;0&quot;</span>),
-                                     <span class="kw">sub</span>(<span class="st">&quot;0{1}&quot;</span>,<span class="st">&quot;&quot;</span>,datos_acdivoca_num<span class="op">$</span>MPIO_IK, <span class="dt">ignore.case=</span><span class="ot">TRUE</span>),
-                                     datos_acdivoca_num<span class="op">$</span>MPIO_IK)
-columna_PAR<span class="op">$</span>Divipola &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">startsWith</span>(<span class="kw">as.character</span>(columna_PAR<span class="op">$</span>Divipola),<span class="st">&quot;0&quot;</span>),
-                                     <span class="kw">sub</span>(<span class="st">&quot;0{1}&quot;</span>,<span class="st">&quot;&quot;</span>,columna_PAR<span class="op">$</span>Divipola,
-                                         <span class="dt">ignore.case=</span><span class="ot">TRUE</span>),columna_PAR<span class="op">$</span>Divipola)
-
-
-<span class="kw">setnames</span>(datos_acdivoca, <span class="st">&#39;MPIO_IK&#39;</span>, <span class="st">&#39;codmpio&#39;</span>) <span class="co">#Para que el merge sea más fácil </span>
-<span class="kw">setnames</span>(datos_acdivoca_num, <span class="st">&#39;MPIO_IK&#39;</span>, <span class="st">&#39;codmpio&#39;</span>)
-<span class="kw">setnames</span>(columna_PAR, <span class="st">&#39;Divipola&#39;</span>, <span class="st">&#39;codmpio&#39;</span>)
-<span class="co"># Meter municipio en codigo </span>
-Nombre_cod_municipio &lt;-<span class="st"> </span>datos_acdivoca[,<span class="kw">c</span>(<span class="st">&#39;Municipio&#39;</span>,<span class="st">&#39;codmpio&#39;</span>)]   
-Nombre_cod_municipio &lt;-<span class="st"> </span>datos_acdivoca_num[,<span class="kw">c</span>(<span class="st">&#39;Municipio&#39;</span>,<span class="st">&#39;codmpio&#39;</span>)]
-Nombre_cod_municipio<span class="op">$</span>codmpio &lt;-<span class="st"> </span><span class="kw">as.character</span>(Nombre_cod_municipio<span class="op">$</span>codmpio)
-<span class="co">#Eliminar las filas repetidas   </span>
-Nombre_cod_municipio &lt;-<span class="st"> </span>Nombre_cod_municipio[<span class="op">!</span><span class="kw">duplicated</span>(Nombre_cod_municipio),]</code></pre></div>
 </div>
 </div>
 <div id="merge" class="section level1">
 <h1><span class="header-section-number">2</span> Merge</h1>
 <p>Aqui hacemos el merge de las bases de datos. Mas especificamente, vamos a reducir las bases de datos del CEDE para que solo tengan los 44 municipios que tienen los datos del ACDIVOCA. El resto de municipios los podemos obviar.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Merge CONFLICTO con 44 municipuos (Asi queda con los mismos municipios del acdivoca)   </span>
-cede_conflicto_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_conflicto, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
+cede_conflicto_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_conflicto, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
 <span class="co">#Merge EDUCACIOON con 44 municipuos (Asi queda con los mismos municipios del acdivoca)</span>
-cede_educacion_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_educacion, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
+cede_educacion_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_educacion, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
 <span class="co">#Merge GENERAL con 44 municipuos (Asi queda con los mismos municipios del acdivoca)</span>
-cede_general_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_generales, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
+cede_general_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_generales, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
 <span class="co">#Merge GOBIERNO con 44 municipuos (Asi queda con los mismos municipios del acdivoca)</span>
-cede_gobierno_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_gobierno, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
+cede_gobierno_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_gobierno, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
 <span class="co">#Merge SALUD con 44 municipuos (Asi queda con los mismos municipios del acdivoca)</span>
-cede_salud_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_salud, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
+cede_salud_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_salud, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
 <span class="co">#Merge TIERRAS con 44 municipuos (Asi queda con los mismos municipios del acdivoca)</span>
-cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_tierras, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
+cede_tierras_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_tierras, Nombre_cod_municipio, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>, <span class="dt">all.y=</span>T)
 
 <span class="co"># Convertir ano en numero</span>
-cede_conflicto_<span class="dv">44</span><span class="op">$</span>ano &lt;-<span class="st"> </span><span class="kw">as.Date</span>(cede_conflicto_<span class="dv">44</span><span class="op">$</span>ano, <span class="st">&#39;%Y&#39;</span>, <span class="dt">na.rm=</span>T)
-cede_general_<span class="dv">44</span><span class="op">$</span>ano &lt;-<span class="st"> </span><span class="kw">as.Date</span>(cede_general_<span class="dv">44</span><span class="op">$</span>ano, <span class="st">&#39;%Y&#39;</span>, <span class="dt">na.rm=</span>T)</code></pre></div>
+cede_conflicto_44_<span class="dv">2019</span><span class="op">$</span>ano &lt;-<span class="st"> </span><span class="kw">as.Date</span>(cede_conflicto_44_<span class="dv">2019</span><span class="op">$</span>ano, <span class="st">&#39;%Y&#39;</span>, <span class="dt">na.rm=</span>T)
+cede_general_44_<span class="dv">2019</span><span class="op">$</span>ano &lt;-<span class="st"> </span><span class="kw">as.Date</span>(cede_general_44_<span class="dv">2019</span><span class="op">$</span>ano, <span class="st">&#39;%Y&#39;</span>, <span class="dt">na.rm=</span>T)</code></pre></div>
 </div>
 <div id="items-acdivoca" class="section level1">
 <h1><span class="header-section-number">3</span> Items ACDI/VOCA</h1>
-<p>Primero recodificamos los valores para que la respuesta “Totalmente en desacuerdo” tome el valor -2, la respuesta “En desacuerdo” tome el valor -1 y asi sucesivamente hasta que la respuesta “Totalmente de acuerdo” tome el valor 2.</p>
+<p>SOLO CON LOS INDICES DE RECONCILIACION Y VIOLENCIA Primero recodificamos los valores para que la respuesta “Totalmente en desacuerdo” tome el valor -2, la respuesta “En desacuerdo” tome el valor -1 y asi sucesivamente hasta que la respuesta “Totalmente de acuerdo” tome el valor 2.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Recodificar valores de los ítems para que sean más interpretables (código para los no invertidos y los invertidos) (el 1 es -2; el 2 es 1; el 3 es 0; el 4 es 1 y el 5 es 2)</span>
-datos_acdivoca_num<span class="op">$</span>memoria &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p075_<span class="dv">1</span> 
-datos_acdivoca_num &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">c</span>(<span class="st">&quot;p024_1&quot;</span>, <span class="st">&quot;p024_2&quot;</span>, <span class="st">&quot;p024_3&quot;</span>, <span class="st">&quot;p024_4&quot;</span>, <span class="st">&quot;p024_5&quot;</span>, 
-              <span class="st">&quot;p024_6&quot;</span>, <span class="st">&quot;p024_7&quot;</span>, <span class="st">&quot;p024_8&quot;</span>, <span class="st">&quot;p053&quot;</span>,
-              <span class="st">&quot;p058&quot;</span>, <span class="st">&quot;memoria&quot;</span>), 
-            recode, <span class="st">&quot;1&quot;</span>=<span class="op">-</span><span class="dv">2</span>, <span class="st">&quot;2&quot;</span>=<span class="op">-</span><span class="dv">1</span>,<span class="st">&quot;4&quot;</span>=<span class="dv">1</span>,<span class="st">&quot;5&quot;</span>=<span class="dv">2</span>,<span class="st">&quot;3&quot;</span>=<span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">c</span>(<span class="st">&quot;p059&quot;</span>), recode, <span class="st">&quot;1&quot;</span>=<span class="dv">2</span>,<span class="st">&quot;2&quot;</span>=<span class="dv">1</span>,
-                                <span class="st">&quot;4&quot;</span>=<span class="op">-</span><span class="dv">1</span>,<span class="st">&quot;5&quot;</span>=<span class="op">-</span><span class="dv">2</span>, <span class="st">&quot;3&quot;</span>=<span class="dv">0</span>)</code></pre></div>
+datos_acdivoca_<span class="dv">2019</span> &lt;-<span class="st"> </span>datos_acdivoca_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_at</span>(<span class="kw">c</span>(<span class="st">&quot;Pe10_1&quot;</span>,<span class="st">&quot;Pe10_2&quot;</span>,<span class="st">&quot;Pe10_3&quot;</span>,<span class="st">&quot;Pe10_4&quot;</span>,<span class="st">&quot;Pe10_5&quot;</span>, <span class="st">&quot;Pe39&quot;</span>, <span class="st">&quot;Pe35&quot;</span>), 
+            recode, <span class="st">&quot;1&quot;</span>=<span class="op">-</span><span class="dv">2</span>, <span class="st">&quot;2&quot;</span>=<span class="op">-</span><span class="dv">1</span>,<span class="st">&quot;3&quot;</span>=<span class="dv">1</span>,<span class="st">&quot;4&quot;</span>=<span class="dv">2</span>)</code></pre></div>
 <div id="reconciliacion" class="section level2">
 <h2><span class="header-section-number">3.1</span> Reconciliacion</h2>
 <p>El item de reconciliacion es el siguiente:</p>
 <center>
 <img src="Reconciliacion_nuestro.JPG" alt="Items Reconciliacion nuestro" />
 </center>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pregunta p024 -- Preguntas de Reconciliacion. Todos son Directos, se suman para sacar un indice más global.</span>
-datos_acdivoca_num<span class="op">$</span>reconciliacion &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(p024_<span class="dv">1</span>, p024_<span class="dv">2</span>, p024_<span class="dv">3</span>, p024_<span class="dv">4</span>, p024_<span class="dv">5</span>, p024_<span class="dv">6</span>, p024_<span class="dv">7</span>, p024_<span class="dv">8</span>) <span class="op">%&gt;%</span>
+<p>CAMBIOS DEL 2017 AL 2019: <br> Solo hay 4 opciones en la escala Likert. <br> Se quitaron 3 opciones en las preguntas (la p024_3, p024_5 y la p024_8) y, dos de las que mantuvieron fueron reformuladas(p024_6 y la p024_7). <br></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pregunta Pe10 -- Preguntas de Reconciliacion. Todos son Directos, se suman para sacar un indice más global.</span>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>reconciliacion &lt;-<span class="st"> </span>datos_acdivoca_<span class="dv">2019</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="st">&quot;Pe10_1&quot;</span>,<span class="st">&quot;Pe10_2&quot;</span>,<span class="st">&quot;Pe10_3&quot;</span>,<span class="st">&quot;Pe10_4&quot;</span>,<span class="st">&quot;Pe10_5&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rowSums</span>()</code></pre></div>
 </div>
 <div id="disculpas" class="section level2">
 <h2><span class="header-section-number">3.2</span> Disculpas</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p053 -- Pregunta sobre las disculpas. Solo es una entonces good</span>
-datos_acdivoca_num<span class="op">$</span>disculpas &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p053</code></pre></div>
+<p>CAMBIOS DEL 2017 AL 2019: <br> Solo hay 4 opciones en la escala Likert. <br> Se cambio la formulacion. La nueva pregunta es: “…cuando agreden a alguien le piden disculpas?” 1-Nunca, 2-Casi Nunca, 3-Casi Siempre, 4-Siempre. <br></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta Pe39 -- Pregunta sobre las disculpas. Solo es una entonces good</span>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>disculpas &lt;-<span class="st"> </span>datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Pe39</code></pre></div>
 </div>
 <div id="violencia" class="section level2">
 <h2><span class="header-section-number">3.3</span> Violencia</h2>
@@ -810,112 +810,71 @@ datos_acdivoca_num<span class="op">$</span>disculpas &lt;-<span class="st"> </sp
 <center>
 <img src="Violencia.JPG" alt="Items Violencia" />
 </center>
-<p>Es la suma de esos items. El segundo tiene la escala invertida. Asi, el indice va de 2 a 10 y, a mayor indice de violencia, mas metodos de dialogo violentos tiene el municipio a buscar la reconciliacion</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p058 y p059. Ambas de Violencia. La segunda tiene escala invertida. La Primera no. Se hacen los arreglos necesarios para poder sumarlas.</span>
+<p>Es la suma de esos items. El segundo tiene la escala invertida. Asi, el indice va de -4 a 4 y, a mayor indice de violencia, mas metodos de dialogo violentos tiene el municipio a buscar la reconciliacion <br> <br></p>
+<p>CAMBIOS DEL 2017 AL 2019: <br> Solo hay 4 opciones en la escala Likert. <br> Se cambio la formulacion de p058. La nueva pregunta es: “…creen que la agresión física o verbal es necesaria para solucionar problemas de la cotidianidad?” 1-Nunca, 2-Casi Nunca, 3-Casi Siempre, 4-Siempre. Se cambio la formulacion de p059. Se volvio una dicotomica en la que se pregunta: ¿Conoce y tiene la posibilidad de participar en acciones que mejoren la seguridad ciudadana en su barrio? <br></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta Pe35. </span>
 
-datos_acdivoca_num<span class="op">$</span>violencia &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(p058, p059) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">rowSums</span>()</code></pre></div>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>violencia &lt;-<span class="st"> </span>datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Pe35</code></pre></div>
 </div>
-<div id="rencor" class="section level2">
-<h2><span class="header-section-number">3.4</span> Rencor</h2>
-<p>El item de rencor es el siguiente:</p>
-<center>
-<img src="rencor.JPG" alt="Items Rencor" />
-</center>
-<p>Este indice es interesante. Se hace una formula para sacar un indice entre 0 y 15. Un valor bajito representa una persona con mucho rencor mientras que un valor alto representa a una persona con culpa. La formula es la siguiente:</p>
-<p><span class="math inline">\(Rencor = \frac{Otro_{i}}{Uno_{i}} \times \frac{(Otro_{i}+Uno_{i})}{2}\)</span></p>
-<p>Así: <span class="math inline">\(0 &lt; Rencor &lt; 15\)</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p071a y p071b. Este es chevere. Indice de rencor. Se hace una formula para hablar de la &quot;gravedad&quot; del rencor. Un valor alto indica alta culpa, un valor bajo indica rencor. </span>
-
-datos_acdivoca_num<span class="op">$</span>rencor &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(p071_<span class="dv">1</span>, p071_<span class="dv">2</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">rencor=</span>(p071_<span class="dv">2</span><span class="op">/</span>p071_<span class="dv">1</span>)<span class="op">*</span>((p071_<span class="dv">1</span><span class="op">+</span>p071_<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(rencor) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">as.matrix</span>(<span class="kw">sapply</span>(., as.numeric)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">as.numeric</span>()</code></pre></div>
+<div id="rencor-no-se-puede-porque-se-quito-un-item" class="section level2">
+<h2><span class="header-section-number">3.4</span> Rencor NO SE PUEDE PORQUE SE QUITO UN ITEM</h2>
+<p>Quitaron el item en el que se preguntaba por la percepcion propia y por eso no se puede construir el item.</p>
 </div>
-<div id="memoria-historica" class="section level2">
-<h2><span class="header-section-number">3.5</span> Memoria Historica</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p075_1 es de memora historica.</span>
-
-datos_acdivoca_num<span class="op">$</span>memoria &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p075_<span class="dv">1</span> </code></pre></div>
+<div id="memoria-historica-no-se-puede-porque-se-quito-el-item" class="section level2">
+<h2><span class="header-section-number">3.5</span> Memoria Historica NO SE PUEDE PORQUE SE QUITO EL ITEM</h2>
 </div>
-<div id="item-de-memoria-historica-con-expectativas-bicchieri" class="section level2">
-<h2><span class="header-section-number">3.6</span> Item de memoria historica con expectativas (Bicchieri)</h2>
-<p>El item de memoria historica es el siguiente:</p>
-<center>
-<img src="memoria_historica.JPG" alt="Items memoria historica" />
-</center>
-<p>Este item tiene la misma formula que la del indice de rencor solo que se hace con las preguntas de memoria historica. La formula es la misma.</p>
-<p><span class="math inline">\(Memoria_{Bicchieri} = \frac{Otro_{i}}{Uno_{i}} \times \frac{(Otro_{i}+Uno_{i})}{2}\)</span></p>
-<p>Asi: <span class="math inline">\(0 &lt; Memoria_{Bicchieri} &lt; 15\)</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#indice de memoria histórica y expectativas cf. Bicchieri.</span>
-
-datos_acdivoca_num<span class="op">$</span>memoria_expectativa &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(p075_<span class="dv">1</span>, p075_<span class="dv">2</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">memoria_expectativa=</span>(p075_<span class="dv">2</span><span class="op">/</span>p075_<span class="dv">1</span>)<span class="op">*</span>((p075_<span class="dv">1</span><span class="op">+</span>p075_<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(memoria_expectativa) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">as.matrix</span>(<span class="kw">sapply</span>(., as.numeric)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">as.numeric</span>()</code></pre></div>
+<div id="item-de-memoria-historica-con-expectativas-bicchieri-no-se-puede-se-quito-un-item" class="section level2">
+<h2><span class="header-section-number">3.6</span> Item de memoria historica con expectativas (Bicchieri) NO SE PUEDE SE QUITO UN ITEM</h2>
+<p>Solo dejaron un item y es en el que preguntan: En una escala donde 1 es totalmente en desacuerdo y 4 es totalmente de acuerdo, ¿Que tan de acuerdo esta con la siguiente frase?: <br></p>
+<p>Las personas de su barrio o vereda piensan que reconstruir la memoria del conflicto armado del país abre heridas del pasado.</p>
 </div>
 <div id="confianza-en-vecinos" class="section level2">
 <h2><span class="header-section-number">3.7</span> Confianza en Vecinos</h2>
-<p>Este item pregunta: ¿Usted en cuantos vecinos confia? Y responden de 1 a 5 en donde 1 es “En ninguno” y 5 es “En todos”</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p065 -- Pregunta sobre las disculpas. Solo es una entonces good</span>
-datos_acdivoca_num<span class="op">$</span>confianza_vec &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p065</code></pre></div>
+<p>Este item pregunta: ¿Usted en cuantos vecinos confia? Y responden de 1 a 5 en donde 1 es “En ninguno” y 5 es “En todos” <br> CAMBIOS DEL 2017 AL 2019: <br> Solo hay 4 opciones en la escala Likert. <br> En una escala donde 1 es En ninguno y 4 es En todos ¿Usted en cuántos vecinos confía? 1-Nunca, 2-Casi Nunca, 3-Casi Siempre, 4-Siempre.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta Pe40 -- Pregunta sobre las disculpas. Solo es una entonces good</span>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>confianza_vec &lt;-<span class="st"> </span>datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>Pe40</code></pre></div>
 </div>
-<div id="confianza-en-colombianos" class="section level2">
-<h2><span class="header-section-number">3.8</span> Confianza en Colombianos</h2>
-<p>Este item pregunta: ¿Usted en cuantos colombianos confia? Y responden de 1 a 5 en donde 1 es “En ninguno” y 5 es “En todos”</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p066 -- Pregunta sobre las disculpas. Solo es una entonces good</span>
-datos_acdivoca_num<span class="op">$</span>confianza_col &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p066</code></pre></div>
+<div id="confianza-en-colombianos-no-se-puede-se-quito-el-item" class="section level2">
+<h2><span class="header-section-number">3.8</span> Confianza en Colombianos NO SE PUEDE SE QUITO EL ITEM</h2>
 </div>
-<div id="armonia-en-colombianos" class="section level2">
-<h2><span class="header-section-number">3.9</span> Armonia en Colombianos</h2>
-<p>Este item pregunta: ¿Usted piensa que en Colombia hay armonia o entendimiento entre las personas? Y responden de 1 a 5 en donde 1 es “Totalmente en desacuerdo” y 5 es “Totalmente de acuerdo”</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p051 -- </span>
-datos_acdivoca_num<span class="op">$</span>armonia_col &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p051</code></pre></div>
+<div id="armonia-en-colombianos-no-se-puede-se-quito-el-item" class="section level2">
+<h2><span class="header-section-number">3.9</span> Armonia en Colombianos NO SE PUEDE SE QUITO EL ITEM</h2>
 </div>
-<div id="buena-voluntad" class="section level2">
-<h2><span class="header-section-number">3.10</span> Buena Voluntad</h2>
-<p>Este item pregunta: ¿Con que frecuencia usted tiene pensamientos en los que les desea el bien a los demas? Y responden de 1 a 5 en donde 1 es “Nunca” y 5 es “Siempre”</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p074 -- </span>
-datos_acdivoca_num<span class="op">$</span>buena_voluntad &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p074</code></pre></div>
+<div id="buena-voluntad-no-se-puede-se-quito-el-item" class="section level2">
+<h2><span class="header-section-number">3.10</span> Buena Voluntad NO SE PUEDE SE QUITO EL ITEM</h2>
 </div>
-<div id="sentido-de-pertenencia" class="section level2">
-<h2><span class="header-section-number">3.11</span> Sentido de Pertenencia</h2>
-<p>Este item pregunta: ¿Como es su sentido de pertenencia a comunidades y grupos? Y responden de 1 a 5 en donde 1 es “No hay sentido de pertenencia” y 5 es “Totalmente”. El 3 representa: “ni fuerte, ni debil”</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p046 -- </span>
-datos_acdivoca_num<span class="op">$</span>pertenencia &lt;-<span class="st"> </span>datos_acdivoca_num<span class="op">$</span>p046</code></pre></div>
+<div id="sentido-de-pertenencia-no-se-puede-se-quito-el-item" class="section level2">
+<h2><span class="header-section-number">3.11</span> Sentido de Pertenencia NO SE PUEDE SE QUITO EL ITEM</h2>
 </div>
 <div id="confianza-en-instituciones" class="section level2">
 <h2><span class="header-section-number">3.12</span> Confianza en Instituciones</h2>
-<p>El item de confianza en las instituciones es el siguiente:</p>
+<p>El item de reconciliacion es el siguiente:</p>
 <center>
 <img src="confianza_instituciones.JPG" alt="Items Confianza Instituciones" />
 </center>
 <p>Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 0 a 85 y, a mayor indice de reconciliacion, mas confia en las instituciones</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p067 -- </span>
+<p>CAMBIOS DEL 2017 AL 2019: <br> Solo hay 4 opciones en la escala Likert. <br> Se quitaron 3 opciones en las preguntas y, dos de las que mantuvieron fueron y se agrego una opcion: ¿Qué tanta confianza tiene por… n. …organizaciones que ayudan a los venezolanos? <br></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta Pe41 -- </span>
 
 <span class="co">#Ojo aqui porque todos los valores de NS/NR/no conoce se tomaron como valores perdidos. </span>
-datos_acdivoca_num<span class="op">$</span>confianza_instituciones &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;p067&quot;</span>)) <span class="op">%&gt;%</span>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>confianza_instituciones &lt;-<span class="st"> </span>datos_acdivoca_<span class="dv">2019</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;Pe41&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate_all</span>(<span class="op">~</span><span class="kw">na_if</span>(., <span class="st">&#39;99&#39;</span>))<span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rowSums</span>()</code></pre></div>
 </div>
 <div id="confianza-en-medios-de-comunicacion" class="section level2">
 <h2><span class="header-section-number">3.13</span> Confianza en Medios de comunicacion</h2>
-<p>El item de confianza en medios es el siguiente:</p>
+<p>El item de reconciliacion es el siguiente:</p>
 <center>
 <img src="confianza_medios.JPG" alt="Items Confianza medios" />
 </center>
 <p>Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 0 a 35 y, a mayor indice de reconciliacion, mas confia en los medios de comunciacion</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p083 -- </span>
+<p>CAMBIOS DEL 2017 AL 2019: <br> Solo hay 4 opciones en la escala Likert: En una escala donde 1 es nada y 4 es totalmente, ¿Qué tanto confía en las siguientes fuentes de información? y se quito la opcion de no sabe no responde. <br></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta Pe42 -- </span>
 
 <span class="co">#Ojo aqui porque todos los valores de NS/NR/no conoce se tomaron como valores perdidos. </span>
-datos_acdivoca_num<span class="op">$</span>confianza_medios &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;p083&quot;</span>)) <span class="op">%&gt;%</span>
+datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>confianza_medios &lt;-<span class="st"> </span>datos_acdivoca_<span class="dv">2019</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;Pe42&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate_all</span>(<span class="op">~</span><span class="kw">na_if</span>(., <span class="st">&#39;99&#39;</span>))<span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rowSums</span>()</code></pre></div>
 </div>
@@ -924,89 +883,77 @@ datos_acdivoca_num<span class="op">$</span>confianza_medios &lt;-<span class="st
 <h1><span class="header-section-number">4</span> Estadisticos de los items creados</h1>
 <p>Aqui exponemos las estadisticas descriptivas de los items que se acaban de crear</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Otra forma de ver los estadisticos </span>
-datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">select</span>(memoria, reconciliacion, disculpas, 
-         violencia, rencor, memoria_expectativa, confianza_vec, 
-         confianza_col, armonia_col, buena_voluntad, pertenencia, confianza_instituciones, confianza_medios) <span class="op">%&gt;%</span><span class="st"> </span>
+datos_acdivoca_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(reconciliacion, disculpas, 
+         violencia, confianza_vec, confianza_instituciones, confianza_medios) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">describe</span>(<span class="dt">fast =</span> T) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">print</span>()</code></pre></div>
-<pre><code>##                         vars     n  mean    sd   min max range   se
-## memoria                    1 11966  3.33  1.08   1.0   5   4.0 0.01
-## reconciliacion             2 11966  3.41  6.22 -16.0  16  32.0 0.06
-## disculpas                  3 11966  0.80  1.02  -2.0   2   4.0 0.01
-## violencia                  4 11966 -1.23  1.46  -4.0   4   8.0 0.01
-## rencor                     5 11966  3.67  1.06   0.6  15  14.4 0.01
-## memoria_expectativa        6 11966  3.38  1.25   0.6  15  14.4 0.01
-## confianza_vec              7 11966  2.49  1.09   1.0   5   4.0 0.01
-## confianza_col              8 11966  2.44  0.96   1.0   5   4.0 0.01
-## armonia_col                9 11966  2.94  0.93   1.0   5   4.0 0.01
-## buena_voluntad            10 11966  3.82  0.95   1.0   5   4.0 0.01
-## pertenencia               11 11966  3.22  0.95   1.0   5   4.0 0.01
-## confianza_instituciones   12  1062 47.50 13.01  18.0  86  68.0 0.40
-## confianza_medios          13 11045 18.85  6.62   7.0  35  28.0 0.06</code></pre>
+<pre><code>##                         vars     n  mean   sd min max range   se
+## reconciliacion             1 11345  0.43 5.02 -10  10    20 0.05
+## disculpas                  2 11345 -0.15 1.30  -2   2     4 0.01
+## violencia                  3 11345 -1.12 1.20  -2   2     4 0.01
+## confianza_vec              4 11345  2.12 0.74   1   4     3 0.01
+## confianza_instituciones    5 11345 25.28 7.17  14  56    42 0.07
+## confianza_medios           6 11345 13.52 3.94   7  28    21 0.04</code></pre>
 </div>
 <div id="creacion-variables-generales-el-collapse-por-municipio" class="section level1">
 <h1><span class="header-section-number">5</span> Creacion variables generales (el collapse por municipio)</h1>
+<p>Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (año, pib, poblacion, etc.)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Collapse estadisticos por municipio</span>
 
-reconciliacion_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(reconciliacion <span class="op">~</span><span class="st"> </span>Municipio, 
-                                  datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-disculpas_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(disculpas <span class="op">~</span><span class="st"> </span>Municipio, 
-                             datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-violencia_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(violencia <span class="op">~</span><span class="st"> </span>Municipio, 
-                             datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-rencor_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(rencor <span class="op">~</span><span class="st"> </span>Municipio, 
-                          datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-memoria_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(memoria <span class="op">~</span><span class="st"> </span>Municipio, 
-                           datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-memoria_expectativa_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(memoria_expectativa <span class="op">~</span><span class="st"> </span>Municipio, 
-                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-confianza_vec_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_vec <span class="op">~</span><span class="st"> </span>Municipio, 
-                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-confianza_col_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_col <span class="op">~</span><span class="st"> </span>Municipio, 
-                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-armonia_col_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(armonia_col <span class="op">~</span><span class="st"> </span>Municipio, 
-                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-buena_voluntad_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(buena_voluntad <span class="op">~</span><span class="st"> </span>Municipio, 
-                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-pertenencia_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(pertenencia <span class="op">~</span><span class="st"> </span>Municipio, 
-                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-confianza_instituciones_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_instituciones <span class="op">~</span><span class="st"> </span>Municipio, 
-                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
-confianza_medios_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_medios <span class="op">~</span><span class="st"> </span>Municipio, 
-                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )</code></pre></div>
+reconciliacion_agreg2019 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(reconciliacion <span class="op">~</span><span class="st"> </span>Municipio, 
+                                  datos_acdivoca_<span class="dv">2019</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F)
+
+disculpas_agreg2019 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(disculpas <span class="op">~</span><span class="st"> </span>Municipio, 
+                             datos_acdivoca_<span class="dv">2019</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+violencia_agreg2019 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(violencia <span class="op">~</span><span class="st"> </span>Municipio, 
+                             datos_acdivoca_<span class="dv">2019</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+confianza_vec_agreg2019 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_vec <span class="op">~</span><span class="st"> </span>Municipio, 
+                                       datos_acdivoca_<span class="dv">2019</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+confianza_instituciones_agreg2019 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_instituciones <span class="op">~</span><span class="st"> </span>Municipio, 
+                                       datos_acdivoca_<span class="dv">2019</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+confianza_medios_agreg2019 &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_medios <span class="op">~</span><span class="st"> </span>Municipio, 
+                                       datos_acdivoca_<span class="dv">2019</span>, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+
+
+items_acdi_agregados_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">cbind</span>(reconciliacion_agreg2019,
+                                   disculpas_agreg2019[<span class="op">-</span><span class="dv">1</span>],
+                                   violencia_agreg2019[<span class="op">-</span><span class="dv">1</span>],
+                                   confianza_vec_agreg2019[<span class="op">-</span><span class="dv">1</span>],
+                                   confianza_instituciones_agreg2019[<span class="op">-</span><span class="dv">1</span>],
+                                   confianza_medios_agreg2019[<span class="op">-</span><span class="dv">1</span>])</code></pre></div>
 </div>
 <div id="merge-con-base-de-datos-cede-general" class="section level1">
 <h1><span class="header-section-number">6</span> MERGE con base de datos CEDE general</h1>
 <p>Finalmente, vamos a pegar esta base de datos (el CEDE general) con el resto porque esta presenta la informacion mas general de todos los municipios (año, pib, poblacion, etc.)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Merge con base de datos general -----------------------------------------</span>
 <span class="co">#Vamos a limpiar un poco la base general para que el merge sea mas facil de entender</span>
-cede_general_<span class="dv">44</span> &lt;-<span class="st"> </span>cede_general_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
+cede_general_44_<span class="dv">2019</span> &lt;-<span class="st"> </span>cede_general_44_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(Municipio)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#Quitar variable que tienen las otras bases</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">ano_base_general=</span>ano) <span class="co">#Renombrar la variable ano asociada con la base general</span>
 
 <span class="co">#Merge con las bases</span>
-cede_conflicto_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_conflicto_<span class="dv">44</span>, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&quot;codmpio&quot;</span>)
-cede_conflicto_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_conflicto_<span class="dv">44</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;Municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
-cede_educacion_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_educacion, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
-cede_educacion_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_educacion_<span class="dv">44</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
-cede_gobierno_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_gobierno, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
-cede_gobierno_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_gobierno_<span class="dv">44</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
-cede_salud_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_salud, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
-cede_salud_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_salud_<span class="dv">44</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
-cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_tierras, cede_general_<span class="dv">44</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
-cede_tierras_<span class="dv">44</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_tierras_<span class="dv">44</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)</code></pre></div>
+cede_conflicto_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_conflicto_44_<span class="dv">2019</span>, cede_general_44_<span class="dv">2019</span>, <span class="dt">by=</span><span class="st">&quot;codmpio&quot;</span>)
+cede_conflicto_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_conflicto_44_<span class="dv">2019</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;Municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
+cede_educacion_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_educacion, cede_general_44_<span class="dv">2019</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
+cede_educacion_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_educacion_44_<span class="dv">2019</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
+cede_gobierno_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_gobierno, cede_general_44_<span class="dv">2019</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
+cede_gobierno_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_gobierno_44_<span class="dv">2019</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
+cede_salud_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_salud, cede_general_44_<span class="dv">2019</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
+cede_salud_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_salud_44_<span class="dv">2019</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)
+cede_tierras_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(datos_cede_tierras, cede_general_44_<span class="dv">2019</span>, <span class="dt">by=</span><span class="st">&#39;codmpio&#39;</span>)
+cede_tierras_44_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(cede_tierras_44_<span class="dv">2019</span>, acdi_imr, <span class="dt">by.x=</span><span class="st">&quot;municipio&quot;</span>, <span class="dt">by.y=</span><span class="st">&quot;Municipio_imr&quot;</span>, <span class="dt">all.x =</span> T)</code></pre></div>
 <p>Por ultimo limpiamos las variables que ya no se vuelven a utilizar</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Limpiar environment</span>
 
 <span class="kw">rm</span>(datos_cede_conflicto,datos_cede_educacion,
    datos_cede_generales,datos_cede_gobierno,
-   datos_cede_salud,datos_cede_tierras, cede_general_<span class="dv">44</span>)</code></pre></div>
+   datos_cede_salud,datos_cede_tierras, cede_general_44_<span class="dv">2019</span>)</code></pre></div>
 </div>
 <div id="guardar-environment" class="section level1">
 <h1><span class="header-section-number">7</span> Guardar Environment</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Codigo para guardar el environement (la base de datos), para poder importarla en otros scripts. </span>
-<span class="kw">save.image</span>(<span class="dt">file=</span><span class="st">&#39;MergeBases_Environment.RData&#39;</span>)</code></pre></div>
+<span class="kw">save.image</span>(<span class="dt">file=</span><span class="st">&#39;MergeBases2019_Environment.RData&#39;</span>)</code></pre></div>
 </div>
 
 

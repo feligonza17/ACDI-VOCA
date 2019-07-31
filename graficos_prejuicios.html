@@ -458,16 +458,29 @@ div.tocify {
     Home
   </a>
 </li>
-<li>
-  <a href="Merge_bases.html">Codigo para iniciar</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Panel CEDE Municipal
+    Cod. para iniciar
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Merge_bases.html">Indice IMR 2017 y PANEL CEDE</a>
+    </li>
+    <li>
+      <a href="Merge_bases_2019.html">Indice IMR 2019</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analisis 44 mpios
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Panel CEDE Municipal</li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploraciones</a>
       <ul class="dropdown-menu" role="menu">
@@ -508,29 +521,39 @@ div.tocify {
         </li>
       </ul>
     </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ELCA</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="elca_exploracion.html">
+            <span class="fa fa-object-ungroup"></span>
+             
+            Depuracion y merge
+          </a>
+        </li>
+        <li>
+          <a href="elca_modulo_politica.html">
+            <span class="fa fa-comment"></span>
+             
+            Modulo Politica
+          </a>
+        </li>
+      </ul>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    ELCA
+    Analisis 27 mpios (PAR)
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="elca_exploracion.html">
-        <span class="fa fa-object-ungroup"></span>
-         
-        Depuracion y merge
-      </a>
+      <a href="Analisis_indice_PAR.html">Analisis PAR. Primera ola 2017</a>
     </li>
-    <li>
-      <a href="elca_modulo_politica.html">
-        <span class="fa fa-comment"></span>
-         
-        Modulo Politica
-      </a>
-    </li>
+    <li class="dropdown-header">Analisis PAR. Segunda ola 2019</li>
+    <li class="dropdown-header">Analisis PAR. Diferencias</li>
   </ul>
 </li>
 <li class="dropdown">
@@ -541,15 +564,20 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="encuesta_diferencias_municipal.html">Exploracion Diferencias Municipales</a>
+      <a href="graficos_prejuicios.html">
+        <span class="fa fa-dizzy"></span>
+         
+        Graficos prejuicios
+      </a>
     </li>
     <li>
-      <a href="graficos_prejuicios.html">Graficos prejuicios</a>
+      <a href="encuesta_diferencias_municipal.html">
+        <span class="fa fa-chart-bar"></span>
+         
+        Exploracion Diferencias Municipales
+      </a>
     </li>
   </ul>
-</li>
-<li>
-  <a href="Analisis_indice_PAR.html">Analisis PAR</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -621,7 +649,9 @@ div.tocify {
 <span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(forcats)
 <span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
-base_stata &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata.dta&quot;</span>, <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)</code></pre></div>
+base_stata &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata.dta&quot;</span>, <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)
+
+base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta&quot;</span>, <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)</code></pre></div>
 <p>En esta presentacion se van a presentar los hallazgos mas relevantes para el evento ACDIVOCA. A continuacion se presentan los graficos que podrian romper algunos prejuicios o actitudes negativas. Esto dependiendo de como lo definamos.</p>
 </div>
 <div id="homicidios-haber-sufrido-homicidios-y-reconciliacion" class="section level1">
@@ -653,6 +683,23 @@ base_stata &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span 
   <span class="kw">print</span>(plot)
 }</code></pre></div>
 <p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">ends_with</span>(<span class="st">&quot;mean2019&quot;</span>))
+<span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">2</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>))
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">which</span>(<span class="kw">colnames</span>(x)<span class="op">==</span><span class="st">&quot;reconciliacion_mean2019&quot;</span>)){
+   
+  plot &lt;-<span class="st"> </span>
+<span class="st">    </span>
+<span class="st">    </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span>(<span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&gt;</span><span class="kw">mean</span>(homi_cienmil_mean),
+                             <span class="st">&quot;Alta homicidios&quot;</span>,<span class="st">&quot;Baja homicidios&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>.[[<span class="kw">names</span>(x)[i]]], <span class="dt">col=</span>mun_homicidio)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()<span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Mpios PAR para el 2019&quot;</span>, <span class="dt">y=</span><span class="kw">names</span>(x[i]))<span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))
+  <span class="kw">print</span>(plot)
+}</code></pre></div>
+<p><img src="graficos_prejuicios_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
 </div>
 <div id="separandolos-en-q1-y-q3" class="section level3">
 <h3><span class="header-section-number">2.1.2</span> Separandolos en Q1 y Q3</h3>
