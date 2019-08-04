@@ -342,7 +342,7 @@ Se quitaron 3 opciones en las preguntas y, dos de las que mantuvieron fueron y s
 
 #Ojo aqui porque todos los valores de NS/NR/no conoce se tomaron como valores perdidos. 
 datos_acdivoca_2019$confianza_instituciones <- datos_acdivoca_2019 %>%
-  select(starts_with("Pe41")) %>%
+  select(starts_with("Pe41"), -Pe41_14) %>%
   mutate_all(~na_if(., '99'))%>%
   rowSums()
 ```

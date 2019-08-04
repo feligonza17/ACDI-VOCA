@@ -447,7 +447,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+      <a class="navbar-brand" href="index.html">ACDI/VOCA</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -460,7 +460,7 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Codigo para iniciar
+    Cod. para iniciar
      
     <span class="caret"></span>
   </a>
@@ -475,7 +475,7 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Analisis con 44 mpios
+    Analisis 44 mpios
      
     <span class="caret"></span>
   </a>
@@ -544,11 +544,31 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analisis 27 mpios (PAR)
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Analisis_indice_PAR.html">Analisis PAR. Primera ola 2017</a>
+    </li>
+    <li class="dropdown-header">Analisis PAR. Segunda ola 2019</li>
+    <li class="dropdown-header">Analisis PAR. Diferencias</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Evento ACDIVOCA
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Comparacion_PAR_por_categorias.html">Analisis Mpios PAR por categorias PREJUICIOS</a>
+    </li>
+    <li>
+      <a href="Reconciliacion,_2017-2019.html">Comparaciones exploratorias mpios PAR 2017-2019</a>
+    </li>
     <li>
       <a href="graficos_prejuicios.html">
         <span class="fa fa-dizzy"></span>
@@ -562,18 +582,6 @@ div.tocify {
          
         Exploracion Diferencias Municipales
       </a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Analisis con 27 mpios (PAR)
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="Analisis_indice_PAR.html">Analisis PAR</a>
     </li>
   </ul>
 </li>
@@ -858,7 +866,7 @@ datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>confianza_ve
 
 <span class="co">#Ojo aqui porque todos los valores de NS/NR/no conoce se tomaron como valores perdidos. </span>
 datos_acdivoca_<span class="dv">2019</span><span class="op">$</span>confianza_instituciones &lt;-<span class="st"> </span>datos_acdivoca_<span class="dv">2019</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;Pe41&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;Pe41&quot;</span>), <span class="op">-</span>Pe41_<span class="dv">14</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate_all</span>(<span class="op">~</span><span class="kw">na_if</span>(., <span class="st">&#39;99&#39;</span>))<span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rowSums</span>()</code></pre></div>
 </div>
@@ -893,7 +901,7 @@ datos_acdivoca_<span class="dv">2019</span> <span class="op">%&gt;%</span><span 
 ## disculpas                  2 11345 -0.15 1.30  -2   2     4 0.01
 ## violencia                  3 11345 -1.12 1.20  -2   2     4 0.01
 ## confianza_vec              4 11345  2.12 0.74   1   4     3 0.01
-## confianza_instituciones    5 11345 25.28 7.17  14  56    42 0.07
+## confianza_instituciones    5 11345 23.41 6.66  13  52    39 0.06
 ## confianza_medios           6 11345 13.52 3.94   7  28    21 0.04</code></pre>
 </div>
 <div id="creacion-variables-generales-el-collapse-por-municipio" class="section level1">

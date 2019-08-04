@@ -390,6 +390,55 @@ datos_acdivoca_num$confianza_medios <- datos_acdivoca_num %>%
 ```
 
 
+```{r include=FALSE}
+
+#Esto es para generar los items de confianza con las escalas corregidas. 
+#Confianza Vecinos 
+
+
+#En 2017 es: #Pregunta p065 
+#Vamos a recodificar para que quede igual que en IMR 2019
+
+datos_acdivoca_num <- datos_acdivoca_num %>% 
+  mutate_at(c("p065"), 
+            recode, "4"=3, "5"=4,"3"=0)
+
+datos_acdivoca_num$confianza_vec_arr <- datos_acdivoca_num$p065
+
+datos_acdivoca_num <- datos_acdivoca_num %>% 
+  mutate_at(c("p067_1","p067_2","p067_3","p067_4","p067_5","p067_6","p067_7",
+              "p067_8","p067_9","p067_10","p067_11","p067_12","p067_13",
+              "p067_14","p067_15","p067_16","p067_17"), 
+            recode, "4"=3, "5"=4,"3"=0)
+
+datos_acdivoca_num$confianza_instituciones_arr <- datos_acdivoca_num %>%
+  select(starts_with("p067"), -p067_2 , -p067_8 , -p067_14 , -p067_17 ,-p067_18) %>%
+  rowSums()
+
+datos_acdivoca_num <- datos_acdivoca_num %>% 
+  mutate_at(c("p083_1","p083_2","p083_3","p083_4","p083_5","p083_6","p083_7"), 
+            recode, "4"=3, "5"=4,"3"=0, "99"=0)
+
+datos_acdivoca_num$confianza_medios_arr <- datos_acdivoca_num %>%
+  select(starts_with("p083")) %>%
+  rowSums()
+
+
+
+confianza_vec_agregarr <- summaryBy(confianza_vec_arr ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+
+confianza_instituciones_agregarr <- summaryBy(confianza_instituciones_arr ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=T)
+confianza_medios_agregarr <- summaryBy(confianza_medios_arr ~ Municipio, 
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=T )
+
+
+
+```
+
+
+
 #Estadisticos de los items creados
 
 Aqui exponemos las estadisticas descriptivas de los items que se acaban de crear

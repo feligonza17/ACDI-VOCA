@@ -1286,7 +1286,10 @@ base_stata <- as.data.frame(cbind(descrip_homi,
                                   buena_voluntad_agreg[-1],
                                   pertenencia_agreg[-1], 
                                   confianza_instituciones_agreg[-1],
-                                  confianza_medios_agreg[-1]
+                                  confianza_medios_agreg[-1],
+                                  confianza_vec_agregarr[-1],
+                                  confianza_instituciones_agregarr[-1],
+                                  confianza_medios_agregarr[-1]
                                   ))
 
 base_stata_2019 <- merge(base_stata, columna_PAR, by="Municipio", all.x=TRUE)
