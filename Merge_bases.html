@@ -460,7 +460,7 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Codigo para iniciar
+    Cod. para iniciar
      
     <span class="caret"></span>
   </a>
@@ -475,7 +475,7 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Analisis con 44 mpios
+    Analisis 44 mpios
      
     <span class="caret"></span>
   </a>
@@ -544,6 +544,20 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analisis 27 mpios (PAR)
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Analisis_indice_PAR.html">Analisis PAR. Primera ola 2017</a>
+    </li>
+    <li class="dropdown-header">Analisis PAR. Segunda ola 2019</li>
+    <li class="dropdown-header">Analisis PAR. Diferencias</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Evento ACDIVOCA
      
     <span class="caret"></span>
@@ -562,18 +576,6 @@ div.tocify {
          
         Exploracion Diferencias Municipales
       </a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Analisis con 27 mpios (PAR)
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="Analisis_indice_PAR.html">Analisis PAR</a>
     </li>
   </ul>
 </li>
@@ -792,7 +794,7 @@ datos_acdivoca_num &lt;-<span class="st"> </span>datos_acdivoca_num <span class=
 <h2><span class="header-section-number">3.1</span> Reconciliacion</h2>
 <p>El item de reconciliacion es el siguiente:</p>
 <center>
-<img src="Reconciliacion_nuestro.JPG" alt="Items Reconciliacion nuestro" />
+<img src="C:/Users/felig/Dropbox/Proyecto%20Juan%20Camilo/Evento%20ACIDVOCA/Reconciliacion_nuestro.JPG" alt="Items Reconciliacion nuestro" />
 </center>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pregunta p024 -- Preguntas de Reconciliacion. Todos son Directos, se suman para sacar un indice más global.</span>
 datos_acdivoca_num<span class="op">$</span>reconciliacion &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
@@ -808,7 +810,7 @@ datos_acdivoca_num<span class="op">$</span>disculpas &lt;-<span class="st"> </sp
 <h2><span class="header-section-number">3.3</span> Violencia</h2>
 <p>El item de violencia es el siguiente:</p>
 <center>
-<img src="Violencia.JPG" alt="Items Violencia" />
+<img src="C:/Users/felig/Dropbox/Proyecto%20Juan%20Camilo/Evento%20ACIDVOCA/Violencia.JPG" alt="Items Violencia" />
 </center>
 <p>Es la suma de esos items. El segundo tiene la escala invertida. Asi, el indice va de 2 a 10 y, a mayor indice de violencia, mas metodos de dialogo violentos tiene el municipio a buscar la reconciliacion</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p058 y p059. Ambas de Violencia. La segunda tiene escala invertida. La Primera no. Se hacen los arreglos necesarios para poder sumarlas.</span>
@@ -821,7 +823,7 @@ datos_acdivoca_num<span class="op">$</span>violencia &lt;-<span class="st"> </sp
 <h2><span class="header-section-number">3.4</span> Rencor</h2>
 <p>El item de rencor es el siguiente:</p>
 <center>
-<img src="rencor.JPG" alt="Items Rencor" />
+<img src="C:/Users/felig/Dropbox/Proyecto%20Juan%20Camilo/Evento%20ACIDVOCA/rencor.JPG" alt="Items Rencor" />
 </center>
 <p>Este indice es interesante. Se hace una formula para sacar un indice entre 0 y 15. Un valor bajito representa una persona con mucho rencor mientras que un valor alto representa a una persona con culpa. La formula es la siguiente:</p>
 <p><span class="math inline">\(Rencor = \frac{Otro_{i}}{Uno_{i}} \times \frac{(Otro_{i}+Uno_{i})}{2}\)</span></p>
@@ -845,7 +847,7 @@ datos_acdivoca_num<span class="op">$</span>memoria &lt;-<span class="st"> </span
 <h2><span class="header-section-number">3.6</span> Item de memoria historica con expectativas (Bicchieri)</h2>
 <p>El item de memoria historica es el siguiente:</p>
 <center>
-<img src="memoria_historica.JPG" alt="Items memoria historica" />
+<img src="C:/Users/felig/Dropbox/Proyecto%20Juan%20Camilo/Evento%20ACIDVOCA/memoria_historica.JPG" alt="Items memoria historica" />
 </center>
 <p>Este item tiene la misma formula que la del indice de rencor solo que se hace con las preguntas de memoria historica. La formula es la misma.</p>
 <p><span class="math inline">\(Memoria_{Bicchieri} = \frac{Otro_{i}}{Uno_{i}} \times \frac{(Otro_{i}+Uno_{i})}{2}\)</span></p>
@@ -893,22 +895,21 @@ datos_acdivoca_num<span class="op">$</span>pertenencia &lt;-<span class="st"> </
 <h2><span class="header-section-number">3.12</span> Confianza en Instituciones</h2>
 <p>El item de confianza en las instituciones es el siguiente:</p>
 <center>
-<img src="confianza_instituciones.JPG" alt="Items Confianza Instituciones" />
+<img src="C:/Users/felig/Dropbox/Proyecto%20Juan%20Camilo/Evento%20ACIDVOCA/confianza_instituciones.JPG" alt="Items Confianza Instituciones" />
 </center>
 <p>Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 0 a 85 y, a mayor indice de reconciliacion, mas confia en las instituciones</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p067 -- </span>
 
 <span class="co">#Ojo aqui porque todos los valores de NS/NR/no conoce se tomaron como valores perdidos. </span>
 datos_acdivoca_num<span class="op">$</span>confianza_instituciones &lt;-<span class="st"> </span>datos_acdivoca_num <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;p067&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate_all</span>(<span class="op">~</span><span class="kw">na_if</span>(., <span class="st">&#39;99&#39;</span>))<span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;p067&quot;</span>), <span class="op">-</span>p067_<span class="dv">18</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rowSums</span>()</code></pre></div>
 </div>
 <div id="confianza-en-medios-de-comunicacion" class="section level2">
 <h2><span class="header-section-number">3.13</span> Confianza en Medios de comunicacion</h2>
 <p>El item de confianza en medios es el siguiente:</p>
 <center>
-<img src="confianza_medios.JPG" alt="Items Confianza medios" />
+<img src="C:/Users/felig/Dropbox/Proyecto%20Juan%20Camilo/Evento%20ACIDVOCA/confianza_medios.JPG" alt="Items Confianza medios" />
 </center>
 <p>Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 0 a 35 y, a mayor indice de reconciliacion, mas confia en los medios de comunciacion</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Pregunta p083 -- </span>
@@ -942,7 +943,7 @@ datos_acdivoca_num <span class="op">%&gt;%</span><span class="st"> </span>
 ## armonia_col                9 11966  2.94  0.93   1.0   5   4.0 0.01
 ## buena_voluntad            10 11966  3.82  0.95   1.0   5   4.0 0.01
 ## pertenencia               11 11966  3.22  0.95   1.0   5   4.0 0.01
-## confianza_instituciones   12  1062 47.50 13.01  18.0  86  68.0 0.40
+## confianza_instituciones   12 11966 40.00 13.58  17.0  85  68.0 0.12
 ## confianza_medios          13 11045 18.85  6.62   7.0  35  28.0 0.06</code></pre>
 </div>
 <div id="creacion-variables-generales-el-collapse-por-municipio" class="section level1">
@@ -972,9 +973,9 @@ buena_voluntad_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</s
 pertenencia_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(pertenencia <span class="op">~</span><span class="st"> </span>Municipio, 
                                        datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
 confianza_instituciones_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_instituciones <span class="op">~</span><span class="st"> </span>Municipio, 
-                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )
+                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>T)
 confianza_medios_agreg &lt;-<span class="st"> </span><span class="kw">summaryBy</span>(confianza_medios <span class="op">~</span><span class="st"> </span>Municipio, 
-                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>F )</code></pre></div>
+                                       datos_acdivoca_num, <span class="dt">FUN=</span><span class="kw">c</span>(sum, median, mean, sd), <span class="dt">na.rm=</span>T )</code></pre></div>
 </div>
 <div id="merge-con-base-de-datos-cede-general" class="section level1">
 <h1><span class="header-section-number">6</span> MERGE con base de datos CEDE general</h1>

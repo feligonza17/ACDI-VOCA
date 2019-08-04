@@ -1,0 +1,1104 @@
+---
+title: 'Reconciliacion mpios PAR: 2017-2019'
+author: "Felipe Gonzalez-Arango"
+date: "22 de julio de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+#Setup
+Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
+
+```{r message=FALSE, warning=FALSE}
+#ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
+
+
+#Set Working Directory
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+rm(list=ls())
+
+#Importar base de datos donde esta todo
+library(haven)
+library(readstata13)
+library(tidyr)
+library(plyr)
+library(dplyr)
+library(gridExtra)
+library(ggplot2)
+library(forcats)
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+base_stata <- read_dta("Para Stata/base_acdi_stata.dta",
+                                   encoding="UTF-8")
+base_stata_2019 <- read_dta("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta", encoding="UTF-8")
+
+
+
+```
+
+
+#Donde la categoria son municipios homicidios
+
+##Separandolos por media
+```{r}
+
+x2017 <- base_stata %>% select(reconciliacion_mean, disculpas_mean, violencia_mean, confianza_vec_mean,confianza_medios_mean, confianza_instituciones_mean)
+x2019 <- base_stata_2019 %>% select(ends_with("mean2019"), ends_with("men2019"))
+
+par(mar=c(4,2,0.1,0.1))
+for(i in 1:length(x2017)){
+   
+  plot <- 
+    
+    base_stata %>%
+    filter(dummyPAR==1) %>% 
+  mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
+                             "Alta homicidios","Baja homicidios"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2017", y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+par(mar=c(4,2,0.1,0.1))
+
+for(i in 1:length(x2019)){
+   
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
+                             "Alta homicidios","Baja homicidios"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+```
+
+##Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+
+
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+        filter(dummyPAR==1) %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017",y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+
+ par(mfrow=c(2,4))
+
+
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+    
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+
+```
+
+##Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+        filter(dummyPAR==1) %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean==max(homi_cienmil_mean),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean==min(homi_cienmil_mean),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017", y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+
+
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean==max(homi_cienmil_mean),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean==min(homi_cienmil_mean),
+                         "Baja homicidios",
+                         NA))))) %>% 
+    filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_homicidio)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+
+```
+
+
+
+#Donde la categoria son municipios violentados
+
+##Separandolos por media
+```{r}
+
+
+par(mar=c(4,2,0.1,0.1))
+for(i in 1:length(x2017)){
+   
+  plot <- 
+    
+    base_stata %>% 
+        filter(dummyPAR==1) %>% 
+  mutate(mun_violentado=(ifelse(Ataques_Pobl_Civil_mean>mean(Ataques_Pobl_Civil_mean),
+                             "violentado","No violentado"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_violentado)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2017", y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+
+x <- base_stata_2019 %>% select(ends_with("mean2019"), ends_with("men2019"))
+for(i in 1:length(x2019)){
+   
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_violentado=(ifelse(Ataques_Pobl_Civil_mean>mean(Ataques_Pobl_Civil_mean),
+                             "violentado","No violentado"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_violentado)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+```
+
+##Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+
+
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_violentado=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean>quantile(Ataques_Pobl_Civil_mean, 0.75),
+                         "violentado",
+                         ifelse(Ataques_Pobl_Civil_mean<quantile(Ataques_Pobl_Civil_mean, 0.25),
+                         "No violentado",
+                         NA))))) %>% 
+    filter(mun_violentado!=is.na(mun_violentado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_violentado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017", y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+
+
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_violentado=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean>quantile(Ataques_Pobl_Civil_mean, 0.75),
+                         "violentado",
+                         ifelse(Ataques_Pobl_Civil_mean<quantile(Ataques_Pobl_Civil_mean, 0.25),
+                         "No violentado",
+                         NA))))) %>% 
+    filter(mun_violentado!=is.na(mun_violentado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_violentado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+
+
+```
+
+##Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+
+
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_violentado=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean==max(Ataques_Pobl_Civil_mean),
+                         "violentado",
+                         ifelse(Ataques_Pobl_Civil_mean==min(Ataques_Pobl_Civil_mean),
+                         "No violentado",
+                         NA))))) %>% 
+    filter(mun_violentado!=is.na(mun_violentado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_violentado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017", y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_violentado=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean==max(Ataques_Pobl_Civil_mean),
+                         "violentado",
+                         ifelse(Ataques_Pobl_Civil_mean==min(Ataques_Pobl_Civil_mean),
+                         "No violentado",
+                         NA))))) %>% 
+    filter(mun_violentado!=is.na(mun_violentado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_violentado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+```
+
+#Donde la categoria son municipios con presencia de victimas (secuestro)
+
+##Separandolos por media
+```{r}
+
+
+par(mar=c(4,2,0.1,0.1))
+for(i in 1:length(x2017)){
+   
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_secuestrado=(ifelse(secuestro_cienmil_mean>mean(secuestro_cienmil_mean),
+                             "Alto secuestro","Bajo secuestro"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_secuestrado)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2017", y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+for(i in 1:length(x2019)){
+   
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_secuestrado=(ifelse(secuestro_cienmil_mean>mean(secuestro_cienmil_mean),
+                             "Alto secuestro","Bajo secuestro"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_secuestrado)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+```
+
+##Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_secuestrado=as.factor((ifelse
+                       (secuestro_cienmil_mean>quantile(secuestro_cienmil_mean, 0.75),
+                         "Alto secuestro",
+                         ifelse(secuestro_cienmil_mean<quantile(secuestro_cienmil_mean, 0.25),
+                         "Bajo secuestro",
+                         NA))))) %>% 
+    filter(mun_secuestrado!=is.na(mun_secuestrado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_secuestrado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017",y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+ par(mfrow=c(2,4))
+
+
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_secuestrado=as.factor((ifelse
+                       (secuestro_cienmil_mean>quantile(secuestro_cienmil_mean, 0.75),
+                         "Alto secuestro",
+                         ifelse(secuestro_cienmil_mean<quantile(secuestro_cienmil_mean, 0.25),
+                         "Bajo secuestro",
+                         NA))))) %>% 
+    filter(mun_secuestrado!=is.na(mun_secuestrado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_secuestrado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+##Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+
+
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_violentado=as.factor((ifelse
+                       (secuestro_cienmil_mean==max(secuestro_cienmil_mean),
+                         "Alto secuestro",
+                         ifelse(secuestro_cienmil_mean==min(secuestro_cienmil_mean),
+                         "Bajo secuestro",
+                         NA))))) %>% 
+    filter(mun_violentado!=is.na(mun_violentado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_violentado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017",y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_violentado=as.factor((ifelse
+                       (secuestro_cienmil_mean==max(secuestro_cienmil_mean),
+                         "Alto secuestro",
+                         ifelse(secuestro_cienmil_mean==min(secuestro_cienmil_mean),
+                         "Bajo secuestro",
+                         NA))))) %>% 
+    filter(mun_violentado!=is.na(mun_violentado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_violentado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019",y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+#Donde la categoria son municipios con presencia de desmoviliazdos
+
+##Separandolos por media
+```{r}
+
+
+par(mar=c(4,2,0.1,0.1))
+for(i in 1:length(x2017)){
+   
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_desmovilizado=(ifelse(desmovilizados_cienmil_mean>mean(desmovilizados_cienmil_mean),
+                             "Alto desmovilizado","Bajo desmovilizado"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_desmovilizado)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2017", y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+for(i in 1:length(x2019)){
+   
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_desmovilizado=(ifelse(desmovilizados_cienmil_mean>mean(desmovilizados_cienmil_mean),
+                             "Alto desmovilizado","Bajo desmovilizado"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_desmovilizado)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+```
+
+##Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+
+
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_desmovilizado=as.factor((ifelse
+                       (desmovilizados_cienmil_mean>quantile(desmovilizados_cienmil_mean, 0.75),
+                         "Alto desmovilizado",
+                         ifelse(desmovilizados_cienmil_mean<quantile(desmovilizados_cienmil_mean, 0.25),
+                         "Bajo desmovilizado",
+                         NA))))) %>% 
+    filter(mun_desmovilizado!=is.na(mun_desmovilizado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_desmovilizado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017",y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_desmovilizado=as.factor((ifelse
+                       (desmovilizados_cienmil_mean>quantile(desmovilizados_cienmil_mean, 0.75),
+                         "Alto desmovilizado",
+                         ifelse(desmovilizados_cienmil_mean<quantile(desmovilizados_cienmil_mean, 0.25),
+                         "Bajo desmovilizado",
+                         NA))))) %>% 
+    filter(mun_desmovilizado!=is.na(mun_desmovilizado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_desmovilizado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019",y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+##Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+
+
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_violentado=as.factor((ifelse
+                       (desmovilizados_cienmil_mean==max(desmovilizados_cienmil_mean),
+                         "Alto desmovilizado",
+                         ifelse(desmovilizados_cienmil_mean==min(desmovilizados_cienmil_mean),
+                         "Bajo desmovilizado",
+                         NA))))) %>% 
+    filter(mun_violentado!=is.na(mun_violentado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_violentado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017",y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+
+  mutate(mun_violentado=as.factor((ifelse
+                       (desmovilizados_cienmil_mean==max(desmovilizados_cienmil_mean),
+                         "Alto desmovilizado",
+                         ifelse(desmovilizados_cienmil_mean==min(desmovilizados_cienmil_mean),
+                         "Bajo desmovilizado",
+                         NA))))) %>% 
+    filter(mun_violentado!=is.na(mun_violentado)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_violentado)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019",y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+#Donde la categoria son municipios pobres
+
+##Separandolos por media
+```{r}
+
+par(mar=c(4,2,0.1,0.1))
+for(i in 1:length(x2017)){
+   
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_pobre=(ifelse(nbi_mean>mean(nbi_mean),
+                             "Alta pobreza","Baja pobreza"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2017", y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+for(i in 1:length(x2019)){
+   
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_pobre=(ifelse(nbi_mean>mean(nbi_mean),
+                             "Alta pobreza","Baja pobreza"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+```
+
+##Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017",y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019",y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+```
+
+##Separandolos entre el maximo y el minimo
+
+```{r}
+
+ par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean==max(nbi_mean),
+                         "Alta pobreza",
+                         ifelse(nbi_mean==min(nbi_mean),
+                         "Baja pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017",y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean==max(nbi_mean),
+                         "Alta pobreza",
+                         ifelse(nbi_mean==min(nbi_mean),
+                         "Baja pobreza",
+                         NA))))) %>% 
+    filter(mun_pobre!=is.na(mun_pobre)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_pobre)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019",y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+
+```
+
+
+
+
+
+
+
+#Donde la categoria son municipios con presencia de establecimientos educativos
+
+##Separandolos por media
+
+```{r}
+
+par(mar=c(4,2,0.1,0.1))
+for(i in 1:length(x2017)){
+   
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_establ=(ifelse(t_establ_mean>mean(t_establ_mean),
+                             "Alta presencia Establecimientos Educativos","Baja presencia Establecimientos Educativos"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_establ)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2017", y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+for(i in 1:length(x2019)){
+   
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_establ=(ifelse(t_establ_mean>mean(t_establ_mean),
+                             "Alta presencia Establecimientos Educativos","Baja presencia Establecimientos Educativos"))) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_establ)) +
+  geom_bar(stat="identity", fill = "white")+
+  theme_minimal()+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  print(plot)
+}
+
+```
+
+##Separandolos en Q1 y Q3
+
+```{r}
+
+ par(mfrow=c(2,4))
+
+
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_establ=as.factor((ifelse
+                       (t_establ_mean>quantile(t_establ_mean, 0.75),
+                         "Alta presencia Establecimientos Educativos",
+                         ifelse(t_establ_mean<quantile(t_establ_mean, 0.25),
+                         "Baja presencia Establecimientos Educativos",
+                         NA))))) %>% 
+    filter(mun_establ!=is.na(mun_establ)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_establ)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017", y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_establ=as.factor((ifelse
+                       (t_establ_mean>quantile(t_establ_mean, 0.75),
+                         "Alta presencia Establecimientos Educativos",
+                         ifelse(t_establ_mean<quantile(t_establ_mean, 0.25),
+                         "Baja presencia Establecimientos Educativos",
+                         NA))))) %>% 
+    filter(mun_establ!=is.na(mun_establ)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_establ)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019", y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+```
+
+##Separandolos entre el maximo y el minimo
+
+```{r}
+
+par(mfrow=c(2,4))
+x <- base_stata[,165:207] %>% select(ends_with("mean"))
+
+
+for(i in 1:length(x2017)){
+
+  plot <- 
+    
+    base_stata %>% 
+    filter(dummyPAR==1) %>% 
+  mutate(mun_establ=as.factor((ifelse
+                       (t_establ_mean==max(t_establ_mean),
+                         "Alta presencia Establecimientos Educativos",
+                         ifelse(t_establ_mean==min(t_establ_mean),
+                         "Baja presencia Establecimientos Educativos",
+                         NA))))) %>% 
+    filter(mun_establ!=is.na(mun_establ)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2017)[i]]], col=mun_establ)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2017",y=names(x2017[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+} 
+
+for(i in 1:length(x2019)){
+
+  plot <- 
+    
+    base_stata_2019 %>% 
+  mutate(mun_establ=as.factor((ifelse
+                       (t_establ_mean==max(t_establ_mean),
+                         "Alta presencia Establecimientos Educativos",
+                         ifelse(t_establ_mean==min(t_establ_mean),
+                         "Baja presencia Establecimientos Educativos",
+                         NA))))) %>% 
+    filter(mun_establ!=is.na(mun_establ)) %>% 
+  ggplot(aes(x=Municipio, y=.[[names(x2019)[i]]], col=mun_establ)) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019",y=names(x2019[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+} 
+
+
+
+```
+
+
+#Pruebas T
+
+```{r}
+base_stata_2017 <-  base_stata %>% filter(dummyPAR==1)
+
+for (i in 1:length(x2017)){
+  
+  ttest <- t.test(as.data.frame(base_stata_2017[names(x2017)][i]),as.data.frame(base_stata_2019[names(x2019)][i]))
+  
+  print(ttest)
+}
+
+```
+
+#Graficos generales
+
+```{r}
+
+
+#Creacion de la bsae de datos para poder comparar los graficos por ano. 
+ano2017 <- c()
+ano2017[1:27] <- 2017
+ano2017 <- t(ano2017)
+ 
+ano2019 <- c()
+ano2019[1:27] <- 2019
+ano2019 <- t(ano2019)
+
+
+#Aqui juntamos los valores de interes de la ola 2017 y 2019. 
+base_stata_2019_tidy <- cbind(base_stata_2019[1],base_stata_2017[names(x2017)], base_stata_2019[names(x2019)])
+                              
+                              
+#Aqui se hace el tidy para poder generar la variable "indicador"
+base_stata_2019_tidy_ensayo <- base_stata_2019_tidy %>%   gather(key=indicador, value=valor, -Municipio)
+
+#Creamos la columna para distinguir las olas
+base_stata_2019_tidy_ensayo$ano <- 0
+base_stata_2019_tidy_ensayo[1:162,4] <- 2017
+base_stata_2019_tidy_ensayo[163:324,4] <- 2019
+
+
+#Limpiamos nombres para que todos encajen en uno mismo. 
+base_stata_2019_tidy_ensayo$indicador <-  gsub("_mean","", base_stata_2019_tidy_ensayo$indicador, ignore.case = TRUE)
+base_stata_2019_tidy_ensayo$indicador <-  gsub("2019","", base_stata_2019_tidy_ensayo$indicador, ignore.case = TRUE)
+base_stata_2019_tidy_ensayo$indicador <-  gsub("_men","", base_stata_2019_tidy_ensayo$indicador, ignore.case = TRUE)
+
+
+base_stata_2019_tidy_ensayo %>%
+ggplot(aes(x=as.factor(indicador), y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(~Municipio)+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+base_stata_2019_tidy_ensayo %>%
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+```
+
+
+#Graficos por municipio y por indicador (se hace zoom)
+
+```{r}
+
+#Volver categoricas las variables categoricas. 
+base_stata_2019_tidy_ensayo$indicador <-  as.factor(base_stata_2019_tidy_ensayo$indicador)
+
+
+
+  
+  for (i in 1:length(unique(base_stata_2019_tidy_ensayo$Municipio))){
+    
+    plot <- base_stata_2019_tidy_ensayo %>%
+      ggplot(aes(x=as.factor(ano), y=valor, col=Municipio[i])) +
+      geom_point()+
+      facet_wrap(~indicador)+
+      labs(title="Comparacion Mpios PAR 2017 y 2019")+
+      theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+    
+    print(plot)
+    
+}
+
+```
+
+
+
+#Exploraciones para ver variaciones chéveres
+```{r eval=FALSE, include=FALSE}
+
+for (i in 1:length(c2019)){
+plot <-
+base_stata_2019 %>%
+ggplot(aes(x=Municipio, y=.[[names(y2017)[i]]])) +
+geom_point(na.rm=TRUE, colour="white")+
+labs(title="Mpios PAR para el 2017", y=names(y2017[i]))+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+plot2 <-
+base_stata_2019 %>%
+ggplot(aes(x=Municipio, y=.[[names(c2019)[i]]])) +
+geom_point(na.rm=TRUE, colour="darkorange2")+
+labs(title="Mpios PAR para el 2017", y=names(y2017[i]))+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+grid.newpage()
+grid.draw(rbind(ggplotGrob(plot), ggplotGrob(plot2), size = "last"))
+
+}
+
+c2019 <- base_stata_2019 %>% 
+  select(matches("mean2019|men2019"))
+
+y2017 <- base_stata_2019 %>% 
+  select(matches("mean2017|men2017"))
+
+for (i in 1:length(c2019)){
+plot <- 
+    
+   
+  
+  
+   par(mfrow=c(2,1))
+  print(plot)
+  
+  
+  
+  
+}
+```
+
+
+```{r eval=FALSE, include=FALSE}
+ggplot() + 
+  geom_point(mapping = aes(x = base_stata_2019$Municipio, y = base_stata_2019$confianza_instituciones_men2017), fill = "grey") +
+  geom_line(mapping = aes(x = base_stata_2019$Municipio, y = base_stata_2019$confianza_instituciones_men2019), size = 2, color = "blue") + 
+  scale_y_continuous(name = "Interruptions/day", 
+    sec.axis = sec_axis(~./5, name = "Productivity % of best", 
+      labels = function(b) { paste0(round(b * 100, 0), "%")})) + 
+  theme(
+      axis.title.y = element_text(color = "grey"),
+      axis.title.y.right = element_text(color = "blue"))
+```
+
+

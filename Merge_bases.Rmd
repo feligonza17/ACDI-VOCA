@@ -209,7 +209,7 @@ datos_acdivoca_num <- datos_acdivoca_num %>%
 El item de reconciliacion es el siguiente:
 
 <center>
-![Items Reconciliacion nuestro](C:/Users/felig/ACDI-VOCA/Reconciliacion_nuestro.JPG)
+![Items Reconciliacion nuestro](C:/Users/felig/Dropbox/Proyecto Juan Camilo/Evento ACIDVOCA/Reconciliacion_nuestro.JPG)
 </center>
 
 
@@ -233,7 +233,7 @@ datos_acdivoca_num$disculpas <- datos_acdivoca_num$p053
 El item de violencia es el siguiente:
 
 <center>
-![Items Violencia](C:/Users/felig/ACDI-VOCA/Violencia.JPG)
+![Items Violencia](C:/Users/felig/Dropbox/Proyecto Juan Camilo/Evento ACIDVOCA/Violencia.JPG)
 </center>
 
 Es la suma de esos items. El segundo tiene la escala invertida. Asi, el indice va de 2 a 10 y, a mayor indice de violencia, mas metodos de dialogo violentos tiene el municipio a buscar la reconciliacion
@@ -250,7 +250,7 @@ datos_acdivoca_num$violencia <- datos_acdivoca_num %>%
 El item de rencor es el siguiente:
 
 <center>
-![Items Rencor](C:/Users/felig/ACDI-VOCA/rencor.JPG)
+![Items Rencor](C:/Users/felig/Dropbox/Proyecto Juan Camilo/Evento ACIDVOCA/rencor.JPG)
 </center>
 
 Este indice es interesante. Se hace una formula para sacar un indice entre 0 y 15. Un valor bajito representa una persona con mucho rencor mientras que un valor alto representa a una persona con culpa. La formula es la siguiente:
@@ -284,7 +284,7 @@ datos_acdivoca_num$memoria <- datos_acdivoca_num$p075_1
 El item de memoria historica es el siguiente:
 
 <center>
-![Items memoria historica](C:/Users/felig/ACDI-VOCA/memoria_historica.JPG)
+![Items memoria historica](C:/Users/felig/Dropbox/Proyecto Juan Camilo/Evento ACIDVOCA/memoria_historica.JPG)
 </center>
 
 
@@ -356,7 +356,7 @@ datos_acdivoca_num$pertenencia <- datos_acdivoca_num$p046
 El item de confianza en las instituciones es el siguiente:
 
 <center>
-![Items Confianza Instituciones](C:/Users/felig/ACDI-VOCA/confianza_instituciones.JPG)
+![Items Confianza Instituciones](C:/Users/felig/Dropbox/Proyecto Juan Camilo/Evento ACIDVOCA/confianza_instituciones.JPG)
 </center>
 
 Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 0 a 85 y, a mayor indice de reconciliacion, mas confia en las instituciones
@@ -366,8 +366,7 @@ Es la suma se esos items. Hay algunos que se deben inversar porque estan creados
 
 #Ojo aqui porque todos los valores de NS/NR/no conoce se tomaron como valores perdidos. 
 datos_acdivoca_num$confianza_instituciones <- datos_acdivoca_num %>%
-  select(starts_with("p067")) %>%
-  mutate_all(~na_if(., '99'))%>%
+  select(starts_with("p067"), -p067_18) %>%
   rowSums()
 ```
 ##Confianza en Medios de comunicacion
@@ -375,7 +374,7 @@ datos_acdivoca_num$confianza_instituciones <- datos_acdivoca_num %>%
 El item de confianza en medios es el siguiente:
 
 <center>
-![Items Confianza medios](C:/Users/felig/ACDI-VOCA/confianza_medios.JPG)
+![Items Confianza medios](C:/Users/felig/Dropbox/Proyecto Juan Camilo/Evento ACIDVOCA/confianza_medios.JPG)
 </center>
 
 Es la suma se esos items. Hay algunos que se deben inversar porque estan creados de manera inversa. Sin embargo, el indice va de 0 a 35 y, a mayor indice de reconciliacion, mas confia en los medios de comunciacion
@@ -438,9 +437,9 @@ buena_voluntad_agreg <- summaryBy(buena_voluntad ~ Municipio,
 pertenencia_agreg <- summaryBy(pertenencia ~ Municipio, 
                                        datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
 confianza_instituciones_agreg <- summaryBy(confianza_instituciones ~ Municipio, 
-                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=T)
 confianza_medios_agreg <- summaryBy(confianza_medios ~ Municipio, 
-                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=F )
+                                       datos_acdivoca_num, FUN=c(sum, median, mean, sd), na.rm=T )
 ```
 
 

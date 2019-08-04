@@ -49,8 +49,6 @@ base_stata <- read_dta("Para Stata/base_acdi_stata.dta",
 base_stata_2019 <- read_dta("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta", encoding="UTF-8")
 
 
-names_par <- base_stata_2019$Municipio
-
 
 ```
 
@@ -66,7 +64,8 @@ for(i in 1:length(x)){
    
   plot <- 
     
-    base_stata %>% 
+    base_stata %>%
+    filter(dummyPAR==1) %>% 
   mutate(mun_homicidio=(ifelse(homi_cienmil_mean>mean(homi_cienmil_mean),
                              "Alta homicidios","Baja homicidios"))) %>% 
   ggplot(aes(x=Municipio, y=.[[names(x)[i]]], col=mun_homicidio)) +
@@ -660,7 +659,28 @@ for(i in 1:length(x)){
 
 
 
+#Exploraciones para ver variaciones chéveres
+```{r}
 
+c2019 <- base_stata_2019 %>% 
+  select(matches("mean2019|men2019"))
+
+y2017 <- base_stata_2019 %>% 
+  select(matches("mean2017|men2017"))
+
+for (i in 1:length(c2019)){
+plot <- 
+    
+    base_stata_2019 %>%
+  ggplot(aes(x=Municipio, y=.[[names(y2017)[i]]], col=.[[names(c2019)[i]]])) +
+  geom_bar(stat="identity", na.rm=TRUE, fill="white")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800"))+
+  labs(title="Mpios PAR para el 2019", y=names(x[i]))+
+  theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+  
+  print(plot)
+}
+```
 
 
 
