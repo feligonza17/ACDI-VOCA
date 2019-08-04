@@ -1,0 +1,256 @@
+---
+title: 'Comparacion olas PAR por categorias'
+author: "Felipe Gonzalez-Arango"
+date: "22 de julio de 2019"
+output:
+  html_document:
+    code_folding: show
+    highlight: tango
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+```
+
+#Setup
+Con este codigo se importan todas las bases de datos y todos los paquetes necesarios. 
+
+```{r message=FALSE, warning=FALSE}
+#ANTES DE CORRER, ¡CORRER LA PESTANA "CODIGO PARA ARRANCAR TODO"!
+
+
+#Set Working Directory
+setwd("C:/Users/felig/Dropbox/Proyecto Juan Camilo")
+rm(list=ls())
+
+#Importar base de datos donde esta todo
+library(haven)
+library(readstata13)
+library(tidyr)
+library(plyr)
+library(dplyr)
+library(gridExtra)
+library(ggplot2)
+library(forcats)
+load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
+base_stata <- read_dta("Para Stata/base_acdi_stata.dta",
+                                   encoding="UTF-8")
+base_stata_2019 <- read_dta("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta", encoding="UTF-8")
+
+
+
+```
+
+
+#Graficos generales
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+base_stata_2017 <-  base_stata %>% filter(dummyPAR==1)
+x2017 <- base_stata %>% select(reconciliacion_mean, disculpas_mean, violencia_mean, confianza_vec_mean,confianza_medios_mean, confianza_instituciones_mean)
+x2019 <- base_stata_2019 %>% select(ends_with("mean2019"), ends_with("men2019"))
+
+#Creacion de la bsae de datos para poder comparar los graficos por ano. 
+ano2017 <- c()
+ano2017[1:27] <- 2017
+ano2017 <- t(ano2017)
+ 
+ano2019 <- c()
+ano2019[1:27] <- 2019
+ano2019 <- t(ano2019)
+
+
+#Aqui juntamos los valores de interes de la ola 2017 y 2019. 
+base_stata_2019_tidy <- cbind(base_stata_2019[1],base_stata_2017[names(x2017)], base_stata_2019[names(x2019)])
+                              
+                              
+#Aqui se hace el tidy para poder generar la variable "indicador"
+base_stata_2019_tidy_ensayo <- base_stata_2019_tidy %>%   gather(key=indicador, value=valor, -Municipio)
+
+#Creamos la columna para distinguir las olas
+base_stata_2019_tidy_ensayo$ano <- 0
+base_stata_2019_tidy_ensayo[1:162,4] <- 2017
+base_stata_2019_tidy_ensayo[163:324,4] <- 2019
+
+
+#Limpiamos nombres para que todos encajen en uno mismo. 
+base_stata_2019_tidy_ensayo$indicador <-  gsub("_mean","", base_stata_2019_tidy_ensayo$indicador, ignore.case = TRUE)
+base_stata_2019_tidy_ensayo$indicador <-  gsub("2019","", base_stata_2019_tidy_ensayo$indicador, ignore.case = TRUE)
+base_stata_2019_tidy_ensayo$indicador <-  gsub("_men","", base_stata_2019_tidy_ensayo$indicador, ignore.case = TRUE)
+
+
+base_stata_2019_tidy_ensayo %>%
+ggplot(aes(x=as.factor(indicador), y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(~Municipio)+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+base_stata_2019_tidy_ensayo %>%
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+```
+
+
+
+#Graficos por categorias
+
+
+##Municipios con diferencias en homicidios (Q1 y Q3)
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+#Creamos base de datos general
+
+
+base_stata_2019 <- base_stata_2019 %>%
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) 
+
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_homicidio))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_homicidio)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+```
+
+##Municipios con ataques a la poblacion civil (Q1 y Q3)
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+base_stata_2019 <- base_stata_2019 %>%
+  mutate(mun_violentado=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean>quantile(Ataques_Pobl_Civil_mean, 0.75),
+                         "violentado",
+                         ifelse(Ataques_Pobl_Civil_mean<quantile(Ataques_Pobl_Civil_mean, 0.25),
+                         "No violentado",
+                         NA)))))
+
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_violentado))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_violentado!=is.na(mun_violentado)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_violentado)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+```
+
+##Municipios donde hubo secuestros (Q1 y Q3)
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+base_stata_2019 <- base_stata_2019 %>%
+   mutate(mun_secuestrado=as.factor((ifelse
+                       (secuestro_cienmil_mean>quantile(secuestro_cienmil_mean, 0.75),
+                         "Alto secuestro",
+                         ifelse(secuestro_cienmil_mean<quantile(secuestro_cienmil_mean, 0.25),
+                         "Bajo secuestro",
+                         NA)))))
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_secuestrado))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_secuestrado!=is.na(mun_secuestrado)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_secuestrado)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+```
+
+##Municipios donde hubo desmovilizados (Q1 y Q3)
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+base_stata_2019 <- base_stata_2019 %>%
+   mutate(mun_desmovilizado=as.factor((ifelse
+                       (desmovilizados_cienmil_mean>quantile(desmovilizados_cienmil_mean, 0.75),
+                         "Alto desmovilizado",
+                         ifelse(desmovilizados_cienmil_mean<quantile(desmovilizados_cienmil_mean, 0.25),
+                         "Bajo desmovilizado",
+                         NA)))))
+
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_desmovilizado))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_desmovilizado!=is.na(mun_desmovilizado)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_desmovilizado)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+```
+
+
+##Municipios pobres (Q1 y Q3)
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+base_stata_2019 <- base_stata_2019 %>%
+   mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja pobreza",
+                         NA)))))
+
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_pobre))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_pobre!=is.na(mun_pobre)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_pobre)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+```
+
+##Municipios con presencia de educaciones educativas
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+base_stata_2019 <- base_stata_2019 %>%
+   mutate(mun_establ=as.factor((ifelse
+                       (t_establ_mean>quantile(t_establ_mean, 0.75),
+                         "Alta presencia Establecimientos Educativos",
+                         ifelse(t_establ_mean<quantile(t_establ_mean, 0.25),
+                         "Baja presencia Establecimientos Educativos",
+                         NA)))))
+
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_establ))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_establ!=is.na(mun_establ)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_establ)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+```
+

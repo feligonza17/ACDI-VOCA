@@ -1,7 +1,7 @@
 name: "feli-website"
 output_dir: "."
 navbar:
-  title: "Proyecto ACDI/VOCA"
+  title: "ACDI/VOCA"
   left: 
     - text: "Home"
       icon: fa-home
@@ -58,7 +58,10 @@ navbar:
           href:
     - text: "Evento ACDIVOCA"
       menu:
-        - text: "Comparaciones Iniciales mpios PAR 2017-2019"
+        - text: "Analisis Mpios PAR por categorias PREJUICIOS"
+          icon:
+          href: Comparacion_PAR_por_categorias.html
+        - text: "Comparaciones exploratorias mpios PAR 2017-2019"
           icon:
           href: Reconciliacion,_2017-2019.html
         - text: "Graficos prejuicios"
