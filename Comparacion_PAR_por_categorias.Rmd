@@ -43,14 +43,17 @@ library(dplyr)
 library(gridExtra)
 library(ggplot2)
 library(forcats)
+library(readxl)
 load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData")
 load("C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases2019_Environment.RData")
 base_stata <- read_dta("Para Stata/base_acdi_stata.dta",
                                    encoding="UTF-8")
 base_stata_2019 <- read_dta("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta", encoding="UTF-8")
+base_cerac <- read_excel("C:/Users/felig/Dropbox/Proyecto Juan Camilo/Evento ACIDVOCA/Copy of CERAC - Tipología de los municipios de Colombia según el conflicto armado interno.xlsx", sheet = 2, col_names = TRUE)
 
+base_cerac <- base_cerac %>% filter(`Mpio PAR`==1) %>% arrange(Municipio)
 
-
+base_stata_2019 <- merge(base_stata_2019,base_cerac, by="Municipio")
 ```
 
 
@@ -285,16 +288,17 @@ ano2019 <- t(ano2019)
 
 
 #Aqui juntamos los valores de interes de la ola 2017 y 2019. 
-base_stata_2019_tidy <- cbind(base_stata_2019[1],base_stata_2017[names(x2017)], base_stata_2019[names(x2019)])
+base_stata_2019_tidy <- cbind(base_stata_2019[1],base_stata_2017[names(x2017)],
+                              base_stata_2019[names(x2019)], base_stata_2019[261])
                               
                               
 #Aqui se hace el tidy para poder generar la variable "indicador"
-base_stata_2019_tidy_ensayo <- base_stata_2019_tidy %>%   gather(key=indicador, value=valor, -Municipio)
+base_stata_2019_tidy_ensayo <- base_stata_2019_tidy %>%   gather(key=indicador, value=valor, -Municipio, -`Grupo de categoría`)
 
 #Creamos la columna para distinguir las olas
 base_stata_2019_tidy_ensayo$ano <- 0
-base_stata_2019_tidy_ensayo[1:81,4] <- 2017
-base_stata_2019_tidy_ensayo[82:162,4] <- 2019
+base_stata_2019_tidy_ensayo[1:81,5] <- 2017
+base_stata_2019_tidy_ensayo[82:162,5] <- 2019
 
 
 #Limpiamos nombres para que todos encajen en uno mismo. 
@@ -312,13 +316,45 @@ labs(title="Comparacion Mpios PAR 2017 y 2019")+
 theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
 
 
+
+
+base_stata_2019_tidy_ensayo %>%
+ggplot(aes(x=as.factor(indicador), y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(~Municipio)+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+```
+
+
+##Con base de datos CERAC
+Ahora utilizamos la informacion de la base de datos del CERAC.
+
+ Grupo de categorias de los municipios						
+1	Fuertemente afectados y persistente					
+2	Levemente afectados y persistente					
+3	Fuertemente afectados e interrumpido					
+4	Levemente afectados e interrumpido					
+6	Levemente afectados y finalizado					
+7	Sin conflicto					
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
 base_stata_2019_tidy_ensayo %>%
 ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
 geom_point()+
-facet_wrap(~as.factor(indicador))+
+facet_wrap(as.factor(`Grupo de categoría`)~as.factor(indicador))+
 labs(title="Comparacion Mpios PAR 2017 y 2019")+
 theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
 
+
+
+base_stata_2019_tidy_ensayo %>%
+ggplot(aes(x=as.factor(indicador), y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(`Grupo de categoría`)~Municipio)+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
 
 ```
 

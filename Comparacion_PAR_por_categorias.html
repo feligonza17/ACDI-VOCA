@@ -652,11 +652,17 @@ div.tocify {
 <span class="kw">library</span>(gridExtra)
 <span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(forcats)
+<span class="kw">library</span>(readxl)
 <span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases_Environment.RData&quot;</span>)
 <span class="kw">load</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/MergeBases2019_Environment.RData&quot;</span>)
 base_stata &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;Para Stata/base_acdi_stata.dta&quot;</span>,
                                    <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)
-base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta&quot;</span>, <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)</code></pre></div>
+base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta&quot;</span>, <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)
+base_cerac &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Evento ACIDVOCA/Copy of CERAC - Tipología de los municipios de Colombia según el conflicto armado interno.xlsx&quot;</span>, <span class="dt">sheet =</span> <span class="dv">2</span>, <span class="dt">col_names =</span> <span class="ot">TRUE</span>)
+
+base_cerac &lt;-<span class="st"> </span>base_cerac <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">Mpio PAR</span><span class="st">`</span><span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio)
+
+base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(base_stata_<span class="dv">2019</span>,base_cerac, <span class="dt">by=</span><span class="st">&quot;Municipio&quot;</span>)</code></pre></div>
 </div>
 <div id="graficos-generales" class="section level1">
 <h1><span class="header-section-number">2</span> Graficos generales</h1>
@@ -860,16 +866,17 @@ ano2019 &lt;-<span class="st"> </span><span class="kw">t</span>(ano2019)
 
 
 <span class="co">#Aqui juntamos los valores de interes de la ola 2017 y 2019. </span>
-base_stata_2019_tidy &lt;-<span class="st"> </span><span class="kw">cbind</span>(base_stata_<span class="dv">2019</span>[<span class="dv">1</span>],base_stata_<span class="dv">2017</span>[<span class="kw">names</span>(x2017)], base_stata_<span class="dv">2019</span>[<span class="kw">names</span>(x2019)])
+base_stata_2019_tidy &lt;-<span class="st"> </span><span class="kw">cbind</span>(base_stata_<span class="dv">2019</span>[<span class="dv">1</span>],base_stata_<span class="dv">2017</span>[<span class="kw">names</span>(x2017)],
+                              base_stata_<span class="dv">2019</span>[<span class="kw">names</span>(x2019)], base_stata_<span class="dv">2019</span>[<span class="dv">261</span>])
                               
                               
 <span class="co">#Aqui se hace el tidy para poder generar la variable &quot;indicador&quot;</span>
-base_stata_2019_tidy_ensayo &lt;-<span class="st"> </span>base_stata_2019_tidy <span class="op">%&gt;%</span><span class="st">   </span><span class="kw">gather</span>(<span class="dt">key=</span>indicador, <span class="dt">value=</span>valor, <span class="op">-</span>Municipio)
+base_stata_2019_tidy_ensayo &lt;-<span class="st"> </span>base_stata_2019_tidy <span class="op">%&gt;%</span><span class="st">   </span><span class="kw">gather</span>(<span class="dt">key=</span>indicador, <span class="dt">value=</span>valor, <span class="op">-</span>Municipio, <span class="op">-</span><span class="st">`</span><span class="dt">Grupo de categoría</span><span class="st">`</span>)
 
 <span class="co">#Creamos la columna para distinguir las olas</span>
 base_stata_2019_tidy_ensayo<span class="op">$</span>ano &lt;-<span class="st"> </span><span class="dv">0</span>
-base_stata_2019_tidy_ensayo[<span class="dv">1</span><span class="op">:</span><span class="dv">81</span>,<span class="dv">4</span>] &lt;-<span class="st"> </span><span class="dv">2017</span>
-base_stata_2019_tidy_ensayo[<span class="dv">82</span><span class="op">:</span><span class="dv">162</span>,<span class="dv">4</span>] &lt;-<span class="st"> </span><span class="dv">2019</span>
+base_stata_2019_tidy_ensayo[<span class="dv">1</span><span class="op">:</span><span class="dv">81</span>,<span class="dv">5</span>] &lt;-<span class="st"> </span><span class="dv">2017</span>
+base_stata_2019_tidy_ensayo[<span class="dv">82</span><span class="op">:</span><span class="dv">162</span>,<span class="dv">5</span>] &lt;-<span class="st"> </span><span class="dv">2019</span>
 
 
 <span class="co">#Limpiamos nombres para que todos encajen en uno mismo. </span>
@@ -887,12 +894,37 @@ base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
 <span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
 <p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-9-1.png" width="1152" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
-<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>valor, <span class="dt">col=</span><span class="kw">as.factor</span>(ano))) <span class="op">+</span>
+<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span><span class="kw">as.factor</span>(indicador), <span class="dt">y=</span>valor, <span class="dt">col=</span><span class="kw">as.factor</span>(ano))) <span class="op">+</span>
 <span class="kw">geom_point</span>()<span class="op">+</span>
-<span class="kw">facet_wrap</span>(<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
+<span class="kw">facet_wrap</span>(<span class="op">~</span>Municipio)<span class="op">+</span>
 <span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
 <span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
 <p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-9-2.png" width="1152" /></p>
+<div id="con-base-de-datos-cerac" class="section level2">
+<h2><span class="header-section-number">5.1</span> Con base de datos CERAC</h2>
+<p>Ahora utilizamos la informacion de la base de datos del CERAC.</p>
+<p>Grupo de categorias de los municipios<br />
+1 Fuertemente afectados y persistente<br />
+2 Levemente afectados y persistente<br />
+3 Fuertemente afectados e interrumpido<br />
+4 Levemente afectados e interrumpido<br />
+6 Levemente afectados y finalizado<br />
+7 Sin conflicto</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
+<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>valor, <span class="dt">col=</span><span class="kw">as.factor</span>(ano))) <span class="op">+</span>
+<span class="kw">geom_point</span>()<span class="op">+</span>
+<span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(<span class="st">`</span><span class="dt">Grupo de categoría</span><span class="st">`</span>)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
+<span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
+<span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
+<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-10-1.png" width="1152" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
+<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span><span class="kw">as.factor</span>(indicador), <span class="dt">y=</span>valor, <span class="dt">col=</span><span class="kw">as.factor</span>(ano))) <span class="op">+</span>
+<span class="kw">geom_point</span>()<span class="op">+</span>
+<span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(<span class="st">`</span><span class="dt">Grupo de categoría</span><span class="st">`</span>)<span class="op">~</span>Municipio)<span class="op">+</span>
+<span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
+<span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
+<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-10-2.png" width="1152" /></p>
+</div>
 </div>
 <div id="graficos-por-categorias-1" class="section level1">
 <h1><span class="header-section-number">6</span> Graficos por categorias</h1>
@@ -918,7 +950,7 @@ base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
 <span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_homicidio)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
 <span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
 <span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
-<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-10-1.png" width="1152" /></p>
+<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-11-1.png" width="1152" /></p>
 </div>
 <div id="municipios-con-ataques-a-la-poblacion-civil-q1-y-q3-1" class="section level2">
 <h2><span class="header-section-number">6.2</span> Municipios con ataques a la poblacion civil (Q1 y Q3)</h2>
@@ -939,7 +971,7 @@ base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
 <span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_violentado)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
 <span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
 <span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
-<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-11-1.png" width="1152" /></p>
+<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-12-1.png" width="1152" /></p>
 </div>
 <div id="municipios-donde-hubo-secuestros-q1-y-q3-1" class="section level2">
 <h2><span class="header-section-number">6.3</span> Municipios donde hubo secuestros (Q1 y Q3)</h2>
@@ -959,7 +991,7 @@ base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
 <span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_secuestrado)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
 <span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
 <span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
-<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-12-1.png" width="1152" /></p>
+<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-13-1.png" width="1152" /></p>
 </div>
 <div id="municipios-donde-hubo-desmovilizados-q1-y-q3-1" class="section level2">
 <h2><span class="header-section-number">6.4</span> Municipios donde hubo desmovilizados (Q1 y Q3)</h2>
@@ -980,7 +1012,7 @@ base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
 <span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_desmovilizado)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
 <span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
 <span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
-<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-13-1.png" width="1152" /></p>
+<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-14-1.png" width="1152" /></p>
 </div>
 <div id="municipios-pobres-q1-y-q3-1" class="section level2">
 <h2><span class="header-section-number">6.5</span> Municipios pobres (Q1 y Q3)</h2>
@@ -1001,7 +1033,7 @@ base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
 <span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_pobre)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
 <span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
 <span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
-<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-14-1.png" width="1152" /></p>
+<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-15-1.png" width="1152" /></p>
 </div>
 <div id="municipios-con-presencia-de-educaciones-educativas-1" class="section level2">
 <h2><span class="header-section-number">6.6</span> Municipios con presencia de educaciones educativas</h2>
@@ -1022,7 +1054,7 @@ base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
 <span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_establ)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
 <span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
 <span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
-<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-15-1.png" width="1152" /></p>
+<p><img src="Comparacion_PAR_por_categorias_files/figure-html/unnamed-chunk-16-1.png" width="1152" /></p>
 </div>
 </div>
 
