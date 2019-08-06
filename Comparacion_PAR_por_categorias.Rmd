@@ -7,7 +7,7 @@ output:
     code_folding: show
     highlight: tango
     number_sections: yes
-    theme: journal
+    theme: lumen
     toc: yes
     toc_depth: 2
     toc_float:
@@ -120,7 +120,7 @@ theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=9
 ```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
 #Creamos base de datos general
 
-
+#Creamos la dummy que separa a los mpios donde hubo mas homicidios con su contraparte. 
 base_stata_2019 <- base_stata_2019 %>%
   mutate(mun_homicidio=as.factor((ifelse
                        (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),

@@ -7,7 +7,7 @@ output:
     code_folding: show
     highlight: tango
     number_sections: yes
-    theme: journal
+    theme: lumen
     toc: yes
     toc_depth: 2
     toc_float:

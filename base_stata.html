@@ -16,7 +16,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -167,33 +167,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 61px;
+  padding-top: 54px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h2 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h3 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h4 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h5 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h6 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .dropdown-submenu {
   position: relative;
@@ -447,18 +447,11 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+      <a class="navbar-brand" href="index.html">ACDI/VOCA</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-    Home
-  </a>
-</li>
-<li class="dropdown">
+        <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Cod. para iniciar
      
@@ -558,11 +551,23 @@ div.tocify {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-globe-americas"></span>
+     
     Evento ACDIVOCA
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Comparacion_PAR_por_categorias.html">
+        <span class="fa fa-chart-pie"></span>
+         
+        Analisis Mpios PAR por categorias PREJUICIOS
+      </a>
+    </li>
+    <li>
+      <a href="Reconciliacion,_2017-2019.html">Comparaciones exploratorias mpios PAR 2017-2019</a>
+    </li>
     <li>
       <a href="graficos_prejuicios.html">
         <span class="fa fa-dizzy"></span>
@@ -578,6 +583,13 @@ div.tocify {
       </a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="particpantes_graficos.html">
+    <span class="fa fa-people-carry"></span>
+     
+    Para Participantes
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -829,7 +841,10 @@ div.tocify {
                                   buena_voluntad_agreg[<span class="op">-</span><span class="dv">1</span>],
                                   pertenencia_agreg[<span class="op">-</span><span class="dv">1</span>], 
                                   confianza_instituciones_agreg[<span class="op">-</span><span class="dv">1</span>],
-                                  confianza_medios_agreg[<span class="op">-</span><span class="dv">1</span>]
+                                  confianza_medios_agreg[<span class="op">-</span><span class="dv">1</span>],
+                                  confianza_vec_agregarr[<span class="op">-</span><span class="dv">1</span>],
+                                  confianza_instituciones_agregarr[<span class="op">-</span><span class="dv">1</span>],
+                                  confianza_medios_agregarr[<span class="op">-</span><span class="dv">1</span>]
                                   ))
 
 base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(base_stata, columna_PAR, <span class="dt">by=</span><span class="st">&quot;Municipio&quot;</span>, <span class="dt">all.x=</span><span class="ot">TRUE</span>)

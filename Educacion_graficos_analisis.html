@@ -16,7 +16,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -167,33 +167,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 61px;
+  padding-top: 54px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h2 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h3 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h4 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h5 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h6 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .dropdown-submenu {
   position: relative;
@@ -447,27 +447,33 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+      <a class="navbar-brand" href="index.html">ACDI/VOCA</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-    Home
-  </a>
-</li>
-<li>
-  <a href="Merge_bases.html">Codigo para iniciar</a>
-</li>
-<li class="dropdown">
+        <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Panel CEDE Municipal
+    Cod. para iniciar
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Merge_bases.html">Indice IMR 2017 y PANEL CEDE</a>
+    </li>
+    <li>
+      <a href="Merge_bases_2019.html">Indice IMR 2019</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analisis 44 mpios
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Panel CEDE Municipal</li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploraciones</a>
       <ul class="dropdown-menu" role="menu">
@@ -508,33 +514,82 @@ div.tocify {
         </li>
       </ul>
     </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ELCA</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="elca_exploracion.html">
+            <span class="fa fa-object-ungroup"></span>
+             
+            Depuracion y merge
+          </a>
+        </li>
+        <li>
+          <a href="elca_modulo_politica.html">
+            <span class="fa fa-comment"></span>
+             
+            Modulo Politica
+          </a>
+        </li>
+      </ul>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    ELCA
+    Analisis 27 mpios (PAR)
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="elca_exploracion.html">
-        <span class="fa fa-object-ungroup"></span>
+      <a href="Analisis_indice_PAR.html">Analisis PAR. Primera ola 2017</a>
+    </li>
+    <li class="dropdown-header">Analisis PAR. Segunda ola 2019</li>
+    <li class="dropdown-header">Analisis PAR. Diferencias</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-globe-americas"></span>
+     
+    Evento ACDIVOCA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Comparacion_PAR_por_categorias.html">
+        <span class="fa fa-chart-pie"></span>
          
-        Depuracion y merge
+        Analisis Mpios PAR por categorias PREJUICIOS
       </a>
     </li>
     <li>
-      <a href="elca_modulo_politica.html">
-        <span class="fa fa-comment"></span>
+      <a href="Reconciliacion,_2017-2019.html">Comparaciones exploratorias mpios PAR 2017-2019</a>
+    </li>
+    <li>
+      <a href="graficos_prejuicios.html">
+        <span class="fa fa-dizzy"></span>
          
-        Modulo Politica
+        Graficos prejuicios
+      </a>
+    </li>
+    <li>
+      <a href="encuesta_diferencias_municipal.html">
+        <span class="fa fa-chart-bar"></span>
+         
+        Exploracion Diferencias Municipales
       </a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="Analisis_indice_PAR.html">Analisis PAR</a>
+  <a href="particpantes_graficos.html">
+    <span class="fa fa-people-carry"></span>
+     
+    Para Participantes
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -551,6 +606,9 @@ div.tocify {
     </li>
     <li>
       <a href="acdivoca_analisis.html">Violencia y estadistica</a>
+    </li>
+    <li>
+      <a href="base_stata.html">Creacion BBDD para Stata</a>
     </li>
   </ul>
 </li>
@@ -2024,62 +2082,45 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 <span class="kw">colnames</span>(correlaciones) &lt;-<span class="st"> </span>nombres
 <span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) </code></pre></div>
 <pre><code>##                           alumnos_cienmil doctores_cienmil
-## alumnos_cienmil                      1.00            -0.15
-## doctores_cienmil                    -0.15             1.00
-## estudiantes_edad_estudiar            0.50            -0.76
-## total_establecimientos              -0.05             0.80
-## Indice_reconciliacion                0.18            -0.29
+## alumnos_cienmil                         1              NaN
+## doctores_cienmil                      NaN                1
+## estudiantes_edad_estudiar             NaN              NaN
+## total_establecimientos                NaN              NaN
+## Indice_reconciliacion                 NaN              NaN
 ##                           estudiantes_edad_estudiar total_establecimientos
-## alumnos_cienmil                                0.50                  -0.05
-## doctores_cienmil                              -0.76                   0.80
-## estudiantes_edad_estudiar                      1.00                  -0.47
-## total_establecimientos                        -0.47                   1.00
-## Indice_reconciliacion                          0.12                   0.04
+## alumnos_cienmil                                 NaN                    NaN
+## doctores_cienmil                                NaN                    NaN
+## estudiantes_edad_estudiar                         1                    NaN
+## total_establecimientos                          NaN                      1
+## Indice_reconciliacion                           NaN                    NaN
 ##                           Indice_reconciliacion
-## alumnos_cienmil                            0.18
-## doctores_cienmil                          -0.29
-## estudiantes_edad_estudiar                  0.12
-## total_establecimientos                     0.04
-## Indice_reconciliacion                      1.00
+## alumnos_cienmil                             NaN
+## doctores_cienmil                            NaN
+## estudiantes_edad_estudiar                   NaN
+## total_establecimientos                      NaN
+## Indice_reconciliacion                         1
 ## 
-## n
-##                           alumnos_cienmil doctores_cienmil
-## alumnos_cienmil                        22               12
-## doctores_cienmil                       12               12
-## estudiantes_edad_estudiar              22               12
-## total_establecimientos                 22               12
-## Indice_reconciliacion                  22               12
-##                           estudiantes_edad_estudiar total_establecimientos
-## alumnos_cienmil                                  22                     22
-## doctores_cienmil                                 12                     12
-## estudiantes_edad_estudiar                        22                     22
-## total_establecimientos                           22                     22
-## Indice_reconciliacion                            22                     22
-##                           Indice_reconciliacion
-## alumnos_cienmil                              22
-## doctores_cienmil                             12
-## estudiantes_edad_estudiar                    22
-## total_establecimientos                       22
-## Indice_reconciliacion                        22
+## n= 22 
+## 
 ## 
 ## P
 ##                           alumnos_cienmil doctores_cienmil
-## alumnos_cienmil                           0.6331          
-## doctores_cienmil          0.6331                          
-## estudiantes_edad_estudiar 0.0182          0.0045          
-## total_establecimientos    0.8165          0.0016          
-## Indice_reconciliacion     0.4195          0.3663          
+## alumnos_cienmil                                           
+## doctores_cienmil                                          
+## estudiantes_edad_estudiar                                 
+## total_establecimientos                                    
+## Indice_reconciliacion                                     
 ##                           estudiantes_edad_estudiar total_establecimientos
-## alumnos_cienmil           0.0182                    0.8165                
-## doctores_cienmil          0.0045                    0.0016                
-## estudiantes_edad_estudiar                           0.0280                
-## total_establecimientos    0.0280                                          
-## Indice_reconciliacion     0.5939                    0.8437                
+## alumnos_cienmil                                                           
+## doctores_cienmil                                                          
+## estudiantes_edad_estudiar                                                 
+## total_establecimientos                                                    
+## Indice_reconciliacion                                                     
 ##                           Indice_reconciliacion
-## alumnos_cienmil           0.4195               
-## doctores_cienmil          0.3663               
-## estudiantes_edad_estudiar 0.5939               
-## total_establecimientos    0.8437               
+## alumnos_cienmil                                
+## doctores_cienmil                               
+## estudiantes_edad_estudiar                      
+## total_establecimientos                         
 ## Indice_reconciliacion</code></pre>
 </div>
 <div id="regresion-lineal-2" class="section level2">
@@ -2093,22 +2134,19 @@ regEducacion_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(Indice
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.160305 -0.022662  0.001551  0.053044  0.112415 
+## -0.132155 -0.068432 -0.000343  0.062618  0.135366 
 ## 
-## Coefficients:
-##                             Estimate Std. Error t value Pr(&gt;|t|)  
-## (Intercept)                7.557e-01  3.744e-01   2.019   0.0833 .
-## alumnos_cienmil            4.566e-06  8.926e-06   0.512   0.6247  
-## doctores_cienmil          -1.450e-03  1.537e-03  -0.943   0.3769  
-## estudiantes_edad_estudiar -1.266e-05  1.640e-05  -0.772   0.4653  
-## total_establecimientos    -2.089e-05  4.434e-05  -0.471   0.6519  
+## Coefficients: (4 not defined because of singularities)
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                0.52299    0.01702   30.73   &lt;2e-16 ***
+## alumnos_cienmil                 NA         NA      NA       NA    
+## doctores_cienmil                NA         NA      NA       NA    
+## estudiantes_edad_estudiar       NA         NA      NA       NA    
+## total_establecimientos          NA         NA      NA       NA    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.09511 on 7 degrees of freedom
-##   (10 observations deleted due to missingness)
-## Multiple R-squared:  0.2577, Adjusted R-squared:  -0.1665 
-## F-statistic: 0.6075 on 4 and 7 DF,  p-value: 0.6703</code></pre>
+## Residual standard error: 0.07981 on 21 degrees of freedom</code></pre>
 </div>
 <div id="variables-con-diferencias-deltas-delta-con-indice-par" class="section level2">
 <h2><span class="header-section-number">4.4</span> Variables con diferencias (Deltas <span class="math inline">\(\Delta\)</span>) con indice PAR</h2>
@@ -2152,62 +2190,45 @@ nombres &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st"
 
 <span class="kw">rcorr</span>(correlaciones, <span class="dt">type=</span><span class="st">&quot;spearman&quot;</span>) <span class="co">#Aqui hay cosas bien interesantes}</span></code></pre></div>
 <pre><code>##                           alumnos_cienmil doctores_cienmil
-## alumnos_cienmil                      1.00            -0.18
-## doctores_cienmil                    -0.18             1.00
-## estudiantes_edad_estudiar            0.32            -0.38
-## total_establecimientos               0.22            -0.31
-## Indice_reconciliacion               -0.26             0.35
+## alumnos_cienmil                         1              NaN
+## doctores_cienmil                      NaN                1
+## estudiantes_edad_estudiar             NaN              NaN
+## total_establecimientos                NaN              NaN
+## Indice_reconciliacion                 NaN              NaN
 ##                           estudiantes_edad_estudiar total_establecimientos
-## alumnos_cienmil                                0.32                   0.22
-## doctores_cienmil                              -0.38                  -0.31
-## estudiantes_edad_estudiar                      1.00                   0.04
-## total_establecimientos                         0.04                   1.00
-## Indice_reconciliacion                         -0.12                  -0.50
+## alumnos_cienmil                                 NaN                    NaN
+## doctores_cienmil                                NaN                    NaN
+## estudiantes_edad_estudiar                         1                    NaN
+## total_establecimientos                          NaN                      1
+## Indice_reconciliacion                           NaN                    NaN
 ##                           Indice_reconciliacion
-## alumnos_cienmil                           -0.26
-## doctores_cienmil                           0.35
-## estudiantes_edad_estudiar                 -0.12
-## total_establecimientos                    -0.50
-## Indice_reconciliacion                      1.00
+## alumnos_cienmil                             NaN
+## doctores_cienmil                            NaN
+## estudiantes_edad_estudiar                   NaN
+## total_establecimientos                      NaN
+## Indice_reconciliacion                         1
 ## 
-## n
-##                           alumnos_cienmil doctores_cienmil
-## alumnos_cienmil                        22               12
-## doctores_cienmil                       12               12
-## estudiantes_edad_estudiar              22               12
-## total_establecimientos                 22               12
-## Indice_reconciliacion                  22               12
-##                           estudiantes_edad_estudiar total_establecimientos
-## alumnos_cienmil                                  22                     22
-## doctores_cienmil                                 12                     12
-## estudiantes_edad_estudiar                        22                     22
-## total_establecimientos                           22                     22
-## Indice_reconciliacion                            22                     22
-##                           Indice_reconciliacion
-## alumnos_cienmil                              22
-## doctores_cienmil                             12
-## estudiantes_edad_estudiar                    22
-## total_establecimientos                       22
-## Indice_reconciliacion                        22
+## n= 22 
+## 
 ## 
 ## P
 ##                           alumnos_cienmil doctores_cienmil
-## alumnos_cienmil                           0.5717          
-## doctores_cienmil          0.5717                          
-## estudiantes_edad_estudiar 0.1479          0.2262          
-## total_establecimientos    0.3363          0.3306          
-## Indice_reconciliacion     0.2506          0.2652          
+## alumnos_cienmil                                           
+## doctores_cienmil                                          
+## estudiantes_edad_estudiar                                 
+## total_establecimientos                                    
+## Indice_reconciliacion                                     
 ##                           estudiantes_edad_estudiar total_establecimientos
-## alumnos_cienmil           0.1479                    0.3363                
-## doctores_cienmil          0.2262                    0.3306                
-## estudiantes_edad_estudiar                           0.8437                
-## total_establecimientos    0.8437                                          
-## Indice_reconciliacion     0.6045                    0.0182                
+## alumnos_cienmil                                                           
+## doctores_cienmil                                                          
+## estudiantes_edad_estudiar                                                 
+## total_establecimientos                                                    
+## Indice_reconciliacion                                                     
 ##                           Indice_reconciliacion
-## alumnos_cienmil           0.2506               
-## doctores_cienmil          0.2652               
-## estudiantes_edad_estudiar 0.6045               
-## total_establecimientos    0.0182               
+## alumnos_cienmil                                
+## doctores_cienmil                               
+## estudiantes_edad_estudiar                      
+## total_establecimientos                         
 ## Indice_reconciliacion</code></pre>
 <p>Aqui observe que hay un resultado contraintuitivo. A mayor numero de establecimientos, el indice de reconcialiacion PAR disminuye significativamente. El coeficiente de correlacion es de -0.5</p>
 </div>
@@ -2222,22 +2243,19 @@ regEducacion_diff_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(I
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
-## -0.108320 -0.044653 -0.005034  0.016558  0.138857 
+## -0.132155 -0.068432 -0.000343  0.062618  0.135366 
 ## 
-## Coefficients:
-##                             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                5.226e-01  3.625e-02  14.419 1.84e-06 ***
-## alumnos_cienmil           -9.798e-06  7.341e-06  -1.335    0.224    
-## doctores_cienmil           2.834e-03  3.812e-03   0.743    0.481    
-## estudiantes_edad_estudiar  2.043e-05  1.362e-05   1.500    0.177    
-## total_establecimientos    -1.055e-04  1.182e-04  -0.893    0.402    
+## Coefficients: (4 not defined because of singularities)
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                0.52299    0.01702   30.73   &lt;2e-16 ***
+## alumnos_cienmil                 NA         NA      NA       NA    
+## doctores_cienmil                NA         NA      NA       NA    
+## estudiantes_edad_estudiar       NA         NA      NA       NA    
+## total_establecimientos          NA         NA      NA       NA    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.08193 on 7 degrees of freedom
-##   (10 observations deleted due to missingness)
-## Multiple R-squared:  0.4492, Adjusted R-squared:  0.1345 
-## F-statistic: 1.427 on 4 and 7 DF,  p-value: 0.319</code></pre>
+## Residual standard error: 0.07981 on 21 degrees of freedom</code></pre>
 </div>
 </div>
 

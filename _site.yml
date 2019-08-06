@@ -2,10 +2,9 @@ name: "feli-website"
 output_dir: "."
 navbar:
   title: "ACDI/VOCA"
+  icon: fa-home
+  href: index.html
   left: 
-    - text: "Home"
-      icon: fa-home
-      href: index.html
     - text: "Cod. para iniciar"
       icon:
       menu:
@@ -57,9 +56,10 @@ navbar:
           icon: 
           href:
     - text: "Evento ACDIVOCA"
+      icon: fa-globe-americas
       menu:
         - text: "Analisis Mpios PAR por categorias PREJUICIOS"
-          icon:
+          icon: fa-chart-pie
           href: Comparacion_PAR_por_categorias.html
         - text: "Comparaciones exploratorias mpios PAR 2017-2019"
           icon:
@@ -70,6 +70,9 @@ navbar:
         - text: "Exploracion Diferencias Municipales"
           icon: fa-chart-bar
           href: encuesta_diferencias_municipal.html
+    - text: "Para Participantes" 
+      icon: fa-people-carry
+      href: particpantes_graficos.html
     - text: "More"
       icon: fa-gear
       menu:

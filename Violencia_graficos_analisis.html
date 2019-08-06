@@ -16,7 +16,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -167,33 +167,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 61px;
+  padding-top: 54px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h2 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h3 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h4 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h5 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .section h6 {
-  padding-top: 66px;
-  margin-top: -66px;
+  padding-top: 59px;
+  margin-top: -59px;
 }
 .dropdown-submenu {
   position: relative;
@@ -447,27 +447,33 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Proyecto ACDI/VOCA</a>
+      <a class="navbar-brand" href="index.html">ACDI/VOCA</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li>
-  <a href="index.html">
-    <span class="fa fa-home"></span>
-     
-    Home
-  </a>
-</li>
-<li>
-  <a href="Merge_bases.html">Codigo para iniciar</a>
-</li>
-<li class="dropdown">
+        <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Panel CEDE Municipal
+    Cod. para iniciar
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Merge_bases.html">Indice IMR 2017 y PANEL CEDE</a>
+    </li>
+    <li>
+      <a href="Merge_bases_2019.html">Indice IMR 2019</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analisis 44 mpios
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Panel CEDE Municipal</li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploraciones</a>
       <ul class="dropdown-menu" role="menu">
@@ -508,33 +514,76 @@ div.tocify {
         </li>
       </ul>
     </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">ELCA</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="elca_exploracion.html">
+            <span class="fa fa-object-ungroup"></span>
+             
+            Depuracion y merge
+          </a>
+        </li>
+        <li>
+          <a href="elca_modulo_politica.html">
+            <span class="fa fa-comment"></span>
+             
+            Modulo Politica
+          </a>
+        </li>
+      </ul>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    ELCA
+    Analisis 27 mpios (PAR)
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="elca_exploracion.html">
-        <span class="fa fa-object-ungroup"></span>
+      <a href="Analisis_indice_PAR.html">Analisis PAR. Primera ola 2017</a>
+    </li>
+    <li class="dropdown-header">Analisis PAR. Segunda ola 2019</li>
+    <li class="dropdown-header">Analisis PAR. Diferencias</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Evento ACDIVOCA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Comparacion_PAR_por_categorias.html">Analisis Mpios PAR por categorias PREJUICIOS</a>
+    </li>
+    <li>
+      <a href="Reconciliacion,_2017-2019.html">Comparaciones exploratorias mpios PAR 2017-2019</a>
+    </li>
+    <li>
+      <a href="graficos_prejuicios.html">
+        <span class="fa fa-dizzy"></span>
          
-        Depuracion y merge
+        Graficos prejuicios
       </a>
     </li>
     <li>
-      <a href="elca_modulo_politica.html">
-        <span class="fa fa-comment"></span>
+      <a href="encuesta_diferencias_municipal.html">
+        <span class="fa fa-chart-bar"></span>
          
-        Modulo Politica
+        Exploracion Diferencias Municipales
       </a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="Analisis_indice_PAR.html">Analisis PAR</a>
+  <a href="particpantes_graficos.html">
+    <span class="fa fa-people-carry"></span>
+     
+    Para Participantes
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -551,6 +600,9 @@ div.tocify {
     </li>
     <li>
       <a href="acdivoca_analisis.html">Violencia y estadistica</a>
+    </li>
+    <li>
+      <a href="base_stata.html">Creacion BBDD para Stata</a>
     </li>
   </ul>
 </li>
