@@ -694,7 +694,7 @@ mpios_par &lt;-<span class="st"> </span><span class="kw">t</span>(base_stata_<sp
 <div id="graficos-generales" class="section level1">
 <h1><span class="header-section-number">3</span> Graficos generales</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_stata_<span class="dv">2017</span> &lt;-<span class="st">  </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dummyPAR<span class="op">==</span><span class="dv">1</span>)
-x2017 &lt;-<span class="st"> </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(confianza_vec_arr_mean, confianza_instituciones_arr_men, confianza_medios_mean)
+x2017 &lt;-<span class="st"> </span>base_stata <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(confianza_vec_arr_mean, confianza_instituciones_arr_men, confianza_medios_arr_mean)
 x2019 &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(confianza_vec_mean2019, confianza_instituciones_men2019, confianza_medios_mean2019)
 
 <span class="co">#Creacion de la bsae de datos para poder comparar los graficos por ano. </span>

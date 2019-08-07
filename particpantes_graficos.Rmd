@@ -86,7 +86,7 @@ Como los items cambiaron de una encuesta a otra, a continuacion vamos a corregir
 
 ```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
 base_stata_2017 <-  base_stata %>% filter(dummyPAR==1)
-x2017 <- base_stata %>% select(confianza_vec_arr_mean, confianza_instituciones_arr_men, confianza_medios_mean)
+x2017 <- base_stata %>% select(confianza_vec_arr_mean, confianza_instituciones_arr_men, confianza_medios_arr_mean)
 x2019 <- base_stata_2019 %>% select(confianza_vec_mean2019, confianza_instituciones_men2019, confianza_medios_mean2019)
 
 #Creacion de la bsae de datos para poder comparar los graficos por ano. 
