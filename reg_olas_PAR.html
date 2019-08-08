@@ -9,9 +9,10 @@
 <meta name="generator" content="pandoc" />
 
 
+<meta name="author" content="Felipe Gonzalez-Arango" />
 
 
-<title></title>
+<title>Analisis Diferencias Olas PAR</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,26 +20,89 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
 
 <style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
-  }
-}
-</script>
-
 
 
 <style type="text/css">
@@ -257,7 +321,101 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
 
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -267,6 +425,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -457,627 +625,28 @@ $(document).ready(function () {
 
 <div class="fluid-row" id="header">
 
-
-
-
-</div>
-
-
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<p><meta charset="utf-8" /> <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> <meta name="generator" content="pandoc" /></p>
-<p><meta name="author" content="Felipe Gonzalez-Arango" /></p>
-<title>
-Analisis Diferencias Olas PAR
-</title>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" /> <link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
-<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
-<script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
-<p><link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" /> <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" /></p>
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css" data-origin="pandoc">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-pre, code { background-color: #f8f8f8; }
-code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
-code > span.dt { color: #204a87; } /* DataType */
-code > span.dv { color: #0000cf; } /* DecVal */
-code > span.bn { color: #0000cf; } /* BaseN */
-code > span.fl { color: #0000cf; } /* Float */
-code > span.ch { color: #4e9a06; } /* Char */
-code > span.st { color: #4e9a06; } /* String */
-code > span.co { color: #8f5902; font-style: italic; } /* Comment */
-code > span.ot { color: #8f5902; } /* Other */
-code > span.al { color: #ef2929; } /* Alert */
-code > span.fu { color: #000000; } /* Function */
-code > span.er { color: #a40000; font-weight: bold; } /* Error */
-code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #000000; } /* Constant */
-code > span.sc { color: #000000; } /* SpecialChar */
-code > span.vs { color: #4e9a06; } /* VerbatimString */
-code > span.ss { color: #4e9a06; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #000000; } /* Variable */
-code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
-code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
-code > span.ex { } /* Extension */
-code > span.at { color: #c4a000; } /* Attribute */
-code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
-code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
-
-.sourceCode .row {
-  width: 100%;
-}
-.sourceCode {
-  overflow-x: auto;
-}
-.code-folding-btn {
-  margin-right: -30px;
-}
-</style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
-  }
-})();
-</script>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
-}
-.tabbed-pane {
-  padding-top: 12px;
-}
-.html-widget {
-  margin-bottom: 20px;
-}
-button.code-folding-btn:focus {
-  outline: none;
-}
-summary {
-  display: list-item;
-}
-</style>
-<style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 54px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 59px;
-  margin-top: -59px;
-}
-.section h2 {
-  padding-top: 59px;
-  margin-top: -59px;
-}
-.section h3 {
-  padding-top: 59px;
-  margin-top: -59px;
-}
-.section h4 {
-  padding-top: 59px;
-  margin-top: -59px;
-}
-.section h5 {
-  padding-top: 59px;
-  margin-top: -59px;
-}
-.section h6 {
-  padding-top: 59px;
-  margin-top: -59px;
-}
-.dropdown-submenu {
-  position: relative;
-}
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  border-radius: 0 6px 6px 6px;
-}
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #cccccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-.dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
-}
-.dropdown-submenu.pull-left {
-  float: none;
-}
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  border-radius: 6px 0 6px 6px;
-}
-</style>
-<script>
-// manage active state of menu based on current page
-$(document).ready(function () {
-  // active menu anchor
-  href = window.location.pathname
-  href = href.substr(href.lastIndexOf('/') + 1)
-  if (href === "")
-    href = "index.html";
-  var menuAnchor = $('a[href="' + href + '"]');
-
-  // mark it active
-  menuAnchor.parent().addClass('active');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
-});
-</script>
-<!-- tabsets -->
-<style type="text/css">
-.tabset-dropdown > .nav-tabs {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "î‰™";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "î‰™";
-  font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
-}
-
-.tabset-dropdown > .nav-tabs > li.active {
-  display: block;
-}
-
-.tabset-dropdown > .nav-tabs > li > a,
-.tabset-dropdown > .nav-tabs > li > a:focus,
-.tabset-dropdown > .nav-tabs > li > a:hover {
-  border: none;
-  display: inline-block;
-  border-radius: 4px;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
-  display: block;
-  float: none;
-}
-
-.tabset-dropdown > .nav-tabs > li {
-  display: none;
-}
-</style>
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-<!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = false;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-</head>
-<body>
-<div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-
-</div>
-</div>
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
-
-
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-<div class="container">
-<pre><code>&lt;div class=&quot;navbar-header&quot;&gt;
-  &lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#navbar&quot;&gt;
-    &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-    &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-    &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
-  &lt;/button&gt;
-  &lt;a class=&quot;navbar-brand&quot; href=&quot;index.html&quot;&gt;ACDI/VOCA&lt;/a&gt;
-&lt;/div&gt;
-&lt;div id=&quot;navbar&quot; class=&quot;navbar-collapse collapse&quot;&gt;
-  &lt;ul class=&quot;nav navbar-nav&quot;&gt;
-    &lt;li class=&quot;dropdown&quot;&gt;</code></pre>
-<p><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Cod. para iniciar</p>
-<pre><code>&lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;</code></pre>
-</a>
-<ul class="dropdown-menu" role="menu">
-<pre><code>&lt;li&gt;
-  &lt;a href=&quot;Merge_bases.html&quot;&gt;Indice IMR 2017 y PANEL CEDE&lt;/a&gt;
-&lt;/li&gt;
-&lt;li&gt;
-  &lt;a href=&quot;Merge_bases_2019.html&quot;&gt;Indice IMR 2019&lt;/a&gt;
-&lt;/li&gt;</code></pre>
-</ul>
-</li>
-<li class="dropdown">
-<p><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Analisis 44 mpios</p>
-<pre><code>&lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;</code></pre>
-</a>
-<ul class="dropdown-menu" role="menu">
-<pre><code>&lt;li class=&quot;dropdown-header&quot;&gt;Panel CEDE Municipal&lt;/li&gt;
-&lt;li class=&quot;dropdown-submenu&quot;&gt;
-  &lt;a href=&quot;#&quot; class=&quot;dropdown-toggle&quot; data-toggle=&quot;dropdown&quot; role=&quot;button&quot; aria-expanded=&quot;false&quot;&gt;Exploraciones&lt;/a&gt;
-  &lt;ul class=&quot;dropdown-menu&quot; role=&quot;menu&quot;&gt;
-    &lt;li&gt;
-      &lt;a href=&quot;Violencia_graficos_analisis.html&quot;&gt;
-        &lt;span class=&quot;fa fa-bomb&quot;&gt;&lt;/span&gt;
-         
-        Violencia
-      &lt;/a&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;a href=&quot;Gobierno_graficos_analisis.html&quot;&gt;
-        &lt;span class=&quot;fa fa-university&quot;&gt;&lt;/span&gt;
-         
-        Gobierno
-      &lt;/a&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;a href=&quot;Salud_graficos_analisis.html&quot;&gt;
-        &lt;span class=&quot;fa fa-user-md&quot;&gt;&lt;/span&gt;
-         
-        Salud
-      &lt;/a&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;a href=&quot;Educacion_graficos_analisis.html&quot;&gt;
-        &lt;span class=&quot;fa fa-graduation-cap&quot;&gt;&lt;/span&gt;
-         
-        Educacion
-      &lt;/a&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;a href=&quot;Tierras_graficos_analisis.html&quot;&gt;
-        &lt;span class=&quot;fa fa-seedling&quot;&gt;&lt;/span&gt;
-         
-        Tierras
-      &lt;/a&gt;
-    &lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/li&gt;
-&lt;li class=&quot;dropdown-submenu&quot;&gt;
-  &lt;a href=&quot;#&quot; class=&quot;dropdown-toggle&quot; data-toggle=&quot;dropdown&quot; role=&quot;button&quot; aria-expanded=&quot;false&quot;&gt;ELCA&lt;/a&gt;
-  &lt;ul class=&quot;dropdown-menu&quot; role=&quot;menu&quot;&gt;
-    &lt;li&gt;
-      &lt;a href=&quot;elca_exploracion.html&quot;&gt;
-        &lt;span class=&quot;fa fa-object-ungroup&quot;&gt;&lt;/span&gt;
-         
-        Depuracion y merge
-      &lt;/a&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;a href=&quot;elca_modulo_politica.html&quot;&gt;
-        &lt;span class=&quot;fa fa-comment&quot;&gt;&lt;/span&gt;
-         
-        Modulo Politica
-      &lt;/a&gt;
-    &lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/li&gt;</code></pre>
-</ul>
-</li>
-<li class="dropdown">
-<p><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Analisis 27 mpios (PAR)</p>
-<pre><code>&lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;</code></pre>
-</a>
-<ul class="dropdown-menu" role="menu">
-<pre><code>&lt;li&gt;
-  &lt;a href=&quot;Analisis_indice_PAR.html&quot;&gt;Analisis PAR. Primera ola 2017&lt;/a&gt;
-&lt;/li&gt;
-&lt;li class=&quot;dropdown-header&quot;&gt;Analisis PAR. Segunda ola 2019&lt;/li&gt;
-&lt;li class=&quot;dropdown-header&quot;&gt;Analisis PAR. Diferencias&lt;/li&gt;</code></pre>
-</ul>
-</li>
-<li class="dropdown">
-<p><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <span class="fa fa-globe-americas"></span></p>
-<pre><code>Evento ACDIVOCA
- 
-&lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;</code></pre>
-</a>
-<ul class="dropdown-menu" role="menu">
-<pre><code>&lt;li&gt;
-  &lt;a href=&quot;reg_olas_PAR.html&quot;&gt;Estadistica Diferencias mpios PAR entre 2017 y 2019 &lt;/a&gt;
-&lt;/li&gt;
-&lt;li&gt;
-  &lt;a href=&quot;Comparacion_PAR_por_categorias.html&quot;&gt;
-    &lt;span class=&quot;fa fa-chart-pie&quot;&gt;&lt;/span&gt;
-     
-    Analisis Mpios PAR por categorias PREJUICIOS
-  &lt;/a&gt;
-&lt;/li&gt;
-&lt;li&gt;
-  &lt;a href=&quot;Reconciliacion,_2017-2019.html&quot;&gt;Comparaciones exploratorias mpios PAR 2017-2019&lt;/a&gt;
-&lt;/li&gt;
-&lt;li&gt;
-  &lt;a href=&quot;graficos_prejuicios.html&quot;&gt;
-    &lt;span class=&quot;fa fa-dizzy&quot;&gt;&lt;/span&gt;
-     
-    Graficos prejuicios
-  &lt;/a&gt;
-&lt;/li&gt;
-&lt;li&gt;
-  &lt;a href=&quot;encuesta_diferencias_municipal.html&quot;&gt;
-    &lt;span class=&quot;fa fa-chart-bar&quot;&gt;&lt;/span&gt;
-     
-    Exploracion Diferencias Municipales
-  &lt;/a&gt;
-&lt;/li&gt;</code></pre>
-</ul>
-</li>
-<li>
-<p><a href="particpantes_graficos.html"> <span class="fa fa-people-carry"></span></p>
-<pre><code>Para Participantes</code></pre>
-</a>
-</li>
-<li class="dropdown">
-<p><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <span class="fa fa-gear"></span></p>
-<pre><code>More
- 
-&lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;</code></pre>
-</a>
-<ul class="dropdown-menu" role="menu">
-<pre><code>&lt;li class=&quot;dropdown-header&quot;&gt;Exploraciones Viejas&lt;/li&gt;
-&lt;li&gt;
-  &lt;a href=&quot;Exploracion_CEDE_Violencia_ACDIVOCA.html&quot;&gt;Violencia y graficos&lt;/a&gt;
-&lt;/li&gt;
-&lt;li&gt;
-  &lt;a href=&quot;acdivoca_analisis.html&quot;&gt;Violencia y estadistica&lt;/a&gt;
-&lt;/li&gt;
-&lt;li&gt;
-  &lt;a href=&quot;base_stata.html&quot;&gt;Creacion BBDD para Stata&lt;/a&gt;
-&lt;/li&gt;</code></pre>
-</ul>
-</li>
-<pre><code>  &lt;/ul&gt;
-  &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt;
-    
-  &lt;/ul&gt;
-&lt;/div&gt;&lt;!--/.nav-collapse --&gt;</code></pre>
-</div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
-<div id="header" class="fluid-row">
 <div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-<span>Code</span> <span class="caret"></span>
-</button>
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
 <ul class="dropdown-menu" style="min-width: 50px;">
-<li>
-<a id="rmd-show-all-code" href="#">Show All Code</a>
-</li>
-<li>
-<a id="rmd-hide-all-code" href="#">Hide All Code</a>
-</li>
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
 </ul>
 </div>
-<h1 class="title toc-ignore">
-Analisis Diferencias Olas PAR
-</h1>
-<h4 class="author">
-Felipe Gonzalez-Arango
-</h4>
-<h4 class="date">
-08 de agosto de 2019
-</h4>
+
+
+
+<h1 class="title toc-ignore">Analisis Diferencias Olas PAR</h1>
+<h4 class="author">Felipe Gonzalez-Arango</h4>
+<h4 class="date">08 de agosto de 2019</h4>
+
 </div>
-<p>
-El objetivo de este documento es empezar a cruzar variables de diferentes bases de datos. En efecto, las bases anteriores (y sus analisis) podian estar presentando problemas de multicolinealidad. Las variables de Gobierno, a pesar de ser diferentes eran parecidas. Por lo tanto, aqui se hara alguna estadistica inferencial mezclando bases de datos para poder ver que puede predecir el indice de confianza en los municipios PAR.
-</p>
+
+
+<p>El objetivo de este documento es empezar a cruzar variables de diferentes bases de datos. En efecto, las bases anteriores (y sus analisis) podian estar presentando problemas de multicolinealidad. Las variables de Gobierno, a pesar de ser diferentes eran parecidas. Por lo tanto, aqui se hara alguna estadistica inferencial mezclando bases de datos para poder ver que puede predecir el indice de confianza en los municipios PAR.</p>
 <div id="setup" class="section level1">
-<h1>
-<span class="header-section-number">1</span> Setup
-</h1>
-<p>
-Con este codigo se importan todas las bases de datos y todos los paquetes necesarios.
-</p>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Set Working Directory</span>
+<h1><span class="header-section-number">1</span> Setup</h1>
+<p>Con este codigo se importan todas las bases de datos y todos los paquetes necesarios.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Set Working Directory</span>
 <span class="kw">setwd</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo&quot;</span>)
 <span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 
@@ -1111,1497 +680,712 @@ Con este codigo se importan todas las bases de datos y todos los paquetes necesa
 base_stata &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;Para Stata/base_acdi_stata.dta&quot;</span>,
                                    <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)
 base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Para Stata/base_acdi_stata_2019.dta&quot;</span>, <span class="dt">encoding=</span><span class="st">&quot;UTF-8&quot;</span>)
-base_cerac &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Evento ACIDVOCA/Copy of CERAC - TipologÃ­a de los municipios de Colombia segÃºn el conflicto armado interno.xlsx&quot;</span>, <span class="dt">sheet =</span> <span class="dv">2</span>, <span class="dt">col_names =</span> <span class="ot">TRUE</span>)
+base_cerac &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/felig/Dropbox/Proyecto Juan Camilo/Evento ACIDVOCA/Copy of CERAC - Tipología de los municipios de Colombia según el conflicto armado interno.xlsx&quot;</span>, <span class="dt">sheet =</span> <span class="dv">2</span>, <span class="dt">col_names =</span> <span class="ot">TRUE</span>)
 
 base_cerac &lt;-<span class="st"> </span>base_cerac <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">Mpio PAR</span><span class="st">`</span><span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(Municipio)
 
 base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(base_stata_<span class="dv">2019</span>,base_cerac, <span class="dt">by=</span><span class="st">&quot;Municipio&quot;</span>)
 
-mpios_par &lt;-<span class="st"> </span><span class="kw">t</span>(base_stata_<span class="dv">2019</span><span class="op">$</span>codmpio)</code></pre>
-</div>
+mpios_par &lt;-<span class="st"> </span><span class="kw">t</span>(base_stata_<span class="dv">2019</span><span class="op">$</span>codmpio)</code></pre></div>
 </div>
 <div id="importar-variables" class="section level1">
-<h1>
-<span class="header-section-number">2</span> Importar variables
-</h1>
-<p>
-Vamos a importar(crear) las variables que ya se utilizaron en las otras bases de datos. Se recuerda que se utilizaron 5 bases de datos diferentes (Gobierno, Violencia, Tierras, Educacion y Salud).
-</p>
-<p>
-Tenga en cuenta que <strong>solo un codigo parcial de esta seccion se va a mostrar</strong> Esto sencillamente para no sobrecargar el documento. Si usted esta interesado en ver el codigo ir a la siguiente pagina: <a href="https://github.com/feligonza17/ACDI-VOCA">GitHub</a> y buscar el archivo con el nombre: <em>reg_olas_PAR.Rmd</em>
-</p>
+<h1><span class="header-section-number">2</span> Importar variables</h1>
+<p>Vamos a importar(crear) las variables que ya se utilizaron en las otras bases de datos. Se recuerda que se utilizaron 5 bases de datos diferentes (Gobierno, Violencia, Tierras, Educacion y Salud).</p>
+<p>Tenga en cuenta que <strong>solo un codigo parcial de esta seccion se va a mostrar</strong> Esto sencillamente para no sobrecargar el documento. Si usted esta interesado en ver el codigo ir a la siguiente pagina: <a href="https://github.com/feligonza17/ACDI-VOCA">GitHub</a> y buscar el archivo con el nombre: <em>reg_olas_PAR.Rmd</em></p>
 <div id="diferencia-de-resultados-entre-ola-2017-y-ola-2019" class="section level2">
-<h2>
-<span class="header-section-number">2.1</span> Diferencia de resultados entre Ola 2017 y Ola 2019
-</h2>
-<p>
-Aqui se va a crear la variable que mide la diferencia en el puntaje en los indices de confianza (instiucion, medios y vecinos) a nivel municipal.
-</p>
-<p>
-La variable se calcula de la siguiente forma: <span class="math inline"><span class="math inline">\(\bar{x}_{indice2019} - \bar{x}_{indice2017}\)</span></span>
-</p>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r">base_stata_<span class="dv">2019</span><span class="op">$</span>dif_confianza_instituciones &lt;-<span class="st">  </span>base_stata_<span class="dv">2019</span><span class="op">$</span>confianza_instituciones_men2019<span class="op">-</span><span class="st"> </span>base_stata_<span class="dv">2019</span><span class="op">$</span>confianza_instituciones_arr_men
+<h2><span class="header-section-number">2.1</span> Diferencia de resultados entre Ola 2017 y Ola 2019</h2>
+<p>Aqui se va a crear la variable que mide la diferencia en el puntaje en los indices de confianza (instiucion, medios y vecinos) a nivel municipal.</p>
+<p>La variable se calcula de la siguiente forma: <span class="math inline">\(\bar{x}_{indice2019} - \bar{x}_{indice2017}\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_stata_<span class="dv">2019</span><span class="op">$</span>dif_confianza_instituciones &lt;-<span class="st">  </span>base_stata_<span class="dv">2019</span><span class="op">$</span>confianza_instituciones_men2019<span class="op">-</span><span class="st"> </span>base_stata_<span class="dv">2019</span><span class="op">$</span>confianza_instituciones_arr_men
 
 base_stata_<span class="dv">2019</span><span class="op">$</span>dif_confianza_medios &lt;-<span class="st">  </span>base_stata_<span class="dv">2019</span><span class="op">$</span>confianza_medios_mean2019 <span class="op">-</span><span class="st"> </span>base_stata_<span class="dv">2019</span><span class="op">$</span>confianza_medios_arr_mean
 
-base_stata_<span class="dv">2019</span><span class="op">$</span>dif_confianza_vec &lt;-<span class="st">  </span>base_stata_<span class="dv">2019</span><span class="op">$</span>confianza_vec_mean2019 <span class="op">-</span><span class="st"> </span>base_stata_<span class="dv">2019</span><span class="op">$</span>confianza_vec_arr_mean</code></pre>
-</div>
+base_stata_<span class="dv">2019</span><span class="op">$</span>dif_confianza_vec &lt;-<span class="st">  </span>base_stata_<span class="dv">2019</span><span class="op">$</span>confianza_vec_mean2019 <span class="op">-</span><span class="st"> </span>base_stata_<span class="dv">2019</span><span class="op">$</span>confianza_vec_arr_mean</code></pre></div>
 </div>
 </div>
 <div id="educacion" class="section level1">
-<h1>
-<span class="header-section-number">3</span> Educacion
-</h1>
+<h1><span class="header-section-number">3</span> Educacion</h1>
 <div id="graficos-variables-importantes-y-algunos-descriptivos" class="section level2">
-<h2>
-<span class="header-section-number">3.1</span> Graficos variables importantes y algunos descriptivos
-</h2>
-<p>
-Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.
-</p>
+<h2><span class="header-section-number">3.1</span> Graficos variables importantes y algunos descriptivos</h2>
+<p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="alumnos-en-total" class="section level3">
-<h3>
-<span class="header-section-number">3.1.1</span> Alumnos en total
-</h3>
-<p>
-Esta variable es la cantidad de alumnos de instituciones educativas ***
-</p>
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
+<h3><span class="header-section-number">3.1.1</span> Alumnos en total</h3>
+<p>Esta variable es la cantidad de alumnos de instituciones educativas ***</p>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 </div>
 <div id="graficos" class="section level3">
-<h3>
-<span class="header-section-number">3.1.2</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">3.1.2</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div id="descriptivos" class="section level4">
-<h4>
-<span class="header-section-number">3.1.2.1</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">3.1.2.1</span> Descriptivos</h4>
 <div id="agregados" class="section level5">
-<h5>
-<span class="header-section-number">3.1.2.1.1</span> Agregados
-</h5>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h5><span class="header-section-number">3.1.2.1.1</span> Agregados</h5>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta" class="section level5">
-<h5>
-<span class="header-section-number">3.1.2.1.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h5>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h5><span class="header-section-number">3.1.2.1.2</span> <span class="math inline">\(\Delta\)</span></h5>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 <div id="docentes-con-doctorado-en-total" class="section level3">
-<h3>
-<span class="header-section-number">3.1.3</span> Docentes con doctorado en total
-</h3>
+<h3><span class="header-section-number">3.1.3</span> Docentes con doctorado en total</h3>
 <div id="graficos-1" class="section level4">
-<h4>
-<span class="header-section-number">3.1.3.1</span> Graficos
-</h4>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h4><span class="header-section-number">3.1.3.1</span> Graficos</h4>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-1" class="section level4">
-<h4>
-<span class="header-section-number">3.1.3.2</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">3.1.3.2</span> Descriptivos</h4>
 <div id="agregados-1" class="section level5">
-<h5>
-<span class="header-section-number">3.1.3.2.1</span> Agregados
-</h5>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h5><span class="header-section-number">3.1.3.2.1</span> Agregados</h5>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-1" class="section level5">
-<h5>
-<span class="header-section-number">3.1.3.2.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h5>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h5><span class="header-section-number">3.1.3.2.2</span> <span class="math inline">\(\Delta\)</span></h5>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 <div id="porcentaje-de-la-poblacion-de-mas-de-15-anos-o-mas-que-sabe-leer-y-escribir-tasa-de-alfabetismo-2005" class="section level3">
-<h3>
-<span class="header-section-number">3.1.4</span> Porcentaje de la poblacion de mas de 15 anos o mas que sabe leer y escribir (Tasa de alfabetismo) 2005
-</h3>
+<h3><span class="header-section-number">3.1.4</span> Porcentaje de la poblacion de mas de 15 anos o mas que sabe leer y escribir (Tasa de alfabetismo) 2005</h3>
 </div>
 <div id="graficos-2" class="section level3">
-<h3>
-<span class="header-section-number">3.1.5</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
-<p>
-Segun esta encuesta, la tasa de analfabetismo no ha cambiado (cuando se revisa el numero en bruto, igualmente, no hay variacion por municipio por ano.)
-</p>
-<p>
-Por esta razon se decide culminar el analisis de esta variable aqui
-</p>
+<h3><span class="header-section-number">3.1.5</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<p>Segun esta encuesta, la tasa de analfabetismo no ha cambiado (cuando se revisa el numero en bruto, igualmente, no hay variacion por municipio por ano.)</p>
+<p>Por esta razon se decide culminar el analisis de esta variable aqui</p>
 </div>
 </div>
 <div id="proyecciones-de-poblacion-en-edad-de-asistir-a-primaria-o-secundaria-es-decir-poblacion-entre-7-a-17-anos." class="section level2">
-<h2>
-<span class="header-section-number">3.2</span> Proyecciones de poblacion en edad de asistir a primaria o secundaria, es decir, poblacion entre 7 a 17 anos.
-</h2>
-<p>
-Esta variable es una proyeccion de cuanta gente puede asistir al colegio. Como es una variable poblacional se va a hacer por cada cienmil habitantes.
-</p>
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
+<h2><span class="header-section-number">3.2</span> Proyecciones de poblacion en edad de asistir a primaria o secundaria, es decir, poblacion entre 7 a 17 anos.</h2>
+<p>Esta variable es una proyeccion de cuanta gente puede asistir al colegio. Como es una variable poblacional se va a hacer por cada cienmil habitantes.</p>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 <div id="graficos-3" class="section level3">
-<h3>
-<span class="header-section-number">3.2.1</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">3.2.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-2" class="section level3">
-<h3>
-<span class="header-section-number">3.2.2</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">3.2.2</span> Descriptivos</h3>
 <div id="agregados-2" class="section level4">
-<h4>
-<span class="header-section-number">3.2.2.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">3.2.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-2" class="section level4">
-<h4>
-<span class="header-section-number">3.2.2.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">3.2.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 <div id="total-establecimientos-educativos" class="section level2">
-<h2>
-<span class="header-section-number">3.3</span> Total establecimientos educativos
-</h2>
+<h2><span class="header-section-number">3.3</span> Total establecimientos educativos</h2>
 <div id="graficos-4" class="section level3">
-<h3>
-<span class="header-section-number">3.3.1</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">3.3.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 </div>
 </div>
 <div id="gobierno" class="section level1">
-<h1>
-<span class="header-section-number">4</span> Gobierno
-</h1>
+<h1><span class="header-section-number">4</span> Gobierno</h1>
 <div id="graficos-variables-importantes-y-algunos-descriptivos-1" class="section level2">
-<h2>
-<span class="header-section-number">4.1</span> Graficos variables importantes y algunos descriptivos
-</h2>
-<p>
-Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.
-</p>
+<h2><span class="header-section-number">4.1</span> Graficos variables importantes y algunos descriptivos</h2>
+<p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="analisis-desempeno-fiscal-indice" class="section level3">
-<h3>
-<span class="header-section-number">4.1.1</span> Analisis Desempeno fiscal (indice)
-</h3>
-<p>
-Este indice mide globalmente el resultado fiscal alcanzado en cada aÃ±o y se encuentra en una escala de 0 a 100, donde los valores cercanos a 0 reflejan un bajo desempeÃ±o fiscal y valores cercanos a 100 significan que la entidad territorial logro en conjunto los siguientes resultados (DNP, 2013): Buen balance en su desempeÃ±o fiscal, Suficientes recursos para sostener su funcionamiento Cumplimiento de gasto de funcionamiento segun la Ley 617/00, Importante nivel de recursos propios (solvencia tributaria) como contrapartida a los recursos de SGP, Altos niveles de inversion, Adecuada capacidad de respaldo del servicio de su deuda, Generacion de ahorro corriente, necesario para garantizar su solvencia financiera
-</p>
+<h3><span class="header-section-number">4.1.1</span> Analisis Desempeno fiscal (indice)</h3>
+<p>Este indice mide globalmente el resultado fiscal alcanzado en cada año y se encuentra en una escala de 0 a 100, donde los valores cercanos a 0 reflejan un bajo desempeño fiscal y valores cercanos a 100 significan que la entidad territorial logro en conjunto los siguientes resultados (DNP, 2013): Buen balance en su desempeño fiscal, Suficientes recursos para sostener su funcionamiento Cumplimiento de gasto de funcionamiento segun la Ley 617/00, Importante nivel de recursos propios (solvencia tributaria) como contrapartida a los recursos de SGP, Altos niveles de inversion, Adecuada capacidad de respaldo del servicio de su deuda, Generacion de ahorro corriente, necesario para garantizar su solvencia financiera</p>
 <div id="graficos-5" class="section level4">
-<h4>
-<span class="header-section-number">4.1.1.1</span> Graficos
-</h4>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h4><span class="header-section-number">4.1.1.1</span> Graficos</h4>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-3" class="section level4">
-<h4>
-<span class="header-section-number">4.1.1.2</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">4.1.1.2</span> Descriptivos</h4>
 <div id="agregados-3" class="section level5">
-<h5>
-<span class="header-section-number">4.1.1.2.1</span> Agregados
-</h5>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h5><span class="header-section-number">4.1.1.2.1</span> Agregados</h5>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-3" class="section level5">
-<h5>
-<span class="header-section-number">4.1.1.2.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h5>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h5><span class="header-section-number">4.1.1.2.2</span> <span class="math inline">\(\Delta\)</span></h5>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 <div id="analisis-desempeno-integral-indice" class="section level3">
-<h3>
-<span class="header-section-number">4.1.2</span> Analisis Desempeno integral (indice)
-</h3>
-<p>
-La evaluacion del desempeno integral tiene por objeto evaluar, valga la redundancia, el desempeno de la gestion de las entidades territoriales en sus competencias fundamentales, basado en: los resultados obtenidos, en los compromisos adquiridos por estas entidades en los planes de desarrollo, el marco del proceso de descentralizacion de competencias y recursos, asi como, el cumplimiento del ordenamiento juridico que lo fundamenta.
-</p>
+<h3><span class="header-section-number">4.1.2</span> Analisis Desempeno integral (indice)</h3>
+<p>La evaluacion del desempeno integral tiene por objeto evaluar, valga la redundancia, el desempeno de la gestion de las entidades territoriales en sus competencias fundamentales, basado en: los resultados obtenidos, en los compromisos adquiridos por estas entidades en los planes de desarrollo, el marco del proceso de descentralizacion de competencias y recursos, asi como, el cumplimiento del ordenamiento juridico que lo fundamenta.</p>
 <div id="graficos-6" class="section level4">
-<h4>
-<span class="header-section-number">4.1.2.1</span> Graficos
-</h4>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
-<p>
-Grafico del desempeno integral junto con el fiscal
-</p>
+<h4><span class="header-section-number">4.1.2.1</span> Graficos</h4>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<p>Grafico del desempeno integral junto con el fiscal</p>
 </div>
 <div id="descriptivos-4" class="section level4">
-<h4>
-<span class="header-section-number">4.1.2.2</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">4.1.2.2</span> Descriptivos</h4>
 <div id="agregados-4" class="section level5">
-<h5>
-<span class="header-section-number">4.1.2.2.1</span> Agregados
-</h5>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h5><span class="header-section-number">4.1.2.2.1</span> Agregados</h5>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 </div>
 <div id="delta-4" class="section level4">
-<h4>
-<span class="header-section-number">4.1.2.3</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">4.1.2.3</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="analisis-inversion-total" class="section level3">
-<h3>
-<span class="header-section-number">4.1.3</span> Analisis Inversion total
-</h3>
-<p>
-Esta variable mide: Inversion total (inv_total = inv_a_educacion + inv_crecusion + inv_fortinst + inv_promdllo + inv_sp + inv_tranporte + inv_cult + inv_agropecuario + inv_aguasani + inv_ambiental + inv_dllocomun+inv_dyr + inv_en_educacion + inv_equipamiento + inv_gruposvunera + inv_en_justicia +inv_prevdesastr + inv_en_salud + inv_en_vias + inv_en_vivienda)
-</p>
+<h3><span class="header-section-number">4.1.3</span> Analisis Inversion total</h3>
+<p>Esta variable mide: Inversion total (inv_total = inv_a_educacion + inv_crecusion + inv_fortinst + inv_promdllo + inv_sp + inv_tranporte + inv_cult + inv_agropecuario + inv_aguasani + inv_ambiental + inv_dllocomun+inv_dyr + inv_en_educacion + inv_equipamiento + inv_gruposvunera + inv_en_justicia +inv_prevdesastr + inv_en_salud + inv_en_vias + inv_en_vivienda)</p>
 <hr />
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
-<p>
-En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></span>
-</p>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
+<p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-7" class="section level4">
-<h4>
-<span class="header-section-number">4.1.3.1</span> Graficos
-</h4>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h4><span class="header-section-number">4.1.3.1</span> Graficos</h4>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-5" class="section level4">
-<h4>
-<span class="header-section-number">4.1.3.2</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">4.1.3.2</span> Descriptivos</h4>
 <div id="agregados-5" class="section level5">
-<h5>
-<span class="header-section-number">4.1.3.2.1</span> Agregados
-</h5>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h5><span class="header-section-number">4.1.3.2.1</span> Agregados</h5>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-5" class="section level5">
-<h5>
-<span class="header-section-number">4.1.3.2.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h5>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h5><span class="header-section-number">4.1.3.2.2</span> <span class="math inline">\(\Delta\)</span></h5>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 <div id="analisis-inversion-en-fortalecimiento-institucional" class="section level3">
-<h3>
-<span class="header-section-number">4.1.4</span> Analisis Inversion en fortalecimiento institucional
-</h3>
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
-<p>
-En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></span>
-</p>
+<h3><span class="header-section-number">4.1.4</span> Analisis Inversion en fortalecimiento institucional</h3>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
+<p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-8" class="section level4">
-<h4>
-<span class="header-section-number">4.1.4.1</span> Graficos
-</h4>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h4><span class="header-section-number">4.1.4.1</span> Graficos</h4>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-6" class="section level4">
-<h4>
-<span class="header-section-number">4.1.4.2</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">4.1.4.2</span> Descriptivos</h4>
 </div>
 <div id="agregados-6" class="section level4">
-<h4>
-<span class="header-section-number">4.1.4.3</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">4.1.4.3</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-6" class="section level4">
-<h4>
-<span class="header-section-number">4.1.4.4</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">4.1.4.4</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="analisis-indice-de-gobierno-abierto" class="section level3">
-<h3>
-<span class="header-section-number">4.1.5</span> Analisis Indice de Gobierno Abierto
-</h3>
-<p>
-Con esta dimension, el IGA pretende medir los niveles de organizacion y cumplimiento de las normas basicas de la administracion publica. Por esto se ubica al principio de la cadena y de la estructura operativa del indicador, pues dispone una capacidad instalada al interior de la administracion publica para que, tanto los funcionarios como la ciudadania, estructuren su relacion en torno a los flujos de informacion producidos y requeridos en el proceso de relacionamiento publico.Fuente: Procuraduria General de la Nacion
-</p>
+<h3><span class="header-section-number">4.1.5</span> Analisis Indice de Gobierno Abierto</h3>
+<p>Con esta dimension, el IGA pretende medir los niveles de organizacion y cumplimiento de las normas basicas de la administracion publica. Por esto se ubica al principio de la cadena y de la estructura operativa del indicador, pues dispone una capacidad instalada al interior de la administracion publica para que, tanto los funcionarios como la ciudadania, estructuren su relacion en torno a los flujos de informacion producidos y requeridos en el proceso de relacionamiento publico.Fuente: Procuraduria General de la Nacion</p>
 </div>
 <div id="graficos-9" class="section level3">
-<h3>
-<span class="header-section-number">4.1.6</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">4.1.6</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-7" class="section level3">
-<h3>
-<span class="header-section-number">4.1.7</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">4.1.7</span> Descriptivos</h3>
 <div id="agregados-7" class="section level4">
-<h4>
-<span class="header-section-number">4.1.7.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">4.1.7.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-7" class="section level4">
-<h4>
-<span class="header-section-number">4.1.7.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">4.1.7.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 </div>
 <div id="salud" class="section level1">
-<h1>
-<span class="header-section-number">5</span> Salud
-</h1>
+<h1><span class="header-section-number">5</span> Salud</h1>
 <div id="graficos-variables-importantes-y-algunos-descriptivos-2" class="section level2">
-<h2>
-<span class="header-section-number">5.1</span> Graficos variables importantes y algunos descriptivos
-</h2>
-<p>
-Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.
-</p>
+<h2><span class="header-section-number">5.1</span> Graficos variables importantes y algunos descriptivos</h2>
+<p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="analisis-tasa-mortalidad-infantil-tmi" class="section level3">
-<h3>
-<span class="header-section-number">5.1.1</span> Analisis Tasa Mortalidad Infantil (TMI)
-</h3>
+<h3><span class="header-section-number">5.1.1</span> Analisis Tasa Mortalidad Infantil (TMI)</h3>
 </div>
 <div id="graficos-10" class="section level3">
-<h3>
-<span class="header-section-number">5.1.2</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">5.1.2</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-8" class="section level3">
-<h3>
-<span class="header-section-number">5.1.3</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">5.1.3</span> Descriptivos</h3>
 <div id="agregados-8" class="section level4">
-<h4>
-<span class="header-section-number">5.1.3.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">5.1.3.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-8" class="section level4">
-<h4>
-<span class="header-section-number">5.1.3.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">5.1.3.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="analisis-necesidades-basicas-insatisfechas-nbi" class="section level3">
-<h3>
-<span class="header-section-number">5.1.4</span> Analisis Necesidades Basicas Insatisfechas (NBI)
-</h3>
+<h3><span class="header-section-number">5.1.4</span> Analisis Necesidades Basicas Insatisfechas (NBI)</h3>
 </div>
 <div id="graficos-11" class="section level3">
-<h3>
-<span class="header-section-number">5.1.5</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
-<p>
-Cuidado el grafico es enganoso, analizar con cautela
-</p>
+<h3><span class="header-section-number">5.1.5</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<p>Cuidado el grafico es enganoso, analizar con cautela</p>
 </div>
 <div id="descriptivos-9" class="section level3">
-<h3>
-<span class="header-section-number">5.1.6</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">5.1.6</span> Descriptivos</h3>
 <div id="agregados-9" class="section level4">
-<h4>
-<span class="header-section-number">5.1.6.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">5.1.6.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-9" class="section level4">
-<h4>
-<span class="header-section-number">5.1.6.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">5.1.6.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 <div id="analisis-prestadoras-de-servicio" class="section level2">
-<h2>
-<span class="header-section-number">5.2</span> Analisis prestadoras de servicio
-</h2>
-<p>
-Esta variable es el numero de prestadoras de servicio de salud publica. ***
-</p>
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
+<h2><span class="header-section-number">5.2</span> Analisis prestadoras de servicio</h2>
+<p>Esta variable es el numero de prestadoras de servicio de salud publica. ***</p>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 <div id="graficos-12" class="section level3">
-<h3>
-<span class="header-section-number">5.2.1</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">5.2.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-10" class="section level3">
-<h3>
-<span class="header-section-number">5.2.2</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">5.2.2</span> Descriptivos</h3>
 <div id="agregados-10" class="section level4">
-<h4>
-<span class="header-section-number">5.2.2.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">5.2.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-10" class="section level4">
-<h4>
-<span class="header-section-number">5.2.2.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">5.2.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="analisis-personas-afiliadas-al-regimen-subsidiado" class="section level3">
-<h3>
-<span class="header-section-number">5.2.3</span> Analisis personas afiliadas al regimen subsidiado
-</h3>
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
-<p>
-En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></span>
-</p>
+<h3><span class="header-section-number">5.2.3</span> Analisis personas afiliadas al regimen subsidiado</h3>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
+<p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-13" class="section level4">
-<h4>
-<span class="header-section-number">5.2.3.1</span> Graficos
-</h4>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h4><span class="header-section-number">5.2.3.1</span> Graficos</h4>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-11" class="section level4">
-<h4>
-<span class="header-section-number">5.2.3.2</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">5.2.3.2</span> Descriptivos</h4>
 <div id="agregados-11" class="section level5">
-<h5>
-<span class="header-section-number">5.2.3.2.1</span> Agregados
-</h5>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h5><span class="header-section-number">5.2.3.2.1</span> Agregados</h5>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 </div>
 <div id="delta-11" class="section level4">
-<h4>
-<span class="header-section-number">5.2.3.3</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">5.2.3.3</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="analisis-personas-afilidas-al-regimen-contributivo" class="section level3">
-<h3>
-<span class="header-section-number">5.2.4</span> Analisis personas afilidas al regimen contributivo
-</h3>
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
-<p>
-En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></span>
-</p>
+<h3><span class="header-section-number">5.2.4</span> Analisis personas afilidas al regimen contributivo</h3>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
+<p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-14" class="section level4">
-<h4>
-<span class="header-section-number">5.2.4.1</span> Graficos
-</h4>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h4><span class="header-section-number">5.2.4.1</span> Graficos</h4>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-12" class="section level4">
-<h4>
-<span class="header-section-number">5.2.4.2</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">5.2.4.2</span> Descriptivos</h4>
 <div id="agregados-12" class="section level5">
-<h5>
-<span class="header-section-number">5.2.4.2.1</span> Agregados
-</h5>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h5><span class="header-section-number">5.2.4.2.1</span> Agregados</h5>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 </div>
 <div id="delta-12" class="section level4">
-<h4>
-<span class="header-section-number">5.2.4.3</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">5.2.4.3</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 </div>
 <div id="tierras" class="section level1">
-<h1>
-<span class="header-section-number">6</span> Tierras
-</h1>
+<h1><span class="header-section-number">6</span> Tierras</h1>
 <div id="graficos-variables-importantes-y-algunos-descriptivos-3" class="section level2">
-<h2>
-<span class="header-section-number">6.1</span> Graficos variables importantes y algunos descriptivos
-</h2>
-<p>
-Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.
-</p>
+<h2><span class="header-section-number">6.1</span> Graficos variables importantes y algunos descriptivos</h2>
+<p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="numero-de-creditos-a-pequenos-medianos-y-grandes-productores" class="section level3">
-<h3>
-<span class="header-section-number">6.1.1</span> Numero de creditos a pequenos, medianos y grandes productores
-</h3>
-<p>
-Esta variable es la cantidad de creditos que le dan a los pequenos, medianos y grandes productores ***
-</p>
+<h3><span class="header-section-number">6.1.1</span> Numero de creditos a pequenos, medianos y grandes productores</h3>
+<p>Esta variable es la cantidad de creditos que le dan a los pequenos, medianos y grandes productores ***</p>
 <div id="graficos-15" class="section level4">
-<h4>
-<span class="header-section-number">6.1.1.1</span> Graficos
-</h4>
-<p>
-Vamos a graficar el numero de creditos por ano por municipio de los pequenos, grandes y medianos productores en un mismo grafico. La linea negra son los pequenos La linea azul son los medianos La linea roja son los grandes
-</p>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h4><span class="header-section-number">6.1.1.1</span> Graficos</h4>
+<p>Vamos a graficar el numero de creditos por ano por municipio de los pequenos, grandes y medianos productores en un mismo grafico. La linea negra son los pequenos La linea azul son los medianos La linea roja son los grandes</p>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 </div>
 <div id="pequenos-productores" class="section level3">
-<h3>
-<span class="header-section-number">6.1.2</span> Pequenos productores
-</h3>
+<h3><span class="header-section-number">6.1.2</span> Pequenos productores</h3>
 <div id="descriptivos-13" class="section level4">
-<h4>
-<span class="header-section-number">6.1.2.1</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">6.1.2.1</span> Descriptivos</h4>
 <div id="agregados-13" class="section level5">
-<h5>
-<span class="header-section-number">6.1.2.1.1</span> Agregados
-</h5>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h5><span class="header-section-number">6.1.2.1.1</span> Agregados</h5>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 </div>
 <div id="delta-13" class="section level4">
-<h4>
-<span class="header-section-number">6.1.2.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">6.1.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="medianos-productores" class="section level3">
-<h3>
-<span class="header-section-number">6.1.3</span> Medianos productores
-</h3>
+<h3><span class="header-section-number">6.1.3</span> Medianos productores</h3>
 </div>
 <div id="descriptivos-14" class="section level3">
-<h3>
-<span class="header-section-number">6.1.4</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">6.1.4</span> Descriptivos</h3>
 <div id="agregados-14" class="section level4">
-<h4>
-<span class="header-section-number">6.1.4.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">6.1.4.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-14" class="section level4">
-<h4>
-<span class="header-section-number">6.1.4.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">6.1.4.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 <div id="grandes-productores" class="section level2">
-<h2>
-<span class="header-section-number">6.2</span> Grandes productores
-</h2>
+<h2><span class="header-section-number">6.2</span> Grandes productores</h2>
 <div id="descriptivos-15" class="section level3">
-<h3>
-<span class="header-section-number">6.2.1</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">6.2.1</span> Descriptivos</h3>
 <div id="agregados-15" class="section level4">
-<h4>
-<span class="header-section-number">6.2.1.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">6.2.1.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-15" class="section level4">
-<h4>
-<span class="header-section-number">6.2.1.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">6.2.1.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="valor-de-creditos-a-pequenos-medianos-y-grandes-productores" class="section level3">
-<h3>
-<span class="header-section-number">6.2.2</span> Valor de creditos a pequenos, medianos y grandes productores
-</h3>
-<p>
-Esta variable es la cantidad de creditos que le dan a los pequenos, medianos y grandes productores ***
-</p>
+<h3><span class="header-section-number">6.2.2</span> Valor de creditos a pequenos, medianos y grandes productores</h3>
+<p>Esta variable es la cantidad de creditos que le dan a los pequenos, medianos y grandes productores ***</p>
 </div>
 <div id="graficos-16" class="section level3">
-<h3>
-<span class="header-section-number">6.2.3</span> Graficos
-</h3>
-<p>
-Vamos a graficar el valor del credito por ano por municipio de los pequenos, grandes y medianos productores en un mismo grafico. La linea negra son los pequenos La linea azul son los medianos La linea roja son los grandes
-</p>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">6.2.3</span> Graficos</h3>
+<p>Vamos a graficar el valor del credito por ano por municipio de los pequenos, grandes y medianos productores en un mismo grafico. La linea negra son los pequenos La linea azul son los medianos La linea roja son los grandes</p>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="valor-credito-para-pequenos-productores" class="section level3">
-<h3>
-<span class="header-section-number">6.2.4</span> Valor credito para Pequenos productores
-</h3>
+<h3><span class="header-section-number">6.2.4</span> Valor credito para Pequenos productores</h3>
 <div id="descriptivos-16" class="section level4">
-<h4>
-<span class="header-section-number">6.2.4.1</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">6.2.4.1</span> Descriptivos</h4>
 <div id="agregados-16" class="section level5">
-<h5>
-<span class="header-section-number">6.2.4.1.1</span> Agregados
-</h5>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h5><span class="header-section-number">6.2.4.1.1</span> Agregados</h5>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 </div>
 <div id="delta-16" class="section level4">
-<h4>
-<span class="header-section-number">6.2.4.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">6.2.4.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 <div id="valor-credito-para-medianos-productores" class="section level2">
-<h2>
-<span class="header-section-number">6.3</span> Valor credito para Medianos productores
-</h2>
+<h2><span class="header-section-number">6.3</span> Valor credito para Medianos productores</h2>
 <div id="descriptivos-17" class="section level3">
-<h3>
-<span class="header-section-number">6.3.1</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">6.3.1</span> Descriptivos</h3>
 <div id="agregados-17" class="section level4">
-<h4>
-<span class="header-section-number">6.3.1.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">6.3.1.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-17" class="section level4">
-<h4>
-<span class="header-section-number">6.3.1.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">6.3.1.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="valor-credito-para-grandes-productores" class="section level3">
-<h3>
-<span class="header-section-number">6.3.2</span> Valor credito para Grandes productores
-</h3>
+<h3><span class="header-section-number">6.3.2</span> Valor credito para Grandes productores</h3>
 <div id="descriptivos-18" class="section level4">
-<h4>
-<span class="header-section-number">6.3.2.1</span> Descriptivos
-</h4>
+<h4><span class="header-section-number">6.3.2.1</span> Descriptivos</h4>
 </div>
 <div id="agregados-18" class="section level4">
-<h4>
-<span class="header-section-number">6.3.2.2</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">6.3.2.2</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-18" class="section level4">
-<h4>
-<span class="header-section-number">6.3.2.3</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">6.3.2.3</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 <div id="numero-de-creditos-totales" class="section level2">
-<h2>
-<span class="header-section-number">6.4</span> Numero de creditos totales
-</h2>
+<h2><span class="header-section-number">6.4</span> Numero de creditos totales</h2>
 <div id="graficos-17" class="section level3">
-<h3>
-<span class="header-section-number">6.4.1</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">6.4.1</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-19" class="section level3">
-<h3>
-<span class="header-section-number">6.4.2</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">6.4.2</span> Descriptivos</h3>
 <div id="agregados-19" class="section level4">
-<h4>
-<span class="header-section-number">6.4.2.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">6.4.2.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-19" class="section level4">
-<h4>
-<span class="header-section-number">6.4.2.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">6.4.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="valor-de-creditos-totales" class="section level3">
-<h3>
-<span class="header-section-number">6.4.3</span> Valor de creditos totales
-</h3>
+<h3><span class="header-section-number">6.4.3</span> Valor de creditos totales</h3>
 </div>
 <div id="graficos-18" class="section level3">
-<h3>
-<span class="header-section-number">6.4.4</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">6.4.4</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-20" class="section level3">
-<h3>
-<span class="header-section-number">6.4.5</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">6.4.5</span> Descriptivos</h3>
 <div id="agregados-20" class="section level4">
-<h4>
-<span class="header-section-number">6.4.5.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">6.4.5.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-20" class="section level4">
-<h4>
-<span class="header-section-number">6.4.5.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">6.4.5.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 </div>
 <div id="violencia" class="section level1">
-<h1>
-<span class="header-section-number">7</span> Violencia
-</h1>
+<h1><span class="header-section-number">7</span> Violencia</h1>
 <div id="graficos-variables-importantes-y-algunos-descriptivos-4" class="section level2">
-<h2>
-<span class="header-section-number">7.1</span> Graficos variables importantes y algunos descriptivos
-</h2>
-<p>
-Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.
-</p>
+<h2><span class="header-section-number">7.1</span> Graficos variables importantes y algunos descriptivos</h2>
+<p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="analisis-homicidios" class="section level3">
-<h3>
-<span class="header-section-number">7.1.1</span> Analisis Homicidios
-</h3>
+<h3><span class="header-section-number">7.1.1</span> Analisis Homicidios</h3>
 <div id="creacion-de-variables" class="section level4">
-<h4>
-<span class="header-section-number">7.1.1.1</span> Creacion de variables
-</h4>
-<p>
-En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.
-</p>
-<p>
-Para mas informacion sobre la concepcion del <em>tidy</em> ver: <a href="https://www.researchgate.net/publication/215990669_Tidy_data">Paper tidy</a>
-</p>
+<h4><span class="header-section-number">7.1.1.1</span> Creacion de variables</h4>
+<p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
+<p>Para mas informacion sobre la concepcion del <em>tidy</em> ver: <a href="https://www.researchgate.net/publication/215990669_Tidy_data">Paper tidy</a></p>
 </div>
 </div>
 <div id="graficos-19" class="section level3">
-<h3>
-<span class="header-section-number">7.1.2</span> Graficos
-</h3>
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
-<p>
-Grafico Homicidios FARC
-</p>
-<p>
-Graficos homicidios por ano y municipio
-</p>
+<h3><span class="header-section-number">7.1.2</span> Graficos</h3>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<p>Grafico Homicidios FARC</p>
+<p>Graficos homicidios por ano y municipio</p>
 </div>
 <div id="descriptivos-21" class="section level3">
-<h3>
-<span class="header-section-number">7.1.3</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">7.1.3</span> Descriptivos</h3>
 <div id="agregados-21" class="section level4">
-<h4>
-<span class="header-section-number">7.1.3.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">7.1.3.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-21" class="section level4">
-<h4>
-<span class="header-section-number">7.1.3.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">7.1.3.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="analisis-ataques" class="section level3">
-<h3>
-<span class="header-section-number">7.1.4</span> Analisis Ataques
-</h3>
+<h3><span class="header-section-number">7.1.4</span> Analisis Ataques</h3>
 </div>
 <div id="creacion-de-variables-1" class="section level3">
-<h3>
-<span class="header-section-number">7.1.5</span> Creacion de variables
-</h3>
-<p>
-En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.
-</p>
+<h3><span class="header-section-number">7.1.5</span> Creacion de variables</h3>
+<p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
 </div>
 <div id="graficos-20" class="section level3">
-<h3>
-<span class="header-section-number">7.1.6</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
-<p>
-Graficos ataques, por Municipio por actor armado (numeros brutos)
-</p>
+<h3><span class="header-section-number">7.1.6</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
+<p>Graficos ataques, por Municipio por actor armado (numeros brutos)</p>
 </div>
 <div id="descriptivos-22" class="section level3">
-<h3>
-<span class="header-section-number">7.1.7</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">7.1.7</span> Descriptivos</h3>
 <div id="agregados-22" class="section level4">
-<h4>
-<span class="header-section-number">7.1.7.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">7.1.7.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-22" class="section level4">
-<h4>
-<span class="header-section-number">7.1.7.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">7.1.7.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="analisis-secuestros" class="section level3">
-<h3>
-<span class="header-section-number">7.1.8</span> Analisis Secuestros
-</h3>
+<h3><span class="header-section-number">7.1.8</span> Analisis Secuestros</h3>
 </div>
 <div id="creacion-de-variables-2" class="section level3">
-<h3>
-<span class="header-section-number">7.1.9</span> Creacion de variables
-</h3>
-<p>
-En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.
-</p>
+<h3><span class="header-section-number">7.1.9</span> Creacion de variables</h3>
+<p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
 <hr />
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 </div>
 <div id="graficos-21" class="section level3">
-<h3>
-<span class="header-section-number">7.1.10</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">7.1.10</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-23" class="section level3">
-<h3>
-<span class="header-section-number">7.1.11</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">7.1.11</span> Descriptivos</h3>
 <div id="agregados-23" class="section level4">
-<h4>
-<span class="header-section-number">7.1.11.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">7.1.11.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-23" class="section level4">
-<h4>
-<span class="header-section-number">7.1.11.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">7.1.11.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="analisis-secuestros-politicos" class="section level3">
-<h3>
-<span class="header-section-number">7.1.12</span> Analisis Secuestros Politicos
-</h3>
+<h3><span class="header-section-number">7.1.12</span> Analisis Secuestros Politicos</h3>
 </div>
 <div id="creacion-de-variables-3" class="section level3">
-<h3>
-<span class="header-section-number">7.1.13</span> Creacion de variables
-</h3>
-<p>
-En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.
-</p>
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
+<h3><span class="header-section-number">7.1.13</span> Creacion de variables</h3>
+<p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 </div>
 <div id="graficos-22" class="section level3">
-<h3>
-<span class="header-section-number">7.1.14</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">7.1.14</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-24" class="section level3">
-<h3>
-<span class="header-section-number">7.1.15</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">7.1.15</span> Descriptivos</h3>
 <div id="agregados-24" class="section level4">
-<h4>
-<span class="header-section-number">7.1.15.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">7.1.15.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-24" class="section level4">
-<h4>
-<span class="header-section-number">7.1.15.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">7.1.15.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 <div id="analisis-desmovilizados" class="section level3">
-<h3>
-<span class="header-section-number">7.1.16</span> Analisis Desmovilizados
-</h3>
+<h3><span class="header-section-number">7.1.16</span> Analisis Desmovilizados</h3>
 </div>
 <div id="creacion-de-variables-4" class="section level3">
-<h3>
-<span class="header-section-number">7.1.17</span> Creacion de variables
-</h3>
-<p>
-En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.
-</p>
-<p>
-Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:
-</p>
-<p>
-<span class="math inline"><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></span>
-</p>
-<p>
-En donde: <span class="math inline"><span class="math inline">\(T=\)</span></span> La tasa por 100 mil habitantes <span class="math inline"><span class="math inline">\(N_{t}=\)</span></span> Numero total de la variable de interes <span class="math inline"><span class="math inline">\(P_{t}=\)</span></span> Poblacion total en el periodo <span class="math inline"><span class="math inline">\(t\)</span></span>
-</p>
-<p>
-Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**
-</p>
+<h3><span class="header-section-number">7.1.17</span> Creacion de variables</h3>
+<p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
+<p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
+<p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
+<p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
+<p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 </div>
 <div id="graficos-23" class="section level3">
-<h3>
-<span class="header-section-number">7.1.18</span> Graficos
-</h3>
-<p>
-En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.
-</p>
+<h3><span class="header-section-number">7.1.18</span> Graficos</h3>
+<p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 </div>
 <div id="descriptivos-25" class="section level3">
-<h3>
-<span class="header-section-number">7.1.19</span> Descriptivos
-</h3>
+<h3><span class="header-section-number">7.1.19</span> Descriptivos</h3>
 <div id="agregados-25" class="section level4">
-<h4>
-<span class="header-section-number">7.1.19.1</span> Agregados
-</h4>
-<p>
-En esta seccion se generan los descriptivos agregados de la variable.
-</p>
-<p>
-Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.
-</p>
-<p>
-El nombre de la variable agregada es : <strong>descrip_</strong>
-</p>
+<h4><span class="header-section-number">7.1.19.1</span> Agregados</h4>
+<p>En esta seccion se generan los descriptivos agregados de la variable.</p>
+<p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
+<p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
 </div>
 <div id="delta-25" class="section level4">
-<h4>
-<span class="header-section-number">7.1.19.2</span> <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</h4>
-<p>
-A continuacion se generan las variables necesarias para hacer el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>. Para obtener el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline"><span class="math inline">\(\Delta\)</span></span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline"><span class="math inline">\(\Delta\)</span></span> es: <strong>diff_</strong>
-</p>
-<p>
-Codigo para calcular el <span class="math inline"><span class="math inline">\(\Delta\)</span></span>
-</p>
+<h4><span class="header-section-number">7.1.19.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
+<p>Codigo para calcular el <span class="math inline">\(\Delta\)</span></p>
 </div>
 </div>
 </div>
 </div>
 <div id="indices-de-confianza" class="section level1">
-<h1>
-<span class="header-section-number">8</span> Indices de confianza
-</h1>
+<h1><span class="header-section-number">8</span> Indices de confianza</h1>
 <div id="correlaciones" class="section level2">
-<h2>
-<span class="header-section-number">8.1</span> Correlaciones
-</h2>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(agregados_regresiones)</code></pre>
-</div>
+<h2><span class="header-section-number">8.1</span> Correlaciones</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(agregados_regresiones)</code></pre></div>
 <pre><code>##                               Homicidios Ataques_Pobl_Civil Desmovilizados
 ## Homicidios                    1.00000000        -0.15222099     0.47175175
 ## Ataques_Pobl_Civil           -0.15222099         1.00000000    -0.37922764
@@ -2968,23 +1752,13 @@ Codigo para calcular el <span class="math inline"><span class="math inline">\(\D
 ## dif_confianza_vec                  1.000000000</code></pre>
 </div>
 <div id="regresiones" class="section level2">
-<h2>
-<span class="header-section-number">8.2</span> Regresiones
-</h2>
+<h2><span class="header-section-number">8.2</span> Regresiones</h2>
 <div id="variables-con-valores-absolutos-agregados" class="section level3">
-<h3>
-<span class="header-section-number">8.2.1</span> Variables con valores absolutos (agregados)
-</h3>
-<p>
-A continuacion vamos a hacer las regresiones correspondientes.
-</p>
-<p>
-Hacemos la regresion final
-</p>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_insti <span class="op">~</span><span class="st"> </span>total_establecimientos <span class="op">+</span><span class="st"> </span>doctores_cienmil <span class="op">+</span><span class="st"> `</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil <span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> agregados_regresiones)
-<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre>
-</div>
+<h3><span class="header-section-number">8.2.1</span> Variables con valores absolutos (agregados)</h3>
+<p>A continuacion vamos a hacer las regresiones correspondientes.</p>
+<p>Hacemos la regresion final</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_insti <span class="op">~</span><span class="st"> </span>total_establecimientos <span class="op">+</span><span class="st"> </span>doctores_cienmil <span class="op">+</span><span class="st"> `</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil <span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> agregados_regresiones)
+<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = dif_confianza_insti ~ total_establecimientos + doctores_cienmil + 
@@ -3011,10 +1785,8 @@ Hacemos la regresion final
 ##   (14 observations deleted due to missingness)
 ## Multiple R-squared:  0.6714, Adjusted R-squared:  0.3428 
 ## F-statistic: 2.043 on 6 and 6 DF,  p-value: 0.2029</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_insti <span class="op">~</span><span class="st"> </span>numero_pequenos<span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios  , <span class="dt">data =</span>agregados_regresiones)
-<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre>
-</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_insti <span class="op">~</span><span class="st"> </span>numero_pequenos<span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios  , <span class="dt">data =</span>agregados_regresiones)
+<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = dif_confianza_insti ~ numero_pequenos + total_establecimientos + 
@@ -3039,12 +1811,10 @@ Hacemos la regresion final
 ## Residual standard error: 0.1975 on 19 degrees of freedom
 ## Multiple R-squared:  0.2798, Adjusted R-squared:  0.01448 
 ## F-statistic: 1.055 on 7 and 19 DF,  p-value: 0.4282</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hacemos la regresion final </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hacemos la regresion final </span>
 
 regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_medios <span class="op">~</span><span class="st"> </span>total_establecimientos <span class="op">+</span><span class="st"> </span>doctores_cienmil <span class="op">+</span><span class="st"> `</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil <span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> agregados_regresiones)
-<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre>
-</div>
+<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = dif_confianza_medios ~ total_establecimientos + 
@@ -3069,10 +1839,8 @@ regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(d
 ##   (14 observations deleted due to missingness)
 ## Multiple R-squared:  0.3358, Adjusted R-squared:  -0.3284 
 ## F-statistic: 0.5055 on 6 and 6 DF,  p-value: 0.7865</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_medios <span class="op">~</span><span class="st"> </span>numero_pequenos<span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios  , <span class="dt">data =</span>agregados_regresiones)
-<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre>
-</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_medios <span class="op">~</span><span class="st"> </span>numero_pequenos<span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios  , <span class="dt">data =</span>agregados_regresiones)
+<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = dif_confianza_medios ~ numero_pequenos + total_establecimientos + 
@@ -3099,12 +1867,10 @@ regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(d
 ## Residual standard error: 0.2714 on 19 degrees of freedom
 ## Multiple R-squared:  0.3411, Adjusted R-squared:  0.09833 
 ## F-statistic: 1.405 on 7 and 19 DF,  p-value: 0.2602</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hacemos la regresion final </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Hacemos la regresion final </span>
 
 regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_vec <span class="op">~</span><span class="st"> </span>total_establecimientos <span class="op">+</span><span class="st"> </span>doctores_cienmil <span class="op">+</span><span class="st"> `</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil <span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> agregados_regresiones)
-<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre>
-</div>
+<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = dif_confianza_vec ~ total_establecimientos + doctores_cienmil + 
@@ -3131,10 +1897,8 @@ regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(d
 ##   (14 observations deleted due to missingness)
 ## Multiple R-squared:  0.7247, Adjusted R-squared:  0.4494 
 ## F-statistic: 2.633 on 6 and 6 DF,  p-value: 0.132</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_vec <span class="op">~</span><span class="st"> </span>numero_pequenos<span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios  , <span class="dt">data =</span>agregados_regresiones)
-<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre>
-</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_vec <span class="op">~</span><span class="st"> </span>numero_pequenos<span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios  , <span class="dt">data =</span>agregados_regresiones)
+<span class="kw">summary</span>(regFinalAgregados_PAR)  </code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = dif_confianza_vec ~ numero_pequenos + total_establecimientos + 
@@ -3163,22 +1927,14 @@ regFinalAgregados_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(d
 ## F-statistic: 1.499 on 7 and 19 DF,  p-value: 0.2267</code></pre>
 </div>
 <div id="variables-con-valores-diferenciasdeltas-delta" class="section level3">
-<h3>
-<span class="header-section-number">8.2.2</span> Variables con valores diferencias(Deltas <span class="math inline"><span class="math inline">\(\Delta\)</span></span> )
-</h3>
-<p>
-A continuacion vamos a hacer las regresiones correspondientes.
-</p>
+<h3><span class="header-section-number">8.2.2</span> Variables con valores diferencias(Deltas <span class="math inline">\(\Delta\)</span> )</h3>
+<p>A continuacion vamos a hacer las regresiones correspondientes.</p>
 </div>
 </div>
 </div>
 <div id="correlaciones-1" class="section level1">
-<h1>
-<span class="header-section-number">9</span> Correlaciones
-</h1>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(deltas_regresiones)</code></pre>
-</div>
+<h1><span class="header-section-number">9</span> Correlaciones</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(deltas_regresiones)</code></pre></div>
 <pre><code>## Warning in cor(deltas_regresiones): the standard deviation is zero</code></pre>
 <pre><code>##                               Homicidios Ataques_Pobl_Civil Desmovilizados
 ## Homicidios                    1.00000000       -0.120351127   -0.360030377
@@ -3516,13 +2272,9 @@ A continuacion vamos a hacer las regresiones correspondientes.
 ## dif_confianza_insti                0.171527764
 ## dif_confianza_medios              -0.061233668
 ## dif_confianza_vec                  1.000000000</code></pre>
-<p>
-Hacemos la regresion final
-</p>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_insti <span class="op">~</span><span class="st"> </span>total_establecimientos <span class="op">+</span><span class="st"> </span>doctores_cienmil <span class="op">+</span><span class="st"> `</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil <span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> deltas_regresiones)
-<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre>
-</div>
+<p>Hacemos la regresion final</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_insti <span class="op">~</span><span class="st"> </span>total_establecimientos <span class="op">+</span><span class="st"> </span>doctores_cienmil <span class="op">+</span><span class="st"> `</span><span class="dt">Inv Total</span><span class="st">`</span> <span class="op">+</span><span class="st">  `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil <span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> deltas_regresiones)
+<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = dif_confianza_insti ~ total_establecimientos + doctores_cienmil + 
@@ -3549,10 +2301,8 @@ Hacemos la regresion final
 ##   (14 observations deleted due to missingness)
 ## Multiple R-squared:  0.7585, Adjusted R-squared:  0.5169 
 ## F-statistic:  3.14 on 6 and 6 DF,  p-value: 0.0948</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_insti <span class="op">~</span><span class="st"> </span>numero_pequenos<span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> deltas_regresiones)
-<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre>
-</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_insti <span class="op">~</span><span class="st"> </span>numero_pequenos<span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>estudiantes_edad_estudiar<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios, <span class="dt">data =</span> deltas_regresiones)
+<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = dif_confianza_insti ~ numero_pequenos + total_establecimientos + 
@@ -3580,10 +2330,8 @@ Hacemos la regresion final
 ##   (1 observation deleted due to missingness)
 ## Multiple R-squared:   0.26,  Adjusted R-squared:  0.02626 
 ## F-statistic: 1.112 on 6 and 19 DF,  p-value: 0.3917</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_insti <span class="op">~</span><span class="st"> `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span><span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>numero_medianos<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios<span class="op">+</span>doctores_cienmil, <span class="dt">data =</span> deltas_regresiones)
-<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre>
-</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regFinaldeltas_PAR &lt;-<span class="st"> </span><span class="kw">lm</span>(dif_confianza_insti <span class="op">~</span><span class="st"> `</span><span class="dt">Gobierno Abierto</span><span class="st">`</span><span class="op">+</span>total_establecimientos <span class="op">+</span><span class="st">  </span>NBI <span class="op">+</span><span class="st"> </span>Ataques_Pobl_Civil<span class="op">+</span>numero_medianos<span class="op">+</span>Secuestros<span class="op">+</span><span class="st"> </span>Homicidios<span class="op">+</span>doctores_cienmil, <span class="dt">data =</span> deltas_regresiones)
+<span class="kw">summary</span>(regFinaldeltas_PAR)  </code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = dif_confianza_insti ~ `Gobierno Abierto` + total_establecimientos + 
@@ -3615,35 +2363,11 @@ Hacemos la regresion final
 ## Multiple R-squared:  0.9162, Adjusted R-squared:  0.7988 
 ## F-statistic: 7.808 on 7 and 5 DF,  p-value: 0.01895</code></pre>
 </div>
+
+
+
 </div>
 </div>
-</div>
-<script>
-
-// add bootstrap table styles to pandoc tables
-function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
-}
-$(document).ready(function () {
-  bootstrapStylePandocTables();
-});
-
-
-</script>
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
-</body>
-</html>
-
-
-
 
 </div>
 

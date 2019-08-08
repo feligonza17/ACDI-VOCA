@@ -559,6 +559,9 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="reg_olas_PAR.html">Estadistica Diferencias mpios PAR entre 2017 y 2019 </a>
+    </li>
+    <li>
       <a href="Comparacion_PAR_por_categorias.html">
         <span class="fa fa-chart-pie"></span>
          
@@ -743,13 +746,144 @@ base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
 <p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-2-2.png" width="1152" /></p>
 </div>
 </div>
+<div id="graficos-por-categorias" class="section level1">
+<h1><span class="header-section-number">3</span> Graficos por categorias</h1>
+<div id="municipios-con-diferencias-en-homicidios-q1-y-q3" class="section level2">
+<h2><span class="header-section-number">3.1</span> Municipios con diferencias en homicidios (Q1 y Q3)</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Creamos base de datos general</span>
+
+
+base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_homicidio=</span><span class="kw">as.factor</span>((ifelse
+                       (homi_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta homicidios&quot;</span>,
+                         <span class="kw">ifelse</span>(homi_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(homi_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja homicidios&quot;</span>,
+                         <span class="ot">NA</span>))))) 
+
+base_stata_2019_tidy_ensayo &lt;-base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">transmute</span>(Municipio, mun_homicidio))
+
+base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
+<span class="kw">filter</span>(mun_homicidio<span class="op">!=</span><span class="kw">is.na</span>(mun_homicidio)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>valor, <span class="dt">col=</span><span class="kw">as.factor</span>(ano))) <span class="op">+</span>
+<span class="kw">geom_point</span>()<span class="op">+</span>
+<span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_homicidio)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
+<span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
+<span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-3-1.png" width="1152" /></p>
+</div>
+<div id="municipios-con-ataques-a-la-poblacion-civil-q1-y-q3" class="section level2">
+<h2><span class="header-section-number">3.2</span> Municipios con ataques a la poblacion civil (Q1 y Q3)</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mun_violentado=</span><span class="kw">as.factor</span>((ifelse
+                       (Ataques_Pobl_Civil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;violentado&quot;</span>,
+                         <span class="kw">ifelse</span>(Ataques_Pobl_Civil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(Ataques_Pobl_Civil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;No violentado&quot;</span>,
+                         <span class="ot">NA</span>)))))
+
+base_stata_2019_tidy_ensayo &lt;-base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">transmute</span>(Municipio, mun_violentado))
+
+base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
+<span class="kw">filter</span>(mun_violentado<span class="op">!=</span><span class="kw">is.na</span>(mun_violentado)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>valor, <span class="dt">col=</span><span class="kw">as.factor</span>(ano))) <span class="op">+</span>
+<span class="kw">geom_point</span>()<span class="op">+</span>
+<span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_violentado)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
+<span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
+<span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-4-1.png" width="1152" /></p>
+</div>
+<div id="municipios-donde-hubo-secuestros-q1-y-q3" class="section level2">
+<h2><span class="header-section-number">3.3</span> Municipios donde hubo secuestros (Q1 y Q3)</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span>
+<span class="st">   </span><span class="kw">mutate</span>(<span class="dt">mun_secuestrado=</span><span class="kw">as.factor</span>((ifelse
+                       (secuestro_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(secuestro_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alto secuestro&quot;</span>,
+                         <span class="kw">ifelse</span>(secuestro_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(secuestro_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Bajo secuestro&quot;</span>,
+                         <span class="ot">NA</span>)))))
+base_stata_2019_tidy_ensayo &lt;-base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">transmute</span>(Municipio, mun_secuestrado))
+
+base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
+<span class="kw">filter</span>(mun_secuestrado<span class="op">!=</span><span class="kw">is.na</span>(mun_secuestrado)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>valor, <span class="dt">col=</span><span class="kw">as.factor</span>(ano))) <span class="op">+</span>
+<span class="kw">geom_point</span>()<span class="op">+</span>
+<span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_secuestrado)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
+<span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
+<span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-5-1.png" width="1152" /></p>
+</div>
+<div id="municipios-donde-hubo-desmovilizados-q1-y-q3" class="section level2">
+<h2><span class="header-section-number">3.4</span> Municipios donde hubo desmovilizados (Q1 y Q3)</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span>
+<span class="st">   </span><span class="kw">mutate</span>(<span class="dt">mun_desmovilizado=</span><span class="kw">as.factor</span>((ifelse
+                       (desmovilizados_cienmil_mean<span class="op">&gt;</span><span class="kw">quantile</span>(desmovilizados_cienmil_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alto desmovilizado&quot;</span>,
+                         <span class="kw">ifelse</span>(desmovilizados_cienmil_mean<span class="op">&lt;</span><span class="kw">quantile</span>(desmovilizados_cienmil_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Bajo desmovilizado&quot;</span>,
+                         <span class="ot">NA</span>)))))
+
+base_stata_2019_tidy_ensayo &lt;-base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">transmute</span>(Municipio, mun_desmovilizado))
+
+base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
+<span class="kw">filter</span>(mun_desmovilizado<span class="op">!=</span><span class="kw">is.na</span>(mun_desmovilizado)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>valor, <span class="dt">col=</span><span class="kw">as.factor</span>(ano))) <span class="op">+</span>
+<span class="kw">geom_point</span>()<span class="op">+</span>
+<span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_desmovilizado)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
+<span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
+<span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-6-1.png" width="1152" /></p>
+</div>
+<div id="municipios-pobres-q1-y-q3" class="section level2">
+<h2><span class="header-section-number">3.5</span> Municipios pobres (Q1 y Q3)</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span>
+<span class="st">   </span><span class="kw">mutate</span>(<span class="dt">mun_pobre=</span><span class="kw">as.factor</span>((ifelse
+                       (nbi_mean<span class="op">&gt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta pobreza&quot;</span>,
+                         <span class="kw">ifelse</span>(nbi_mean<span class="op">&lt;</span><span class="kw">quantile</span>(nbi_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja pobreza&quot;</span>,
+                         <span class="ot">NA</span>)))))
+
+base_stata_2019_tidy_ensayo &lt;-base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">transmute</span>(Municipio, mun_pobre))
+
+base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
+<span class="kw">filter</span>(mun_pobre<span class="op">!=</span><span class="kw">is.na</span>(mun_pobre)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>valor, <span class="dt">col=</span><span class="kw">as.factor</span>(ano))) <span class="op">+</span>
+<span class="kw">geom_point</span>()<span class="op">+</span>
+<span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_pobre)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
+<span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
+<span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-7-1.png" width="1152" /></p>
+</div>
+<div id="municipios-con-presencia-de-educaciones-educativas" class="section level2">
+<h2><span class="header-section-number">3.6</span> Municipios con presencia de educaciones educativas</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_stata_<span class="dv">2019</span> &lt;-<span class="st"> </span>base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span>
+<span class="st">   </span><span class="kw">mutate</span>(<span class="dt">mun_establ=</span><span class="kw">as.factor</span>((ifelse
+                       (t_establ_mean<span class="op">&gt;</span><span class="kw">quantile</span>(t_establ_mean, <span class="fl">0.75</span>),
+                         <span class="st">&quot;Alta presencia Establecimientos Educativos&quot;</span>,
+                         <span class="kw">ifelse</span>(t_establ_mean<span class="op">&lt;</span><span class="kw">quantile</span>(t_establ_mean, <span class="fl">0.25</span>),
+                         <span class="st">&quot;Baja presencia Establecimientos Educativos&quot;</span>,
+                         <span class="ot">NA</span>)))))
+
+base_stata_2019_tidy_ensayo &lt;-base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(base_stata_<span class="dv">2019</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">transmute</span>(Municipio, mun_establ))
+
+base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
+<span class="kw">filter</span>(mun_establ<span class="op">!=</span><span class="kw">is.na</span>(mun_establ)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Municipio, <span class="dt">y=</span>valor, <span class="dt">col=</span><span class="kw">as.factor</span>(ano))) <span class="op">+</span>
+<span class="kw">geom_point</span>()<span class="op">+</span>
+<span class="kw">facet_wrap</span>(<span class="kw">as.factor</span>(mun_establ)<span class="op">~</span><span class="kw">as.factor</span>(indicador))<span class="op">+</span>
+<span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Comparacion Mpios PAR 2017 y 2019&quot;</span>)<span class="op">+</span>
+<span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-8-1.png" width="1152" /></p>
+</div>
+</div>
 <div id="educacion" class="section level1">
-<h1><span class="header-section-number">3</span> Educacion</h1>
+<h1><span class="header-section-number">4</span> Educacion</h1>
 <div id="graficos-variables-importantes-y-algunos-descriptivos" class="section level2">
-<h2><span class="header-section-number">3.1</span> Graficos variables importantes y algunos descriptivos</h2>
+<h2><span class="header-section-number">4.1</span> Graficos variables importantes y algunos descriptivos</h2>
 <p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="alumnos-en-total" class="section level3">
-<h3><span class="header-section-number">3.1.1</span> Alumnos en total</h3>
+<h3><span class="header-section-number">4.1.1</span> Alumnos en total</h3>
 <p>Esta variable es la cantidad de alumnos de instituciones educativas ***</p>
 <p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
 <p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
@@ -757,7 +891,7 @@ base_stata_2019_tidy_ensayo <span class="op">%&gt;%</span>
 <p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 </div>
 <div id="graficos" class="section level3">
-<h3><span class="header-section-number">3.1.2</span> Graficos</h3>
+<h3><span class="header-section-number">4.1.2</span> Graficos</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
@@ -785,11 +919,11 @@ cede_educacion_44_eq &lt;-<span class="st"> </span>cede_educacion_44_eq <span cl
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1996</span><span class="op">:</span><span class="dv">2013</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_educacion_44_eq<span class="op">$</span>alumnos_cienmil[<span class="kw">which.min</span>(cede_educacion_44_eq<span class="op">$</span>alumnos_cienmil)],
                          cede_educacion_44_eq<span class="op">$</span>alumnos_cienmil[<span class="kw">which.max</span>(cede_educacion_44_eq<span class="op">$</span>alumnos_cienmil)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-4-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-10-1.png" width="1152" /></p>
 <div id="descriptivos" class="section level4">
-<h4><span class="header-section-number">3.1.2.1</span> Descriptivos</h4>
+<h4><span class="header-section-number">4.1.2.1</span> Descriptivos</h4>
 <div id="agregados" class="section level5">
-<h5><span class="header-section-number">3.1.2.1.1</span> Agregados</h5>
+<h5><span class="header-section-number">4.1.2.1.1</span> Agregados</h5>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -854,7 +988,7 @@ descrip_alumnos_cienmil<span class="op">%&gt;%</span><span class="kw">filter</sp
 ## 27           2830.483</code></pre>
 </div>
 <div id="delta" class="section level5">
-<h5><span class="header-section-number">3.1.2.1.2</span> <span class="math inline">\(\Delta\)</span></h5>
+<h5><span class="header-section-number">4.1.2.1.2</span> <span class="math inline">\(\Delta\)</span></h5>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_alumnos_cienmil_5antes &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2001-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -879,9 +1013,9 @@ diff_alumnos_cienmil_sd &lt;-<span class="st"> </span>descrip_alumnos_cienmil_5a
 </div>
 </div>
 <div id="docentes-con-doctorado-en-total" class="section level3">
-<h3><span class="header-section-number">3.1.3</span> Docentes con doctorado en total</h3>
+<h3><span class="header-section-number">4.1.3</span> Docentes con doctorado en total</h3>
 <div id="graficos-1" class="section level4">
-<h4><span class="header-section-number">3.1.3.1</span> Graficos</h4>
+<h4><span class="header-section-number">4.1.3.1</span> Graficos</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
@@ -909,12 +1043,12 @@ cede_educacion_44_eq &lt;-<span class="st"> </span>cede_educacion_44_eq <span cl
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2007</span><span class="op">:</span><span class="dv">2015</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_educacion_44_eq<span class="op">$</span>phds_cienmil[<span class="kw">which.min</span>(cede_educacion_44_eq<span class="op">$</span>phds_cienmil)],
                          cede_educacion_44_eq<span class="op">$</span>phds_cienmil[<span class="kw">which.max</span>(cede_educacion_44_eq<span class="op">$</span>phds_cienmil)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-9-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-15-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-1" class="section level4">
-<h4><span class="header-section-number">3.1.3.2</span> Descriptivos</h4>
+<h4><span class="header-section-number">4.1.3.2</span> Descriptivos</h4>
 <div id="agregados-1" class="section level5">
-<h5><span class="header-section-number">3.1.3.2.1</span> Agregados</h5>
+<h5><span class="header-section-number">4.1.3.2.1</span> Agregados</h5>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -979,7 +1113,7 @@ descrip_phds_cienmil<span class="op">%&gt;%</span><span class="kw">filter</span>
 ## 27              NA</code></pre>
 </div>
 <div id="delta-1" class="section level5">
-<h5><span class="header-section-number">3.1.3.2.2</span> <span class="math inline">\(\Delta\)</span></h5>
+<h5><span class="header-section-number">4.1.3.2.2</span> <span class="math inline">\(\Delta\)</span></h5>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_phds_cienmil_5antes &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2011-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -1004,10 +1138,10 @@ diff_phds_cienmil_sd &lt;-<span class="st"> </span>descrip_phds_cienmil_5antes<s
 </div>
 </div>
 <div id="porcentaje-de-la-poblacion-de-mas-de-15-anos-o-mas-que-sabe-leer-y-escribir-tasa-de-alfabetismo-2005" class="section level3">
-<h3><span class="header-section-number">3.1.4</span> Porcentaje de la poblacion de mas de 15 anos o mas que sabe leer y escribir (Tasa de alfabetismo) 2005</h3>
+<h3><span class="header-section-number">4.1.4</span> Porcentaje de la poblacion de mas de 15 anos o mas que sabe leer y escribir (Tasa de alfabetismo) 2005</h3>
 </div>
 <div id="graficos-2" class="section level3">
-<h3><span class="header-section-number">3.1.5</span> Graficos</h3>
+<h3><span class="header-section-number">4.1.5</span> Graficos</h3>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_educacion_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> ind_alfa2005)) <span class="op">+</span><span class="st">    </span>
@@ -1018,20 +1152,20 @@ diff_phds_cienmil_sd &lt;-<span class="st"> </span>descrip_phds_cienmil_5antes<s
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1993</span><span class="op">:</span><span class="dv">2013</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ind_alfa2005[<span class="kw">which.min</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ind_alfa2005)],cede_educacion_<span class="dv">44</span><span class="op">$</span>ind_alfa2005[<span class="kw">which.max</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ind_alfa2005)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-13-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-19-1.png" width="1152" /></p>
 <p>Segun esta encuesta, la tasa de analfabetismo no ha cambiado (cuando se revisa el numero en bruto, igualmente, no hay variacion por municipio por ano.)</p>
 <p>Por esta razon se decide culminar el analisis de esta variable aqui</p>
 </div>
 </div>
 <div id="proyecciones-de-poblacion-en-edad-de-asistir-a-primaria-o-secundaria-es-decir-poblacion-entre-7-a-17-anos." class="section level2">
-<h2><span class="header-section-number">3.2</span> Proyecciones de poblacion en edad de asistir a primaria o secundaria, es decir, poblacion entre 7 a 17 anos.</h2>
+<h2><span class="header-section-number">4.2</span> Proyecciones de poblacion en edad de asistir a primaria o secundaria, es decir, poblacion entre 7 a 17 anos.</h2>
 <p>Esta variable es una proyeccion de cuanta gente puede asistir al colegio. Como es una variable poblacional se va a hacer por cada cienmil habitantes.</p>
 <p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
 <p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
 <p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
 <p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 <div id="graficos-3" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Graficos</h3>
+<h3><span class="header-section-number">4.2.1</span> Graficos</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
@@ -1058,12 +1192,12 @@ cede_educacion_44_eq &lt;-<span class="st"> </span>cede_educacion_44_eq <span cl
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1991</span><span class="op">:</span><span class="dv">2013</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_educacion_44_eq<span class="op">$</span>estudiantes_proy_cienmil[<span class="kw">which.min</span>(cede_educacion_44_eq<span class="op">$</span>estudiantes_proy_cienmil)],cede_educacion_44_eq<span class="op">$</span>estudiantes_proy_cienmil[<span class="kw">which.max</span>(cede_educacion_44_eq<span class="op">$</span>estudiantes_proy_cienmil)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-15-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-21-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-2" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> Descriptivos</h3>
+<h3><span class="header-section-number">4.2.2</span> Descriptivos</h3>
 <div id="agregados-2" class="section level4">
-<h4><span class="header-section-number">3.2.2.1</span> Agregados</h4>
+<h4><span class="header-section-number">4.2.2.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -1128,7 +1262,7 @@ descrip_estudiantes_proy_cienmil<span class="op">%&gt;%</span><span class="kw">f
 ## 27                      23981.84                    655.4594</code></pre>
 </div>
 <div id="delta-2" class="section level4">
-<h4><span class="header-section-number">3.2.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">4.2.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_estudiantes_proy_cienmil_5antes &lt;-<span class="st"> </span>cede_educacion_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;1996-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -1153,9 +1287,9 @@ diff_estudiantes_proy_cienmil_sd &lt;-<span class="st"> </span>descrip_estudiant
 </div>
 </div>
 <div id="total-establecimientos-educativos" class="section level2">
-<h2><span class="header-section-number">3.3</span> Total establecimientos educativos</h2>
+<h2><span class="header-section-number">4.3</span> Total establecimientos educativos</h2>
 <div id="graficos-4" class="section level3">
-<h3><span class="header-section-number">3.3.1</span> Graficos</h3>
+<h3><span class="header-section-number">4.3.1</span> Graficos</h3>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_educacion_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> t_establ)) <span class="op">+</span><span class="st">    </span>
@@ -1166,12 +1300,12 @@ diff_estudiantes_proy_cienmil_sd &lt;-<span class="st"> </span>descrip_estudiant
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1996</span><span class="op">:</span><span class="dv">2013</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>t_establ[<span class="kw">which.min</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>t_establ)],cede_educacion_<span class="dv">44</span><span class="op">$</span>t_establ[<span class="kw">which.max</span>(cede_educacion_<span class="dv">44</span><span class="op">$</span>t_establ)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-19-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-25-1.png" width="1152" /></p>
 </div>
 </div>
 </div>
 <div id="gobierno" class="section level1">
-<h1><span class="header-section-number">4</span> Gobierno</h1>
+<h1><span class="header-section-number">5</span> Gobierno</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Cambiarle los nombres a algunos municipios que no estan codificados igual</span>
 
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Bojaya&quot;</span>] &lt;-<span class="st"> &quot;Bojayá&quot;</span>
@@ -1181,13 +1315,13 @@ cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Cartagena del Chairá&quot;</span>] &lt;-<span class="st"> &quot;Cartagena Del Chairá&quot;</span>
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;San Vicente del Caguán&quot;</span>] &lt;-<span class="st"> &quot;San Vicente Del Caguán&quot;</span></code></pre></div>
 <div id="graficos-variables-importantes-y-algunos-descriptivos-1" class="section level2">
-<h2><span class="header-section-number">4.1</span> Graficos variables importantes y algunos descriptivos</h2>
+<h2><span class="header-section-number">5.1</span> Graficos variables importantes y algunos descriptivos</h2>
 <p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="analisis-desempeno-fiscal-indice" class="section level3">
-<h3><span class="header-section-number">4.1.1</span> Analisis Desempeno fiscal (indice)</h3>
+<h3><span class="header-section-number">5.1.1</span> Analisis Desempeno fiscal (indice)</h3>
 <p>Este indice mide globalmente el resultado fiscal alcanzado en cada año y se encuentra en una escala de 0 a 100, donde los valores cercanos a 0 reflejan un bajo desempeño fiscal y valores cercanos a 100 significan que la entidad territorial logro en conjunto los siguientes resultados (DNP, 2013): Buen balance en su desempeño fiscal, Suficientes recursos para sostener su funcionamiento Cumplimiento de gasto de funcionamiento segun la Ley 617/00, Importante nivel de recursos propios (solvencia tributaria) como contrapartida a los recursos de SGP, Altos niveles de inversion, Adecuada capacidad de respaldo del servicio de su deuda, Generacion de ahorro corriente, necesario para garantizar su solvencia financiera</p>
 <div id="graficos-5" class="section level4">
-<h4><span class="header-section-number">4.1.1.1</span> Graficos</h4>
+<h4><span class="header-section-number">5.1.1.1</span> Graficos</h4>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> DF_desemp_fisc)) <span class="op">+</span><span class="st">  </span>
@@ -1199,12 +1333,12 @@ cede_gobierno_<span class="dv">44</span><span class="op">$</span>municipio[cede_
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc)],
                          cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DF_desemp_fisc)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-21-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-27-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-3" class="section level4">
-<h4><span class="header-section-number">4.1.1.2</span> Descriptivos</h4>
+<h4><span class="header-section-number">5.1.1.2</span> Descriptivos</h4>
 <div id="agregados-3" class="section level5">
-<h5><span class="header-section-number">4.1.1.2.1</span> Agregados</h5>
+<h5><span class="header-section-number">5.1.1.2.1</span> Agregados</h5>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -1269,7 +1403,7 @@ descrip_desemp_fisc<span class="op">%&gt;%</span><span class="kw">filter</span>(
 ## 27          5.901083</code></pre>
 </div>
 <div id="delta-3" class="section level5">
-<h5><span class="header-section-number">4.1.1.2.2</span> <span class="math inline">\(\Delta\)</span></h5>
+<h5><span class="header-section-number">5.1.1.2.2</span> <span class="math inline">\(\Delta\)</span></h5>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_desemp_fisc_5antes &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2005-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -1293,10 +1427,10 @@ diff_desemp_fisc_sd &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<spa
 </div>
 </div>
 <div id="analisis-desempeno-integral-indice" class="section level3">
-<h3><span class="header-section-number">4.1.2</span> Analisis Desempeno integral (indice)</h3>
+<h3><span class="header-section-number">5.1.2</span> Analisis Desempeno integral (indice)</h3>
 <p>La evaluacion del desempeno integral tiene por objeto evaluar, valga la redundancia, el desempeno de la gestion de las entidades territoriales en sus competencias fundamentales, basado en: los resultados obtenidos, en los compromisos adquiridos por estas entidades en los planes de desarrollo, el marco del proceso de descentralizacion de competencias y recursos, asi como, el cumplimiento del ordenamiento juridico que lo fundamenta.</p>
 <div id="graficos-6" class="section level4">
-<h4><span class="header-section-number">4.1.2.1</span> Graficos</h4>
+<h4><span class="header-section-number">5.1.2.1</span> Graficos</h4>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> DI_desemp_int)) <span class="op">+</span><span class="st">   </span>
@@ -1308,7 +1442,7 @@ diff_desemp_fisc_sd &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<spa
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2005</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)],
                          cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-25-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-31-1.png" width="1152" /></p>
 <p>Grafico del desempeno integral junto con el fiscal</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano)) <span class="op">+</span><span class="st">  </span>
@@ -1321,12 +1455,12 @@ diff_desemp_fisc_sd &lt;-<span class="st"> </span>descrip_desemp_fisc_5antes<spa
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)],
                          cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>DI_desemp_int)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-26-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-32-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-4" class="section level4">
-<h4><span class="header-section-number">4.1.2.2</span> Descriptivos</h4>
+<h4><span class="header-section-number">5.1.2.2</span> Descriptivos</h4>
 <div id="agregados-4" class="section level5">
-<h5><span class="header-section-number">4.1.2.2.1</span> Agregados</h5>
+<h5><span class="header-section-number">5.1.2.2.1</span> Agregados</h5>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -1392,7 +1526,7 @@ descrip_desemp_int<span class="op">%&gt;%</span><span class="kw">filter</span>(c
 </div>
 </div>
 <div id="delta-4" class="section level4">
-<h4><span class="header-section-number">4.1.2.3</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">5.1.2.3</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_desemp_int_5antes &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2005-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -1416,7 +1550,7 @@ diff_desemp_int_sd &lt;-<span class="st"> </span>descrip_desemp_int_5antes<span 
 </div>
 </div>
 <div id="analisis-inversion-total" class="section level3">
-<h3><span class="header-section-number">4.1.3</span> Analisis Inversion total</h3>
+<h3><span class="header-section-number">5.1.3</span> Analisis Inversion total</h3>
 <p>Esta variable mide: Inversion total (inv_total = inv_a_educacion + inv_crecusion + inv_fortinst + inv_promdllo + inv_sp + inv_tranporte + inv_cult + inv_agropecuario + inv_aguasani + inv_ambiental + inv_dllocomun+inv_dyr + inv_en_educacion + inv_equipamiento + inv_gruposvunera + inv_en_justicia +inv_prevdesastr + inv_en_salud + inv_en_vias + inv_en_vivienda)</p>
 <hr />
 <p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
@@ -1426,7 +1560,7 @@ diff_desemp_int_sd &lt;-<span class="st"> </span>descrip_desemp_int_5antes<span 
 <p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
 <p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-7" class="section level4">
-<h4><span class="header-section-number">4.1.3.1</span> Graficos</h4>
+<h4><span class="header-section-number">5.1.3.1</span> Graficos</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
@@ -1452,12 +1586,12 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion total&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion total por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2000</span>, <span class="dv">2010</span>, <span class="dt">by=</span><span class="dv">1</span>))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-31-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-37-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-5" class="section level4">
-<h4><span class="header-section-number">4.1.3.2</span> Descriptivos</h4>
+<h4><span class="header-section-number">5.1.3.2</span> Descriptivos</h4>
 <div id="agregados-5" class="section level5">
-<h5><span class="header-section-number">4.1.3.2.1</span> Agregados</h5>
+<h5><span class="header-section-number">5.1.3.2.1</span> Agregados</h5>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -1522,7 +1656,7 @@ descrip_inv_total_cienmil<span class="op">%&gt;%</span><span class="kw">filter</
 ## 27               17.29920            0.6074247</code></pre>
 </div>
 <div id="delta-5" class="section level5">
-<h5><span class="header-section-number">4.1.3.2.2</span> <span class="math inline">\(\Delta\)</span></h5>
+<h5><span class="header-section-number">5.1.3.2.2</span> <span class="math inline">\(\Delta\)</span></h5>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_inv_total_cienmil_5antes &lt;-<span class="st"> </span>cede_gobierno_44_inv <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="dv">2005</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -1547,7 +1681,7 @@ diff_inv_total_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_total_cienmi
 </div>
 </div>
 <div id="analisis-inversion-en-fortalecimiento-institucional" class="section level3">
-<h3><span class="header-section-number">4.1.4</span> Analisis Inversion en fortalecimiento institucional</h3>
+<h3><span class="header-section-number">5.1.4</span> Analisis Inversion en fortalecimiento institucional</h3>
 <p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
 <p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
 <p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
@@ -1555,7 +1689,7 @@ diff_inv_total_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_total_cienmi
 <p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
 <p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-8" class="section level4">
-<h4><span class="header-section-number">4.1.4.1</span> Graficos</h4>
+<h4><span class="header-section-number">5.1.4.1</span> Graficos</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
@@ -1581,13 +1715,13 @@ cede_gobierno_44_inv &lt;-<span class="st"> </span>cede_gobierno_44_inv <span cl
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Inversion al fortalecimiento institucional&#39;</span>, <span class="dt">title=</span><span class="st">&#39;Logaritmo de la inversion al fortalecimiento institucional por municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DNP&quot;</span>) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2002</span>, <span class="dv">2010</span>, <span class="dt">by=</span><span class="dv">1</span>))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-36-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-42-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-6" class="section level4">
-<h4><span class="header-section-number">4.1.4.2</span> Descriptivos</h4>
+<h4><span class="header-section-number">5.1.4.2</span> Descriptivos</h4>
 </div>
 <div id="agregados-6" class="section level4">
-<h4><span class="header-section-number">4.1.4.3</span> Agregados</h4>
+<h4><span class="header-section-number">5.1.4.3</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -1652,7 +1786,7 @@ descrip_inv_fortinst_cienmil<span class="op">%&gt;%</span><span class="kw">filte
 ## 27                  13.33102               0.4576636</code></pre>
 </div>
 <div id="delta-6" class="section level4">
-<h4><span class="header-section-number">4.1.4.4</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">5.1.4.4</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_inv_fortinst_cienmil_5antes &lt;-<span class="st"> </span>cede_gobierno_44_inv <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="dv">2006</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -1677,11 +1811,11 @@ diff_inv_fortinst_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_fortinst_
 </div>
 </div>
 <div id="analisis-indice-de-gobierno-abierto" class="section level3">
-<h3><span class="header-section-number">4.1.5</span> Analisis Indice de Gobierno Abierto</h3>
+<h3><span class="header-section-number">5.1.5</span> Analisis Indice de Gobierno Abierto</h3>
 <p>Con esta dimension, el IGA pretende medir los niveles de organizacion y cumplimiento de las normas basicas de la administracion publica. Por esto se ubica al principio de la cadena y de la estructura operativa del indicador, pues dispone una capacidad instalada al interior de la administracion publica para que, tanto los funcionarios como la ciudadania, estructuren su relacion en torno a los flujos de informacion producidos y requeridos en el proceso de relacionamiento publico.Fuente: Procuraduria General de la Nacion</p>
 </div>
 <div id="graficos-9" class="section level3">
-<h3><span class="header-section-number">4.1.6</span> Graficos</h3>
+<h3><span class="header-section-number">5.1.6</span> Graficos</h3>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> IGA_total)) <span class="op">+</span><span class="st">   </span>
@@ -1693,12 +1827,12 @@ diff_inv_fortinst_cienmil_sd &lt;-<span class="st"> </span>descrip_inv_fortinst_
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">seq</span>(<span class="dv">2010</span>,<span class="dv">2016</span>, <span class="dt">by=</span><span class="dv">1</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total[<span class="kw">which.min</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total)],
                          cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total[<span class="kw">which.max</span>(cede_gobierno_<span class="dv">44</span><span class="op">$</span>IGA_total)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-40-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-46-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-7" class="section level3">
-<h3><span class="header-section-number">4.1.7</span> Descriptivos</h3>
+<h3><span class="header-section-number">5.1.7</span> Descriptivos</h3>
 <div id="agregados-7" class="section level4">
-<h4><span class="header-section-number">4.1.7.1</span> Agregados</h4>
+<h4><span class="header-section-number">5.1.7.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -1763,7 +1897,7 @@ descrip_IGA_total<span class="op">%&gt;%</span><span class="kw">filter</span>(co
 ## 27    12.194084</code></pre>
 </div>
 <div id="delta-7" class="section level4">
-<h4><span class="header-section-number">4.1.7.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">5.1.7.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_IGA_total_5antes &lt;-<span class="st"> </span>cede_gobierno_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2014-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -1789,7 +1923,7 @@ diff_IGA_total_sd &lt;-<span class="st"> </span>descrip_IGA_total_5antes<span cl
 </div>
 </div>
 <div id="salud" class="section level1">
-<h1><span class="header-section-number">5</span> Salud</h1>
+<h1><span class="header-section-number">6</span> Salud</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Cambiarle los nombres a algunos municipios que no estan codificados igual</span>
 
 cede_salud_<span class="dv">44</span><span class="op">$</span>municipio[cede_salud_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Bojaya&quot;</span>] &lt;-<span class="st"> &quot;Bojayá&quot;</span>
@@ -1799,13 +1933,13 @@ cede_salud_<span class="dv">44</span><span class="op">$</span>municipio[cede_sal
 cede_salud_<span class="dv">44</span><span class="op">$</span>municipio[cede_salud_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Cartagena del Chairá&quot;</span>] &lt;-<span class="st"> &quot;Cartagena Del Chairá&quot;</span>
 cede_salud_<span class="dv">44</span><span class="op">$</span>municipio[cede_salud_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;San Vicente del Caguán&quot;</span>] &lt;-<span class="st"> &quot;San Vicente Del Caguán&quot;</span></code></pre></div>
 <div id="graficos-variables-importantes-y-algunos-descriptivos-2" class="section level2">
-<h2><span class="header-section-number">5.1</span> Graficos variables importantes y algunos descriptivos</h2>
+<h2><span class="header-section-number">6.1</span> Graficos variables importantes y algunos descriptivos</h2>
 <p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="analisis-tasa-mortalidad-infantil-tmi" class="section level3">
-<h3><span class="header-section-number">5.1.1</span> Analisis Tasa Mortalidad Infantil (TMI)</h3>
+<h3><span class="header-section-number">6.1.1</span> Analisis Tasa Mortalidad Infantil (TMI)</h3>
 </div>
 <div id="graficos-10" class="section level3">
-<h3><span class="header-section-number">5.1.2</span> Graficos</h3>
+<h3><span class="header-section-number">6.1.2</span> Graficos</h3>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_salud_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> TMI)) <span class="op">+</span><span class="st"> </span>
@@ -1817,12 +1951,12 @@ cede_salud_<span class="dv">44</span><span class="op">$</span>municipio[cede_sal
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2005</span><span class="op">:</span><span class="dv">2015</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>TMI[<span class="kw">which.min</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>TMI)],
                          cede_salud_<span class="dv">44</span><span class="op">$</span>TMI[<span class="kw">which.max</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>TMI)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-45-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-51-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-8" class="section level3">
-<h3><span class="header-section-number">5.1.3</span> Descriptivos</h3>
+<h3><span class="header-section-number">6.1.3</span> Descriptivos</h3>
 <div id="agregados-8" class="section level4">
-<h4><span class="header-section-number">5.1.3.1</span> Agregados</h4>
+<h4><span class="header-section-number">6.1.3.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -1859,7 +1993,7 @@ descrip_TMI<span class="op">%&gt;%</span><span class="kw">filter</span>(codmpio<
 ## 27           Vistahermosa   50711  9503.860 34.559490 3.1500174</code></pre>
 </div>
 <div id="delta-8" class="section level4">
-<h4><span class="header-section-number">5.1.3.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">6.1.3.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_TMI_5antes &lt;-<span class="st"> </span>cede_salud_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2005-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -1881,10 +2015,10 @@ diff_TMI_sd &lt;-<span class="st"> </span>descrip_TMI_5antes<span class="op">$</
 </div>
 </div>
 <div id="analisis-necesidades-basicas-insatisfechas-nbi" class="section level3">
-<h3><span class="header-section-number">5.1.4</span> Analisis Necesidades Basicas Insatisfechas (NBI)</h3>
+<h3><span class="header-section-number">6.1.4</span> Analisis Necesidades Basicas Insatisfechas (NBI)</h3>
 </div>
 <div id="graficos-11" class="section level3">
-<h3><span class="header-section-number">5.1.5</span> Graficos</h3>
+<h3><span class="header-section-number">6.1.5</span> Graficos</h3>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <p>Cuidado el grafico es enganoso, analizar con cautela</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#GRAFICO ENGANOSO NO PONER CUIDADO</span>
@@ -1903,12 +2037,12 @@ cede_salud_<span class="dv">44</span> <span class="op">%&gt;%</span><span class=
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim=</span><span class="kw">c</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>nbi[<span class="kw">which.min</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>nbi)],
                          cede_salud_<span class="dv">44</span><span class="op">$</span>nbi[<span class="kw">which.max</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>nbi)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-49-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-55-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-9" class="section level3">
-<h3><span class="header-section-number">5.1.6</span> Descriptivos</h3>
+<h3><span class="header-section-number">6.1.6</span> Descriptivos</h3>
 <div id="agregados-9" class="section level4">
-<h4><span class="header-section-number">5.1.6.1</span> Agregados</h4>
+<h4><span class="header-section-number">6.1.6.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -1945,7 +2079,7 @@ descrip_nbi<span class="op">%&gt;%</span><span class="kw">filter</span>(codmpio<
 ## 27           Vistahermosa   50711 6413.784 67.51352 11.612102</code></pre>
 </div>
 <div id="delta-9" class="section level4">
-<h4><span class="header-section-number">5.1.6.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">6.1.6.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_nbi_5antes &lt;-<span class="st"> </span>cede_salud_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2001-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -1974,14 +2108,14 @@ diff_nbi_sd &lt;-<span class="st"> </span>descrip_nbi_5antes<span class="op">$</
 </div>
 </div>
 <div id="analisis-prestadoras-de-servicio" class="section level2">
-<h2><span class="header-section-number">5.2</span> Analisis prestadoras de servicio</h2>
+<h2><span class="header-section-number">6.2</span> Analisis prestadoras de servicio</h2>
 <p>Esta variable es el numero de prestadoras de servicio de salud publica. ***</p>
 <p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
 <p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
 <p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
 <p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 <div id="graficos-12" class="section level3">
-<h3><span class="header-section-number">5.2.1</span> Graficos</h3>
+<h3><span class="header-section-number">6.2.1</span> Graficos</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
@@ -2010,12 +2144,12 @@ cede_salud_44_eq &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op"
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2010</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>prestadores[<span class="kw">which.min</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>prestadores)],
                          cede_salud_<span class="dv">44</span><span class="op">$</span>prestadores[<span class="kw">which.max</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>prestadores)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-54-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-60-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-10" class="section level3">
-<h3><span class="header-section-number">5.2.2</span> Descriptivos</h3>
+<h3><span class="header-section-number">6.2.2</span> Descriptivos</h3>
 <div id="agregados-10" class="section level4">
-<h4><span class="header-section-number">5.2.2.1</span> Agregados</h4>
+<h4><span class="header-section-number">6.2.2.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -2079,7 +2213,7 @@ descrip_prestadores_cienmil<span class="op">%&gt;%</span><span class="kw">filter
 ## 27                      NaN                     NA</code></pre>
 </div>
 <div id="delta-10" class="section level4">
-<h4><span class="header-section-number">5.2.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">6.2.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_prestadores_cienmil_5antes &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2014-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -2103,7 +2237,7 @@ diff_prestadores_cienmil_sd &lt;-<span class="st"> </span>descrip_prestadores_ci
 </div>
 </div>
 <div id="analisis-personas-afiliadas-al-regimen-subsidiado" class="section level3">
-<h3><span class="header-section-number">5.2.3</span> Analisis personas afiliadas al regimen subsidiado</h3>
+<h3><span class="header-section-number">6.2.3</span> Analisis personas afiliadas al regimen subsidiado</h3>
 <p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
 <p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
 <p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
@@ -2111,7 +2245,7 @@ diff_prestadores_cienmil_sd &lt;-<span class="st"> </span>descrip_prestadores_ci
 <p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
 <p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-13" class="section level4">
-<h4><span class="header-section-number">5.2.3.1</span> Graficos</h4>
+<h4><span class="header-section-number">6.2.3.1</span> Graficos</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
@@ -2136,12 +2270,12 @@ cede_salud_44_eq &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op"
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Log Numero de personas subsidiadas por cien mil&#39;</span>, <span class="dt">title=</span><span class="st">&#39;subsidiado de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DANE - Estadisticas Vitales&quot;</span>) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2009</span><span class="op">:</span><span class="dv">2016</span>))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-59-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-65-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-11" class="section level4">
-<h4><span class="header-section-number">5.2.3.2</span> Descriptivos</h4>
+<h4><span class="header-section-number">6.2.3.2</span> Descriptivos</h4>
 <div id="agregados-11" class="section level5">
-<h5><span class="header-section-number">5.2.3.2.1</span> Agregados</h5>
+<h5><span class="header-section-number">6.2.3.2.1</span> Agregados</h5>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -2207,7 +2341,7 @@ descrip_subsidiado_cienmil<span class="op">%&gt;%</span><span class="kw">filter<
 </div>
 </div>
 <div id="delta-11" class="section level4">
-<h4><span class="header-section-number">5.2.3.3</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">6.2.3.3</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_subsidiado_cienmil_5antes &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2013-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -2231,7 +2365,7 @@ diff_subsidiado_cienmil_sd &lt;-<span class="st"> </span>descrip_subsidiado_cien
 </div>
 </div>
 <div id="analisis-personas-afilidas-al-regimen-contributivo" class="section level3">
-<h3><span class="header-section-number">5.2.4</span> Analisis personas afilidas al regimen contributivo</h3>
+<h3><span class="header-section-number">6.2.4</span> Analisis personas afilidas al regimen contributivo</h3>
 <p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
 <p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
 <p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
@@ -2239,7 +2373,7 @@ diff_subsidiado_cienmil_sd &lt;-<span class="st"> </span>descrip_subsidiado_cien
 <p>En algunos casos, como en este, se saca el logaritmo para bajar la magnitud de la variable pero manteniendo las variaciones.</p>
 <p><span class="math inline">\(T = \ln(\frac{N_{t}}{P_{t}} \times 100 000)\)</span></p>
 <div id="graficos-14" class="section level4">
-<h4><span class="header-section-number">5.2.4.1</span> Graficos</h4>
+<h4><span class="header-section-number">6.2.4.1</span> Graficos</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general &lt;-<span class="st"> </span><span class="kw">substring</span>(cede_salud_<span class="dv">44</span><span class="op">$</span>ano_base_general,<span class="dv">1</span>,<span class="dv">4</span>)
@@ -2266,12 +2400,12 @@ cede_salud_44_eq &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op"
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&#39;Log Numero de personas subsidiadas por cien mil&#39;</span>, <span class="dt">title=</span><span class="st">&#39;contributivo de municipios por ano&#39;</span>, <span class="dt">x=</span> <span class="st">&#39;Año&#39;</span>, <span class="dt">caption=</span><span class="st">&quot;Fuente: DANE - Estadisticas Vitales&quot;</span>) <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2009</span><span class="op">:</span><span class="dv">2016</span>))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-64-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-70-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-12" class="section level4">
-<h4><span class="header-section-number">5.2.4.2</span> Descriptivos</h4>
+<h4><span class="header-section-number">6.2.4.2</span> Descriptivos</h4>
 <div id="agregados-12" class="section level5">
-<h5><span class="header-section-number">5.2.4.2.1</span> Agregados</h5>
+<h5><span class="header-section-number">6.2.4.2.1</span> Agregados</h5>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -2337,7 +2471,7 @@ descrip_contributivo_cienmil<span class="op">%&gt;%</span><span class="kw">filte
 </div>
 </div>
 <div id="delta-12" class="section level4">
-<h4><span class="header-section-number">5.2.4.3</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">6.2.4.3</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_contributivo_cienmil_5antes &lt;-<span class="st"> </span>cede_salud_44_eq <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2013-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -2363,7 +2497,7 @@ diff_contributivo_cienmil_sd &lt;-<span class="st"> </span>descrip_contributivo_
 </div>
 </div>
 <div id="tierras" class="section level1">
-<h1><span class="header-section-number">6</span> Tierras</h1>
+<h1><span class="header-section-number">7</span> Tierras</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Cambiarle los nombres a algunos municipios que no estan codificados igual</span>
 
 cede_tierras_<span class="dv">44</span><span class="op">$</span>municipio[cede_tierras_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Bojaya&quot;</span>] &lt;-<span class="st"> &quot;Bojayá&quot;</span>
@@ -2373,13 +2507,13 @@ cede_tierras_<span class="dv">44</span><span class="op">$</span>municipio[cede_t
 cede_tierras_<span class="dv">44</span><span class="op">$</span>municipio[cede_tierras_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;Cartagena del Chairá&quot;</span>] &lt;-<span class="st"> &quot;Cartagena Del Chairá&quot;</span>
 cede_tierras_<span class="dv">44</span><span class="op">$</span>municipio[cede_tierras_<span class="dv">44</span><span class="op">$</span>municipio<span class="op">==</span><span class="st">&quot;San Vicente del Caguán&quot;</span>] &lt;-<span class="st"> &quot;San Vicente Del Caguán&quot;</span></code></pre></div>
 <div id="graficos-variables-importantes-y-algunos-descriptivos-3" class="section level2">
-<h2><span class="header-section-number">6.1</span> Graficos variables importantes y algunos descriptivos</h2>
+<h2><span class="header-section-number">7.1</span> Graficos variables importantes y algunos descriptivos</h2>
 <p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="numero-de-creditos-a-pequenos-medianos-y-grandes-productores" class="section level3">
-<h3><span class="header-section-number">6.1.1</span> Numero de creditos a pequenos, medianos y grandes productores</h3>
+<h3><span class="header-section-number">7.1.1</span> Numero de creditos a pequenos, medianos y grandes productores</h3>
 <p>Esta variable es la cantidad de creditos que le dan a los pequenos, medianos y grandes productores ***</p>
 <div id="graficos-15" class="section level4">
-<h4><span class="header-section-number">6.1.1.1</span> Graficos</h4>
+<h4><span class="header-section-number">7.1.1.1</span> Graficos</h4>
 <p>Vamos a graficar el numero de creditos por ano por municipio de los pequenos, grandes y medianos productores en un mismo grafico. La linea negra son los pequenos La linea azul son los medianos La linea roja son los grandes</p>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
@@ -2393,15 +2527,15 @@ cede_tierras_<span class="dv">44</span><span class="op">$</span>municipio[cede_t
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">700</span>))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-69-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-75-1.png" width="1152" /></p>
 </div>
 </div>
 <div id="pequenos-productores" class="section level3">
-<h3><span class="header-section-number">6.1.2</span> Pequenos productores</h3>
+<h3><span class="header-section-number">7.1.2</span> Pequenos productores</h3>
 <div id="descriptivos-13" class="section level4">
-<h4><span class="header-section-number">6.1.2.1</span> Descriptivos</h4>
+<h4><span class="header-section-number">7.1.2.1</span> Descriptivos</h4>
 <div id="agregados-13" class="section level5">
-<h5><span class="header-section-number">6.1.2.1.1</span> Agregados</h5>
+<h5><span class="header-section-number">7.1.2.1.1</span> Agregados</h5>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -2439,7 +2573,7 @@ descrip_nuf_peq<span class="op">%&gt;%</span><span class="kw">filter</span>(codm
 </div>
 </div>
 <div id="delta-13" class="section level4">
-<h4><span class="header-section-number">6.1.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">7.1.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_nuf_peq_5antes &lt;-<span class="st"> </span>cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2006-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -2463,12 +2597,12 @@ diff_nuf_peq_sd &lt;-<span class="st"> </span>descrip_nuf_peq_5antes<span class=
 </div>
 </div>
 <div id="medianos-productores" class="section level3">
-<h3><span class="header-section-number">6.1.3</span> Medianos productores</h3>
+<h3><span class="header-section-number">7.1.3</span> Medianos productores</h3>
 </div>
 <div id="descriptivos-14" class="section level3">
-<h3><span class="header-section-number">6.1.4</span> Descriptivos</h3>
+<h3><span class="header-section-number">7.1.4</span> Descriptivos</h3>
 <div id="agregados-14" class="section level4">
-<h4><span class="header-section-number">6.1.4.1</span> Agregados</h4>
+<h4><span class="header-section-number">7.1.4.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -2533,7 +2667,7 @@ descrip_nuf_medianos<span class="op">%&gt;%</span><span class="kw">filter</span>
 ## 27       34.160572</code></pre>
 </div>
 <div id="delta-14" class="section level4">
-<h4><span class="header-section-number">6.1.4.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">7.1.4.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_nuf_medianos_5antes &lt;-<span class="st"> </span>cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2006-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -2558,11 +2692,11 @@ diff_nuf_medianos_sd &lt;-<span class="st"> </span>descrip_nuf_medianos_5antes<s
 </div>
 </div>
 <div id="grandes-productores" class="section level2">
-<h2><span class="header-section-number">6.2</span> Grandes productores</h2>
+<h2><span class="header-section-number">7.2</span> Grandes productores</h2>
 <div id="descriptivos-15" class="section level3">
-<h3><span class="header-section-number">6.2.1</span> Descriptivos</h3>
+<h3><span class="header-section-number">7.2.1</span> Descriptivos</h3>
 <div id="agregados-15" class="section level4">
-<h4><span class="header-section-number">6.2.1.1</span> Agregados</h4>
+<h4><span class="header-section-number">7.2.1.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -2627,7 +2761,7 @@ descrip_nuf_grandes<span class="op">%&gt;%</span><span class="kw">filter</span>(
 ## 27             NA</code></pre>
 </div>
 <div id="delta-15" class="section level4">
-<h4><span class="header-section-number">6.2.1.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">7.2.1.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_nuf_grandes_5antes &lt;-<span class="st"> </span>cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2006-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -2651,11 +2785,11 @@ diff_nuf_grandes_sd &lt;-<span class="st"> </span>descrip_nuf_grandes_5antes<spa
 </div>
 </div>
 <div id="valor-de-creditos-a-pequenos-medianos-y-grandes-productores" class="section level3">
-<h3><span class="header-section-number">6.2.2</span> Valor de creditos a pequenos, medianos y grandes productores</h3>
+<h3><span class="header-section-number">7.2.2</span> Valor de creditos a pequenos, medianos y grandes productores</h3>
 <p>Esta variable es la cantidad de creditos que le dan a los pequenos, medianos y grandes productores ***</p>
 </div>
 <div id="graficos-16" class="section level3">
-<h3><span class="header-section-number">6.2.3</span> Graficos</h3>
+<h3><span class="header-section-number">7.2.3</span> Graficos</h3>
 <p>Vamos a graficar el valor del credito por ano por municipio de los pequenos, grandes y medianos productores en un mismo grafico. La linea negra son los pequenos La linea azul son los medianos La linea roja son los grandes</p>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
@@ -2670,14 +2804,14 @@ diff_nuf_grandes_sd &lt;-<span class="st"> </span>descrip_nuf_grandes_5antes<spa
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2016</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_tierras_<span class="dv">44</span><span class="op">$</span>vrf_peq[<span class="kw">which.min</span>(cede_tierras_<span class="dv">44</span><span class="op">$</span>vrf_peq)],
                          cede_tierras_<span class="dv">44</span><span class="op">$</span>vrf_peq[<span class="kw">which.max</span>(cede_tierras_<span class="dv">44</span><span class="op">$</span>vrf_peq)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-79-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-85-1.png" width="1152" /></p>
 </div>
 <div id="valor-credito-para-pequenos-productores" class="section level3">
-<h3><span class="header-section-number">6.2.4</span> Valor credito para Pequenos productores</h3>
+<h3><span class="header-section-number">7.2.4</span> Valor credito para Pequenos productores</h3>
 <div id="descriptivos-16" class="section level4">
-<h4><span class="header-section-number">6.2.4.1</span> Descriptivos</h4>
+<h4><span class="header-section-number">7.2.4.1</span> Descriptivos</h4>
 <div id="agregados-16" class="section level5">
-<h5><span class="header-section-number">6.2.4.1.1</span> Agregados</h5>
+<h5><span class="header-section-number">7.2.4.1.1</span> Agregados</h5>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -2715,7 +2849,7 @@ descrip_vrf_peq<span class="op">%&gt;%</span><span class="kw">filter</span>(codm
 </div>
 </div>
 <div id="delta-16" class="section level4">
-<h4><span class="header-section-number">6.2.4.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">7.2.4.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_vrf_peq_5antes &lt;-<span class="st"> </span>cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2006-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -2739,11 +2873,11 @@ diff_vrf_peq_sd &lt;-<span class="st"> </span>descrip_vrf_peq_5antes<span class=
 </div>
 </div>
 <div id="valor-credito-para-medianos-productores" class="section level2">
-<h2><span class="header-section-number">6.3</span> Valor credito para Medianos productores</h2>
+<h2><span class="header-section-number">7.3</span> Valor credito para Medianos productores</h2>
 <div id="descriptivos-17" class="section level3">
-<h3><span class="header-section-number">6.3.1</span> Descriptivos</h3>
+<h3><span class="header-section-number">7.3.1</span> Descriptivos</h3>
 <div id="agregados-17" class="section level4">
-<h4><span class="header-section-number">6.3.1.1</span> Agregados</h4>
+<h4><span class="header-section-number">7.3.1.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -2808,7 +2942,7 @@ descrip_vrf_medianos<span class="op">%&gt;%</span><span class="kw">filter</span>
 ## 27      2625.23745</code></pre>
 </div>
 <div id="delta-17" class="section level4">
-<h4><span class="header-section-number">6.3.1.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">7.3.1.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_vrf_medianos_5antes &lt;-<span class="st"> </span>cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2006-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -2832,12 +2966,12 @@ diff_vrf_medianos_sd &lt;-<span class="st"> </span>descrip_vrf_medianos_5antes<s
 </div>
 </div>
 <div id="valor-credito-para-grandes-productores" class="section level3">
-<h3><span class="header-section-number">6.3.2</span> Valor credito para Grandes productores</h3>
+<h3><span class="header-section-number">7.3.2</span> Valor credito para Grandes productores</h3>
 <div id="descriptivos-18" class="section level4">
-<h4><span class="header-section-number">6.3.2.1</span> Descriptivos</h4>
+<h4><span class="header-section-number">7.3.2.1</span> Descriptivos</h4>
 </div>
 <div id="agregados-18" class="section level4">
-<h4><span class="header-section-number">6.3.2.2</span> Agregados</h4>
+<h4><span class="header-section-number">7.3.2.2</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -2902,7 +3036,7 @@ descrip_vrf_grandes<span class="op">%&gt;%</span><span class="kw">filter</span>(
 ## 27             NA</code></pre>
 </div>
 <div id="delta-18" class="section level4">
-<h4><span class="header-section-number">6.3.2.3</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">7.3.2.3</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_vrf_grandes_5antes &lt;-<span class="st"> </span>cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2006-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -2927,9 +3061,9 @@ diff_vrf_grandes_sd &lt;-<span class="st"> </span>descrip_vrf_grandes_5antes<spa
 </div>
 </div>
 <div id="numero-de-creditos-totales" class="section level2">
-<h2><span class="header-section-number">6.4</span> Numero de creditos totales</h2>
+<h2><span class="header-section-number">7.4</span> Numero de creditos totales</h2>
 <div id="graficos-17" class="section level3">
-<h3><span class="header-section-number">6.4.1</span> Graficos</h3>
+<h3><span class="header-section-number">7.4.1</span> Graficos</h3>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> ba_tot_nu)) <span class="op">+</span><span class="st">   </span>
@@ -2940,12 +3074,12 @@ diff_vrf_grandes_sd &lt;-<span class="st"> </span>descrip_vrf_grandes_5antes<spa
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2013</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_tierras_<span class="dv">44</span><span class="op">$</span>ba_tot_nu[<span class="kw">which.min</span>(cede_tierras_<span class="dv">44</span><span class="op">$</span>ba_tot_nu)],cede_tierras_<span class="dv">44</span><span class="op">$</span>ba_tot_nu[<span class="kw">which.max</span>(cede_tierras_<span class="dv">44</span><span class="op">$</span>ba_tot_nu)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-89-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-95-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-19" class="section level3">
-<h3><span class="header-section-number">6.4.2</span> Descriptivos</h3>
+<h3><span class="header-section-number">7.4.2</span> Descriptivos</h3>
 <div id="agregados-19" class="section level4">
-<h4><span class="header-section-number">6.4.2.1</span> Agregados</h4>
+<h4><span class="header-section-number">7.4.2.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -3010,7 +3144,7 @@ descrip_ba_tot_nu<span class="op">%&gt;%</span><span class="kw">filter</span>(co
 ## 27     77.17845</code></pre>
 </div>
 <div id="delta-19" class="section level4">
-<h4><span class="header-section-number">6.4.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">7.4.2.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_ba_tot_nu_5antes &lt;-<span class="st"> </span>cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2006-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -3033,10 +3167,10 @@ diff_ba_tot_nu_sd &lt;-<span class="st"> </span>descrip_ba_tot_nu_5antes<span cl
 </div>
 </div>
 <div id="valor-de-creditos-totales" class="section level3">
-<h3><span class="header-section-number">6.4.3</span> Valor de creditos totales</h3>
+<h3><span class="header-section-number">7.4.3</span> Valor de creditos totales</h3>
 </div>
 <div id="graficos-18" class="section level3">
-<h3><span class="header-section-number">6.4.4</span> Graficos</h3>
+<h3><span class="header-section-number">7.4.4</span> Graficos</h3>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ano, <span class="dt">y =</span> ba_tot_vr)) <span class="op">+</span><span class="st">   </span>
@@ -3047,12 +3181,12 @@ diff_ba_tot_nu_sd &lt;-<span class="st"> </span>descrip_ba_tot_nu_5antes<span cl
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2013</span>),
                   <span class="dt">ylim=</span><span class="kw">c</span>(cede_tierras_<span class="dv">44</span><span class="op">$</span>ba_tot_vr[<span class="kw">which.min</span>(cede_tierras_<span class="dv">44</span><span class="op">$</span>ba_tot_vr)],cede_tierras_<span class="dv">44</span><span class="op">$</span>ba_tot_vr[<span class="kw">which.max</span>(cede_tierras_<span class="dv">44</span><span class="op">$</span>ba_tot_vr)]))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-93-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-99-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-20" class="section level3">
-<h3><span class="header-section-number">6.4.5</span> Descriptivos</h3>
+<h3><span class="header-section-number">7.4.5</span> Descriptivos</h3>
 <div id="agregados-20" class="section level4">
-<h4><span class="header-section-number">6.4.5.1</span> Agregados</h4>
+<h4><span class="header-section-number">7.4.5.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -3117,7 +3251,7 @@ descrip_ba_tot_vr<span class="op">%&gt;%</span><span class="kw">filter</span>(co
 ## 27    1421.9302</code></pre>
 </div>
 <div id="delta-20" class="section level4">
-<h4><span class="header-section-number">6.4.5.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">7.4.5.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_ba_tot_vr_5antes &lt;-<span class="st"> </span>cede_tierras_<span class="dv">44</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2006-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -3143,14 +3277,14 @@ diff_ba_tot_vr_sd &lt;-<span class="st"> </span>descrip_ba_tot_vr_5antes<span cl
 </div>
 </div>
 <div id="violencia" class="section level1">
-<h1><span class="header-section-number">7</span> Violencia</h1>
+<h1><span class="header-section-number">8</span> Violencia</h1>
 <div id="graficos-variables-importantes-y-algunos-descriptivos-4" class="section level2">
-<h2><span class="header-section-number">7.1</span> Graficos variables importantes y algunos descriptivos</h2>
+<h2><span class="header-section-number">8.1</span> Graficos variables importantes y algunos descriptivos</h2>
 <p>Esta seccion esta dividiad por variables. Dentro de cada variable hay dos secciones. En la primer se observa un grafico que muestra las tendencias de la variable para los 44 municipios del ACDI-VOCA. *** La segunda seccion tiene los descriptivos de esas variables. Para mas informacion, acercarse a la descripcion de esa seccion.</p>
 <div id="analisis-homicidios" class="section level3">
-<h3><span class="header-section-number">7.1.1</span> Analisis Homicidios</h3>
+<h3><span class="header-section-number">8.1.1</span> Analisis Homicidios</h3>
 <div id="creacion-de-variables" class="section level4">
-<h4><span class="header-section-number">7.1.1.1</span> Creacion de variables</h4>
+<h4><span class="header-section-number">8.1.1.1</span> Creacion de variables</h4>
 <p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
 <p>Para mas informacion sobre la concepcion del <em>tidy</em> ver: <a href="https://www.researchgate.net/publication/215990669_Tidy_data">Paper tidy</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">homi_GA &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&#39;homi_{1}&#39;</span>, <span class="kw">names</span>(cede_conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">grep</span>(<span class="st">&#39;_pn&#39;</span>,.,<span class="dt">value =</span> T, <span class="dt">invert =</span> T)    
@@ -3160,7 +3294,7 @@ conflicto_44_tidy<span class="op">$</span>ano_base_general &lt;-<span class="st"
 </div>
 </div>
 <div id="graficos-19" class="section level3">
-<h3><span class="header-section-number">7.1.2</span> Graficos</h3>
+<h3><span class="header-section-number">8.1.2</span> Graficos</h3>
 <p>Observe que, para ciertas variables, se debe calcular un indice que normalice las poblaciones de cada municipio. Esta variable tiene esa transformacion. Esta variable se transforma para que quede medida <strong>por cien mil habitantes</strong>. Asi, la transformacion que se le hace a estas variables es:</p>
 <p><span class="math inline">\(T = \frac{N_{t}}{P_{t}} \times 100 000\)</span></p>
 <p>En donde: <span class="math inline">\(T=\)</span> La tasa por 100 mil habitantes <span class="math inline">\(N_{t}=\)</span> Numero total de la variable de interes <span class="math inline">\(P_{t}=\)</span> Poblacion total en el periodo <span class="math inline">\(t\)</span></p>
@@ -3191,7 +3325,7 @@ conflicto_44_tidy &lt;-<span class="st"> </span>conflicto_44_tidy <span class="o
 <span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&#39;1 year&#39;</span>, <span class="dt">date_labels =</span> <span class="st">&#39;%Y&#39;</span>,  
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;2003&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2013&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-99-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-105-1.png" width="1152" /></p>
 <p>Graficos homicidios por ano y municipio</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(randomcoloR)    
 n &lt;-<span class="st"> </span><span class="dv">13</span> 
@@ -3205,12 +3339,12 @@ conflicto_44_tidy <span class="op">%&gt;%</span><span class="kw">filter</span>(c
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;2003&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2013&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">110</span>))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-100-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-106-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-21" class="section level3">
-<h3><span class="header-section-number">7.1.3</span> Descriptivos</h3>
+<h3><span class="header-section-number">8.1.3</span> Descriptivos</h3>
 <div id="agregados-21" class="section level4">
-<h4><span class="header-section-number">7.1.3.1</span> Agregados</h4>
+<h4><span class="header-section-number">8.1.3.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -3275,7 +3409,7 @@ descrip_homi<span class="op">%&gt;%</span><span class="kw">filter</span>(codmpio
 ## 27       57.269910</code></pre>
 </div>
 <div id="delta-21" class="section level4">
-<h4><span class="header-section-number">7.1.3.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">8.1.3.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_homi_5antes &lt;-<span class="st"> </span>conflicto_44_tidy <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2008-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -3298,16 +3432,16 @@ diff_homi_sd &lt;-<span class="st"> </span>descrip_homi_5antes<span class="op">$
 </div>
 </div>
 <div id="analisis-ataques" class="section level3">
-<h3><span class="header-section-number">7.1.4</span> Analisis Ataques</h3>
+<h3><span class="header-section-number">8.1.4</span> Analisis Ataques</h3>
 </div>
 <div id="creacion-de-variables-1" class="section level3">
-<h3><span class="header-section-number">7.1.5</span> Creacion de variables</h3>
+<h3><span class="header-section-number">8.1.5</span> Creacion de variables</h3>
 <p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ataque_GA &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;tpobc_{1}&quot;</span>, <span class="kw">names</span>(cede_conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T) 
 conflicto_44_ataque &lt;-<span class="st"> </span><span class="kw">gather</span>(cede_conflicto_<span class="dv">44</span>, <span class="dt">key=</span> <span class="st">&quot;Grupo_Armado&quot;</span>, <span class="dt">value=</span> <span class="st">&quot;Ataques_Pobl_Civil&quot;</span>, ataque_GA)   </code></pre></div>
 </div>
 <div id="graficos-20" class="section level3">
-<h3><span class="header-section-number">7.1.6</span> Graficos</h3>
+<h3><span class="header-section-number">8.1.6</span> Graficos</h3>
 <p>En este codigo se crea el grafico que muestra las <strong>tendencias</strong> en funcion del tiempo para todos los departamentos del cuestionario ACDI-VOCA.</p>
 <p>Graficos ataques, por Municipio por actor armado (numeros brutos)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">conflicto_44_ataque <span class="op">%&gt;%</span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>ano, <span class="dt">y =</span> Ataques_Pobl_Civil, <span class="dt">color=</span> Grupo_Armado)) <span class="op">+</span><span class="st"> </span>
@@ -3320,12 +3454,12 @@ conflicto_44_ataque &lt;-<span class="st"> </span><span class="kw">gather</span>
 <span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&#39;2 year&#39;</span>, <span class="dt">date_labels =</span> <span class="st">&#39;%Y&#39;</span>,  
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;1993&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2010&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.3</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))</code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-105-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-111-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-22" class="section level3">
-<h3><span class="header-section-number">7.1.7</span> Descriptivos</h3>
+<h3><span class="header-section-number">8.1.7</span> Descriptivos</h3>
 <div id="agregados-22" class="section level4">
-<h4><span class="header-section-number">7.1.7.1</span> Agregados</h4>
+<h4><span class="header-section-number">8.1.7.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -3390,7 +3524,7 @@ descrip_ataques<span class="op">%&gt;%</span><span class="kw">filter</span>(codm
 ## 27               1.6250000             4.1257253</code></pre>
 </div>
 <div id="delta-22" class="section level4">
-<h4><span class="header-section-number">7.1.7.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">8.1.7.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_ataques_5antes &lt;-<span class="st"> </span>conflicto_44_ataque <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;1997-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -3421,10 +3555,10 @@ diff_ataques_sd &lt;-<span class="st"> </span>
 </div>
 </div>
 <div id="analisis-secuestros" class="section level3">
-<h3><span class="header-section-number">7.1.8</span> Analisis Secuestros</h3>
+<h3><span class="header-section-number">8.1.8</span> Analisis Secuestros</h3>
 </div>
 <div id="creacion-de-variables-2" class="section level3">
-<h3><span class="header-section-number">7.1.9</span> Creacion de variables</h3>
+<h3><span class="header-section-number">8.1.9</span> Creacion de variables</h3>
 <p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">secuestro_GA &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;secu_{1}&quot;</span>, <span class="kw">names</span>(cede_conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T)
 conflicto_44_secuestro &lt;-<span class="st"> </span><span class="kw">gather</span>(cede_conflicto_<span class="dv">44</span>, <span class="dt">key=</span> <span class="st">&quot;Grupo_Armado&quot;</span>, <span class="dt">value=</span> <span class="st">&quot;Secuestros&quot;</span>, secuestro_GA)
@@ -3437,7 +3571,7 @@ conflicto_44_secuestro<span class="op">$</span>ano_base_general &lt;-<span class
 <p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 </div>
 <div id="graficos-21" class="section level3">
-<h3><span class="header-section-number">7.1.10</span> Graficos</h3>
+<h3><span class="header-section-number">8.1.10</span> Graficos</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(conflicto_44_secuestro)){
@@ -3463,12 +3597,12 @@ conflicto_44_secuestro &lt;-<span class="st"> </span>conflicto_44_secuestro <spa
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;2003&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2013&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.3</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>)) </code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-111-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-117-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-23" class="section level3">
-<h3><span class="header-section-number">7.1.11</span> Descriptivos</h3>
+<h3><span class="header-section-number">8.1.11</span> Descriptivos</h3>
 <div id="agregados-23" class="section level4">
-<h4><span class="header-section-number">7.1.11.1</span> Agregados</h4>
+<h4><span class="header-section-number">8.1.11.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -3533,7 +3667,7 @@ descrip_secuestro<span class="op">%&gt;%</span><span class="kw">filter</span>(co
 ## 27                        0             1.25448593            3.2941124</code></pre>
 </div>
 <div id="delta-23" class="section level4">
-<h4><span class="header-section-number">7.1.11.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">8.1.11.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_secuestro_5antes &lt;-<span class="st"> </span>conflicto_44_secuestro <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;2008-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -3563,10 +3697,10 @@ diff_secuestro_sd &lt;-<span class="st"> </span>
 </div>
 </div>
 <div id="analisis-secuestros-politicos" class="section level3">
-<h3><span class="header-section-number">7.1.12</span> Analisis Secuestros Politicos</h3>
+<h3><span class="header-section-number">8.1.12</span> Analisis Secuestros Politicos</h3>
 </div>
 <div id="creacion-de-variables-3" class="section level3">
-<h3><span class="header-section-number">7.1.13</span> Creacion de variables</h3>
+<h3><span class="header-section-number">8.1.13</span> Creacion de variables</h3>
 <p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">secuestrop_GA &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;secpo_{1}&quot;</span>, <span class="kw">names</span>(cede_conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T) 
 conflicto_44_secuestrop &lt;-<span class="st"> </span><span class="kw">gather</span>(cede_conflicto_<span class="dv">44</span>, <span class="dt">key=</span> <span class="st">&quot;Grupo_Armado&quot;</span>, <span class="dt">value=</span> <span class="st">&quot;Secuestros_Politicos&quot;</span>, secuestrop_GA) 
@@ -3578,7 +3712,7 @@ conflicto_44_secuestrop<span class="op">$</span>ano_base_general &lt;-<span clas
 <p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 </div>
 <div id="graficos-22" class="section level3">
-<h3><span class="header-section-number">7.1.14</span> Graficos</h3>
+<h3><span class="header-section-number">8.1.14</span> Graficos</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(conflicto_44_secuestrop)){
@@ -3604,12 +3738,12 @@ conflicto_44_secuestrop &lt;-<span class="st"> </span>conflicto_44_secuestrop <s
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;2003&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2013&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.3</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))<span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))  </code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-117-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-123-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-24" class="section level3">
-<h3><span class="header-section-number">7.1.15</span> Descriptivos</h3>
+<h3><span class="header-section-number">8.1.15</span> Descriptivos</h3>
 <div id="agregados-24" class="section level4">
-<h4><span class="header-section-number">7.1.15.1</span> Agregados</h4>
+<h4><span class="header-section-number">8.1.15.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -3674,7 +3808,7 @@ descrip_secuestrop<span class="op">%&gt;%</span><span class="kw">filter</span>(c
 ## 27                         0             0.000000000           0.000000000</code></pre>
 </div>
 <div id="delta-24" class="section level4">
-<h4><span class="header-section-number">7.1.15.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">8.1.15.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_secuestrop_5antes &lt;-<span class="st"> </span>conflicto_44_secuestrop <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;1997-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
@@ -3704,10 +3838,10 @@ diff_secuestrop_sd &lt;-<span class="st"> </span>
 </div>
 </div>
 <div id="analisis-desmovilizados" class="section level3">
-<h3><span class="header-section-number">7.1.16</span> Analisis Desmovilizados</h3>
+<h3><span class="header-section-number">8.1.16</span> Analisis Desmovilizados</h3>
 </div>
 <div id="creacion-de-variables-4" class="section level3">
-<h3><span class="header-section-number">7.1.17</span> Creacion de variables</h3>
+<h3><span class="header-section-number">8.1.17</span> Creacion de variables</h3>
 <p>En esta base de datos es necesario hacer un <em>tidy</em> de la base de datos. Es decir, transformar algunas columnas en filas.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">desmovilizados &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;desmov_{1}&quot;</span>, <span class="kw">names</span>(cede_conflicto_<span class="dv">44</span>), <span class="dt">value =</span> T) <span class="co">#Seleccionar variables que empiecen con desmov_                                                </span>
 desmovilizados &lt;-<span class="st"> </span>desmovilizados[<span class="op">-</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">7</span>)]<span class="co">#Limpiar los nombres para poder hacer el gather  </span>
@@ -3726,7 +3860,7 @@ conflicto_44_desmovilizados<span class="op">$</span>ano_base_general &lt;-<span 
 <p>Por lo tanto, generamos el siguiente codigo para poder crear esta variable. El nombre de esas variables es **_cienmil**</p>
 </div>
 <div id="graficos-23" class="section level3">
-<h3><span class="header-section-number">7.1.18</span> Graficos</h3>
+<h3><span class="header-section-number">8.1.18</span> Graficos</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Loop para saber poder saber qué observaciones concuerdan tanto en el año del censo como en el año del conflicto. Esto es necesario para generar el índice porque debe haber concordancia en el año de ambas bases. </span>
 a &lt;-<span class="st">  </span><span class="kw">c</span>()
 <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(conflicto_44_desmovilizados)){
@@ -3750,12 +3884,12 @@ conflicto_44_desmovilizados &lt;-<span class="st"> </span>conflicto_44_desmovili
 <span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&#39;2 year&#39;</span>, <span class="dt">date_labels =</span> <span class="st">&#39;%Y&#39;</span>,  
                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&#39;1993&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>), <span class="kw">as.Date</span>(<span class="st">&#39;2010&#39;</span>, <span class="dt">format =</span> <span class="st">&#39;%Y&#39;</span>))) <span class="op">+</span><span class="st">    </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.3</span>), <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">90</span>))   </code></pre></div>
-<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-123-1.png" width="1152" /></p>
+<p><img src="particpantes_graficos_files/figure-html/unnamed-chunk-129-1.png" width="1152" /></p>
 </div>
 <div id="descriptivos-25" class="section level3">
-<h3><span class="header-section-number">7.1.19</span> Descriptivos</h3>
+<h3><span class="header-section-number">8.1.19</span> Descriptivos</h3>
 <div id="agregados-25" class="section level4">
-<h4><span class="header-section-number">7.1.19.1</span> Agregados</h4>
+<h4><span class="header-section-number">8.1.19.1</span> Agregados</h4>
 <p>En esta seccion se generan los descriptivos agregados de la variable.</p>
 <p>Aqui se genera el collapse por anos para cada municipio. Es decir, aqui se encuentran los descriptivos de la variable para cada municipio, en donde se hizo un collapse por anos.</p>
 <p>El nombre de la variable agregada es : <strong>descrip_</strong></p>
@@ -3849,7 +3983,7 @@ descrip_desmovilizados <span class="op">%&gt;%</span><span class="kw">filter</sp
 ## 27                16.6710849</code></pre>
 </div>
 <div id="delta-25" class="section level4">
-<h4><span class="header-section-number">7.1.19.2</span> <span class="math inline">\(\Delta\)</span></h4>
+<h4><span class="header-section-number">8.1.19.2</span> <span class="math inline">\(\Delta\)</span></h4>
 <p>A continuacion se generan las variables necesarias para hacer el <span class="math inline">\(\Delta\)</span>. Para obtener el <span class="math inline">\(\Delta\)</span> se hace la diferencia de la variable entre los primeros 5 anos y los ultimos 5 anos de los datos disponibles. Por ejemplo, si la variable de interes se recolecto entre 1997 y 2016, el <span class="math inline">\(\Delta\)</span> sera la reste entre el collapase de los anos 1997 a 2001 y el collapse de los anos 2012 a 2016. El nombre de la varible <span class="math inline">\(\Delta\)</span> es: <strong>diff_</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descrip_desmovilizados_5antes &lt;-<span class="st"> </span>conflicto_44_desmovilizados <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">filter</span>(codmpio<span class="op">%in%</span>mpios_par)<span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(ano<span class="op">&lt;</span><span class="st">&quot;1997-04-27&quot;</span>) <span class="co">#Codigo para seleccionar solamente las variables que sean menores al ano 2008</span>
