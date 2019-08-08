@@ -139,6 +139,165 @@ theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=9
 ```
 
 
+#Graficos por categorias
+
+
+
+##Municipios con diferencias en homicidios (Q1 y Q3)
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+#Creamos base de datos general
+
+
+base_stata_2019 <- base_stata_2019 %>%
+  mutate(mun_homicidio=as.factor((ifelse
+                       (homi_cienmil_mean>quantile(homi_cienmil_mean, 0.75),
+                         "Alta homicidios",
+                         ifelse(homi_cienmil_mean<quantile(homi_cienmil_mean, 0.25),
+                         "Baja homicidios",
+                         NA))))) 
+
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_homicidio))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_homicidio!=is.na(mun_homicidio)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_homicidio)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+```
+
+##Municipios con ataques a la poblacion civil (Q1 y Q3)
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+base_stata_2019 <- base_stata_2019 %>%
+  mutate(mun_violentado=as.factor((ifelse
+                       (Ataques_Pobl_Civil_mean>quantile(Ataques_Pobl_Civil_mean, 0.75),
+                         "violentado",
+                         ifelse(Ataques_Pobl_Civil_mean<quantile(Ataques_Pobl_Civil_mean, 0.25),
+                         "No violentado",
+                         NA)))))
+
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_violentado))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_violentado!=is.na(mun_violentado)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_violentado)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+```
+
+##Municipios donde hubo secuestros (Q1 y Q3)
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+base_stata_2019 <- base_stata_2019 %>%
+   mutate(mun_secuestrado=as.factor((ifelse
+                       (secuestro_cienmil_mean>quantile(secuestro_cienmil_mean, 0.75),
+                         "Alto secuestro",
+                         ifelse(secuestro_cienmil_mean<quantile(secuestro_cienmil_mean, 0.25),
+                         "Bajo secuestro",
+                         NA)))))
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_secuestrado))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_secuestrado!=is.na(mun_secuestrado)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_secuestrado)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+```
+
+##Municipios donde hubo desmovilizados (Q1 y Q3)
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+base_stata_2019 <- base_stata_2019 %>%
+   mutate(mun_desmovilizado=as.factor((ifelse
+                       (desmovilizados_cienmil_mean>quantile(desmovilizados_cienmil_mean, 0.75),
+                         "Alto desmovilizado",
+                         ifelse(desmovilizados_cienmil_mean<quantile(desmovilizados_cienmil_mean, 0.25),
+                         "Bajo desmovilizado",
+                         NA)))))
+
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_desmovilizado))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_desmovilizado!=is.na(mun_desmovilizado)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_desmovilizado)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+```
+
+
+##Municipios pobres (Q1 y Q3)
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+
+base_stata_2019 <- base_stata_2019 %>%
+   mutate(mun_pobre=as.factor((ifelse
+                       (nbi_mean>quantile(nbi_mean, 0.75),
+                         "Alta pobreza",
+                         ifelse(nbi_mean<quantile(nbi_mean, 0.25),
+                         "Baja pobreza",
+                         NA)))))
+
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_pobre))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_pobre!=is.na(mun_pobre)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_pobre)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+```
+
+##Municipios con presencia de educaciones educativas
+
+```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
+base_stata_2019 <- base_stata_2019 %>%
+   mutate(mun_establ=as.factor((ifelse
+                       (t_establ_mean>quantile(t_establ_mean, 0.75),
+                         "Alta presencia Establecimientos Educativos",
+                         ifelse(t_establ_mean<quantile(t_establ_mean, 0.25),
+                         "Baja presencia Establecimientos Educativos",
+                         NA)))))
+
+base_stata_2019_tidy_ensayo <-base_stata_2019_tidy_ensayo %>% left_join(base_stata_2019 %>% transmute(Municipio, mun_establ))
+
+base_stata_2019_tidy_ensayo %>%
+filter(mun_establ!=is.na(mun_establ)) %>% 
+ggplot(aes(x=Municipio, y=valor, col=as.factor(ano))) +
+geom_point()+
+facet_wrap(as.factor(mun_establ)~as.factor(indicador))+
+labs(title="Comparacion Mpios PAR 2017 y 2019")+
+theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Educacion
 

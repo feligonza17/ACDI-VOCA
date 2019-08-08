@@ -2482,12 +2482,8 @@ print(cbind(base_stata_2019[1],diff_desmovilizados_mean))
 
 #Indices de confianza
 
-##Regresiones 
 
-###Variables con valores absolutos (agregados) 
-
-A continuacion vamos a hacer las regresiones correspondientes.
-
+##Correlaciones
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 
@@ -2558,6 +2554,18 @@ agregados_regresiones <- as.data.frame(agregados_regresiones)
 
 
 ```
+
+```{r}
+cor(agregados_regresiones)
+```
+
+
+##Regresiones 
+
+###Variables con valores absolutos (agregados) 
+
+A continuacion vamos a hacer las regresiones correspondientes.
+
 
 
 Hacemos la regresion final 
@@ -2666,6 +2674,14 @@ deltas_regresiones <- as.data.frame(deltas_regresiones)
 
 
 ```
+
+
+#Correlaciones 
+
+```{r}
+cor(deltas_regresiones)
+```
+
 
 
 Hacemos la regresion final 
