@@ -58,6 +58,9 @@ navbar:
     - text: "Evento ACDIVOCA"
       icon: fa-globe-americas
       menu:
+        - text: "Estadistica Diferencias mpios PAR entre 2017 y 2019 "
+          icon: 
+          href: reg_olas_PAR.html 
         - text: "Analisis Mpios PAR por categorias PREJUICIOS"
           icon: fa-chart-pie
           href: Comparacion_PAR_por_categorias.html
