@@ -7,7 +7,7 @@ output:
     code_folding: show
     highlight: tango
     number_sections: yes
-    theme: journal
+    theme: lumen
     toc: yes
     toc_depth: 2
     toc_float:
@@ -368,6 +368,9 @@ Es la suma se esos items. Hay algunos que se deben inversar porque estan creados
 datos_acdivoca_num$confianza_instituciones <- datos_acdivoca_num %>%
   select(starts_with("p067"), -p067_18) %>%
   rowSums()
+
+
+
 ```
 ##Confianza en Medios de comunicacion
 
@@ -387,14 +390,15 @@ datos_acdivoca_num$confianza_medios <- datos_acdivoca_num %>%
   select(starts_with("p083")) %>%
   mutate_all(~na_if(., '99'))%>%
   rowSums()
+
+
+
 ```
 
 
 ```{r include=FALSE}
-
-#Esto es para generar los items de confianza con las escalas corregidas. 
 #Confianza Vecinos 
-
+#Esto es para generar los items de confianza con las escalas corregidas. 
 
 #En 2017 es: #Pregunta p065 
 #Vamos a recodificar para que quede igual que en IMR 2019
@@ -415,14 +419,20 @@ datos_acdivoca_num$confianza_instituciones_arr <- datos_acdivoca_num %>%
   select(starts_with("p067"), -p067_2 , -p067_8 , -p067_14 , -p067_17 ,-p067_18) %>%
   rowSums()
 
+datos_acdivoca_num$confianza_instituciones_arr <- datos_acdivoca_num %>% select(confianza_instituciones_arr) %>% mutate(confianza_instituciones_arr=confianza_instituciones_arr/17)
+
 datos_acdivoca_num <- datos_acdivoca_num %>% 
   mutate_at(c("p083_1","p083_2","p083_3","p083_4","p083_5","p083_6","p083_7"), 
             recode, "4"=3, "5"=4,"3"=0, "99"=0)
+
+
 
 datos_acdivoca_num$confianza_medios_arr <- datos_acdivoca_num %>%
   select(starts_with("p083")) %>%
   rowSums()
 
+
+datos_acdivoca_num$confianza_medios_arr <- datos_acdivoca_num %>% select(confianza_medios_arr) %>% mutate(confianza_medios_arr=confianza_medios_arr/7)
 
 
 confianza_vec_agregarr <- summaryBy(confianza_vec_arr ~ Municipio, 

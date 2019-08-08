@@ -82,7 +82,7 @@ Como los items cambiaron de una encuesta a otra, a continuacion vamos a corregir
 
 
 
-#Graficos generales
+##Graficos generales
 
 ```{r fig.height=10, fig.width=12, message=FALSE, warning=FALSE}
 base_stata_2017 <-  base_stata %>% filter(dummyPAR==1)

@@ -7,7 +7,7 @@ output:
     code_folding: show
     highlight: tango
     number_sections: yes
-    theme: journal
+    theme: lumen
     toc: yes
     toc_depth: 2
     toc_float:
@@ -345,6 +345,9 @@ datos_acdivoca_2019$confianza_instituciones <- datos_acdivoca_2019 %>%
   select(starts_with("Pe41"), -Pe41_14) %>%
   mutate_all(~na_if(., '99'))%>%
   rowSums()
+
+datos_acdivoca_2019$confianza_instituciones <- datos_acdivoca_2019 %>% select(confianza_instituciones) %>% mutate(confianza_instituciones=confianza_instituciones/13)
+
 ```
 ##Confianza en Medios de comunicacion
 
@@ -369,6 +372,8 @@ datos_acdivoca_2019$confianza_medios <- datos_acdivoca_2019 %>%
   select(starts_with("Pe42")) %>%
   mutate_all(~na_if(., '99'))%>%
   rowSums()
+
+datos_acdivoca_2019$confianza_medios <-  datos_acdivoca_2019 %>% select(confianza_medios) %>% mutate(confianza_medios=confianza_medios/7)
 ```
 
 
